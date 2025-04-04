@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingPaperAnswerMapper">
+
+    <resultMap type="DamingPaperAnswer" id="DamingPaperAnswerResult">
+        <result property="paperAnswerId"    column="paper_answer_id"    />
+        <result property="paperName"    column="paper_name"    />
+        <result property="paperId"    column="paper_id"    />
+        <result property="createUser"    column="create_user"    />
+        <result property="paperScore"    column="paper_score"    />
+        <result property="finalScore"    column="final_score"    />
+        <result property="questionCount"    column="question_count"    />
+        <result property="correctCount"    column="correct_count"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="subjectId"    column="subject_id"    />
+        <result property="doTime"    column="do_time"    />
+    </resultMap>
+
+    <sql id="selectDamingPaperAnswerVo">
+        select paper_answer_id, paper_name, paper_id, create_user, paper_score, final_score, question_count, correct_count, create_time, subject_id ,do_time from daming_paper_answer
+    </sql>
+
+    <select id="selectDamingPaperAnswerList" parameterType="DamingPaperAnswer" resultMap="DamingPaperAnswerResult">
+        <include refid="selectDamingPaperAnswerVo"/>
+        <where>
+            <if test="paperName != null  and paperName != ''"> and paper_name like concat('%', #{paperName}, '%')</if>
+            <if test="paperId != null "> and paper_id = #{paperId}</if>
+            <if test="createUser != null "> and create_user = #{createUser}</if>
+            <if test="paperScore != null "> and paper_score = #{paperScore}</if>
+            <if test="finalScore != null "> and final_score = #{finalScore}</if>
+            <if test="questionCount != null "> and question_count = #{questionCount}</if>
+            <if test="correctCount != null "> and correct_count = #{correctCount}</if>
+            <if test="subjectId != null "> and subject_id = #{subjectId}</if>
+            <if test="doTime != null "> and do_time = #{doTime}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectDamingPaperAnswerByPaperAnswerId" parameterType="Long" resultMap="DamingPaperAnswerResult">
+        <include refid="selectDamingPaperAnswerVo"/>
+        where paper_answer_id = #{paperAnswerId}
+    </select>
+    <select id="selectDamingPaperAnswerByPaperId" resultType="com.dm.quiz.domain.DamingPaperAnswer">
+        <include refid="selectDamingPaperAnswerVo"/>
+        where paper_id=#{paperId}
+    </select>
+
+    <insert id="insertDamingPaperAnswer" parameterType="DamingPaperAnswer" useGeneratedKeys="true" keyProperty="paperAnswerId">
+        insert into daming_paper_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="paperName != null and paperName != ''">paper_name,</if>
+            <if test="paperId != null">paper_id,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="paperScore != null">paper_score,</if>
+            <if test="finalScore != null">final_score,</if>
+            <if test="questionCount != null">question_count,</if>
+            <if test="correctCount != null">correct_count,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="subjectId != null">subject_id,</if>
+            <if test="doTime != null">do_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="paperName != null and paperName != ''">#{paperName},</if>
+            <if test="paperId != null">#{paperId},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="paperScore != null">#{paperScore},</if>
+            <if test="finalScore != null">#{finalScore},</if>
+            <if test="questionCount != null">#{questionCount},</if>
+            <if test="correctCount != null">#{correctCount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="subjectId != null">#{subjectId},</if>
+            <if test="doTime != null">#{doTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDamingPaperAnswer" parameterType="DamingPaperAnswer">
+        update daming_paper_answer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="paperName != null and paperName != ''">paper_name = #{paperName},</if>
+            <if test="paperId != null">paper_id = #{paperId},</if>
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="paperScore != null">paper_score = #{paperScore},</if>
+            <if test="finalScore != null">final_score = #{finalScore},</if>
+            <if test="questionCount != null">question_count = #{questionCount},</if>
+            <if test="correctCount != null">correct_count = #{correctCount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="subjectId != null">subject_id = #{subjectId},</if>
+            <if test="doTime != null">do_time = #{doTime},</if>
+        </trim>
+        where paper_answer_id = #{paperAnswerId}
+    </update>
+
+    <delete id="deleteDamingPaperAnswerByPaperAnswerId" parameterType="Long">
+        delete from daming_paper_answer where paper_answer_id = #{paperAnswerId}
+    </delete>
+
+    <delete id="deleteDamingPaperAnswerByPaperAnswerIds" parameterType="String">
+        delete from daming_paper_answer where paper_answer_id in
+        <foreach item="paperAnswerId" collection="array" open="(" separator="," close=")">
+            #{paperAnswerId}
+        </foreach>
+    </delete>
+</mapper>
