@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingUserMapper">
+
+    <resultMap type="DamingUser" id="DamingUserResult">
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="password"    column="password"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDamingUserVo">
+        select user_id, user_name, password, nick_name, avatar, del_flag, create_time, update_time from daming_user
+    </sql>
+
+    <select id="selectDamingUserList" parameterType="DamingUser" resultMap="DamingUserResult">
+        <include refid="selectDamingUserVo"/>
+        <where>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+            </if>
+            and del_flag != 2
+        </where>
+    </select>
+
+    <select id="selectDamingUserByUserId" parameterType="Long" resultMap="DamingUserResult">
+        <include refid="selectDamingUserVo"/>
+        where user_id = #{userId}
+    </select>
+    <select id="selectDamingUserByUserName" parameterType="String" resultMap="DamingUserResult">
+        <include refid="selectDamingUserVo"/>
+        where user_name = #{userName}
+    </select>
+
+    <insert id="insertDamingUser" parameterType="DamingUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into daming_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="nickName != null and nickName != ''">nick_name,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDamingUser" parameterType="DamingUser">
+        update daming_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteDamingUserByUserId" parameterType="Long">
+        delete from daming_user where user_id = #{userId}
+    </delete>
+
+    <update id="deleteDamingUserByUserIds" parameterType="String">
+        UPDATE daming_user
+        SET del_flag = 2
+        WHERE user_id IN
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </update>
+</mapper>

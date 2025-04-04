@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingQuestionAnswerMapper">
+
+    <resultMap type="DamingQuestionAnswer" id="DamingQuestionAnswerResult">
+        <result property="answerId" column="answer_id"/>
+        <result property="createUser" column="create_user"/>
+        <result property="paperId" column="paper_id"/>
+        <result property="paperAnswerId" column="paper_answer_id"/>
+        <result property="userAnswer" column="user_answer"/>
+        <result property="createTime" column="create_time"/>
+        <result property="questionType" column="question_type"/>
+        <result property="questionId" column="question_id"/>
+        <result property="subjectId" column="subject_id"/>
+        <result property="finalScore" column="final_score"/>
+        <result property="questionScore" column="question_score"/>
+        <result property="isCorrect" column="is_correct"/>
+        <result property="itemOrder" column="item_order"/>
+    </resultMap>
+
+    <sql id="selectDamingQuestionAnswerVo">
+        select answer_id,
+               create_user,
+               paper_id,
+               paper_answer_id,
+               user_answer,
+               create_time,
+               question_type,
+               question_id,
+               subject_id,
+               final_score,
+               question_score,
+               is_correct,
+               item_order
+        from daming_question_answer
+    </sql>
+
+    <select id="selectDamingQuestionAnswerList" parameterType="DamingQuestionAnswer"
+            resultMap="DamingQuestionAnswerResult">
+        <include refid="selectDamingQuestionAnswerVo"/>
+        <where>
+            <if test="createUser != null ">and create_user = #{createUser}</if>
+            <if test="paperId != null ">and paper_id = #{paperId}</if>
+            <if test="paperAnswerId != null ">and paper_answer_id = #{paperAnswerId}</if>
+            <if test="userAnswer != null  and userAnswer != ''">and user_answer = #{userAnswer}</if>
+            <if test="questionType != null "> and question_type = #{questionType}</if>
+            <if test="questionId != null ">and question_id = #{questionId}</if>
+            <if test="subjectId != null ">and subject_id = #{subjectId}</if>
+            <if test="finalScore != null ">and final_score = #{finalScore}</if>
+            <if test="questionScore != null ">and question_score = #{questionScore}</if>
+            <if test="isCorrect != null ">and is_correct = #{isCorrect}</if>
+            <if test="itemOrder != null ">and item_order = #{itemOrder}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDamingQuestionAnswerByAnswerId" parameterType="Long" resultMap="DamingQuestionAnswerResult">
+        <include refid="selectDamingQuestionAnswerVo"/>
+        where answer_id = #{answerId}
+    </select>
+
+    <select id="selectByPaperAnswerId" resultMap="DamingQuestionAnswerResult">
+        <include refid="selectDamingQuestionAnswerVo"/>
+        where paper_answer_id= #{paperAnswerId}
+    </select>
+    <select id="selectDamingQuestionAnswerByQuestionId" resultType="com.dm.quiz.domain.DamingQuestionAnswer">
+        <include refid="selectDamingQuestionAnswerVo"/>
+        where question_id= #{questionId}
+    </select>
+    <select id="selectDamingQuestionAnswerByPaperId" resultType="com.dm.quiz.domain.DamingQuestionAnswer">
+        <include refid="selectDamingQuestionAnswerVo"/>
+        where paper_id= #{paperId}
+    </select>
+
+    <insert id="insertDamingQuestionAnswer" parameterType="DamingQuestionAnswer" useGeneratedKeys="true"
+            keyProperty="answerId">
+        insert into daming_question_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createUser != null">create_user,</if>
+            <if test="paperId != null">paper_id,</if>
+            <if test="paperAnswerId != null">paper_answer_id,</if>
+            <if test="userAnswer != null">user_answer,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="questionType != null">question_type,</if>
+            <if test="questionId != null">question_id,</if>
+            <if test="subjectId != null">subject_id,</if>
+            <if test="finalScore != null">final_score,</if>
+            <if test="questionScore != null">question_score,</if>
+            <if test="isCorrect != null">is_correct,</if>
+            <if test="itemOrder != null">item_order,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createUser != null">#{createUser},</if>
+            <if test="paperId != null">#{paperId},</if>
+            <if test="paperAnswerId != null">#{paperAnswerId},</if>
+            <if test="userAnswer != null">#{userAnswer},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="questionType != null">#{questionType},</if>
+            <if test="questionId != null">#{questionId},</if>
+            <if test="subjectId != null">#{subjectId},</if>
+            <if test="finalScore != null">#{finalScore},</if>
+            <if test="questionScore != null">#{questionScore},</if>
+            <if test="isCorrect != null">#{isCorrect},</if>
+            <if test="itemOrder != null">#{itemOrder},</if>
+        </trim>
+    </insert>
+    <insert id="insertDamingQuestionAnswerList" parameterType="java.util.List" useGeneratedKeys="true"
+            keyProperty="answerId">
+        INSERT INTO daming_question_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="list[0].createUser != null">create_user,</if>
+            <if test="list[0].paperId != null">paper_id,</if>
+            <if test="list[0].paperAnswerId != null">paper_answer_id,</if>
+            <if test="list[0].userAnswer != null">user_answer,</if>
+            <if test="list[0].createTime != null">create_time,</if>
+            <if test="list[0].questionType != null">question_type,</if>
+            <if test="list[0].questionId != null">question_id,</if>
+            <if test="list[0].subjectId != null">subject_id,</if>
+            <if test="list[0].finalScore != null">final_score,</if>
+            <if test="list[0].questionScore != null">question_score,</if>
+            <if test="list[0].isCorrect != null">is_correct,</if>
+            <if test="list[0].itemOrder != null">item_order,</if>
+        </trim>
+        <trim prefix="VALUES " suffix="" suffixOverrides=",">
+            <foreach collection="list" item="answer" separator=",">
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="answer.createUser != null">#{answer.createUser},</if>
+                    <if test="answer.paperId != null">#{answer.paperId},</if>
+                    <if test="answer.paperAnswerId != null">#{answer.paperAnswerId},</if>
+                    <if test="answer.userAnswer != null">#{answer.userAnswer},</if>
+                    <if test="answer.createTime != null">#{answer.createTime},</if>
+                    <if test="answer.questionType != null">#{answer.questionType},</if>
+                    <if test="answer.questionId != null">#{answer.questionId},</if>
+                    <if test="answer.subjectId != null">#{answer.subjectId},</if>
+                    <if test="answer.finalScore != null">#{answer.finalScore},</if>
+                    <if test="answer.questionScore != null">#{answer.questionScore},</if>
+                    <if test="answer.isCorrect != null">#{answer.isCorrect},</if>
+                    <if test="answer.itemOrder != null">#{answer.itemOrder},</if>
+                </trim>
+            </foreach>
+        </trim>
+    </insert>
+
+    <update id="updateDamingQuestionAnswer" parameterType="DamingQuestionAnswer">
+        update daming_question_answer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createUser != null">create_user = #{createUser},</if>
+            <if test="paperId != null">paper_id = #{paperId},</if>
+            <if test="paperAnswerId != null">paper_answer_id = #{paperAnswerId},</if>
+            <if test="userAnswer != null">user_answer = #{userAnswer},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="questionType != null">question_type = #{questionType},</if>
+            <if test="questionId != null">question_id = #{questionId},</if>
+            <if test="subjectId != null">subject_id = #{subjectId},</if>
+            <if test="finalScore != null">final_score = #{finalScore},</if>
+            <if test="questionScore != null">question_score = #{questionScore},</if>
+            <if test="isCorrect != null">is_correct = #{isCorrect},</if>
+            <if test="itemOrder != null">item_order = #{itemOrder},</if>
+        </trim>
+        where answer_id = #{answerId}
+    </update>
+
+    <delete id="deleteDamingQuestionAnswerByAnswerId" parameterType="Long">
+        delete
+        from daming_question_answer
+        where answer_id = #{answerId}
+    </delete>
+
+    <delete id="deleteDamingQuestionAnswerByAnswerIds" parameterType="String">
+        delete from daming_question_answer where answer_id in
+        <foreach item="answerId" collection="array" open="(" separator="," close=")">
+            #{answerId}
+        </foreach>
+    </delete>
+</mapper>

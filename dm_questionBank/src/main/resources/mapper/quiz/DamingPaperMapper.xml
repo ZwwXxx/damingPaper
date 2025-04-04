@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingPaperMapper">
+
+    <resultMap type="DamingPaper" id="DamingPaperResult">
+        <result property="paperId"    column="paper_id"    />
+        <result property="paperName"    column="paper_name"    />
+        <result property="subjectId"    column="subject_id"    />
+        <result property="score"    column="score"    />
+        <result property="paperInfoId"    column="paper_info_id"    />
+        <result property="questionCount"    column="question_count"    />
+        <result property="suggestTime"    column="suggest_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="paperType"    column="paper_type"    />
+    </resultMap>
+
+    <sql id="selectDamingPaperVo">
+        select paper_id, paper_name, subject_id, score, paper_info_id, question_count, suggest_time, del_flag, create_time, update_time,paper_type from daming_paper
+    </sql>
+
+    <select id="selectDamingPaperList" parameterType="DamingPaper" resultMap="DamingPaperResult">
+        <include refid="selectDamingPaperVo"/>
+        <where>
+            <if test="paperName != null  and paperName != ''">and paper_name like concat('%', #{paperName}, '%')</if>
+            <if test="subjectId != null ">and subject_id = #{subjectId}</if>
+            <if test="score != null ">and score = #{score}</if>
+            <if test="paperInfoId != null ">and paper_info_id = #{paperInfoId}</if>
+            <if test="questionCount != null ">and question_count = #{questionCount}</if>
+            <if test="suggestTime != null ">and suggest_time = #{suggestTime}</if>
+            <if test="paperType != null ">and paper_type = #{paperType}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+            </if>
+            and del_flag!=2
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectDamingPaperByPaperId" parameterType="Long" resultMap="DamingPaperResult">
+        <include refid="selectDamingPaperVo"/>
+        where paper_id = #{paperId}
+        and del_flag!=2
+    </select>
+
+    <insert id="insertDamingPaper" parameterType="DamingPaper" useGeneratedKeys="true" keyProperty="paperId">
+        insert into daming_paper
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="paperName != null and paperName != ''">paper_name,</if>
+            <if test="subjectId != null">subject_id,</if>
+            <if test="score != null">score,</if>
+            <if test="paperInfoId != null">paper_info_id,</if>
+            <if test="questionCount != null">question_count,</if>
+            <if test="suggestTime != null">suggest_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="paperType != null">paper_type,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="paperName != null and paperName != ''">#{paperName},</if>
+            <if test="subjectId != null">#{subjectId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="paperInfoId != null">#{paperInfoId},</if>
+            <if test="questionCount != null">#{questionCount},</if>
+            <if test="suggestTime != null">#{suggestTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="paperType != null">#{paperType},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDamingPaper" parameterType="DamingPaper">
+        update daming_paper
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="paperName != null and paperName != ''">paper_name = #{paperName},</if>
+            <if test="subjectId != null">subject_id = #{subjectId},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="paperInfoId != null">paper_info_id = #{paperInfoId},</if>
+            <if test="questionCount != null">question_count = #{questionCount},</if>
+            <if test="suggestTime != null">suggest_time = #{suggestTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="paperType != null">paper_type = #{paperType},</if>
+        </trim>
+        where paper_id = #{paperId}
+    </update>
+
+    <delete id="deleteDamingPaperByPaperId" parameterType="Long">
+        delete from daming_paper where paper_id = #{paperId}
+    </delete>
+
+    <update id="deleteDamingPaperByPaperIds" parameterType="String">
+        update daming_paper
+        set del_flag = 2
+        where paper_id in
+        <foreach item="paperId" collection="array" open="(" separator="," close=")">
+            #{paperId}
+        </foreach>
+    </update>
+</mapper>

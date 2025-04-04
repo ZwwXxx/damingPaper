@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingQuestionMapper">
+
+    <resultMap type="DamingQuestion" id="DamingQuestionResult">
+        <result property="id"    column="id"    />
+        <result property="questionType"    column="question_type"    />
+        <result property="questionInfoId"    column="question_info_id"    />
+        <result property="correct"    column="correct"    />
+        <result property="score"    column="score"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="subjectId"    column="subject_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDamingQuestionVo">
+        select id, question_type, question_info_id, correct, score, del_flag, subject_id, create_time, update_time from daming_question
+    </sql>
+
+    <select id="selectDamingQuestionList" parameterType="DamingQuestion" resultMap="DamingQuestionResult">
+        <include refid="selectDamingQuestionVo"/>
+        <where>
+            <if test="questionType != null ">and question_type = #{questionType}</if>
+            <if test="questionInfoId != null ">and question_info_id = #{questionInfoId}</if>
+            <if test="score != null ">and score = #{score}</if>
+            <if test="subjectId != null ">and subject_id = #{subjectId}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+            </if>
+            and del_flag!=2
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectDamingQuestionById" parameterType="Long" resultMap="DamingQuestionResult">
+        <include refid="selectDamingQuestionVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectQuestionListByIds" resultMap="DamingQuestionResult">
+        <include refid="selectDamingQuestionVo"/>
+        WHERE id IN
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and del_flag!=2
+    </select>
+
+    <insert id="insertDamingQuestion" parameterType="DamingQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into daming_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionType != null">question_type,</if>
+            <if test="questionInfoId != null">question_info_id,</if>
+            <if test="correct != null">correct,</if>
+            <if test="score != null">score,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="subjectId != null">subject_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="questionType != null">#{questionType},</if>
+            <if test="questionInfoId != null">#{questionInfoId},</if>
+            <if test="correct != null">#{correct},</if>
+            <if test="score != null">#{score},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="subjectId != null">#{subjectId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDamingQuestion" parameterType="DamingQuestion">
+        update daming_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="questionType != null">question_type = #{questionType},</if>
+            <if test="questionInfoId != null">question_info_id = #{questionInfoId},</if>
+            <if test="correct != null">correct = #{correct},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="subjectId != null">subject_id = #{subjectId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDamingQuestionById" parameterType="Long">
+        delete from daming_question where id = #{id}
+    </delete>
+
+    <delete id="deleteDamingQuestionByIds" parameterType="String">
+        update   daming_question
+        set del_flag=2
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
