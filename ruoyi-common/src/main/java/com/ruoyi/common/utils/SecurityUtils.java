@@ -18,9 +18,12 @@ import com.ruoyi.common.exception.ServiceException;
  *
  * @author ruoyi
  */
+
 public class SecurityUtils
 {
-
+    public static void main(String[] args) {
+        System.out.println(SecurityUtils.encryptPassword("1"));
+    }
     /**
      * 用户ID
      **/
