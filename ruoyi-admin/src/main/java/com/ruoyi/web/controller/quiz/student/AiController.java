@@ -65,7 +65,8 @@ public class AiController {
         }
     }
 
-    @GetMapping(value = "/openSseRaw", produces = "text/event-stream")
+
+    @GetMapping(value = "/openSseRaw", produces = "text/event-stream;charset=UTF-8")
     public SseEmitter handleStreamX(String content, HttpSession session) throws IOException {
         currentEmitter= new SseEmitter();
         RequestMessage req = (RequestMessage) session.getAttribute("req");
