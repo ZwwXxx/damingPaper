@@ -26,6 +26,15 @@ export function addPaper(data) {
   })
 }
 
+// 自动组卷
+export function autoComposePaper(data) {
+  return request({
+    url: '/quiz/paper/auto-compose',
+    method: 'post',
+    data
+  })
+}
+
 // 修改试卷
 export function updatePaper(data) {
   return request({

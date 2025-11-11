@@ -14,6 +14,8 @@ public class PaperDto {
     private Integer score;
     private Integer suggestTime;
     private Integer paperType;
+    private Boolean enableAntiCheat;
+    private Integer questionCount;
 
     public Integer getPaperType() {
         return paperType;
@@ -21,6 +23,22 @@ public class PaperDto {
 
     public void setPaperType(Integer paperType) {
         this.paperType = paperType;
+    }
+
+    public Boolean getEnableAntiCheat() {
+        return enableAntiCheat;
+    }
+
+    public void setEnableAntiCheat(Boolean enableAntiCheat) {
+        this.enableAntiCheat = enableAntiCheat;
+    }
+
+    public Integer getQuestionCount() {
+        return questionCount;
+    }
+
+    public void setQuestionCount(Integer questionCount) {
+        this.questionCount = questionCount;
     }
 
     public Integer getSuggestTime() {

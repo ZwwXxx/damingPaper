@@ -16,10 +16,11 @@
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="paperType"    column="paper_type"    />
+        <result property="enableAntiCheat" column="enable_anti_cheat"/>
     </resultMap>
 
     <sql id="selectDamingPaperVo">
-        select paper_id, paper_name, subject_id, score, paper_info_id, question_count, suggest_time, del_flag, create_time, update_time,paper_type from daming_paper
+        select paper_id, paper_name, subject_id, score, paper_info_id, question_count, suggest_time, del_flag, create_time, update_time, paper_type, enable_anti_cheat from daming_paper
     </sql>
 
     <select id="selectDamingPaperList" parameterType="DamingPaper" resultMap="DamingPaperResult">
@@ -62,6 +63,7 @@
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="paperType != null">paper_type,</if>
+            <if test="enableAntiCheat != null">enable_anti_cheat,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="paperName != null and paperName != ''">#{paperName},</if>
@@ -74,6 +76,7 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="paperType != null">#{paperType},</if>
+            <if test="enableAntiCheat != null">#{enableAntiCheat},</if>
         </trim>
     </insert>
 
@@ -90,6 +93,7 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="paperType != null">paper_type = #{paperType},</if>
+            <if test="enableAntiCheat != null">enable_anti_cheat = #{enableAntiCheat},</if>
         </trim>
         where paper_id = #{paperId}
     </update>

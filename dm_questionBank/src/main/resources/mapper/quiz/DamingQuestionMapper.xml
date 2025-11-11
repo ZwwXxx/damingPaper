@@ -53,6 +53,19 @@
         and del_flag!=2
     </select>
 
+    <select id="selectRandomQuestions" resultMap="DamingQuestionResult">
+        <include refid="selectDamingQuestionVo"/>
+        WHERE del_flag != 2
+        <if test="subjectId != null">
+            AND subject_id = #{subjectId}
+        </if>
+        <if test="questionType != null">
+            AND question_type = #{questionType}
+        </if>
+        ORDER BY rand()
+        LIMIT #{limit}
+    </select>
+
     <insert id="insertDamingQuestion" parameterType="DamingQuestion" useGeneratedKeys="true" keyProperty="id">
         insert into daming_question
         <trim prefix="(" suffix=")" suffixOverrides=",">

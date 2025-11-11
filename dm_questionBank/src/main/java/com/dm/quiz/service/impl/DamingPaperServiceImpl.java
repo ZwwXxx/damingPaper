@@ -1,6 +1,9 @@
 package com.dm.quiz.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -8,20 +11,24 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.dm.quiz.config.ModelMapperSingle;
 import com.dm.quiz.domain.*;
+import com.dm.quiz.dto.AutoAssemblePaperRequest;
+import com.dm.quiz.dto.AutoAssembleRuleDto;
 import com.dm.quiz.dto.PaperDto;
 import com.dm.quiz.dto.PaperQuestionTypeDto;
 import com.dm.quiz.dto.QuestionDto;
 import com.dm.quiz.mapper.*;
 import com.dm.quiz.service.IDamingQuestionService;
+import com.dm.quiz.enums.QuestionTypeEnum;
 import com.dm.quiz.viewmodel.PaperQuestionTypeVM;
 import com.dm.quiz.viewmodel.PaperQuestionVM;
-import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dm.quiz.service.IDamingPaperService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 试卷Service业务层处理
@@ -103,6 +110,7 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         damingPaper.setPaperInfoId(damingContentInfo.getId());
         damingPaper.setDelFlag(0);
         damingPaper.setPaperType(paperDto.getPaperType());
+        damingPaper.setEnableAntiCheat(Boolean.TRUE.equals(paperDto.getEnableAntiCheat()));
         damingPaperMapper.insertDamingPaper(damingPaper);
         return damingPaper;
     }
@@ -166,6 +174,7 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         DamingPaper damingPaper = damingPaperMapper.selectDamingPaperByPaperId(paperDto.getPaperId());
         // 2.映射paperDto给查询到的paper
         modelMapper.map(paperDto, damingPaper);
+        damingPaper.setEnableAntiCheat(Boolean.TRUE.equals(paperDto.getEnableAntiCheat()));
         // 3.根据paperInfoId查出来，然后根据最新的paperDto里的题型，设置（先转为vm）给contentInfo然后update
         DamingContentInfo damingContentInfo = damingContentInfoMapper.selectDamingContentInfoById(damingPaper.getPaperInfoId());
         List<PaperQuestionTypeDto> paperQuestionTypeDto = paperDto.getPaperQuestionTypeDto();
@@ -253,9 +262,92 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         }).collect(Collectors.toList());
         PaperDto paperDto = modelMapper.map(damingPaper, PaperDto.class);
         paperDto.setPaperQuestionTypeDto(paperQuestionTypeDtos);
+        paperDto.setEnableAntiCheat(damingPaper.getEnableAntiCheat());
+        paperDto.setQuestionCount(damingPaper.getQuestionCount());
         return paperDto;
         // 搞到底就是为了给题目设置一个顺序，不容易啊，如果序号一开始就设置在DTO上不转存到VM上然后单独加Order就不用引起列表不一致了。(不行，这样VM会有很多空属性，不必要的属性在前后端流通)
         // 噢噢那样的话就写死了好像，这样存到数据库即使没有入卷也会有一个顺序，只有在入卷的时候才会对题型里的题目做一个序号处理，使其后续能递增或是乱序,
         // 不过即使写在questionDto上前端不指定后端自增一个顺序存到info里好像也可以啊
+    }
+
+    @Override
+    public PaperDto autoAssemblePaper(AutoAssemblePaperRequest request) {
+        if (request == null || request.getSubjectId() == null) {
+            throw new ServiceException("请先选择科目");
+        }
+        if (CollectionUtils.isEmpty(request.getRules())) {
+            throw new ServiceException("请至少配置一条组卷规则");
+        }
+        AtomicInteger orderCounter = new AtomicInteger(0);
+        Set<Long> usedQuestionIds = new HashSet<>();
+        List<PaperQuestionTypeDto> paperQuestionTypeDtos = new ArrayList<>();
+        for (AutoAssembleRuleDto rule : request.getRules()) {
+            if (rule.getQuestionType() == null) {
+                throw new ServiceException("题型不能为空");
+            }
+            if (rule.getQuestionCount() == null || rule.getQuestionCount() <= 0) {
+                throw new ServiceException("题目数量必须大于0");
+            }
+            List<DamingQuestion> candidates = damingQuestionMapper.selectRandomQuestions(
+                    request.getSubjectId(),
+                    rule.getQuestionType(),
+                    rule.getQuestionCount()
+            );
+            if (CollectionUtils.isEmpty(candidates)) {
+                throw new ServiceException("题库中没有匹配的题目可供自动组卷");
+            }
+            List<QuestionDto> questionDtos = new ArrayList<>();
+            for (DamingQuestion candidate : candidates) {
+                if (usedQuestionIds.contains(candidate.getId())) {
+                    continue;
+                }
+                questionDtos.add(toQuestionDto(candidate, orderCounter));
+                usedQuestionIds.add(candidate.getId());
+                if (questionDtos.size() >= rule.getQuestionCount()) {
+                    break;
+                }
+            }
+            if (questionDtos.size() < rule.getQuestionCount()) {
+                throw new ServiceException("题型【" + resolveSectionName(rule) + "】剩余可用题目数量不足");
+            }
+            PaperQuestionTypeDto typeDto = new PaperQuestionTypeDto();
+            typeDto.setName(resolveSectionName(rule));
+            typeDto.setQuestionDtos(questionDtos);
+            paperQuestionTypeDtos.add(typeDto);
+        }
+        PaperDto preview = new PaperDto();
+        preview.setPaperQuestionTypeDto(paperQuestionTypeDtos);
+        preview.setSubjectId(request.getSubjectId());
+        preview.setPaperName(request.getPaperName());
+        preview.setPaperType(request.getPaperType());
+        preview.setSuggestTime(request.getSuggestTime());
+        preview.setEnableAntiCheat(Boolean.TRUE.equals(request.getEnableAntiCheat()));
+        if (!CollectionUtils.isEmpty(paperQuestionTypeDtos)) {
+            ComputeCountAndScoreResult stats = getComputeCountAndScoreResult(preview);
+            preview.setScore(stats.totalScore);
+            preview.setQuestionCount(stats.totalCount);
+        } else {
+            preview.setScore(0);
+            preview.setQuestionCount(0);
+        }
+        return preview;
+    }
+
+    private QuestionDto toQuestionDto(DamingQuestion question, AtomicInteger orderCounter) {
+        QuestionDto questionDto = damingQuestionService.getQuestionDto(question);
+        questionDto.setItemOrder(orderCounter.getAndIncrement());
+        return questionDto;
+    }
+
+    private String resolveSectionName(AutoAssembleRuleDto rule) {
+        if (StringUtils.isNotEmpty(rule.getSectionName())) {
+            return rule.getSectionName();
+        }
+        for (QuestionTypeEnum value : QuestionTypeEnum.values()) {
+            if (rule.getQuestionType() != null && rule.getQuestionType().equals(value.getCode())) {
+                return value.getName();
+            }
+        }
+        return "题型" + rule.getQuestionType();
     }
 }

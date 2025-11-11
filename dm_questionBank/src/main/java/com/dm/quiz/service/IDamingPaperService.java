@@ -1,7 +1,9 @@
 package com.dm.quiz.service;
 
 import java.util.List;
+
 import com.dm.quiz.domain.DamingPaper;
+import com.dm.quiz.dto.AutoAssemblePaperRequest;
 import com.dm.quiz.dto.PaperDto;
 
 /**
@@ -64,4 +66,9 @@ public interface IDamingPaperService
      * 试卷VM转为DTO给前端
      */
     PaperDto paperIdtoDto (Long paperId);
+
+    /**
+     * 根据规则自动组卷（仅返回建议内容，不落库）
+     */
+    PaperDto autoAssemblePaper(AutoAssemblePaperRequest request);
 }

@@ -51,12 +51,23 @@ public class DamingPaper extends BaseEntity
     @Excel(name = "试卷类型")
     private Integer paperType;
 
+    /** 是否开启防作弊 */
+    private Boolean enableAntiCheat;
+
     public Integer getPaperType() {
         return paperType;
     }
 
     public void setPaperType(Integer paperType) {
         this.paperType = paperType;
+    }
+
+    public Boolean getEnableAntiCheat() {
+        return enableAntiCheat;
+    }
+
+    public void setEnableAntiCheat(Boolean enableAntiCheat) {
+        this.enableAntiCheat = enableAntiCheat;
     }
 
     public Integer getSuggestTime() {
@@ -134,13 +145,15 @@ public class DamingPaper extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("paperId", getPaperId())
-            .append("paperName", getPaperName())
-            .append("subjectId", getSubjectId())
-            .append("score", getScore())
-            .append("questionCount", getQuestionCount())
-            .append("delFlag", getDelFlag())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .toString();
+                .append("paperName", getPaperName())
+                .append("subjectId", getSubjectId())
+                .append("score", getScore())
+                .append("questionCount", getQuestionCount())
+                .append("delFlag", getDelFlag())
+                .append("createTime", getCreateTime())
+                .append("updateTime", getUpdateTime())
+                .append("paperType", getPaperType())
+                .append("enableAntiCheat", getEnableAntiCheat())
+                .toString();
     }
 }
