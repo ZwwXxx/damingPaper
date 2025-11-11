@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.quiz.admin;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dm.quiz.dto.AutoAssemblePaperRequest;
 import com.dm.quiz.dto.PaperDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +87,16 @@ public class DamingPaperController extends BaseController
         //包含分数和新题型，有顺序的
         PaperDto paperIdtoDto = damingPaperService.paperIdtoDto(damingPaper.getPaperId());
         return success(paperIdtoDto);
+    }
+
+    /**
+     * 自动组卷预览
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:paper:add')")
+    @Log(title = "试卷", businessType = BusinessType.OTHER)
+    @PostMapping("/auto-compose")
+    public AjaxResult autoCompose(@RequestBody AutoAssemblePaperRequest request) {
+        return success(damingPaperService.autoAssemblePaper(request));
     }
 
     /**

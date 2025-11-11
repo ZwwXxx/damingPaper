@@ -130,6 +130,13 @@
           <dict-tag :options="dict.type.paper_type" :value="scope.row.paperType"/>
         </template>
       </el-table-column>
+      <el-table-column label="防作弊" align="center" prop="enableAntiCheat">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.enableAntiCheat ? 'success' : 'info'">
+            {{ scope.row.enableAntiCheat ? '开启' : '关闭' }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <!--<span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>-->

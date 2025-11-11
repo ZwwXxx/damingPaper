@@ -67,4 +67,11 @@ public interface DamingQuestionMapper
      * 根据ids查询questionList
      */
     List<DamingQuestion> selectQuestionListByIds(@Param("ids") List<Long> ids);
+
+    /**
+     * 随机抽题
+     */
+    List<DamingQuestion> selectRandomQuestions(@Param("subjectId") Integer subjectId,
+                                               @Param("questionType") Integer questionType,
+                                               @Param("limit") Integer limit);
 }

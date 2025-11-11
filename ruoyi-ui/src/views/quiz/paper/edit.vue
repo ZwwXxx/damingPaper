@@ -29,7 +29,22 @@
             <el-input-number v-model="formData.suggestTime" :min="0"></el-input-number>
           </el-form-item>
         </el-col>
+        <el-col :span="12">
+          <el-form-item label="开启防作弊">
+            <el-switch
+              v-model="formData.enableAntiCheat"
+              active-text="开启"
+              inactive-text="关闭">
+            </el-switch>
+          </el-form-item>
+        </el-col>
         <!--分割线-->
+        <el-col :span="24" class="mb-2">
+          <el-alert title="可按照题型快速自动组卷，仍可在生成后调整题型及题目列表" type="info" :closable="false"/>
+          <el-button type="primary" icon="el-icon-magic-stick" size="mini" class="mt-2" @click="openAutoComposeDialog">
+            自动组卷
+          </el-button>
+        </el-col>
         <el-col :span="24">
           <el-form-item :label="'题型'+(qtypeIndex+1)+':'"
                         v-for="(questionType,qtypeIndex) in formData.paperQuestionTypeDto"
@@ -135,11 +150,39 @@
         <el-button type="primary" @click="addQuestionConfirm">确定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="自动组卷" :visible.sync="autoCompose.visible" width="600px" @close="closeAutoComposeDialog">
+      <el-form label-width="90px" size="small">
+        <el-form-item label="科目">
+          <el-select v-model="autoCompose.form.subjectId" placeholder="请选择科目" :style="{width: '100%'}">
+            <el-option v-for="(item,index) in subjectIdOptions" :key="index" :label="item.label"
+                       :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="规则配置">
+          <div class="auto-rule-row" v-for="(rule,idx) in autoCompose.form.rules" :key="idx">
+            <el-input class="rule-name" v-model="rule.name" placeholder="分区名称(可选)"></el-input>
+            <el-select class="rule-type" v-model="rule.questionType" placeholder="题型">
+              <el-option v-for="(item,index) in questionTypeOptions" :key="index" :label="item.label"
+                         :value="item.value"></el-option>
+            </el-select>
+            <el-input-number class="rule-count" v-model="rule.questionCount" :min="1" :max="50"
+                             controls-position="right"></el-input-number>
+            <el-button type="text" @click="removeAutoRule(idx)" v-if="autoCompose.form.rules.length > 1">删除</el-button>
+          </div>
+          <el-button type="text" icon="el-icon-plus" @click="addAutoRule">新增规则</el-button>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="closeAutoComposeDialog">取 消</el-button>
+        <el-button type="primary" :loading="autoCompose.loading" @click="handleAutoComposeConfirm">生成题目</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import {getQuestion, listQuestion} from "@/api/quiz/question";
-import {addPaper, getPaper, updatePaper} from "@/api/quiz/paper";
+import {addPaper, getPaper, updatePaper, autoComposePaper} from "@/api/quiz/paper";
 
 export default {
   components: {},
@@ -202,6 +245,9 @@ export default {
         subjectId: undefined,
         paperName: undefined,
         suggestTime: undefined,
+        enableAntiCheat: false,
+        score: 0,
+        questionCount: 0,
         paperQuestionTypeDto: [
           // {
           //   name: '单选题',
@@ -272,10 +318,26 @@ export default {
         "label": "计算机基础与程序设计",
         "value": 3
       }],
+      autoCompose: {
+        visible: false,
+        loading: false,
+        form: {
+          subjectId: undefined,
+          rules: [{
+            name: '',
+            questionType: 1,
+            questionCount: 5
+          }]
+        }
+      }
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    'formData.subjectId'(val) {
+      this.autoCompose.form.subjectId = val
+    }
+  },
   created() {
     let paperId = this.$route.query.paperId
     if (paperId) {
@@ -288,6 +350,7 @@ export default {
     async getPaperById(paperId) {
       this.formData = (await getPaper(paperId)).data
       console.log(this.formData)
+      this.autoCompose.form.subjectId = this.formData.subjectId
     },
     getQuestList() {
       listQuestion(this.questionList.queryParams).then(response => {
@@ -386,9 +449,106 @@ export default {
     resetForm() {
       this.$refs['elForm1'].resetFields()
     },
+    openAutoComposeDialog() {
+      if (!this.autoCompose.form.subjectId && this.formData.subjectId) {
+        this.autoCompose.form.subjectId = this.formData.subjectId
+      }
+      if (!this.autoCompose.form.rules.length) {
+        this.addAutoRule()
+      }
+      this.autoCompose.visible = true
+    },
+    closeAutoComposeDialog() {
+      this.autoCompose.visible = false
+      this.autoCompose.loading = false
+    },
+    addAutoRule() {
+      const defaultType = this.questionTypeOptions.length ? this.questionTypeOptions[0].value : 1
+      this.autoCompose.form.rules.push({
+        name: '',
+        questionType: defaultType,
+        questionCount: 5
+      })
+    },
+    removeAutoRule(index) {
+      this.autoCompose.form.rules.splice(index, 1)
+      if (!this.autoCompose.form.rules.length) {
+        this.addAutoRule()
+      }
+    },
+    async handleAutoComposeConfirm() {
+      if (!this.autoCompose.form.subjectId) {
+        return this.$message.error('请选择科目')
+      }
+      const payload = {
+        subjectId: this.autoCompose.form.subjectId,
+        paperName: this.formData.paperName,
+        paperType: this.formData.paperType,
+        suggestTime: this.formData.suggestTime,
+        enableAntiCheat: this.formData.enableAntiCheat,
+        rules: this.autoCompose.form.rules.map(rule => ({
+          sectionName: rule.name,
+          questionType: rule.questionType,
+          questionCount: rule.questionCount
+        }))
+      }
+      if (!payload.rules.length) {
+        return this.$message.error('请至少配置一条规则')
+      }
+      const invalidRule = payload.rules.find(rule => !rule.questionType || !rule.questionCount || rule.questionCount <= 0)
+      if (invalidRule) {
+        return this.$message.error('请完善每条规则的题型与数量')
+      }
+      this.autoCompose.loading = true
+      try {
+        const res = await autoComposePaper(payload)
+        if (res.code === 200 && res.data) {
+          this.formData.paperQuestionTypeDto = res.data.paperQuestionTypeDto || []
+          this.formData.score = res.data.score
+          this.formData.questionCount = res.data.questionCount
+          if (res.data.subjectId) {
+            this.formData.subjectId = res.data.subjectId
+          }
+          this.$message.success('已根据规则自动组卷')
+          this.autoCompose.visible = false
+        } else {
+          this.$message.error(res.msg || '自动组卷失败')
+        }
+      } finally {
+        this.autoCompose.loading = false
+      }
+    }
   }
 }
 
 </script>
-<style>
+<style scoped>
+.auto-rule-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.auto-rule-row .rule-name {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.auto-rule-row .rule-type {
+  width: 120px;
+  margin-right: 10px;
+}
+
+.auto-rule-row .rule-count {
+  width: 120px;
+  margin-right: 10px;
+}
+
+.mt-2 {
+  margin-top: 10px;
+}
+
+.mb-2 {
+  margin-bottom: 10px;
+}
 </style>
