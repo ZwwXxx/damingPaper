@@ -57,13 +57,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="科目ID" prop="subjectId">
-        <el-select v-model="queryParams.subjectId" placeholder="请输入科目id" clearable>
+      <el-form-item label="科目" prop="subjectId">
+        <el-select v-model="queryParams.subjectId" placeholder="请选择科目" clearable>
           <el-option
-            v-for="dict in dict.type.subject_id"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="option in subjectOptions"
+            :key="option.value"
+            :label="option.label"
+            :value="option.value"
           />
         </el-select>
       </el-form-item>
@@ -142,7 +142,7 @@
       <el-table-column label="答对数量" align="center" prop="correctCount" />
       <el-table-column label="所属科目" align="center" prop="subjectId">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.subject_id" :value="scope.row.subjectId"/>
+          <span>{{ getSubjectLabel(scope.row.subjectId) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -198,7 +198,14 @@
           <el-input v-model="form.correctCount" placeholder="请输入答对数量" />
         </el-form-item>
         <el-form-item label="所属科目" prop="subjectId">
-          <el-input v-model="form.subjectId" placeholder="请输入所属科目" />
+          <el-select v-model="form.subjectId" placeholder="请选择科目">
+            <el-option
+              v-for="option in subjectOptions"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -211,10 +218,9 @@
 
 <script>
 import { listPaperAnswer, getPaperAnswer, delPaperAnswer, addPaperAnswer, updatePaperAnswer } from "@/api/quiz/paperAnswer";
-import {listQuestion} from "@/api/quiz/question";
+import {optionSubject} from "@/api/quiz/subject";
 
 export default {
-  dicts: ['subject_id'],
   name: "PaperAnswer",
   data() {
     return {
@@ -270,15 +276,33 @@ export default {
           { required: true, message: "题目数量不能为空", trigger: "blur" }
         ],
         subjectId: [
-          { required: true, message: "所属科目不能为空", trigger: "blur" }
+          { required: true, message: "所属科目不能为空", trigger: "change" }
         ]
-      }
+      },
+      subjectOptions: [],
+      subjectMap: {}
     };
   },
   created() {
+    this.loadSubjectOptions();
     this.getList();
   },
   methods: {
+    async loadSubjectOptions() {
+      const res = await optionSubject();
+      const list = res.data || [];
+      this.subjectOptions = list.map(item => ({
+        label: item.subjectName,
+        value: item.subjectId
+      }));
+      this.subjectMap = list.reduce((acc, cur) => {
+        acc[cur.subjectId] = cur.subjectName;
+        return acc;
+      }, {});
+    },
+    getSubjectLabel(id) {
+      return this.subjectMap[id] || '-';
+    },
     /** 查询试卷作答情况列表 */
     getList() {
       this.loading = true;

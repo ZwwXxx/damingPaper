@@ -34,13 +34,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="科目ID" prop="subjectId">
-        <el-select v-model="queryParams.subjectId" placeholder="请输入科目id" clearable>
+      <el-form-item label="科目" prop="subjectId">
+        <el-select v-model="queryParams.subjectId" placeholder="请选择科目" clearable>
           <el-option
-            v-for="dict in dict.type.subject_id"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="option in subjectOptions"
+            :key="option.value"
+            :label="option.label"
+            :value="option.value"
           />
         </el-select>
       </el-form-item>
@@ -136,9 +136,9 @@
         </template>
       </el-table-column>
       <el-table-column label="题目id" align="center" prop="questionId" />
-      <el-table-column label="科目iD" align="center" prop="subjectId">
+      <el-table-column label="科目" align="center" prop="subjectId">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.subject_id" :value="scope.row.subjectId"/>
+          <span>{{ getSubjectLabel(scope.row.subjectId) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用户得分" align="center" prop="finalScore" />
@@ -195,8 +195,15 @@
         <el-form-item label="题目id" prop="questionId">
           <el-input v-model="form.questionId" placeholder="请输入题目id" />
         </el-form-item>
-        <el-form-item label="科目id" prop="subjectId">
-          <el-input v-model="form.subjectId" placeholder="请输入科目id" />
+        <el-form-item label="科目" prop="subjectId">
+          <el-select v-model="form.subjectId" placeholder="请选择科目">
+            <el-option
+              v-for="option in subjectOptions"
+              :key="option.value"
+              :label="option.label"
+              :value="option.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="用户得分" prop="finalScore">
           <el-input v-model="form.finalScore" placeholder="请输入用户得分" />
@@ -221,10 +228,10 @@
 
 <script>
 import { listQuestionAnswer, getQuestionAnswer, delQuestionAnswer, addQuestionAnswer, updateQuestionAnswer } from "@/api/quiz/questionAnswer";
-import {listQuestion} from "@/api/quiz/question";
+import {optionSubject} from "@/api/quiz/subject";
 
 export default {
-  dicts: ['question_type','subject_id','is_correct'],
+  dicts: ['question_type','is_correct'],
   name: "QuestionAnswer",
   data() {
     return {
@@ -276,15 +283,33 @@ export default {
           { required: true, message: "题目id不能为空", trigger: "blur" }
         ],
         subjectId: [
-          { required: true, message: "科目id不能为空", trigger: "blur" }
+          { required: true, message: "科目不能为空", trigger: "change" }
         ],
-      }
+      },
+      subjectOptions: [],
+      subjectMap: {}
     };
   },
   created() {
+    this.loadSubjectOptions();
     this.getList();
   },
   methods: {
+    async loadSubjectOptions() {
+      const res = await optionSubject();
+      const list = res.data || [];
+      this.subjectOptions = list.map(item => ({
+        label: item.subjectName,
+        value: item.subjectId
+      }));
+      this.subjectMap = list.reduce((acc, cur) => {
+        acc[cur.subjectId] = cur.subjectName;
+        return acc;
+      }, {});
+    },
+    getSubjectLabel(id) {
+      return this.subjectMap[id] || '-';
+    },
     /** 查询题目回答情况表列表 */
     getList() {
       this.loading = true;
