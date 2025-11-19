@@ -99,7 +99,7 @@
         <el-button
           type="primary"
           plain
-          icon="el-icon-delete"
+          icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
           v-hasPermi="['quiz:question:add']"
@@ -118,13 +118,36 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          type="info"
+          plain
+          icon="el-icon-upload2"
+          size="mini"
+          @click="handleImport"
+          v-hasPermi="['quiz:question:import']"
+        >导入
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-document"
+          size="mini"
+          :disabled="multiple"
+          @click="handleExportSelected"
+          v-hasPermi="['quiz:question:export']"
+        >导出选中
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
           type="warning"
           plain
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
           v-hasPermi="['quiz:question:export']"
-        >导出
+        >导出全部
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -175,6 +198,14 @@
             v-hasPermi="['quiz:question:remove']"
           >删除
           </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-download"
+            @click="handleExportSingle(scope.row)"
+            v-hasPermi="['quiz:question:export']"
+          >导出
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -224,12 +255,39 @@
     <!--    <el-button @click="cancel">取 消</el-button>-->
     <!--  </div>-->
     <!--</el-dialog>-->
+
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="480px" append-to-body>
+      <el-upload
+        ref="upload"
+        drag
+        :limit="1"
+        accept=".xls,.xlsx"
+        :auto-upload="false"
+        :headers="upload.headers"
+        :action="upload.url"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :on-error="handleFileError">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或 <em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">
+          模板首行已提供示例；仅支持 .xls/.xlsx，选项字段填写 JSON 数组，如 [{"prefix":"A","content":"示例"}]
+        </div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="upload.isUploading" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
+        <el-link type="primary" :underline="false" @click="importTemplate">下载模板</el-link>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {listQuestion, getQuestion, delQuestion, addQuestion, updateQuestion} from "@/api/quiz/question";
 import {optionSubject} from "@/api/quiz/subject";
+import { getToken } from "@/utils/auth";
 
 export default {
   name: "Question",
@@ -289,7 +347,14 @@ export default {
         ],
       },
       subjectOptions: [],
-      subjectMap: {}
+      subjectMap: {},
+      upload: {
+        open: false,
+        title: "题目导入",
+        isUploading: false,
+        headers: { Authorization: "Bearer " + getToken() },
+        url: process.env.VUE_APP_BASE_API + "/quiz/question/importData"
+      }
     };
   },
   created() {
@@ -419,6 +484,53 @@ export default {
       this.download('quiz/question/export', {
         ...this.queryParams
       }, `question_${new Date().getTime()}.xlsx`)
+    },
+    /** 导出选中 */
+    handleExportSelected() {
+      if (!this.ids.length) {
+        this.$modal.msgWarning("请选择要导出的题目");
+        return;
+      }
+      this.download('quiz/question/exportByIds', {
+        ids: this.ids.join(',')
+      }, `question_selected_${new Date().getTime()}.xlsx`)
+    },
+    /** 单个导出 */
+    handleExportSingle(row) {
+      if (!row || !row.id) {
+        this.$modal.msgWarning("未找到题目信息");
+        return;
+      }
+      this.download('quiz/question/exportByIds', {
+        ids: row.id
+      }, `question_${row.id}_${new Date().getTime()}.xlsx`)
+    },
+    /** 导入按钮 */
+    handleImport() {
+      this.upload.title = "题目导入";
+      this.upload.open = true;
+    },
+    /** 下载模板 */
+    importTemplate() {
+      this.download('quiz/question/importTemplate', {}, `question_template_${new Date().getTime()}.xlsx`)
+    },
+    handleFileUploadProgress() {
+      this.upload.isUploading = true;
+    },
+    handleFileSuccess(response) {
+      this.upload.isUploading = false;
+      this.upload.open = false;
+      if (this.$refs.upload) {
+        this.$refs.upload.clearFiles();
+      }
+      this.$alert("<div style='overflow:auto;max-height:60vh;padding:10px 20px;'>" + response.msg + "</div>", "导入结果", {dangerouslyUseHTMLString: true});
+      this.getList();
+    },
+    handleFileError() {
+      this.upload.isUploading = false;
+    },
+    submitFileForm() {
+      this.$refs.upload.submit();
     }
   }
 };

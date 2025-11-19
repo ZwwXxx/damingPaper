@@ -192,10 +192,10 @@ export default {
       const valid = await this.$refs['elForm'].validate(); // 使用 await 等待验证结果
       if (!valid) return;
       // TODO 提交表单
-      if (this.formData.questionType===1){
-        this.formData.correctArray=[]
-      }else {
-        this.formData.correct=''
+      if (this.formData.questionType === 1) {
+        this.formData.correctArray = []
+      } else {
+        this.formData.correct = ''
       }
       let res = null
       if (this.formData.id !== undefined) {
@@ -212,12 +212,15 @@ export default {
       });
 
       if (res.code === 200) {
-        const keepSubjectId = this.formData.subjectId;
-        this.$refs['elForm'].resetFields();
-        this.formData.subjectId = keepSubjectId;
-        this.formData.items.forEach(item=>{
-          item.content=''
-        })
+        // 新增时重置表单；修改时保留当前填入内容
+        if (this.formData.id === undefined) {
+          const keepSubjectId = this.formData.subjectId;
+          this.$refs['elForm'].resetFields();
+          this.formData.subjectId = keepSubjectId;
+          this.formData.items.forEach(item => {
+            item.content = ''
+          })
+        }
         // this.$router.push({
         //   path: '/question/index'
         // })
