@@ -183,18 +183,14 @@
 <script>
 import {getQuestion, listQuestion} from "@/api/quiz/question";
 import {addPaper, getPaper, updatePaper, autoComposePaper} from "@/api/quiz/paper";
+import {optionSubject} from "@/api/quiz/subject";
 
 export default {
   components: {},
   props: [],
   data() {
     return {
-      subjectMap: {
-        1: '高数',
-        2: '政治',
-        3: '计算机基础与程序设计',
-        // 其他科目...
-      },
+      subjectMap: {},
       questionTypeMap: {
         1: '单选题',
         2: '多选题',
@@ -215,16 +211,7 @@ export default {
         "label": "主观题",
         "value": 3
       }],
-      subjectOptions: [{
-        "label": "高等数学",
-        "value": 1
-      }, {
-        "label": "政治",
-        "value": 2
-      }, {
-        "label": "计算机基础与程序设计",
-        "value": 3
-      }],
+      subjectOptions: [],
       questionList: {
         selectionList: [],
         queryParams: {
@@ -308,16 +295,7 @@ export default {
         "value": 2
       }
       ],
-      subjectIdOptions: [{
-        "label": "高等数学",
-        "value": 1
-      }, {
-        "label": "政治",
-        "value": 2
-      }, {
-        "label": "计算机基础与程序设计",
-        "value": 3
-      }],
+      subjectIdOptions: [],
       autoCompose: {
         visible: false,
         loading: false,
@@ -338,7 +316,8 @@ export default {
       this.autoCompose.form.subjectId = val
     }
   },
-  created() {
+  async created() {
+    await this.loadSubjectOptions();
     let paperId = this.$route.query.paperId
     if (paperId) {
       this.getPaperById(paperId)
@@ -347,6 +326,20 @@ export default {
   mounted() {
   },
   methods: {
+    async loadSubjectOptions() {
+      const res = await optionSubject();
+      const list = res.data || [];
+      const options = list.map(item => ({
+        label: item.subjectName,
+        value: item.subjectId
+      }));
+      this.subjectOptions = options;
+      this.subjectIdOptions = options;
+      this.subjectMap = list.reduce((acc, cur) => {
+        acc[cur.subjectId] = cur.subjectName;
+        return acc;
+      }, {});
+    },
     async getPaperById(paperId) {
       this.formData = (await getPaper(paperId)).data
       console.log(this.formData)

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingSubjectMapper">
+
+    <resultMap id="DamingSubjectResult" type="com.dm.quiz.domain.DamingSubject">
+        <id property="subjectId" column="subject_id"/>
+        <result property="subjectName" column="subject_name"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectDamingSubjectVo">
+        select subject_id, subject_name, del_flag, create_time, update_time
+        from daming_subject
+    </sql>
+
+    <select id="selectDamingSubjectBySubjectId" parameterType="java.lang.Integer" resultMap="DamingSubjectResult">
+        <include refid="selectDamingSubjectVo"/>
+        where subject_id = #{subjectId}
+    </select>
+
+    <select id="selectDamingSubjectBySubjectName" parameterType="java.lang.String" resultMap="DamingSubjectResult">
+        <include refid="selectDamingSubjectVo"/>
+        where subject_name = #{subjectName}
+          and del_flag != 2
+        limit 1
+    </select>
+
+    <select id="selectDamingSubjectList" parameterType="com.dm.quiz.domain.DamingSubject" resultMap="DamingSubjectResult">
+        <include refid="selectDamingSubjectVo"/>
+        <where>
+            <if test="subjectName != null and subjectName != ''">
+                and subject_name like concat('%', #{subjectName}, '%')
+            </if>
+            <if test="delFlag != null">
+                and del_flag = #{delFlag}
+            </if>
+            <if test="delFlag == null">
+                and del_flag != 2
+            </if>
+        </where>
+        order by subject_id asc
+    </select>
+
+    <select id="selectActiveSubjects" resultMap="DamingSubjectResult">
+        <include refid="selectDamingSubjectVo"/>
+        where del_flag != 2
+        order by subject_id asc
+    </select>
+
+    <insert id="insertDamingSubject" parameterType="com.dm.quiz.domain.DamingSubject" useGeneratedKeys="true" keyProperty="subjectId">
+        insert into daming_subject
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="subjectName != null">subject_name,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="subjectName != null">#{subjectName},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDamingSubject" parameterType="com.dm.quiz.domain.DamingSubject">
+        update daming_subject
+        <trim prefix="set" suffixOverrides=",">
+            <if test="subjectName != null">subject_name = #{subjectName},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where subject_id = #{subjectId}
+    </update>
+
+    <delete id="deleteDamingSubjectBySubjectId" parameterType="java.lang.Integer">
+        update daming_subject
+        set del_flag = 2
+        where subject_id = #{subjectId}
+    </delete>
+
+    <delete id="deleteDamingSubjectBySubjectIds" parameterType="java.lang.Integer">
+        update daming_subject
+        set del_flag = 2
+        where subject_id in
+        <foreach collection="array" item="subjectId" open="(" separator="," close=")">
+            #{subjectId}
+        </foreach>
+    </delete>
+</mapper>
+

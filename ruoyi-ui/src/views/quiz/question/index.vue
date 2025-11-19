@@ -28,13 +28,13 @@
       <!--  />-->
       <!--</el-form-item>-->
 
-      <el-form-item label="科目id" prop="subjectId">
-        <el-select v-model="queryParams.subjectId" placeholder="请输入科目id" clearable>
+      <el-form-item label="科目" prop="subjectId">
+        <el-select v-model="queryParams.subjectId" placeholder="请选择科目" clearable>
           <el-option
-            v-for="dict in dict.type.subject_id"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="option in subjectOptions"
+            :key="option.value"
+            :label="option.label"
+            :value="option.value"
           />
         </el-select>
       </el-form-item>
@@ -140,9 +140,9 @@
       </el-table-column>
       <el-table-column label="题目题干内容" align="center" prop="questionTitle"/>
       <el-table-column label="题目分数" align="center" prop="score"/>
-      <el-table-column label="科目iD" align="center" prop="subjectId">
+      <el-table-column label="科目" align="center" prop="subjectId">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.subject_id" :value="scope.row.subjectId"/>
+          <span>{{ getSubjectLabel(scope.row.subjectId) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -229,10 +229,11 @@
 
 <script>
 import {listQuestion, getQuestion, delQuestion, addQuestion, updateQuestion} from "@/api/quiz/question";
+import {optionSubject} from "@/api/quiz/subject";
 
 export default {
   name: "Question",
-  dicts: ['question_type', 'subject_id'],
+  dicts: ['question_type'],
   data() {
     return {
       // 遮罩层
@@ -286,14 +287,32 @@ export default {
         subjectId: [
           {required: true, message: "科目id不能为空", trigger: "blur"}
         ],
-      }
+      },
+      subjectOptions: [],
+      subjectMap: {}
     };
   },
   created() {
+    this.loadSubjectOptions();
     this.getList();
     console.log(this.dict)
   },
   methods: {
+    async loadSubjectOptions() {
+      const res = await optionSubject();
+      const list = res.data || [];
+      this.subjectOptions = list.map(item => ({
+        label: item.subjectName,
+        value: item.subjectId
+      }));
+      this.subjectMap = list.reduce((acc, cur) => {
+        acc[cur.subjectId] = cur.subjectName;
+        return acc;
+      }, {});
+    },
+    getSubjectLabel(id) {
+      return this.subjectMap[id] || '-';
+    },
     addQuestionType() {
 
     },

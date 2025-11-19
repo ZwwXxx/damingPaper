@@ -52,8 +52,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="解析" prop="analysis">
-            <el-input v-model="formData.analysis" placeholder="请输入解析" clearable :style="{width: '100%'}">
-            </el-input>
+            <editor v-model="formData.analysis" :min-height="220" placeholder="请输入解析"/>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -75,9 +74,11 @@
 <script>
 import question from "@/views/quiz/question/index.vue";
 import {addQuestion, getQuestion, updateQuestion} from "@/api/quiz/question";
+import {optionSubject} from "@/api/quiz/subject";
+import Editor from "@/components/Editor";
 
 export default {
-  components: {},
+  components: { Editor },
   props: [],
   data() {
     return {
@@ -122,7 +123,7 @@ export default {
         analysis: [{
           required: true,
           message: '请输入解析',
-          trigger: 'blur'
+          trigger: 'change'
         }],
         score: [{
           required: true,
@@ -130,16 +131,7 @@ export default {
           trigger: 'blur'
         }],
       },
-      subjectIdOptions: [{
-        "label": "高等数学",
-        "value": 1
-      }, {
-        "label": "政治",
-        "value": 2
-      }, {
-        "label": "计算机基础与程序设计",
-        "value": 3
-      }],
+      subjectIdOptions: [],
 
       questionTypeOptions: [{
         "label": "单选题",
@@ -166,7 +158,8 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {
+  async created() {
+    await this.loadSubjectOptions();
     // 如果有传参，说明是修改我们请求数据进行回显
     let id = this.$route.query.id
     if (id) {
@@ -176,6 +169,14 @@ export default {
   mounted() {
   },
   methods: {
+    async loadSubjectOptions() {
+      const res = await optionSubject();
+      const list = res.data || [];
+      this.subjectIdOptions = list.map(item => ({
+        label: item.subjectName,
+        value: item.subjectId
+      }));
+    },
     changeHandler(value) {
       console.log('改变之后的值是:' + value)
     },
@@ -211,7 +212,9 @@ export default {
       });
 
       if (res.code === 200) {
-        this.$refs['elForm'].resetFields()
+        const keepSubjectId = this.formData.subjectId;
+        this.$refs['elForm'].resetFields();
+        this.formData.subjectId = keepSubjectId;
         this.formData.items.forEach(item=>{
           item.content=''
         })
@@ -222,7 +225,9 @@ export default {
 
     },
     resetForm() {
-      this.$refs['elForm'].resetFields()
+      const keepSubjectId = this.formData.subjectId;
+      this.$refs['elForm'].resetFields();
+      this.formData.subjectId = keepSubjectId;
     },
     optionItemRemove(index) {
       this.formData.items.splice(index, 1)
