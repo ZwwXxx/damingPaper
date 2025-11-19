@@ -1,27 +1,32 @@
 package com.dm.quiz.service.impl;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.dm.quiz.domain.DamingContentInfo;
-import com.dm.quiz.domain.DamingPaperAnswer;
 import com.dm.quiz.domain.DamingQuestionAnswer;
 import com.dm.quiz.mapper.DamingQuestionAnswerMapper;
 import com.dm.quiz.viewmodel.QuestionInfoContentVM;
 import com.dm.quiz.viewmodel.QuestionOptionVM;
+import com.dm.quiz.viewmodel.QuestionExportVO;
 import com.dm.quiz.dto.QuestionDto;
 import com.dm.quiz.enums.QuestionTypeEnum;
 import com.dm.quiz.mapper.DamingContentInfoMapper;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import com.dm.quiz.mapper.DamingQuestionMapper;
 import com.dm.quiz.domain.DamingQuestion;
 import com.dm.quiz.service.IDamingQuestionService;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 题目表Service业务层处理
@@ -95,7 +100,6 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
      * @return 结果
      */
     @Override
-    @Transactional
     public int insertDamingQuestion(QuestionDto questionDto) {
         // DamingPaperMapper.xml.参数校验
         if (questionDto == null) {
@@ -156,7 +160,6 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
      * @return 结果
      */
     @Override
-    @Transactional
     public int updateDamingQuestion(QuestionDto questionDto) {
         // DamingPaperMapper.xml.修改题目信息，先找出来，然后修改后在update表即可
         DamingQuestion damingQuestion = damingQuestionMapper.selectDamingQuestionById(questionDto.getId());
@@ -201,5 +204,112 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
     @Override
     public int deleteDamingQuestionById(Long id) {
         return damingQuestionMapper.deleteDamingQuestionById(id);
+    }
+
+    @Override
+    public List<QuestionExportVO> selectQuestionExportList(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+        List<DamingQuestion> damingQuestions = damingQuestionMapper.selectQuestionListByIds(ids);
+        return damingQuestions.stream()
+                .map(this::buildQuestionExportVO)
+                .collect(Collectors.toList());
+    }
+
+    private QuestionExportVO buildQuestionExportVO(DamingQuestion damingQuestion) {
+        QuestionDto questionDto = getQuestionDto(damingQuestion);
+        QuestionExportVO exportVO = new QuestionExportVO();
+        exportVO.setId(questionDto.getId());
+        exportVO.setSubjectId(questionDto.getSubjectId());
+        exportVO.setQuestionType(questionDto.getQuestionType());
+        exportVO.setQuestionTitle(questionDto.getQuestionTitle());
+        exportVO.setAnalysis(questionDto.getAnalysis());
+        exportVO.setScore(questionDto.getScore());
+        exportVO.setOptionsJson(JSON.toJSONString(questionDto.getItems()));
+        if (Objects.equals(questionDto.getQuestionType(), QuestionTypeEnum.Multiple.getCode())) {
+            exportVO.setCorrect(questionDto.getCorrectArray() == null ? null : String.join(",", questionDto.getCorrectArray()));
+        } else {
+            exportVO.setCorrect(questionDto.getCorrect());
+        }
+        return exportVO;
+    }
+
+    @Override
+    @Transactional
+    public String importQuestions(List<QuestionExportVO> questionList, String operName) {
+        if (CollectionUtils.isEmpty(questionList)) {
+            throw new ServiceException("导入题目数据不能为空！");
+        }
+        int successNum = 0;
+        int failureNum = 0;
+        StringBuilder successMsg = new StringBuilder();
+        StringBuilder failureMsg = new StringBuilder();
+        for (QuestionExportVO questionExportVO : questionList) {
+            try {
+                QuestionDto questionDto = convertExportVOToDto(questionExportVO);
+                insertDamingQuestion(questionDto);
+                successNum++;
+                successMsg.append("<br/>").append(successNum).append("、题干 ").append(questionDto.getQuestionTitle()).append(" 导入成功");
+            } catch (Exception e) {
+                failureNum++;
+                String msg = "<br/>" + failureNum + "、题干 " + questionExportVO.getQuestionTitle() + " 导入失败：" + e.getMessage();
+                failureMsg.append(msg);
+            }
+        }
+        if (failureNum > 0) {
+            failureMsg.insert(0, "很抱歉，部分数据导入失败！共 " + failureNum + " 条，错误如下：");
+            throw new ServiceException(failureMsg.toString());
+        }
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，操作人：" + operName + "，明细如下：");
+        return successMsg.toString();
+    }
+
+    private QuestionDto convertExportVOToDto(QuestionExportVO exportVO) {
+        if (exportVO.getSubjectId() == null) {
+            throw new ServiceException("科目ID不能为空");
+        }
+        if (exportVO.getQuestionType() == null) {
+            throw new ServiceException("题目类型不能为空");
+        }
+        if (StringUtils.isBlank(exportVO.getQuestionTitle())) {
+            throw new ServiceException("题干不能为空");
+        }
+        if (exportVO.getScore() == null) {
+            throw new ServiceException("分数不能为空");
+        }
+        if (StringUtils.isBlank(exportVO.getOptionsJson())) {
+            throw new ServiceException("选项内容不能为空");
+        }
+        List<QuestionOptionVM> optionList = JSON.parseArray(exportVO.getOptionsJson(), QuestionOptionVM.class);
+        if (CollectionUtils.isEmpty(optionList)) {
+            throw new ServiceException("选项内容解析失败，请检查JSON格式");
+        }
+        QuestionDto questionDto = new QuestionDto();
+        questionDto.setSubjectId(exportVO.getSubjectId());
+        questionDto.setQuestionType(exportVO.getQuestionType());
+        questionDto.setQuestionTitle(exportVO.getQuestionTitle());
+        questionDto.setAnalysis(StringUtils.isBlank(exportVO.getAnalysis()) ? "无" : exportVO.getAnalysis());
+        questionDto.setScore(exportVO.getScore());
+        questionDto.setItems(optionList);
+        if (Objects.equals(exportVO.getQuestionType(), QuestionTypeEnum.Multiple.getCode())) {
+            if (StringUtils.isBlank(exportVO.getCorrect())) {
+                throw new ServiceException("多选题正确答案不能为空");
+            }
+            String[] answers = Arrays.stream(exportVO.getCorrect().split(","))
+                    .map(String::trim)
+                    .filter(StringUtils::isNotEmpty)
+                    .toArray(String[]::new);
+            if (answers.length == 0) {
+                throw new ServiceException("多选题正确答案不能为空");
+            }
+            questionDto.setCorrectArray(answers);
+        } else {
+            if (StringUtils.isBlank(exportVO.getCorrect())) {
+                throw new ServiceException("正确答案不能为空");
+            }
+            questionDto.setCorrect(exportVO.getCorrect().trim());
+        }
+        return questionDto;
     }
 }

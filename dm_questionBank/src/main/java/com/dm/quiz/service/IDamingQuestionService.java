@@ -3,6 +3,7 @@ package com.dm.quiz.service;
 import java.util.List;
 import com.dm.quiz.domain.DamingQuestion;
 import com.dm.quiz.dto.QuestionDto;
+import com.dm.quiz.viewmodel.QuestionExportVO;
 import com.ruoyi.common.core.domain.AjaxResult;
 
 /**
@@ -65,4 +66,17 @@ public interface IDamingQuestionService
      * 将question转化为questionDto
      */
     QuestionDto getQuestionDto ( DamingQuestion damingQuestion);
+
+    /**
+     * 根据题目id集合获取可导出的题目内容
+     */
+    List<QuestionExportVO> selectQuestionExportList(List<Long> ids);
+
+    /**
+     * 批量导入题目
+     * @param questionList excel数据
+     * @param operName 操作人
+     * @return 导入结果
+     */
+    String importQuestions(List<QuestionExportVO> questionList, String operName);
 }
