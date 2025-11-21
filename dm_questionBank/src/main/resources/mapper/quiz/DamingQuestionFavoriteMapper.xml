@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingQuestionFavoriteMapper">
+
+    <resultMap id="DamingQuestionFavoriteResult" type="com.dm.quiz.domain.DamingQuestionFavorite">
+        <id    property="favoriteId"     column="favorite_id"/>
+        <result property="questionId"    column="question_id"/>
+        <result property="paperId"       column="paper_id"/>
+        <result property="paperAnswerId" column="paper_answer_id"/>
+        <result property="subjectId"     column="subject_id"/>
+        <result property="createUser"    column="create_user"/>
+        <result property="remark"        column="remark"/>
+        <result property="createTime"    column="create_time"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        favorite_id, question_id, paper_id, paper_answer_id, subject_id, create_user, remark, create_time
+    </sql>
+
+    <select id="selectDamingQuestionFavoriteList" parameterType="com.dm.quiz.domain.DamingQuestionFavorite"
+            resultMap="DamingQuestionFavoriteResult">
+        select
+        <include refid="Base_Column_List"/>
+        from daming_question_favorite
+        <where>
+            <if test="favoriteId != null">
+                and favorite_id = #{favoriteId}
+            </if>
+            <if test="questionId != null">
+                and question_id = #{questionId}
+            </if>
+            <if test="paperAnswerId != null">
+                and paper_answer_id = #{paperAnswerId}
+            </if>
+            <if test="paperId != null">
+                and paper_id = #{paperId}
+            </if>
+            <if test="subjectId != null">
+                and subject_id = #{subjectId}
+            </if>
+            <if test="createUser != null and createUser != ''">
+                and create_user = #{createUser}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and date_format(create_time, '%Y-%m-%d') &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and date_format(create_time, '%Y-%m-%d') &lt;= #{endTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectFavoriteQuestionIds" resultType="java.lang.Long">
+        select question_id
+        from daming_question_favorite
+        where create_user = #{createUser}
+        <if test="paperAnswerId != null">
+            and paper_answer_id = #{paperAnswerId}
+        </if>
+    </select>
+
+    <select id="selectOne" resultMap="DamingQuestionFavoriteResult">
+        select
+        <include refid="Base_Column_List"/>
+        from daming_question_favorite
+        where question_id = #{questionId}
+          and create_user = #{createUser}
+        limit 1
+    </select>
+
+    <insert id="insertDamingQuestionFavorite" parameterType="com.dm.quiz.domain.DamingQuestionFavorite">
+        insert into daming_question_favorite
+        (question_id, paper_id, paper_answer_id, subject_id, create_user, remark, create_time)
+        values
+        (#{questionId}, #{paperId}, #{paperAnswerId}, #{subjectId}, #{createUser}, #{remark}, #{createTime})
+    </insert>
+
+    <delete id="deleteByUserAndQuestion">
+        delete from daming_question_favorite
+        where question_id = #{questionId}
+          and create_user = #{createUser}
+    </delete>
+</mapper>
+
