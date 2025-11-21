@@ -1,5 +1,7 @@
 package com.dm.quiz.domain;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -37,6 +39,24 @@ public class DamingPaperAnswer extends BaseEntity
     /** 用户得分 */
     @Excel(name = "用户得分")
     private Integer finalScore;
+
+    /** 客观题得分 */
+    private Integer objectiveScore;
+
+    /** 主观题得分 */
+    private Integer subjectiveScore;
+
+    /** 批改状态 0-无需 1-待批改 2-已批改 */
+    private Integer reviewStatus;
+
+    /** 批改老师 */
+    private String reviewUser;
+
+    /** 批改时间 */
+    private Date reviewTime;
+
+    /** 批改备注 */
+    private String reviewRemark;
 
     /** 题目数量 */
     @Excel(name = "题目数量")
@@ -123,6 +143,53 @@ public class DamingPaperAnswer extends BaseEntity
     {
         return finalScore;
     }
+    public Integer getObjectiveScore() {
+        return objectiveScore;
+    }
+
+    public void setObjectiveScore(Integer objectiveScore) {
+        this.objectiveScore = objectiveScore;
+    }
+
+    public Integer getSubjectiveScore() {
+        return subjectiveScore;
+    }
+
+    public void setSubjectiveScore(Integer subjectiveScore) {
+        this.subjectiveScore = subjectiveScore;
+    }
+
+    public Integer getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(Integer reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public String getReviewUser() {
+        return reviewUser;
+    }
+
+    public void setReviewUser(String reviewUser) {
+        this.reviewUser = reviewUser;
+    }
+
+    public Date getReviewTime() {
+        return reviewTime;
+    }
+
+    public void setReviewTime(Date reviewTime) {
+        this.reviewTime = reviewTime;
+    }
+
+    public String getReviewRemark() {
+        return reviewRemark;
+    }
+
+    public void setReviewRemark(String reviewRemark) {
+        this.reviewRemark = reviewRemark;
+    }
     public void setQuestionCount(Integer questionCount)
     {
         this.questionCount = questionCount;
@@ -176,6 +243,12 @@ public class DamingPaperAnswer extends BaseEntity
                 .append("createUser", getCreateUser())
                 .append("paperScore", getPaperScore())
                 .append("finalScore", getFinalScore())
+                .append("objectiveScore", getObjectiveScore())
+                .append("subjectiveScore", getSubjectiveScore())
+                .append("reviewStatus", getReviewStatus())
+                .append("reviewUser", getReviewUser())
+                .append("reviewTime", getReviewTime())
+                .append("reviewRemark", getReviewRemark())
                 .append("questionCount", getQuestionCount())
                 .append("correctCount", getCorrectCount())
                 .append("createTime", getCreateTime())
