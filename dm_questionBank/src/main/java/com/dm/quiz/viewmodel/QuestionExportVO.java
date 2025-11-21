@@ -13,7 +13,7 @@ public class QuestionExportVO {
     @Excel(name = "科目ID")
     private Integer subjectId;
 
-    @Excel(name = "题目类型", readConverterExp = "1=单选题,2=多选题")
+    @Excel(name = "题目类型", readConverterExp = "1=单选题,2=多选题,3=主观题,4=判断题")
     private Integer questionType;
 
     @Excel(name = "题干")

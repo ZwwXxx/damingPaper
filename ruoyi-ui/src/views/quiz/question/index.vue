@@ -158,7 +158,11 @@
       <el-table-column label="题目id" align="center" prop="id"/>
       <el-table-column label="题目类型" align="center" prop="questionType">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.question_type" :value="scope.row.questionType"/>
+          <div class="type-chip"
+               :style="{borderColor: getTypeMeta(scope.row.questionType).color, color: getTypeMeta(scope.row.questionType).color}">
+            <i :class="getTypeMeta(scope.row.questionType).icon"></i>
+            <span class="ml-1">{{ getTypeMeta(scope.row.questionType).label }}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="题目题干内容" align="center" prop="questionTitle"/>
@@ -348,6 +352,12 @@ export default {
       },
       subjectOptions: [],
       subjectMap: {},
+      questionTypeMeta: {
+        '1': {label: '单选题', icon: 'el-icon-circle-check', color: '#409EFF'},
+        '2': {label: '多选题', icon: 'el-icon-s-operation', color: '#67C23A'},
+        '3': {label: '主观题', icon: 'el-icon-edit', color: '#E6A23C'},
+        '4': {label: '判断题', icon: 'el-icon-s-check', color: '#F56C6C'}
+      },
       upload: {
         open: false,
         title: "题目导入",
@@ -358,11 +368,23 @@ export default {
     };
   },
   created() {
+    this.ensureDictTypes();
     this.loadSubjectOptions();
     this.getList();
     console.log(this.dict)
   },
   methods: {
+    ensureDictTypes() {
+      const dictList = this.dict?.type?.question_type || [];
+      const exists = dictList.some(item => String(item.value) === '4');
+      if (!exists && this.dict?.type?.question_type) {
+        this.dict.type.question_type.push({
+          label: '判断题',
+          value: '4',
+          listClass: 'info'
+        });
+      }
+    },
     async loadSubjectOptions() {
       const res = await optionSubject();
       const list = res.data || [];
@@ -377,6 +399,17 @@ export default {
     },
     getSubjectLabel(id) {
       return this.subjectMap[id] || '-';
+    },
+    getTypeMeta(value) {
+      const key = String(value);
+      if (this.questionTypeMeta[key]) {
+        return this.questionTypeMeta[key];
+      }
+      const dictItem = (this.dict?.type?.question_type || []).find(item => String(item.value) === key);
+      if (dictItem) {
+        return {label: dictItem.label, icon: 'el-icon-help', color: '#909399'};
+      }
+      return {label: key || '-', icon: 'el-icon-help', color: '#909399'};
     },
     addQuestionType() {
 
@@ -535,3 +568,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.type-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 16px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+</style>
