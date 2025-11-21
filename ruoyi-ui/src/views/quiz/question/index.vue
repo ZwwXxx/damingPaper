@@ -4,10 +4,10 @@
       <el-form-item label="题目类型" prop="questionType">
         <el-select v-model="queryParams.questionType" placeholder="请选择题目类型" clearable>
           <el-option
-            v-for="dict in dict.type.question_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="option in questionTypeOptions"
+            :key="option.value"
+            :label="option.label"
+            :value="option.value"
           />
         </el-select>
       </el-form-item>
@@ -352,6 +352,12 @@ export default {
       },
       subjectOptions: [],
       subjectMap: {},
+      questionTypeOptions: [
+        {label: '单选题', value: '1'},
+        {label: '多选题', value: '2'},
+        {label: '主观题', value: '3'},
+        {label: '判断题', value: '4'}
+      ],
       questionTypeMeta: {
         '1': {label: '单选题', icon: 'el-icon-circle-check', color: '#409EFF'},
         '2': {label: '多选题', icon: 'el-icon-s-operation', color: '#67C23A'},
@@ -373,17 +379,37 @@ export default {
     this.getList();
     console.log(this.dict)
   },
+  watch: {
+    'dict.type.question_type': {
+      handler() {
+        this.ensureDictTypes();
+      },
+      deep: true
+    }
+  },
   methods: {
     ensureDictTypes() {
-      const dictList = this.dict?.type?.question_type || [];
-      const exists = dictList.some(item => String(item.value) === '4');
-      if (!exists && this.dict?.type?.question_type) {
-        this.dict.type.question_type.push({
-          label: '判断题',
-          value: '4',
-          listClass: 'info'
-        });
+      const fallbackTypes = [
+        {label: '单选题', value: '1', listClass: 'primary'},
+        {label: '多选题', value: '2', listClass: 'success'},
+        {label: '主观题', value: '3', listClass: 'warning'},
+        {label: '判断题', value: '4', listClass: 'info'}
+      ];
+      const dictList = this.dict?.type?.question_type;
+      if (!Array.isArray(dictList) || !dictList.length) {
+        this.questionTypeOptions = fallbackTypes;
+        return;
       }
+      fallbackTypes.forEach(item => {
+        const exists = dictList.some(dict => String(dict.value) === item.value);
+        if (!exists) {
+          dictList.push({...item});
+        }
+      });
+      this.questionTypeOptions = dictList.map(item => ({
+        label: item.label,
+        value: String(item.value)
+      }));
     },
     async loadSubjectOptions() {
       const res = await optionSubject();
