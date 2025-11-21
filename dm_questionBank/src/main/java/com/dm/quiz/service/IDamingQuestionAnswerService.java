@@ -2,6 +2,7 @@ package com.dm.quiz.service;
 
 import java.util.List;
 import com.dm.quiz.domain.DamingQuestionAnswer;
+import com.dm.quiz.viewmodel.WrongQuestionVO;
 
 /**
  * 题目回答情况表Service接口
@@ -58,4 +59,9 @@ public interface IDamingQuestionAnswerService
      * @return 结果
      */
     public int deleteDamingQuestionAnswerByAnswerId(Long answerId);
+
+    /**
+     * 查询错题记录
+     */
+    List<WrongQuestionVO> selectWrongQuestionList(DamingQuestionAnswer filter);
 }

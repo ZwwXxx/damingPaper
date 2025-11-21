@@ -195,7 +195,7 @@ export default {
         1: '单选题',
         2: '多选题',
         3: '主观题',
-        // 其他题型...
+        4: '判断题'
       },
       // 控制新增题目的弹框显示
       open: false,
@@ -210,6 +210,9 @@ export default {
       }, {
         "label": "主观题",
         "value": 3
+      }, {
+        "label": "判断题",
+        "value": 4
       }],
       subjectOptions: [],
       questionList: {

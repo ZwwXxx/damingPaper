@@ -1,7 +1,9 @@
 package com.dm.quiz.mapper;
 
 import java.util.List;
+
 import com.dm.quiz.domain.DamingPaper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 试卷Mapper接口
@@ -58,4 +60,9 @@ public interface DamingPaperMapper
      * @return 结果
      */
     public int deleteDamingPaperByPaperIds(Long[] paperIds);
+
+    /**
+     * 根据id集合查询试卷列表
+     */
+    List<DamingPaper> selectDamingPaperListByIds(@Param("paperIds") List<Long> paperIds);
 }

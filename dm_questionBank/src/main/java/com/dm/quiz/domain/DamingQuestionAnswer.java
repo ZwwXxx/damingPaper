@@ -84,8 +84,18 @@ public class DamingQuestionAnswer extends BaseEntity {
      */
     @Excel(name = "题目顺序")
     private Integer itemOrder;
-
-
+    /**
+     * 查询开始时间
+     */
+    private String beginTime;
+    /**
+     * 查询结束时间
+     */
+    private String endTime;
+    /**
+     * 试卷名称(查询/展示)
+     */
+    private String paperName;
 
     public Boolean getCorrect() {
         return isCorrect;
@@ -191,6 +201,30 @@ public class DamingQuestionAnswer extends BaseEntity {
 
     public Integer getItemOrder() {
         return itemOrder;
+    }
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getPaperName() {
+        return paperName;
+    }
+
+    public void setPaperName(String paperName) {
+        this.paperName = paperName;
     }
 
     @Override

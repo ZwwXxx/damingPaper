@@ -139,8 +139,10 @@ export default {
       }, {
         "label": "多选题",
         "value": 2
-      },
-      ],
+      }, {
+        "label": "判断题",
+        "value": 4
+      }],
       // correctAnswerOptions: [{
       //   "label": "A",
       //   "value": 1

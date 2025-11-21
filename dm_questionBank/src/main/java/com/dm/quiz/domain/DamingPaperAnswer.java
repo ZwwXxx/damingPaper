@@ -56,6 +56,11 @@ public class DamingPaperAnswer extends BaseEntity
     @Excel(name = "耗时时间")
     private Integer doTime;
 
+    /** 查询开始时间 */
+    private String beginTime;
+    /** 查询结束时间 */
+    private String endTime;
+
     public Integer getDoTime() {
         return doTime;
     }
@@ -146,6 +151,22 @@ public class DamingPaperAnswer extends BaseEntity
         return subjectId;
     }
 
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -159,6 +180,8 @@ public class DamingPaperAnswer extends BaseEntity
                 .append("correctCount", getCorrectCount())
                 .append("createTime", getCreateTime())
                 .append("subjectId", getSubjectId())
+                .append("beginTime", getBeginTime())
+                .append("endTime", getEndTime())
                 .toString();
     }
 }
