@@ -107,8 +107,7 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         if (questionDto == null) {
             return 0;
         }
-        // 2.组装题目实体,塞到数据库里
-        // 将选项数组转为列表，单选没有score信息，多选有。
+        standardizeQuestionOptions(questionDto);
         String dtoToString = QuestionDtoToString(questionDto);
         DamingContentInfo questionInfo = new DamingContentInfo();
         questionInfo.setContent(dtoToString);
@@ -172,7 +171,7 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         damingQuestion.setScore(questionDto.getScore());
         damingQuestion.setSubjectId(questionDto.getSubjectId());
         damingQuestionMapper.updateDamingQuestion(damingQuestion);
-        // 2.题目信息实体也是这样
+        standardizeQuestionOptions(questionDto);
         DamingContentInfo damingContentInfo = damingContentInfoMapper.selectDamingContentInfoById(damingQuestion.getQuestionInfoId());
         String dtoToString = QuestionDtoToString(questionDto);
         damingContentInfo.setContent(dtoToString);
@@ -209,6 +208,21 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
     @Override
     public int deleteDamingQuestionById(Long id) {
         return damingQuestionMapper.deleteDamingQuestionById(id);
+    }
+
+    private void standardizeQuestionOptions(QuestionDto questionDto) {
+        if (questionDto == null || questionDto.getQuestionType() == null) {
+            return;
+        }
+        if (Objects.equals(questionDto.getQuestionType(), QuestionTypeEnum.Judge.getCode())) {
+            QuestionOptionVM trueOption = new QuestionOptionVM();
+            trueOption.setPrefix("A");
+            trueOption.setContent("正确");
+            QuestionOptionVM falseOption = new QuestionOptionVM();
+            falseOption.setPrefix("B");
+            falseOption.setContent("错误");
+            questionDto.setItems(Arrays.asList(trueOption, falseOption));
+        }
     }
 
     @Override
