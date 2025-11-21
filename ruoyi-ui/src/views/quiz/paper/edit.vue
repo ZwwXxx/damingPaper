@@ -118,9 +118,20 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="id" prop="id">
-              <el-input v-model="formData.id" placeholder="请输入id" clearable
-                        :style="{width: '100%'}"></el-input>
+            <el-form-item label="题干" prop="questionTitle">
+              <el-input
+                v-model="questionList.queryParams.questionTitle"
+                placeholder="请输入题干关键字"
+                clearable
+                :style="{width: '100%'}"
+                @keyup.enter.native="queryQuestionList"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="ID" prop="id">
+              <el-input v-model="questionList.queryParams.id" placeholder="请输入ID" clearable
+                        :style="{width: '100%'}" @keyup.enter.native="queryQuestionList"></el-input>
             </el-form-item>
           </el-col>
           <el-col style="margin-bottom: 10px;">
@@ -129,7 +140,10 @@
         </el-form>
       </el-row>
       <!--表格区域，展示题目，和题型-->
-      <el-table v-loading="questionList.loading" :data="questionList.tableData"
+      <el-table
+        ref="questionTable"
+        v-loading="questionList.loading"
+        :data="questionList.tableData"
                 @selection-change="handleSelectionChange" border fit highlight-current-row style="width: 100%">
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column prop="id" label="Id" width="60px"/>
@@ -219,6 +233,7 @@ export default {
         selectionList: [],
         queryParams: {
           id: undefined,
+          questionTitle: undefined,
           questionType: undefined,
           subjectId: undefined,
           pageNum: 1,
@@ -348,13 +363,51 @@ export default {
       console.log(this.formData)
       this.autoCompose.form.subjectId = this.formData.subjectId
     },
-    getQuestList() {
-      listQuestion(this.questionList.queryParams).then(response => {
-          this.questionList.tableData = response.rows;
-          this.total = response.total;
-          this.questionList.loading = false;
+    getExistingQuestionIds() {
+      const ids = new Set();
+      (this.formData.paperQuestionTypeDto || []).forEach(section => {
+        (section.questionDtos || []).forEach(item => {
+          if (item && item.id !== undefined && item.id !== null) {
+            ids.add(item.id);
+          }
+        });
+      });
+      return ids;
+    },
+    filterExistingQuestions(rows) {
+      if (!Array.isArray(rows) || !rows.length) {
+        return [];
+      }
+      const existingIds = this.getExistingQuestionIds();
+      const keyword = (this.questionList.queryParams.questionTitle || '').trim().toLowerCase();
+      return rows.filter(row => {
+        if (existingIds.has(row.id)) {
+          return false;
         }
-      );
+        if (keyword) {
+          const title = (row.questionTitle || '').toLowerCase();
+          return title.includes(keyword);
+        }
+        return true;
+      });
+    },
+    async getQuestList() {
+      this.questionList.loading = true;
+      try {
+        const params = {
+          ...this.questionList.queryParams,
+          questionTitle: undefined
+        };
+        const response = await listQuestion(params);
+        const filteredRows = this.filterExistingQuestions(response.rows || []);
+        this.questionList.tableData = filteredRows;
+        this.questionList.total = filteredRows.length;
+        this.$nextTick(() => {
+          this.$refs.questionTable && this.$refs.questionTable.clearSelection();
+        });
+      } finally {
+        this.questionList.loading = false;
+      }
     },
     queryQuestionList() {
       this.getQuestList()
@@ -378,10 +431,17 @@ export default {
       this.open = false
     },
     addQuestionConfirm() {
-      // 根据勾选的题目的id遍历查询然后push到
+      const existingIds = this.getExistingQuestionIds()
       this.questionList.selectionList.forEach(q => {
+        if (existingIds.has(q.id)) {
+          return
+        }
         getQuestion(q.id).then(res => {
-          this.currQuestionType.questionDtos.push(res.data)
+          const data = res.data
+          if (!existingIds.has(data.id)) {
+            this.currQuestionType.questionDtos.push(data)
+            existingIds.add(data.id)
+          }
         })
       })
       this.close()
@@ -392,6 +452,12 @@ export default {
       // 拷贝一份当前的题型，标识给哪个题型加题目
       this.currQuestionType = questionType
       this.questionList.loading = true
+      if (!this.questionList.queryParams.subjectId && this.formData.subjectId) {
+        this.questionList.queryParams.subjectId = this.formData.subjectId
+      }
+      if (questionType && questionType.questionType && !this.questionList.queryParams.questionType) {
+        this.questionList.queryParams.questionType = questionType.questionType
+      }
       this.getQuestList()
     },
     addQuestionTypeInput() {
