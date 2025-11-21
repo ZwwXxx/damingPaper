@@ -11,6 +11,12 @@
         <result property="createUser"    column="create_user"    />
         <result property="paperScore"    column="paper_score"    />
         <result property="finalScore"    column="final_score"    />
+        <result property="objectiveScore" column="objective_score" />
+        <result property="subjectiveScore" column="subjective_score" />
+        <result property="reviewStatus" column="review_status" />
+        <result property="reviewUser" column="review_user" />
+        <result property="reviewTime" column="review_time" />
+        <result property="reviewRemark" column="review_remark" />
         <result property="questionCount"    column="question_count"    />
         <result property="correctCount"    column="correct_count"    />
         <result property="createTime"    column="create_time"    />
@@ -19,7 +25,24 @@
     </resultMap>
 
     <sql id="selectDamingPaperAnswerVo">
-        select paper_answer_id, paper_name, paper_id, create_user, paper_score, final_score, question_count, correct_count, create_time, subject_id ,do_time from daming_paper_answer
+        select paper_answer_id,
+               paper_name,
+               paper_id,
+               create_user,
+               paper_score,
+               final_score,
+               objective_score,
+               subjective_score,
+               review_status,
+               review_user,
+               review_time,
+               review_remark,
+               question_count,
+               correct_count,
+               create_time,
+               subject_id,
+               do_time
+        from daming_paper_answer
     </sql>
 
     <select id="selectDamingPaperAnswerList" parameterType="DamingPaperAnswer" resultMap="DamingPaperAnswerResult">
@@ -32,6 +55,8 @@
             <if test="finalScore != null "> and final_score = #{finalScore}</if>
             <if test="questionCount != null "> and question_count = #{questionCount}</if>
             <if test="correctCount != null "> and correct_count = #{correctCount}</if>
+            <if test="reviewStatus != null "> and review_status = #{reviewStatus}</if>
+            <if test="reviewUser != null and reviewUser != '' "> and review_user = #{reviewUser}</if>
             <if test="subjectId != null "> and subject_id = #{subjectId}</if>
             <if test="doTime != null "> and do_time = #{doTime}</if>
             <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
@@ -63,6 +88,12 @@
             <if test="finalScore != null">final_score,</if>
             <if test="questionCount != null">question_count,</if>
             <if test="correctCount != null">correct_count,</if>
+            <if test="objectiveScore != null">objective_score,</if>
+            <if test="subjectiveScore != null">subjective_score,</if>
+            <if test="reviewStatus != null">review_status,</if>
+            <if test="reviewUser != null">review_user,</if>
+            <if test="reviewTime != null">review_time,</if>
+            <if test="reviewRemark != null">review_remark,</if>
             <if test="createTime != null">create_time,</if>
             <if test="subjectId != null">subject_id,</if>
             <if test="doTime != null">do_time,</if>
@@ -75,6 +106,12 @@
             <if test="finalScore != null">#{finalScore},</if>
             <if test="questionCount != null">#{questionCount},</if>
             <if test="correctCount != null">#{correctCount},</if>
+            <if test="objectiveScore != null">#{objectiveScore},</if>
+            <if test="subjectiveScore != null">#{subjectiveScore},</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
+            <if test="reviewUser != null">#{reviewUser},</if>
+            <if test="reviewTime != null">#{reviewTime},</if>
+            <if test="reviewRemark != null">#{reviewRemark},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="subjectId != null">#{subjectId},</if>
             <if test="doTime != null">#{doTime},</if>
@@ -91,6 +128,12 @@
             <if test="finalScore != null">final_score = #{finalScore},</if>
             <if test="questionCount != null">question_count = #{questionCount},</if>
             <if test="correctCount != null">correct_count = #{correctCount},</if>
+            <if test="objectiveScore != null">objective_score = #{objectiveScore},</if>
+            <if test="subjectiveScore != null">subjective_score = #{subjectiveScore},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
+            <if test="reviewUser != null">review_user = #{reviewUser},</if>
+            <if test="reviewTime != null">review_time = #{reviewTime},</if>
+            <if test="reviewRemark != null">review_remark = #{reviewRemark},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="subjectId != null">subject_id = #{subjectId},</if>
             <if test="doTime != null">do_time = #{doTime},</if>

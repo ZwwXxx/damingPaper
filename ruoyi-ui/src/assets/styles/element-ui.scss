@@ -90,3 +90,7 @@
   .el-submenu__icon-arrow {
   display: none;
 }
+
+.el-image-viewer__wrapper {
+  z-index: 5000 !important;
+}

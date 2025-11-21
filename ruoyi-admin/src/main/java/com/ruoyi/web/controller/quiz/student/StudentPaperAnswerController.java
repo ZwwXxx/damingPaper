@@ -6,6 +6,7 @@ import com.dm.quiz.dto.PaperAnswerDto;
 import com.dm.quiz.dto.PaperReviewDto;
 import com.dm.quiz.service.IDamingPaperAnswerService;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,7 @@ public class StudentPaperAnswerController {
      */
     @PostMapping("/submitAnswer")
     public AjaxResult submitAnswer(@RequestBody PaperAnswerDto paperAnswerDto) {
-        int score = damingPaperAnswerService.submitAnswer(paperAnswerDto);
-        return AjaxResult.success(score);
+        return AjaxResult.success(damingPaperAnswerService.submitAnswer(paperAnswerDto));
     }
 
     /**
@@ -32,6 +32,7 @@ public class StudentPaperAnswerController {
      */
     @GetMapping("/list")
     public AjaxResult list(DamingPaperAnswer damingPaperAnswer) {
+        damingPaperAnswer.setCreateUser(SecurityUtils.getUsername());
         List<DamingPaperAnswer> damingPaperAnswers = damingPaperAnswerService.selectDamingPaperAnswerList(damingPaperAnswer);
         return AjaxResult.success(damingPaperAnswers);
     }
