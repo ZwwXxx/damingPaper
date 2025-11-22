@@ -269,33 +269,33 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
                 QuestionDto questionDto = convertExportVOToDto(questionExportVO);
                 insertDamingQuestion(questionDto);
                 successNum++;
-                successMsg.append("<br/>").append(successNum).append("??? " ).append(questionDto.getQuestionTitle()).append(" ????");
+                successMsg.append("<br/>").append(successNum).append("、题目：" ).append(questionDto.getQuestionTitle()).append(" 导入成功");
             } catch (Exception e) {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "??? " + questionExportVO.getQuestionTitle() + " ????????" + e.getMessage();
+                String msg = "<br/>" + failureNum + "、题目：" + questionExportVO.getQuestionTitle() + " 导入失败，原因：" + e.getMessage();
                 failureMsg.append(msg);
             }
         }
         if (failureNum > 0) {
-            failureMsg.insert(0, "很抱歉ÿ0c部分数据导入失败！共 " + failureNum + " ???????");
+            failureMsg.insert(0, "很抱歉，部分数据导入失败！共 " + failureNum + " 条数据");
             throw new ServiceException(failureMsg.toString());
         }
-        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " ??????" + operName + "??????");
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条数据，操作人：" + operName);
         return successMsg.toString();
     }
 
     private QuestionDto convertExportVOToDto(QuestionExportVO exportVO) {
         if (exportVO.getSubjectId() == null) {
-            throw new ServiceException("??ID????");
+            throw new ServiceException("科目ID不能为空");
         }
         if (exportVO.getQuestionType() == null) {
-            throw new ServiceException("????????");
+            throw new ServiceException("题型不能为空");
         }
         if (StringUtils.isBlank(exportVO.getQuestionTitle())) {
-            throw new ServiceException("??????");
+            throw new ServiceException("题目标题不能为空");
         }
         if (exportVO.getScore() == null) {
-            throw new ServiceException("??????");
+            throw new ServiceException("分数不能为空");
         }
 
         Integer questionType = exportVO.getQuestionType();
@@ -318,10 +318,10 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         } else if (isJudge && CollectionUtils.isEmpty(optionList)) {
             QuestionOptionVM optionTrue = new QuestionOptionVM();
             optionTrue.setPrefix("A");
-            optionTrue.setContent("??");
+            optionTrue.setContent("正确");
             QuestionOptionVM optionFalse = new QuestionOptionVM();
             optionFalse.setPrefix("B");
-            optionFalse.setContent("??");
+            optionFalse.setContent("错误");
             optionList = Arrays.asList(optionTrue, optionFalse);
         }
 

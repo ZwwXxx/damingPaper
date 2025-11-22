@@ -4,7 +4,7 @@
       <el-form ref="elForm1" :model="formData" :rules="rules" size="medium" label-width="100px">
         <el-col :span="12">
           <el-form-item label="科目" prop="subjectId">
-            <el-select v-model="formData.subjectId" placeholder="请输入科目" clearable :style="{width: '100%'}">
+            <el-select v-model="formData.subjectId" placeholder="请选择科目" clearable :style="{width: '100%'}">
               <el-option v-for="(item, index) in subjectIdOptions" :key="index" :label="item.label"
                          :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
@@ -18,7 +18,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="试卷类型" prop="paperType">
-            <el-select v-model="formData.paperType" placeholder="请输入试卷类型" clearable :style="{width: '100%'}">
+            <el-select v-model="formData.paperType" placeholder="请选择试卷类型" clearable :style="{width: '100%'}">
               <el-option v-for="(item, index) in paperTypeOptions" :key="index" :label="item.label"
                          :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
@@ -30,7 +30,31 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="开启防作弊">
+          <el-form-item label="开始时间" prop="startTime">
+            <el-date-picker
+              v-model="formData.startTime"
+              type="datetime"
+              placeholder="请选择开始时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              format="yyyy-MM-dd HH:mm:ss"
+              :style="{width: '100%'}">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="截止时间" prop="endTime">
+            <el-date-picker
+              v-model="formData.endTime"
+              type="datetime"
+              placeholder="请选择截止时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              format="yyyy-MM-dd HH:mm:ss"
+              :style="{width: '100%'}">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="防作弊">
             <el-switch
               v-model="formData.enableAntiCheat"
               active-text="开启"
@@ -250,6 +274,8 @@ export default {
         subjectId: undefined,
         paperName: undefined,
         suggestTime: undefined,
+        startTime: '',
+        endTime: '',
         enableAntiCheat: false,
         score: 0,
         questionCount: 0,
@@ -481,6 +507,9 @@ export default {
         }
       })
       if (noSubmit) return
+      if (this.formData.startTime && this.formData.endTime && new Date(this.formData.startTime) >= new Date(this.formData.endTime)) {
+        return this.$message.error('开始时间必须早于截止时间')
+      }
       this.$refs['elForm1'].validate(valid => {
         if (!valid) return
         // TODO 提交表单

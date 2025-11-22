@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.Date;
+
 /**
  * 试卷对象 daming_paper
  *
@@ -54,6 +56,14 @@ public class DamingPaper extends BaseEntity
     /** 是否开启防作弊 */
     private Boolean enableAntiCheat;
 
+    /** 考试开始时间 */
+    @Excel(name = "开始时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date startTime;
+
+    /** 考试截止时间 */
+    @Excel(name = "截止时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date endTime;
+
     public Integer getPaperType() {
         return paperType;
     }
@@ -68,6 +78,22 @@ public class DamingPaper extends BaseEntity
 
     public void setEnableAntiCheat(Boolean enableAntiCheat) {
         this.enableAntiCheat = enableAntiCheat;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     public Integer getSuggestTime() {
@@ -154,6 +180,8 @@ public class DamingPaper extends BaseEntity
                 .append("updateTime", getUpdateTime())
                 .append("paperType", getPaperType())
                 .append("enableAntiCheat", getEnableAntiCheat())
+                .append("startTime", getStartTime())
+                .append("endTime", getEndTime())
                 .toString();
     }
 }

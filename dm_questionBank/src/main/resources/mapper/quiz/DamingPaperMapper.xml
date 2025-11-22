@@ -17,10 +17,12 @@
         <result property="updateTime"    column="update_time"    />
         <result property="paperType"    column="paper_type"    />
         <result property="enableAntiCheat" column="enable_anti_cheat"/>
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
     </resultMap>
 
     <sql id="selectDamingPaperVo">
-        select paper_id, paper_name, subject_id, score, paper_info_id, question_count, suggest_time, del_flag, create_time, update_time, paper_type, enable_anti_cheat from daming_paper
+        select paper_id, paper_name, subject_id, score, paper_info_id, question_count, suggest_time, del_flag, create_time, update_time, paper_type, enable_anti_cheat, start_time, end_time from daming_paper
     </sql>
 
     <select id="selectDamingPaperList" parameterType="DamingPaper" resultMap="DamingPaperResult">
@@ -75,6 +77,8 @@
             <if test="updateTime != null">update_time,</if>
             <if test="paperType != null">paper_type,</if>
             <if test="enableAntiCheat != null">enable_anti_cheat,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="paperName != null and paperName != ''">#{paperName},</if>
@@ -88,6 +92,8 @@
             <if test="updateTime != null">#{updateTime},</if>
             <if test="paperType != null">#{paperType},</if>
             <if test="enableAntiCheat != null">#{enableAntiCheat},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
         </trim>
     </insert>
 
@@ -105,6 +111,8 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="paperType != null">paper_type = #{paperType},</if>
             <if test="enableAntiCheat != null">enable_anti_cheat = #{enableAntiCheat},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
         </trim>
         where paper_id = #{paperId}
     </update>
