@@ -138,6 +138,7 @@
 
 <script>
 import { listPaperReview, getPaperReview, submitPaperReview } from "@/api/quiz/paperReview";
+import { getOssSign } from "@/api/common";
 import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 
 export default {
@@ -170,7 +171,8 @@ export default {
         visible: false,
         urls: [],
         index: 0
-      }
+      },
+      ossUrlCache: {}
     }
   },
   created() {
@@ -289,7 +291,7 @@ export default {
         this.bindAnswerImages()
       })
     },
-    bindAnswerImages() {
+    async bindAnswerImages() {
       const container = this.$refs.answerPreviewBody
       if (!container) {
         return
@@ -298,37 +300,102 @@ export default {
       if (!imgs.length) {
         return
       }
-      const urls = Array.from(imgs).map(img => {
-        const raw = img.getAttribute('src') || img.getAttribute('data-src') || img.src
-        return this.resolveImageUrl(raw)
-      })
-      imgs.forEach((img, index) => {
+      const imgArray = Array.from(imgs)
+      const signedUrls = await Promise.all(imgArray.map(img => this.prepareAnswerImageNode(img)))
+      const previewUrls = []
+      imgArray.forEach((img, index) => {
         img.style.maxWidth = '160px'
         img.style.maxHeight = '160px'
         img.style.objectFit = 'contain'
-        img.style.cursor = 'zoom-in'
         img.style.margin = '8px 8px 8px 0'
-        img.onclick = () => this.openImagePreview(urls, index)
+        const url = signedUrls[index]
+        if (url) {
+          img.style.cursor = 'zoom-in'
+          const previewIndex = previewUrls.push(url) - 1
+          img.onclick = () => this.openImagePreview(previewUrls, previewIndex)
+        } else {
+          img.style.cursor = 'not-allowed'
+        }
       })
     },
-    resolveImageUrl(src) {
-      if (!src) {
+    async prepareAnswerImageNode(img) {
+      const raw = img.getAttribute('data-src') || img.getAttribute('src') || img.src
+      const finalUrl = await this.getDisplayImageUrl(raw)
+      if (finalUrl) {
+        img.setAttribute('src', finalUrl)
+      }
+      return finalUrl
+    },
+    async getDisplayImageUrl(rawSrc) {
+      const parsed = this.parseImageSource(rawSrc)
+      if (!parsed) {
         return ''
       }
-      if (/^https?:\/\//i.test(src) || src.startsWith('data:')) {
-        return src
+      if (parsed.url) {
+        return parsed.url
       }
+      if (!parsed.ossKey) {
+        return ''
+      }
+      const cacheEntry = this.ossUrlCache[parsed.ossKey]
+      const now = Date.now()
+      if (cacheEntry && cacheEntry.expireAt > now) {
+        return cacheEntry.url
+      }
+      try {
+        const res = await getOssSign({ objectName: parsed.ossKey })
+        const url = res.url || (res.data && res.data.url) || ''
+        if (!url) {
+          return ''
+        }
+        const expireSeconds = res.expireSeconds || (res.data && res.data.expireSeconds) || 300
+        this.ossUrlCache[parsed.ossKey] = {
+          url,
+          expireAt: now + expireSeconds * 1000 - 5000
+        }
+        return url
+      } catch (e) {
+        return ''
+      }
+    },
+    parseImageSource(src) {
+      if (!src) {
+        return null
+      }
+      const value = src.trim()
+      if (!value) {
+        return null
+      }
+      if (/^https?:\/\//i.test(value) || value.startsWith('data:')) {
+        return { url: value }
+      }
+      const base = (process.env.VUE_APP_BASE_API || '').replace(/\/$/, '')
+      let normalized = value
+      if (base && normalized.startsWith(base)) {
+        normalized = normalized.slice(base.length)
+      }
+      normalized = normalized.replace(/^\/+/, '')
+      if (!normalized) {
+        return null
+      }
+      const localPrefixes = ['upload/', 'profile/']
+      if (localPrefixes.some(prefix => normalized.startsWith(prefix))) {
+        return { url: this.joinBaseUrl(`/${normalized}`) }
+      }
+      return { ossKey: normalized }
+    },
+    joinBaseUrl(path) {
       const base = process.env.VUE_APP_BASE_API || ''
-      if (src.startsWith(base)) {
-        return src
+      if (!base) {
+        return path
       }
-      if (base.endsWith('/') && src.startsWith('/')) {
-        return `${base}${src.slice(1)}`
+      if (base.endsWith('/') && path.startsWith('/')) {
+        return `${base}${path.slice(1)}`
       }
-      if (!base.endsWith('/') && !src.startsWith('/')) {
-        return `${base}/${src}`
+      if (!base.endsWith('/') && !path.startsWith('/')) {
+        return `${base}/${path}`
       }
-      return `${base}${src}`
+      return `${base}${path}`
     },
     openImagePreview(urls, index) {
       this.imagePreview.urls = urls

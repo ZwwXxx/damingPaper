@@ -119,6 +119,12 @@
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
 
+        <!-- 阿里云OSS -->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+        </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->

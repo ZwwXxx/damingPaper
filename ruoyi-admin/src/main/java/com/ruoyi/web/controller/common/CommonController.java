@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.RuoYiConfig;
@@ -19,6 +21,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.FileUtils;
+import com.ruoyi.common.utils.oss.AliOssClient;
+import com.ruoyi.common.utils.oss.OssUploadResult;
 import com.ruoyi.framework.config.ServerConfig;
 
 /**
@@ -35,7 +39,11 @@ public class CommonController
     @Autowired
     private ServerConfig serverConfig;
 
+    @Autowired(required = false)
+    private AliOssClient aliOssClient;
+
     private static final String FILE_DELIMETER = ",";
+    private static final long DEFAULT_SIGN_EXPIRE = TimeUnit.MINUTES.toSeconds(5);
 
     /**
      * 通用下载请求
@@ -70,6 +78,23 @@ public class CommonController
     }
 
     /**
+     * 获取OSS对象临时访问链接.
+     */
+    @GetMapping("/oss/sign")
+    public AjaxResult generateOssSignedUrl(@RequestParam("objectName") String objectName,
+            @RequestParam(value = "expireSeconds", required = false) Long expireSeconds) {
+        if (!useOss()) {
+            return AjaxResult.error("当前未启用OSS");
+        }
+        String presignedUrl = aliOssClient.generatePresignedUrl(objectName,
+                expireSeconds == null ? DEFAULT_SIGN_EXPIRE : expireSeconds, null);
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("url", presignedUrl);
+        ajax.put("expireSeconds", expireSeconds == null ? DEFAULT_SIGN_EXPIRE : expireSeconds);
+        return ajax;
+    }
+
+    /**
      * 通用上传请求（单个）
      */
     @PostMapping("/upload")
@@ -77,6 +102,10 @@ public class CommonController
     {
         try
         {
+            if (useOss())
+            {
+                return buildOssAjaxResult(aliOssClient.upload(file), file.getOriginalFilename());
+            }
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
             // 上传并返回新文件名称
@@ -103,6 +132,27 @@ public class CommonController
     {
         try
         {
+            if (useOss())
+            {
+                List<String> urls = new ArrayList<>();
+                List<String> fileNames = new ArrayList<>();
+                List<String> newFileNames = new ArrayList<>();
+                List<String> originalFilenames = new ArrayList<>();
+                for (MultipartFile file : files)
+                {
+                    OssUploadResult result = aliOssClient.upload(file);
+                    urls.add(result.getUrl());
+                    fileNames.add(result.getObjectName());
+                    newFileNames.add(FileUtils.getName(result.getObjectName()));
+                    originalFilenames.add(file.getOriginalFilename());
+                }
+                AjaxResult ajax = AjaxResult.success();
+                ajax.put("urls", StringUtils.join(urls, FILE_DELIMETER));
+                ajax.put("fileNames", StringUtils.join(fileNames, FILE_DELIMETER));
+                ajax.put("newFileNames", StringUtils.join(newFileNames, FILE_DELIMETER));
+                ajax.put("originalFilenames", StringUtils.join(originalFilenames, FILE_DELIMETER));
+                return ajax;
+            }
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
             List<String> urls = new ArrayList<String>();
@@ -159,5 +209,20 @@ public class CommonController
         {
             log.error("下载文件失败", e);
         }
+    }
+
+    private boolean useOss()
+    {
+        return aliOssClient != null && aliOssClient.isEnabled();
+    }
+
+    private AjaxResult buildOssAjaxResult(OssUploadResult result, String originalFilename)
+    {
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("url", result.getUrl());
+        ajax.put("fileName", result.getObjectName());
+        ajax.put("newFileName", FileUtils.getName(result.getObjectName()));
+        ajax.put("originalFilename", originalFilename);
+        return ajax;
     }
 }
