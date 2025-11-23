@@ -31,6 +31,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException
     {
+        // ⭐ 跳过微信相关路径，避免JWT验证干扰
+        String uri = request.getRequestURI();
+        if (uri.startsWith("/wx/") || uri.startsWith("/ws/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+        
         LoginUser loginUser = tokenService.getLoginUser(request);
         if (StringUtils.isNotNull(loginUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
         {
