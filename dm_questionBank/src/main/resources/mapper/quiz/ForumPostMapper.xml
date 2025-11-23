@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.quiz.mapper.ForumPostMapper">
+    
+    <resultMap type="com.ruoyi.common.core.domain.entity.ForumPost" id="ForumPostResult">
+        <id     property="postId"          column="post_id"        />
+        <result property="userId"          column="user_id"        />
+        <result property="userName"        column="user_name"      />
+        <result property="nickName"        column="nick_name"      />
+        <result property="avatar"          column="avatar"         />
+        <result property="title"           column="title"          />
+        <result property="content"         column="content"        />
+        <result property="imagesJson"      column="images"         />
+        <result property="viewCount"       column="view_count"     />
+        <result property="likeCount"       column="like_count"     />
+        <result property="commentCount"    column="comment_count"  />
+        <result property="isTop"           column="is_top"         />
+        <result property="isHot"           column="is_hot"         />
+        <result property="status"          column="status"         />
+        <result property="createTime"      column="create_time"    />
+        <result property="updateTime"      column="update_time"    />
+    </resultMap>
+
+    <sql id="selectForumPostVo">
+        select post_id, user_id, user_name, nick_name, avatar, title, content, images, 
+               view_count, like_count, comment_count, is_top, is_hot, status, create_time, update_time
+        from forum_post
+    </sql>
+
+    <select id="selectForumPostList" parameterType="com.ruoyi.common.core.domain.entity.ForumPost" resultMap="ForumPostResult">
+        <include refid="selectForumPostVo"/>
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="title != null and title != ''">
+                AND title like concat('%', #{title}, '%')
+            </if>
+            <if test="isTop != null">
+                AND is_top = #{isTop}
+            </if>
+            <if test="isHot != null">
+                AND is_hot = #{isHot}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY is_top DESC, create_time DESC
+    </select>
+
+    <select id="selectForumPostById" parameterType="Long" resultMap="ForumPostResult">
+        <include refid="selectForumPostVo"/>
+        where post_id = #{postId} AND status = 1
+    </select>
+
+    <insert id="insertForumPost" parameterType="com.ruoyi.common.core.domain.entity.ForumPost" useGeneratedKeys="true" keyProperty="postId">
+        insert into forum_post
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="imagesJson != null">images,</if>
+            <if test="viewCount != null">view_count,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="commentCount != null">comment_count,</if>
+            <if test="isTop != null">is_top,</if>
+            <if test="isHot != null">is_hot,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="imagesJson != null">#{imagesJson},</if>
+            <if test="viewCount != null">#{viewCount},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="commentCount != null">#{commentCount},</if>
+            <if test="isTop != null">#{isTop},</if>
+            <if test="isHot != null">#{isHot},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateForumPost" parameterType="com.ruoyi.common.core.domain.entity.ForumPost">
+        update forum_post
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="imagesJson != null">images = #{imagesJson},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="isHot != null">is_hot = #{isHot},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where post_id = #{postId}
+    </update>
+
+    <delete id="deleteForumPostById" parameterType="Long">
+        update forum_post set status = 0 where post_id = #{postId}
+    </delete>
+
+    <delete id="deleteForumPostByIds" parameterType="Long">
+        update forum_post set status = 0 where post_id in
+        <foreach item="postId" collection="array" open="(" separator="," close=")">
+            #{postId}
+        </foreach>
+    </delete>
+
+    <update id="incrementViewCount" parameterType="Long">
+        update forum_post set view_count = view_count + 1 where post_id = #{postId}
+    </update>
+
+    <update id="incrementLikeCount" parameterType="Long">
+        update forum_post set like_count = like_count + 1 where post_id = #{postId}
+    </update>
+
+    <update id="decrementLikeCount" parameterType="Long">
+        update forum_post set like_count = GREATEST(like_count - 1, 0) where post_id = #{postId}
+    </update>
+
+    <update id="incrementCommentCount" parameterType="Long">
+        update forum_post set comment_count = comment_count + 1 where post_id = #{postId}
+    </update>
+
+    <update id="decrementCommentCount" parameterType="Long">
+        update forum_post set comment_count = GREATEST(comment_count - 1, 0) where post_id = #{postId}
+    </update>
+
+</mapper>

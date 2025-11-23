@@ -50,6 +50,7 @@
         insert into daming_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userName != null and userName != ''">user_name,</if>
+            <if test="password != null and password != ''">password,</if>
             <if test="nickName != null and nickName != ''">nick_name,</if>
             <if test="avatar != null">avatar,</if>
             <if test="wxOpenId != null and wxOpenId != ''">wx_open_id,</if>
@@ -60,6 +61,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="password != null and password != ''">#{password},</if>
             <if test="nickName != null and nickName != ''">#{nickName},</if>
             <if test="avatar != null">#{avatar},</if>
             <if test="wxOpenId != null and wxOpenId != ''">#{wxOpenId},</if>

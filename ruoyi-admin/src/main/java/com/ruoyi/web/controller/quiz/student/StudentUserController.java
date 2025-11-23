@@ -64,7 +64,8 @@ public class StudentUserController {
      */
     @PostMapping("/registry")
     public AjaxResult registry(@RequestBody DamingUser user) {
-        log.info("学生注册 - 用户名: {}", user.getUserName());
+        log.info("学生注册 - 用户名: {}, 昵称: {}", user.getUserName(), user.getNickName());
+        log.info("收到的密码: {}", user.getPassword());
         
         // 检查用户名是否已存在
         DamingUser query = new DamingUser();
@@ -75,9 +76,18 @@ public class StudentUserController {
             return AjaxResult.error("用户名已存在");
         }
         
+        // 验证密码不为空
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            log.error("密码为空");
+            return AjaxResult.error("密码不能为空");
+        }
+        
         // 加密密码
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         user.setDelFlag("0");
+        
+        log.info("加密后的密码: {}", encodedPassword);
         
         // 插入用户
         int result = damingUserService.insertDamingUser(user);
