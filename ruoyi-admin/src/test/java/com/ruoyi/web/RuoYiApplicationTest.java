@@ -28,7 +28,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 // import java.util.List;
 //
 // // import org.springframework.boot.test.context.SpringBootTest;
-@SpringBootTest(classes = RuoYiApplication.class)
+@SpringBootTest(classes = RuoYiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
 public class RuoYiApplicationTest {
     // @Autowired

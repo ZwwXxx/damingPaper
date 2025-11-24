@@ -356,13 +356,15 @@ export default {
         {label: '单选题', value: '1'},
         {label: '多选题', value: '2'},
         {label: '主观题', value: '3'},
-        {label: '判断题', value: '4'}
+        {label: '判断题', value: '4'},
+        {label: '填空题', value: '5'}
       ],
       questionTypeMeta: {
         '1': {label: '单选题', icon: 'el-icon-circle-check', color: '#409EFF'},
         '2': {label: '多选题', icon: 'el-icon-s-operation', color: '#67C23A'},
         '3': {label: '主观题', icon: 'el-icon-edit', color: '#E6A23C'},
-        '4': {label: '判断题', icon: 'el-icon-s-check', color: '#F56C6C'}
+        '4': {label: '判断题', icon: 'el-icon-s-check', color: '#F56C6C'},
+        '5': {label: '填空题', icon: 'el-icon-edit-outline', color: '#909399'}
       },
       upload: {
         open: false,
@@ -393,7 +395,8 @@ export default {
         {label: '单选题', value: '1', listClass: 'primary'},
         {label: '多选题', value: '2', listClass: 'success'},
         {label: '主观题', value: '3', listClass: 'warning'},
-        {label: '判断题', value: '4', listClass: 'info'}
+        {label: '判断题', value: '4', listClass: 'info'},
+        {label: '填空题', value: '5', listClass: 'default'}
       ];
       const dictList = this.dict?.type?.question_type;
       if (!Array.isArray(dictList) || !dictList.length) {

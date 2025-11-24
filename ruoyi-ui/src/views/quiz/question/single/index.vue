@@ -29,7 +29,7 @@
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="24" v-if="formData.questionType !== 3">
+        <el-col :span="24" v-if="formData.questionType !== 3 && formData.questionType !== 5">
           <el-form-item label="选项：" required>
             <el-form-item :label="item.prefix" :key="item.prefix" v-for="(item,index) in formData.items" required
                           label-width="50px" style="margin: 10px 0 !important; ">
@@ -53,10 +53,10 @@
               </el-checkbox>
             </el-checkbox-group>
             <el-input
-              v-if="formData.questionType===3"
+              v-if="[3,5].includes(formData.questionType)"
               v-model="formData.correct"
               type="textarea"
-              placeholder="请输入标准答案"
+              :placeholder="formData.questionType === 5 ? '请输入填空题标准答案（多个答案用英文逗号分隔）' : '请输入主观题标准答案'"
               :rows="3"
             />
           </el-form-item>
@@ -76,7 +76,7 @@
             <el-button type="primary" @click="submitForm">提交</el-button>
             <el-button @click="resetForm">重置</el-button>
             <el-button
-              v-if="formData.questionType !== 3"
+              v-if="formData.questionType !== 3 && formData.questionType !== 5"
               type="warning"
               @click="addNewOption"
             >添加选项</el-button>
@@ -183,6 +183,9 @@ export default {
       }, {
         "label": "判断题",
         "value": 4
+      }, {
+        "label": "填空题",
+        "value": 5
       }],
     }
   },
@@ -219,7 +222,7 @@ export default {
     },
     applyQuestionTypeDefaults(questionType, options = {}) {
       const { preserveAnswer = false } = options;
-      if (questionType === 3) {
+      if (questionType === 3 || questionType === 5) {
         this.formData.items = [];
         if (!preserveAnswer) {
           this.formData.correct = '';
@@ -277,7 +280,7 @@ export default {
       } else {
         this.formData.correctArray = [];
       }
-      if (type === 3) {
+      if (type === 3 || type === 5) {
         this.formData.items = [];
       } else if (type === 4 && this.formData.items.length === 0) {
         this.formData.items = defaultJudgeOptions();
@@ -299,12 +302,47 @@ export default {
 
       if (res.code === 200) {
         if (this.formData.id === undefined) {
+          // 新增成功后，保留科目和题型，只清空题干、选项、答案、解析
           const keepSubjectId = this.formData.subjectId;
-          const keepType = this.presetQuestionType;
-          this.$refs['elForm'].resetFields();
+          const keepQuestionType = this.formData.questionType;
+          const keepScore = this.formData.score;
+          
+          // 清空题干和解析
+          this.formData.questionTitle = '';
+          this.formData.analysis = '无';
+          
+          // 根据题型清空答案和选项
+          if (keepQuestionType === 1) {
+            // 单选题：保留选项结构，清空内容和答案
+            this.formData.items = defaultChoiceOptions();
+            this.formData.correct = '';
+            this.formData.correctArray = [];
+          } else if (keepQuestionType === 2) {
+            // 多选题：保留选项结构，清空内容和答案
+            this.formData.items = defaultChoiceOptions();
+            this.formData.correct = '';
+            this.formData.correctArray = [];
+          } else if (keepQuestionType === 3 || keepQuestionType === 5) {
+            // 主观题和填空题：清空答案
+            this.formData.items = [];
+            this.formData.correct = '';
+            this.formData.correctArray = [];
+          } else if (keepQuestionType === 4) {
+            // 判断题：保留正确/错误选项，清空答案
+            this.formData.items = defaultJudgeOptions();
+            this.formData.correct = '';
+            this.formData.correctArray = [];
+          }
+          
+          // 保留科目、题型和分数
           this.formData.subjectId = keepSubjectId;
-          this.formData.questionType = keepType;
-          this.applyQuestionTypeDefaults(keepType);
+          this.formData.questionType = keepQuestionType;
+          this.formData.score = keepScore;
+          
+          // 清除表单验证状态，避免显示红色提示信息
+          this.$nextTick(() => {
+            this.$refs['elForm'].clearValidate();
+          });
         }
       }
 

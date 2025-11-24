@@ -303,7 +303,8 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         boolean isMultiple = Objects.equals(questionType, QuestionTypeEnum.Multiple.getCode());
         boolean isJudge = Objects.equals(questionType, QuestionTypeEnum.Judge.getCode());
         boolean isSubjective = Objects.equals(questionType, QuestionTypeEnum.Subjective.getCode());
-        if (!isSingle && !isMultiple && !isJudge && !isSubjective) {
+        boolean isFillBlank = Objects.equals(questionType, QuestionTypeEnum.FillBlank.getCode());
+        if (!isSingle && !isMultiple && !isJudge && !isSubjective && !isFillBlank) {
             throw new ServiceException("不支持的题目类型：" + questionType);
         }
 
@@ -345,7 +346,8 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
             }
             questionDto.setCorrectArray(answers);
         } else {
-            if (StringUtils.isBlank(exportVO.getCorrect()) && !isSubjective) {
+            // 主观题可以没有标准答案，其他题型必须有答案
+            if (StringUtils.isBlank(exportVO.getCorrect()) && !isSubjective && !isFillBlank) {
                 throw new ServiceException("正确答案不能为空");
             }
             questionDto.setCorrect(StringUtils.defaultString(exportVO.getCorrect()).trim());

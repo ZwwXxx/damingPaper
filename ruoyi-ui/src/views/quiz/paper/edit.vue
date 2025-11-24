@@ -233,7 +233,8 @@ export default {
         1: '单选题',
         2: '多选题',
         3: '主观题',
-        4: '判断题'
+        4: '判断题',
+        5: '填空题'
       },
       // 控制新增题目的弹框显示
       open: false,
@@ -251,6 +252,9 @@ export default {
       }, {
         "label": "判断题",
         "value": 4
+      }, {
+        "label": "填空题",
+        "value": 5
       }],
       subjectOptions: [],
       questionList: {
