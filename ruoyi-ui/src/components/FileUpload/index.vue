@@ -147,7 +147,10 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       if (res.code === 200) {
-        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        // ⭐ 使用完整的CDN URL（统一前后台逻辑）
+        // res.url 是完整的CDN地址，res.fileName 是相对路径
+        const fileUrl = res.url || res.fileName;
+        this.uploadList.push({ name: res.fileName, url: fileUrl });
         this.uploadedSuccessfully();
       } else {
         this.number--;

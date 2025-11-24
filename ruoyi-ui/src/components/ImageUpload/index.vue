@@ -155,7 +155,10 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       if (res.code === 200) {
-        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        // ⭐ 使用完整的CDN URL（统一前后台逻辑）
+        // res.url 是完整的CDN地址 
+        const imageUrl = res.url 
+        this.uploadList.push({ name: imageUrl, url: imageUrl });
         this.uploadedSuccessfully();
       } else {
         this.number--;
@@ -199,7 +202,8 @@ export default {
       separator = separator || ",";
       for (let i in list) {
         if (list[i].url) {
-          strs += list[i].url.replace(this.baseUrl, "") + separator;
+          // ⭐ 保持完整的URL，不再去掉baseUrl（统一前后台逻辑）
+          strs += list[i].url + separator;
         }
       }
       return strs != '' ? strs.substr(0, strs.length - 1) : '';

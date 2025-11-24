@@ -364,7 +364,7 @@ export default {
         '2': {label: '多选题', icon: 'el-icon-s-operation', color: '#67C23A'},
         '3': {label: '主观题', icon: 'el-icon-edit', color: '#E6A23C'},
         '4': {label: '判断题', icon: 'el-icon-s-check', color: '#F56C6C'},
-        '5': {label: '填空题', icon: 'el-icon-edit-outline', color: '#909399'}
+        '5': {label: '填空题', icon: 'el-icon-document', color: '#9C27B0'}
       },
       upload: {
         open: false,
