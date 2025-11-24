@@ -11,11 +11,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static me.chanjar.weixin.common.api.WxConsts.EventType.SCAN;
+import static me.chanjar.weixin.common.api.WxConsts.EventType.SUBSCRIBE;
 import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType.EVENT;
 
 /**
@@ -30,8 +34,41 @@ import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType.EVENT;
 @ConditionalOnProperty(prefix = "wx.mp", name = "enabled", havingValue = "true", matchIfMissing = false)
 public class WxMpConfiguration {
     
+    private static final Logger log = LoggerFactory.getLogger(WxMpConfiguration.class);
+    
     private final ScanHandler scanHandler;
     private final WxMpProperties properties;
+    
+    /**
+     * 启动时输出微信配置信息
+     */
+    @PostConstruct
+    public void logWxConfig() {
+        log.info("========================================");
+        log.info("微信公众号配置加载成功");
+        log.info("========================================");
+        log.info("✅ 回调地址(callback): {}", properties.getCallback());
+        log.info("✅ 授权模式(authScope): {}", properties.getAuthScope());
+        log.info("✅ 公众号数量: {}", properties.getConfigs() != null ? properties.getConfigs().size() : 0);
+        if (properties.getConfigs() != null && !properties.getConfigs().isEmpty()) {
+            properties.getConfigs().forEach(config -> {
+                log.info("   - AppId: {}", config.getAppId());
+                log.info("     Token: {}", maskString(config.getToken()));
+                log.info("     Secret: {}", maskString(config.getSecret()));
+            });
+        }
+        log.info("========================================");
+    }
+    
+    /**
+     * 脱敏显示敏感信息
+     */
+    private String maskString(String str) {
+        if (str == null || str.length() <= 8) {
+            return "****";
+        }
+        return str.substring(0, 4) + "****" + str.substring(str.length() - 4);
+    }
 
     /**
      * 微信公众号服务配置
@@ -72,8 +109,13 @@ public class WxMpConfiguration {
     @Bean
     public WxMpMessageRouter messageRouter(WxMpService wxMpService) {
         final WxMpMessageRouter newRouter = new WxMpMessageRouter(wxMpService);
-        // 扫码事件
+        
+        // ⭐ 扫码关注事件（首次关注）
+        newRouter.rule().async(false).msgType(EVENT).event(SUBSCRIBE).handler(this.scanHandler).end();
+        
+        // ⭐ 扫码事件（已关注用户）
         newRouter.rule().async(false).msgType(EVENT).event(SCAN).handler(this.scanHandler).end();
+        
         return newRouter;
     }
 }

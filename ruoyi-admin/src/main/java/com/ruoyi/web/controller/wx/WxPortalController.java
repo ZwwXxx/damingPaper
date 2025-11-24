@@ -183,16 +183,35 @@ public class WxPortalController {
         try {
             // 通过code获取access_token
             WxOAuth2AccessToken accessToken = wxMpService.getOAuth2Service().getAccessToken(code);
-            log.info("获取access_token成功: {}", accessToken.getAccessToken());
+            log.info("获取access_token成功 - openId: {}, scope: {}", 
+                    accessToken.getOpenId(), accessToken.getScope());
             
-            // 通过access_token获取用户信息
-            WxOAuth2UserInfo userInfo = wxMpService.getOAuth2Service().getUserInfo(accessToken, "zh_CN");
-            log.info("获取微信用户信息成功 - openId: {}, unionId: {}, nickname: {}, headImgUrl: {}", 
-                    userInfo.getOpenid(), userInfo.getUnionId(), 
-                    userInfo.getNickname(), userInfo.getHeadImgUrl());
+            String openId = accessToken.getOpenId();
+            String scope = accessToken.getScope();
+            
+            // ⭐ 根据scope判断授权类型
+            WxOAuth2UserInfo userInfo = null;
+            String nickname = null;
+            String headImgUrl = null;
+            String unionId = null;
+            
+            if ("snsapi_userinfo".equals(scope)) {
+                // 完整授权：可以获取用户详细信息
+                userInfo = wxMpService.getOAuth2Service().getUserInfo(accessToken, "zh_CN");
+                nickname = userInfo.getNickname();
+                headImgUrl = userInfo.getHeadImgUrl();
+                unionId = userInfo.getUnionId();
+                log.info("获取微信用户详细信息成功 - openId: {}, nickname: {}", openId, nickname);
+            } else {
+                // 静默授权（snsapi_base）：只能获取openId
+                log.info("静默授权，只获取到openId: {}", openId);
+                // 创建一个只包含openId的userInfo对象
+                userInfo = new WxOAuth2UserInfo();
+                userInfo.setOpenid(openId);
+            }
             
             // ⭐ 步骤1: 根据wx_open_id查询扫码记录，获取redirect_url和sessionId
-            WxScanLog scanLog = scanLogService.getByOpenId(userInfo.getOpenid());
+            WxScanLog scanLog = scanLogService.getByOpenId(openId);
             String redirectUrl = null;
             String sessionId = null;
             
@@ -202,7 +221,7 @@ public class WxPortalController {
                 log.info("查询到扫码记录 - sceneStr: {}, sessionId: {}, redirectUrl: {}", 
                         scanLog.getSceneStr(), sessionId, redirectUrl);
             } else {
-                log.warn("未查询到扫码记录 - openId: {}", userInfo.getOpenid());
+                log.warn("未查询到扫码记录 - openId: {}", openId);
             }
             
             // ⭐ 步骤2: 根据wx_open_id查询或创建daming_user
@@ -214,8 +233,8 @@ public class WxPortalController {
                 boolean updated = scanLogService.updateToSuccess(
                         scanLog.getSceneStr(), 
                         user.getUserId().intValue(),  // 保存用户ID
-                        userInfo.getUnionId(), 
-                        userInfo.getNickname()
+                        unionId, 
+                        nickname
                 );
                 if (updated) {
                     log.info("✅ 更新扫码记录为登录成功 - sceneStr: {}, userId: {}", 

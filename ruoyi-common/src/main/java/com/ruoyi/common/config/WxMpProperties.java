@@ -23,6 +23,14 @@ public class WxMpProperties {
      * 回调地址
      */
     private String callback;
+    
+    /**
+     * 授权模式
+     * base: 静默授权(snsapi_base) - 已关注用户扫码后自动登录，只能获取openId
+     * userinfo: 完整授权(snsapi_userinfo) - 需要用户点击授权，可获取昵称头像
+     * 默认值: base
+     */
+    private String authScope = "base";
 
     @Data
     public static class MpConfig {
