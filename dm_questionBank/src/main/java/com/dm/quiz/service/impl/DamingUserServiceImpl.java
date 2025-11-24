@@ -19,6 +19,7 @@ public class DamingUserServiceImpl implements IDamingUserService
 {
     @Autowired
     private DamingUserMapper damingUserMapper;
+    
 
     /**
      * 查询刷题用户
@@ -91,4 +92,5 @@ public class DamingUserServiceImpl implements IDamingUserService
     {
         return damingUserMapper.deleteDamingUserByUserId(userId);
     }
+    
 }

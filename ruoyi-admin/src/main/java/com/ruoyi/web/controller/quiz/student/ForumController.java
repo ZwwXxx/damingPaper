@@ -200,6 +200,15 @@ public class ForumController extends BaseController {
             return AjaxResult.error(401, "请先登录");
         }
         
+        // 检查是否是评论作者
+        ForumComment existComment = forumService.selectForumCommentById(commentId);
+        if (existComment == null) {
+            return AjaxResult.error("评论不存在");
+        }
+        if (!existComment.getUserId().equals(user.getUserId())) {
+            return AjaxResult.error(403, "无权删除他人的评论");
+        }
+        
         log.info("删除评论 - commentId: {}, 用户: {}", commentId, user.getUserName());
         
         boolean success = forumService.deleteForumCommentById(commentId);

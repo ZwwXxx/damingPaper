@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="parentId"          column="parent_id"        />
         <result property="replyToUserId"     column="reply_to_user_id" />
         <result property="replyToUserName"   column="reply_to_user_name" />
+        <result property="replyToNickName"   column="reply_to_nick_name" />
         <result property="likeCount"         column="like_count"       />
         <result property="status"            column="status"           />
         <result property="createTime"        column="create_time"      />
@@ -22,39 +23,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectForumCommentVo">
-        select comment_id, post_id, user_id, user_name, nick_name, avatar, content, 
-               parent_id, reply_to_user_id, reply_to_user_name, like_count, status, create_time, update_time
-        from forum_comment
+        select fc.comment_id, fc.post_id, fc.user_id, fc.user_name, fc.nick_name, fc.avatar, fc.content, 
+               fc.parent_id, fc.reply_to_user_id, fc.reply_to_user_name, 
+               u.nick_name as reply_to_nick_name,
+               fc.like_count, fc.status, fc.create_time, fc.update_time
+        from forum_comment fc
+        left join daming_user u on fc.reply_to_user_id = u.user_id
     </sql>
 
     <select id="selectForumCommentList" parameterType="com.ruoyi.common.core.domain.entity.ForumComment" resultMap="ForumCommentResult">
         <include refid="selectForumCommentVo"/>
         <where>
             <if test="postId != null">
-                AND post_id = #{postId}
+                AND fc.post_id = #{postId}
             </if>
             <if test="userId != null">
-                AND user_id = #{userId}
+                AND fc.user_id = #{userId}
             </if>
             <if test="parentId != null">
-                AND parent_id = #{parentId}
+                AND fc.parent_id = #{parentId}
             </if>
             <if test="status != null">
-                AND status = #{status}
+                AND fc.status = #{status}
             </if>
         </where>
-        ORDER BY create_time ASC
+        ORDER BY fc.create_time ASC
     </select>
 
     <select id="selectCommentsByPostId" parameterType="Long" resultMap="ForumCommentResult">
         <include refid="selectForumCommentVo"/>
-        where post_id = #{postId} AND status = 1
-        ORDER BY create_time ASC
+        where fc.post_id = #{postId} AND fc.status = 1
+        ORDER BY fc.create_time ASC
     </select>
 
     <select id="selectForumCommentById" parameterType="Long" resultMap="ForumCommentResult">
         <include refid="selectForumCommentVo"/>
-        where comment_id = #{commentId} AND status = 1
+        where fc.comment_id = #{commentId} AND fc.status = 1
     </select>
 
     <insert id="insertForumComment" parameterType="com.ruoyi.common.core.domain.entity.ForumComment" useGeneratedKeys="true" keyProperty="commentId">
@@ -68,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="content != null and content != ''">content,</if>
             <if test="parentId != null">parent_id,</if>
             <if test="replyToUserId != null">reply_to_user_id,</if>
-            <if test="replyToUserName != null">reply_to_user_name,</if>
+            <if test="replyToUserName != null and replyToUserName != ''">reply_to_user_name,</if>
             <if test="likeCount != null">like_count,</if>
             <if test="status != null">status,</if>
         </trim>
@@ -81,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="content != null and content != ''">#{content},</if>
             <if test="parentId != null">#{parentId},</if>
             <if test="replyToUserId != null">#{replyToUserId},</if>
-            <if test="replyToUserName != null">#{replyToUserName},</if>
+            <if test="replyToUserName != null and replyToUserName != ''">#{replyToUserName},</if>
             <if test="likeCount != null">#{likeCount},</if>
             <if test="status != null">#{status},</if>
         </trim>

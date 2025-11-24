@@ -22,6 +22,7 @@ import com.dm.quiz.domain.DamingPaper;
 import com.dm.quiz.enums.QuestionTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.oss.OssSignUrlHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,8 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
     private ApplicationContext applicationContext;
     @Autowired
     private DamingQuestionAnswerMapper damingQuestionAnswerMapper;
+    @Autowired
+    private OssSignUrlHelper ossSignUrlHelper;
     
     /**
      * 查询试卷作答情况
@@ -249,11 +252,18 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
         List<QuestionAnswerDto> questionAnswerDtos = damingQuestionAnswers.stream().map(x -> {
             QuestionAnswerDto questionAnswerDto = new QuestionAnswerDto();
             if (x.getQuestionType() == 2) {
+                // 多选题
                 String[] split = x.getUserAnswer().split(",");
                 Arrays.sort(split);
                 questionAnswerDto.setContentArray(split);
             } else {
-                questionAnswerDto.setContent(x.getUserAnswer());
+                String userAnswer = x.getUserAnswer();
+                // ⭐ 主观题答案已经是完整CDN地址，无需签名处理
+                // 注释掉签名逻辑，现在答案直接存储完整CDN地址
+                // if (x.getQuestionType() == QuestionTypeEnum.Subjective.getCode() && userAnswer != null) {
+                //     userAnswer = ossSignUrlHelper.convertToSignedUrl(userAnswer);
+                // }
+                questionAnswerDto.setContent(userAnswer);
             }
             questionAnswerDto.setQuestionId(x.getQuestionId());
             questionAnswerDto.setItemOrder(x.getItemOrder());

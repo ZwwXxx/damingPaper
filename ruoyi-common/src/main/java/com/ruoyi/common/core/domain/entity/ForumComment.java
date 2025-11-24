@@ -50,6 +50,9 @@ public class ForumComment {
     /** 被回复的用户名 */
     private String replyToUserName;
     
+    /** 被回复的用户昵称（优先显示） */
+    private String replyToNickName;
+    
     /** 点赞数 */
     @Excel(name = "点赞数")
     private Integer likeCount;

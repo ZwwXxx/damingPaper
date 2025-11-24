@@ -3,6 +3,7 @@ package com.dm.quiz.service.impl;
 import com.dm.quiz.domain.DamingFeedback;
 import com.dm.quiz.mapper.DamingFeedbackMapper;
 import com.dm.quiz.service.IDamingFeedbackService;
+import com.ruoyi.common.utils.oss.OssSignUrlHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,9 @@ public class DamingFeedbackServiceImpl implements IDamingFeedbackService {
 
     @Autowired
     private DamingFeedbackMapper damingFeedbackMapper;
+    
+    @Autowired
+    private OssSignUrlHelper ossSignUrlHelper;
 
     /**
      * 查询反馈信息
@@ -30,7 +34,12 @@ public class DamingFeedbackServiceImpl implements IDamingFeedbackService {
      */
     @Override
     public DamingFeedback selectDamingFeedbackByFeedbackId(Long feedbackId) {
-        return damingFeedbackMapper.selectDamingFeedbackByFeedbackId(feedbackId);
+        DamingFeedback feedback = damingFeedbackMapper.selectDamingFeedbackByFeedbackId(feedbackId);
+        if (feedback != null) {
+            // ⭐ 将逗号分隔的ObjectName转换为签名URL
+            processImages(feedback);
+        }
+        return feedback;
     }
 
     /**
@@ -41,7 +50,10 @@ public class DamingFeedbackServiceImpl implements IDamingFeedbackService {
      */
     @Override
     public List<DamingFeedback> selectDamingFeedbackList(DamingFeedback damingFeedback) {
-        return damingFeedbackMapper.selectDamingFeedbackList(damingFeedback);
+        List<DamingFeedback> list = damingFeedbackMapper.selectDamingFeedbackList(damingFeedback);
+        // ⭐ 批量处理图片签名URL
+        list.forEach(this::processImages);
+        return list;
     }
 
     /**
@@ -52,7 +64,10 @@ public class DamingFeedbackServiceImpl implements IDamingFeedbackService {
      */
     @Override
     public List<DamingFeedback> selectUserFeedbackList(String userId) {
-        return damingFeedbackMapper.selectUserFeedbackList(userId);
+        List<DamingFeedback> list = damingFeedbackMapper.selectUserFeedbackList(userId);
+        // ⭐ 批量处理图片签名URL
+        list.forEach(this::processImages);
+        return list;
     }
 
     /**
@@ -147,5 +162,18 @@ public class DamingFeedbackServiceImpl implements IDamingFeedbackService {
     @Override
     public List<Map<String, Object>> countByType() {
         return damingFeedbackMapper.countByType();
+    }
+    
+    /**
+     * 处理反馈中的图片字段，将ObjectName转换为签名URL
+     * 
+     * @param feedback 反馈实体
+     */
+    private void processImages(DamingFeedback feedback) {
+        if (feedback != null && feedback.getImages() != null && !feedback.getImages().trim().isEmpty()) {
+            // ⭐ 将逗号分隔的ObjectName字符串转换为签名URL字符串
+            String signedUrls = ossSignUrlHelper.convertCommaSeparatedToSignedUrls(feedback.getImages());
+            feedback.setImages(signedUrls);
+        }
     }
 }

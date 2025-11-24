@@ -178,16 +178,22 @@ public class StudentUserController {
         if (rows > 0) {
             log.info("✅ 更新用户信息成功 - userId: {}, 影响行数: {}", currentUser.getUserId(), rows);
             
-            // 重新获取更新后的用户信息
-            DamingUser updatedUser = damingUserService.selectDamingUserByUserId(currentUser.getUserId());
-            log.info("🔍 更新后的用户信息 - avatar: {}", updatedUser.getAvatar());
+            // 只更新缓存中需要更新的字段，避免重新查询导致的签名URL转换
+            if (updateUser.getNickName() != null) {
+                currentUser.setNickName(updateUser.getNickName());
+            }
+            if (updateUser.getAvatar() != null && !updateUser.getAvatar().trim().isEmpty()) {
+                // ⚠️ 注意：这里存储的是原始ObjectName，不是签名URL
+                currentUser.setAvatar(updateUser.getAvatar());
+            }
             
             // ⭐ 关键：更新Redis缓存中的LoginUser
-            loginUser.setDamingUser(updatedUser);
+            loginUser.setDamingUser(currentUser);
             tokenService.refreshToken(loginUser);
-            log.info("🔄 已更新Redis缓存");
+            log.info("🔄 已更新Redis缓存 - avatar存储为原始路径: {}", currentUser.getAvatar());
             
-            return AjaxResult.success("更新成功").put("user", updatedUser);
+            // 返回成功，让前端重新调用getInfo获取最新数据（会动态签名）
+            return AjaxResult.success("更新成功");
         } else {
             log.warn("⚠️ 更新用户信息失败 - 影响行数为0");
             return AjaxResult.error("更新失败");

@@ -78,7 +78,7 @@
             <if test="userName != null and userName != ''">user_name = #{userName},</if>
             <if test="password != null and password != ''">password = #{password},</if>
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
-            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

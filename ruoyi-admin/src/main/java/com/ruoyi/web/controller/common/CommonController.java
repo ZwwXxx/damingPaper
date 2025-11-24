@@ -95,7 +95,8 @@ public class CommonController
     }
 
     /**
-     * 通用上传请求（单个）
+     * 通用上传请求（单个）- 简化版本
+     * 直接返回完整的CDN地址，简单粗暴
      */
     @PostMapping("/upload")
     public AjaxResult uploadFile(MultipartFile file) throws Exception
@@ -104,7 +105,18 @@ public class CommonController
         {
             if (useOss())
             {
-                return buildOssAjaxResult(aliOssClient.upload(file), file.getOriginalFilename());
+                // ⭐ 直接返回完整的CDN地址
+                OssUploadResult result = aliOssClient.upload(file);
+                // 使用自定义域名（推荐）或OSS域名 + 防盗链
+                String cdnDomain = "https://daming-paper.oss-cn-guangzhou.aliyuncs.com";
+                String fullUrl = cdnDomain + "/" + result.getObjectName();
+                
+                AjaxResult ajax = AjaxResult.success();
+                ajax.put("url", fullUrl);  // 完整CDN地址
+                ajax.put("fileName", result.getObjectName());  // 纯文件路径（不带域名）
+                ajax.put("newFileName", FileUtils.getName(result.getObjectName()));
+                ajax.put("originalFilename", file.getOriginalFilename());
+                return ajax;
             }
             // 上传文件路径
             String filePath = RuoYiConfig.getUploadPath();
@@ -126,6 +138,8 @@ public class CommonController
 
     /**
      * 通用上传请求（多个）
+     * 
+     * OSS模式：只返回ObjectName列表，不返回完整URL
      */
     @PostMapping("/uploads")
     public AjaxResult uploadFiles(List<MultipartFile> files) throws Exception
@@ -134,20 +148,18 @@ public class CommonController
         {
             if (useOss())
             {
-                List<String> urls = new ArrayList<>();
+                // ⭐ OSS模式：只返回ObjectName，不返回URL
                 List<String> fileNames = new ArrayList<>();
                 List<String> newFileNames = new ArrayList<>();
                 List<String> originalFilenames = new ArrayList<>();
                 for (MultipartFile file : files)
                 {
                     OssUploadResult result = aliOssClient.upload(file);
-                    urls.add(result.getUrl());
                     fileNames.add(result.getObjectName());
                     newFileNames.add(FileUtils.getName(result.getObjectName()));
                     originalFilenames.add(file.getOriginalFilename());
                 }
                 AjaxResult ajax = AjaxResult.success();
-                ajax.put("urls", StringUtils.join(urls, FILE_DELIMETER));
                 ajax.put("fileNames", StringUtils.join(fileNames, FILE_DELIMETER));
                 ajax.put("newFileNames", StringUtils.join(newFileNames, FILE_DELIMETER));
                 ajax.put("originalFilenames", StringUtils.join(originalFilenames, FILE_DELIMETER));
@@ -216,10 +228,29 @@ public class CommonController
         return aliOssClient != null && aliOssClient.isEnabled();
     }
 
+    /**
+     * 构建OSS上传结果（旧方法，兼容性保留）
+     * @deprecated 建议使用 buildOssAjaxResultWithObjectName，只返回ObjectName
+     */
+    @Deprecated
     private AjaxResult buildOssAjaxResult(OssUploadResult result, String originalFilename)
     {
         AjaxResult ajax = AjaxResult.success();
         ajax.put("url", result.getUrl());
+        ajax.put("fileName", result.getObjectName());
+        ajax.put("newFileName", FileUtils.getName(result.getObjectName()));
+        ajax.put("originalFilename", originalFilename);
+        return ajax;
+    }
+    
+    /**
+     * 构建OSS上传结果 - 只返回ObjectName，不返回完整URL
+     * 前端需要通过签名接口获取临时访问URL，防止URL泄露和盗链
+     */
+    private AjaxResult buildOssAjaxResultWithObjectName(OssUploadResult result, String originalFilename)
+    {
+        AjaxResult ajax = AjaxResult.success();
+        // ⭐ 只返回ObjectName（相对路径），不返回完整URL
         ajax.put("fileName", result.getObjectName());
         ajax.put("newFileName", FileUtils.getName(result.getObjectName()));
         ajax.put("originalFilename", originalFilename);

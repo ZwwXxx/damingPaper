@@ -68,6 +68,14 @@ public interface IForumService {
     List<ForumComment> selectCommentsByPostId(Long postId, Long currentUserId);
     
     /**
+     * 根据ID查询评论
+     * 
+     * @param commentId 评论ID
+     * @return 评论信息
+     */
+    ForumComment selectForumCommentById(Long commentId);
+    
+    /**
      * 新增评论
      * 
      * @param comment 评论信息
