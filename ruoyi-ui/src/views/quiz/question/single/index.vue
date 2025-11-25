@@ -25,18 +25,26 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="题干" prop="questionTitle">
-            <el-input v-model="formData.questionTitle" placeholder="请输入题干" clearable :style="{width: '100%'}">
-            </el-input>
+            <editor v-model="formData.questionTitle" :min-height="200" placeholder="请输入题干（支持图片、富文本）"/>
           </el-form-item>
         </el-col>
         <el-col :span="24" v-if="formData.questionType !== 3 && formData.questionType !== 5">
           <el-form-item label="选项：" required>
             <el-form-item :label="item.prefix" :key="item.prefix" v-for="(item,index) in formData.items" required
                           label-width="50px" style="margin: 10px 0 !important; ">
-              <el-input v-model="item.prefix" style="width:50px;"/>
-              <el-input v-model="item.content" style="width: 60%; margin-left: 10px"/>
-              <el-button type="danger" size="mini" style="margin-left: 20px" icon="el-icon-delete"
-                         @click="optionItemRemove(index)"></el-button>
+              <div style="display: flex; align-items: flex-start; width: 100%;">
+                <el-input v-model="item.prefix" style="width:50px; margin-right: 10px;"/>
+                <div style="flex: 1; margin-right: 10px;">
+                  <editor 
+                    v-model="item.content" 
+                    :min-height="120" 
+                    :placeholder="'请输入选项内容（支持图片、富文本）'"
+                    style="width: 100%;"
+                  />
+                </div>
+                <el-button type="danger" size="mini" icon="el-icon-delete"
+                           @click="optionItemRemove(index)"></el-button>
+              </div>
             </el-form-item>
           </el-form-item>
         </el-col>

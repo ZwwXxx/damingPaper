@@ -54,6 +54,8 @@ public class SysProfileController extends BaseController
 
     /**
      * 修改用户
+     * 支持更新昵称、邮箱、手机号、性别、头像等信息
+     * 头像已在前端上传到OSS，这里接收完整的CDN地址
      */
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -61,10 +63,25 @@ public class SysProfileController extends BaseController
     {
         LoginUser loginUser = getLoginUser();
         SysUser currentUser = loginUser.getUser();
-        currentUser.setNickName(user.getNickName());
-        currentUser.setEmail(user.getEmail());
-        currentUser.setPhonenumber(user.getPhonenumber());
-        currentUser.setSex(user.getSex());
+        
+        // 更新基本信息
+        if (StringUtils.isNotEmpty(user.getNickName())) {
+            currentUser.setNickName(user.getNickName());
+        }
+        if (StringUtils.isNotEmpty(user.getEmail())) {
+            currentUser.setEmail(user.getEmail());
+        }
+        if (StringUtils.isNotEmpty(user.getPhonenumber())) {
+            currentUser.setPhonenumber(user.getPhonenumber());
+        }
+        if (user.getSex() != null) {
+            currentUser.setSex(user.getSex());
+        }
+        // 更新头像（OSS完整URL）
+        if (StringUtils.isNotEmpty(user.getAvatar())) {
+            currentUser.setAvatar(user.getAvatar());
+        }
+        
         if (StringUtils.isNotEmpty(user.getPhonenumber()) && !userService.checkPhoneUnique(currentUser))
         {
             return error("修改用户'" + loginUser.getUsername() + "'失败，手机号码已存在");

@@ -35,6 +35,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">
                 AND user_id = #{userId}
             </if>
+            <if test="userName != null and userName != ''">
+                AND (user_name like concat('%', #{userName}, '%') OR nick_name like concat('%', #{userName}, '%'))
+            </if>
             <if test="title != null and title != ''">
                 AND title like concat('%', #{title}, '%')
             </if>
@@ -132,6 +135,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <update id="decrementCommentCount" parameterType="Long">
         update forum_post set comment_count = GREATEST(comment_count - 1, 0) where post_id = #{postId}
+    </update>
+
+    <update id="updatePostTop">
+        update forum_post set is_top = #{isTop} where post_id = #{postId}
+    </update>
+
+    <update id="updatePostHot">
+        update forum_post set is_hot = #{isHot} where post_id = #{postId}
+    </update>
+
+    <update id="updatePostStatus">
+        update forum_post set status = #{status} where post_id = #{postId}
     </update>
 
 </mapper>

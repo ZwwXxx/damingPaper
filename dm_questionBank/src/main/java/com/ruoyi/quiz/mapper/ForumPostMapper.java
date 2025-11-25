@@ -99,4 +99,31 @@ public interface ForumPostMapper {
      * @return 影响行数
      */
     int decrementCommentCount(Long postId);
+    
+    /**
+     * 更新帖子置顶状态
+     * 
+     * @param postId 帖子ID
+     * @param isTop 是否置顶（0否 1是）
+     * @return 影响行数
+     */
+    int updatePostTop(@Param("postId") Long postId, @Param("isTop") Integer isTop);
+    
+    /**
+     * 更新帖子热门状态
+     * 
+     * @param postId 帖子ID
+     * @param isHot 是否热门（0否 1是）
+     * @return 影响行数
+     */
+    int updatePostHot(@Param("postId") Long postId, @Param("isHot") Integer isHot);
+    
+    /**
+     * 更新帖子状态
+     * 
+     * @param postId 帖子ID
+     * @param status 状态（0删除 1正常 2审核中）
+     * @return 影响行数
+     */
+    int updatePostStatus(@Param("postId") Long postId, @Param("status") Integer status);
 }

@@ -22,10 +22,7 @@ export function addUser(data) {
   return request({
     url: '/quiz/user',
     method: 'post',
-    data: data,
-    headers: {
-      'Content-Type': 'multipart/form-data' // 可选，axios 通常会自动处理
-    }
+    data: data
   })
 }
 
@@ -43,10 +40,7 @@ export function updateUser(data) {
   return request({
     url: '/quiz/user',
     method: 'put',
-    data: data,
-    headers: {
-      'Content-Type': 'multipart/form-data' // 可选，axios 通常会自动处理
-    }
+    data: data
   })
 }
 

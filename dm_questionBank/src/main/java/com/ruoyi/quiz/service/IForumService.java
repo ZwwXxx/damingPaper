@@ -110,4 +110,67 @@ public interface IForumService {
      * @return 是否点赞（true=点赞成功，false=取消点赞成功）
      */
     boolean toggleCommentLike(Long commentId, Long userId);
+    
+    // ==================== 管理功能 ====================
+    
+    /**
+     * 批量删除帖子
+     * 
+     * @param postIds 帖子ID数组
+     * @return 删除数量
+     */
+    int deleteForumPostByIds(Long[] postIds);
+    
+    /**
+     * 更新帖子置顶状态
+     * 
+     * @param postId 帖子ID
+     * @param isTop 是否置顶（0否 1是）
+     * @return 影响行数
+     */
+    int updatePostTop(Long postId, Integer isTop);
+    
+    /**
+     * 更新帖子热门状态
+     * 
+     * @param postId 帖子ID
+     * @param isHot 是否热门（0否 1是）
+     * @return 影响行数
+     */
+    int updatePostHot(Long postId, Integer isHot);
+    
+    /**
+     * 更新帖子状态
+     * 
+     * @param postId 帖子ID
+     * @param status 状态（0删除 1正常 2审核中）
+     * @return 影响行数
+     */
+    int updatePostStatus(Long postId, Integer status);
+    
+    /**
+     * 查询评论列表（管理用）
+     * 
+     * @param comment 查询条件
+     * @param currentUserId 当前用户ID
+     * @return 评论列表
+     */
+    List<ForumComment> selectForumCommentList(ForumComment comment, Long currentUserId);
+    
+    /**
+     * 根据ID查询评论详情（管理用）
+     * 
+     * @param commentId 评论ID
+     * @param currentUserId 当前用户ID
+     * @return 评论详情
+     */
+    ForumComment selectForumCommentById(Long commentId, Long currentUserId);
+    
+    /**
+     * 批量删除评论
+     * 
+     * @param commentIds 评论ID数组
+     * @return 删除数量
+     */
+    int deleteForumCommentByIds(Long[] commentIds);
 }

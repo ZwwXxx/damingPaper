@@ -301,5 +301,78 @@ public class ForumServiceImpl implements IForumService {
             return true;
         }
     }
+    
+    // ==================== 管理功能 ====================
+    
+    @Override
+    @Transactional
+    public int deleteForumPostByIds(Long[] postIds) {
+        int count = 0;
+        for (Long postId : postIds) {
+            if (deleteForumPostById(postId)) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    @Override
+    public int updatePostTop(Long postId, Integer isTop) {
+        return forumPostMapper.updatePostTop(postId, isTop);
+    }
+    
+    @Override
+    public int updatePostHot(Long postId, Integer isHot) {
+        return forumPostMapper.updatePostHot(postId, isHot);
+    }
+    
+    @Override
+    public int updatePostStatus(Long postId, Integer status) {
+        return forumPostMapper.updatePostStatus(postId, status);
+    }
+    
+    @Override
+    public List<ForumComment> selectForumCommentList(ForumComment comment, Long currentUserId) {
+        List<ForumComment> comments = forumCommentMapper.selectForumCommentList(comment);
+        
+        // 如果有当前用户ID，批量查询点赞状态
+        if (currentUserId != null && !comments.isEmpty()) {
+            List<Long> commentIds = comments.stream()
+                    .map(ForumComment::getCommentId)
+                    .collect(Collectors.toList());
+            List<Long> likedCommentIds = forumLikeMapper.batchCheckLikeExists(currentUserId, commentIds, 2);
+            
+            for (ForumComment c : comments) {
+                c.setHasLiked(likedCommentIds.contains(c.getCommentId()));
+            }
+        }
+        
+        return comments;
+    }
+    
+    @Override
+    public ForumComment selectForumCommentById(Long commentId, Long currentUserId) {
+        ForumComment comment = forumCommentMapper.selectForumCommentById(commentId);
+        
+        // 查询点赞状态
+        if (comment != null && currentUserId != null) {
+            int exists = forumLikeMapper.checkLikeExists(currentUserId, commentId, 2);
+            comment.setHasLiked(exists > 0);
+        }
+        
+        return comment;
+    }
+    
+    @Override
+    @Transactional
+    public int deleteForumCommentByIds(Long[] commentIds) {
+        int count = 0;
+        for (Long commentId : commentIds) {
+            if (deleteForumCommentById(commentId)) {
+                count++;
+            }
+        }
+        return count;
+    }
 
 }

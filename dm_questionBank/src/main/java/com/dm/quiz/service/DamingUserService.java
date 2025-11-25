@@ -41,8 +41,19 @@ public class DamingUserService {
             // 用户不存在，创建新用户
             log.info("创建新用户 - openId: {}, nickname: {}", openId, userInfo.getNickname());
             user = new DamingUser();
-            user.setUserName("wx_" + openId.substring(openId.length() - 8)); // 用openId后8位作为用户名
-            user.setNickName(userInfo.getNickname());
+            
+            // 生成用户名：微信用户 + openId后8位
+            String shortOpenId = openId.substring(openId.length() - 8);
+            user.setUserName("wx_" + shortOpenId);
+            
+            // 设置昵称：如果nickname为空，则使用默认格式
+            String nickName = userInfo.getNickname();
+            if (nickName == null || nickName.trim().isEmpty()) {
+                nickName = "微信用户" + shortOpenId;
+                log.info("nickname为空，使用默认昵称: {}", nickName);
+            }
+            user.setNickName(nickName);
+            
             user.setAvatar(userInfo.getHeadImgUrl());
             user.setWxOpenId(openId);
             user.setWxUnionId(userInfo.getUnionId());

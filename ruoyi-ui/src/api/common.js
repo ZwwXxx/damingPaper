@@ -8,3 +8,16 @@ export function getOssSign(params) {
   })
 }
 
+/**
+ * 上传文件到OSS（通用上传接口）
+ * @param formData FormData对象，包含file字段
+ * @returns {url, fileName, newFileName, originalFilename}
+ */
+export function uploadFile(formData) {
+  return request({
+    url: '/common/upload',
+    method: 'post',
+    data: formData,
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+}
