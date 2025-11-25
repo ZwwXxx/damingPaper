@@ -276,7 +276,13 @@
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或 <em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip">
-          模板首行已提供示例；仅支持 .xls/.xlsx，选项字段填写 JSON 数组，如 [{"prefix":"A","content":"示例"}]
+          <p>⭐ 模板已提供5种题型的完整示例：</p>
+          <ul style="font-size: 12px; margin: 5px 0; padding-left: 20px;">
+            <li><strong>单选题/多选题：</strong>需要填写完整选项 JSON 数组</li>
+            <li><strong>判断题：</strong>选项会自动生成，答案填A(正确)或B(错误)</li>
+            <li><strong>主观题/填空题：</strong>选项字段留空或填"[]"</li>
+          </ul>
+          <p>📎 仅支持 .xls/.xlsx 格式</p>
         </div>
       </el-upload>
       <span slot="footer" class="dialog-footer">

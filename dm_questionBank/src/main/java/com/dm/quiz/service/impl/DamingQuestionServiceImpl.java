@@ -245,7 +245,20 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         exportVO.setQuestionTitle(questionDto.getQuestionTitle());
         exportVO.setAnalysis(questionDto.getAnalysis());
         exportVO.setScore(questionDto.getScore());
-        exportVO.setOptionsJson(JSON.toJSONString(questionDto.getItems()));
+        
+        // 处理选项：单选、多选、判断题需要选项；主观题和填空题选项为空
+        Integer questionType = questionDto.getQuestionType();
+        boolean isSubjective = Objects.equals(questionType, QuestionTypeEnum.Subjective.getCode());
+        boolean isFillBlank = Objects.equals(questionType, QuestionTypeEnum.FillBlank.getCode());
+        if (isSubjective || isFillBlank) {
+            // 主观题和填空题不需要选项，导出为空数组
+            exportVO.setOptionsJson("[]");
+        } else {
+            // 单选、多选、判断题需要选项
+            exportVO.setOptionsJson(JSON.toJSONString(questionDto.getItems()));
+        }
+        
+        // 处理答案：多选题答案用逗号分隔，其他题型直接使用correct字段
         if (Objects.equals(questionDto.getQuestionType(), QuestionTypeEnum.Multiple.getCode())) {
             exportVO.setCorrect(questionDto.getCorrectArray() == null ? null : String.join(",", questionDto.getCorrectArray()));
         } else {
@@ -316,14 +329,17 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
             if (CollectionUtils.isEmpty(optionList)) {
                 throw new ServiceException("单选/多选题的选项内容不能为空");
             }
-        } else if (isJudge && CollectionUtils.isEmpty(optionList)) {
-            QuestionOptionVM optionTrue = new QuestionOptionVM();
-            optionTrue.setPrefix("A");
-            optionTrue.setContent("正确");
-            QuestionOptionVM optionFalse = new QuestionOptionVM();
-            optionFalse.setPrefix("B");
-            optionFalse.setContent("错误");
-            optionList = Arrays.asList(optionTrue, optionFalse);
+        } else if (isJudge) {
+            // 判断题：如果选项为空，自动生成正确/错误选项；如果有选项，直接使用
+            if (CollectionUtils.isEmpty(optionList)) {
+                QuestionOptionVM optionTrue = new QuestionOptionVM();
+                optionTrue.setPrefix("A");
+                optionTrue.setContent("正确");
+                QuestionOptionVM optionFalse = new QuestionOptionVM();
+                optionFalse.setPrefix("B");
+                optionFalse.setContent("错误");
+                optionList = Arrays.asList(optionTrue, optionFalse);
+            }
         }
 
         QuestionDto questionDto = new QuestionDto();

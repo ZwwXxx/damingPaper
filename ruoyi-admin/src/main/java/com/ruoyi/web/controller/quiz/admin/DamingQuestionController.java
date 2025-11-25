@@ -164,15 +164,48 @@ public class DamingQuestionController extends BaseController {
     @PostMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response) {
         ExcelUtil<QuestionExportVO> util = new ExcelUtil<>(QuestionExportVO.class);
+        List<QuestionExportVO> samples = Arrays.asList(
+                // 1. 单选题示例
+                createSampleQuestion(1, 1, "示例：这是一道单选题题干？",
+                        "[{\"prefix\":\"A\",\"content\":\"选项A内容\"},{\"prefix\":\"B\",\"content\":\"选项B内容\"},{\"prefix\":\"C\",\"content\":\"选项C内容\"},{\"prefix\":\"D\",\"content\":\"选项D内容\"}]",
+                        "A", 5, "解析：单选题只有一个正确答案，这里选择A"),
+                
+                // 2. 多选题示例
+                createSampleQuestion(1, 2, "示例：这是一道多选题题干？（多选）",
+                        "[{\"prefix\":\"A\",\"content\":\"选项A内容\"},{\"prefix\":\"B\",\"content\":\"选项B内容\"},{\"prefix\":\"C\",\"content\":\"选项C内容\"},{\"prefix\":\"D\",\"content\":\"选项D内容\"}]",
+                        "A,B,C", 10, "解析：多选题有多个正确答案，答案用英文逗号分隔，这里选择A、B、C"),
+                
+                // 3. 主观题示例
+                createSampleQuestion(1, 3, "示例：这是一道主观题题干，请简述xxx的特点？",
+                        "[]", "参考答案：主观题可以提供参考答案，也可以不提供", 20, "解析：主观题需要人工批阅，可以设置参考答案供批阅参考"),
+                
+                // 4. 判断题示例
+                createSampleQuestion(1, 4, "示例：这是一道判断题题干，xxx说法是否正确？",
+                        "[{\"prefix\":\"A\",\"content\":\"正确\"},{\"prefix\":\"B\",\"content\":\"错误\"}]",
+                        "A", 5, "解析：判断题选项会自动生成为正确/错误，答案填A表示正确，填B表示错误"),
+                
+                // 5. 填空题示例
+                createSampleQuestion(1, 5, "示例：这是一道填空题题干，请填写____的值",
+                        "[]", "答案内容", 8, "解析：填空题答案为标准答案，支持多个空格的情况")
+        );
+        util.exportExcel(response, samples, "题目导入模板");
+    }
+
+    /**
+     * 创建示例题目
+     */
+    private QuestionExportVO createSampleQuestion(Integer subjectId, Integer questionType, 
+                                                   String title, String optionsJson, 
+                                                   String correct, Integer score, String analysis) {
         QuestionExportVO sample = new QuestionExportVO();
-        sample.setSubjectId(1);
-        sample.setQuestionType(1);
-        sample.setQuestionTitle("示例：单选题题干");
-        sample.setOptionsJson("[{\"prefix\":\"A\",\"content\":\"示例选项1\"},{\"prefix\":\"B\",\"content\":\"示例选项2\"}]");
-        sample.setCorrect("A");
-        sample.setScore(5);
-        sample.setAnalysis("解析示例：这里说明答案为何正确");
-        util.exportExcel(response, Arrays.asList(sample), "题目导入模板");
+        sample.setSubjectId(subjectId);
+        sample.setQuestionType(questionType);
+        sample.setQuestionTitle(title);
+        sample.setOptionsJson(optionsJson);
+        sample.setCorrect(correct);
+        sample.setScore(score);
+        sample.setAnalysis(analysis);
+        return sample;
     }
 }
 
