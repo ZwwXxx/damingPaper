@@ -84,8 +84,26 @@ public class DamingQuestionAnswer extends BaseEntity {
      */
     @Excel(name = "题目顺序")
     private Integer itemOrder;
-
-
+    /**
+     * 批改状态 0-无需 1-待批改 2-已批改
+     */
+    private Integer reviewStatus;
+    /**
+     * 批改备注
+     */
+    private String reviewComment;
+    /**
+     * 查询开始时间
+     */
+    private String beginTime;
+    /**
+     * 查询结束时间
+     */
+    private String endTime;
+    /**
+     * 试卷名称(查询/展示)
+     */
+    private String paperName;
 
     public Boolean getCorrect() {
         return isCorrect;
@@ -193,6 +211,46 @@ public class DamingQuestionAnswer extends BaseEntity {
         return itemOrder;
     }
 
+    public Integer getReviewStatus() {
+        return reviewStatus;
+    }
+
+    public void setReviewStatus(Integer reviewStatus) {
+        this.reviewStatus = reviewStatus;
+    }
+
+    public String getReviewComment() {
+        return reviewComment;
+    }
+
+    public void setReviewComment(String reviewComment) {
+        this.reviewComment = reviewComment;
+    }
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getPaperName() {
+        return paperName;
+    }
+
+    public void setPaperName(String paperName) {
+        this.paperName = paperName;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -208,6 +266,8 @@ public class DamingQuestionAnswer extends BaseEntity {
                 .append("questionScore", getQuestionScore())
                 .append("isCorrect", getIsCorrect())
                 .append("itemOrder", getItemOrder())
+                .append("reviewStatus", getReviewStatus())
+                .append("reviewComment", getReviewComment())
                 .toString();
     }
 }

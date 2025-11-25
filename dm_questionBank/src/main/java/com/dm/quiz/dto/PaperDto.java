@@ -16,6 +16,8 @@ public class PaperDto {
     private Integer paperType;
     private Boolean enableAntiCheat;
     private Integer questionCount;
+    private String startTime;
+    private String endTime;
 
     public Integer getPaperType() {
         return paperType;
@@ -91,5 +93,21 @@ public class PaperDto {
 
     public void setPaperQuestionTypeVMS(List<PaperQuestionTypeDto> paperQuestionTypeDto) {
         this.paperQuestionTypeDto = paperQuestionTypeDto;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

@@ -67,4 +67,20 @@ public interface DamingUserMapper
      * @return 结果
      */
     public int deleteDamingUserByUserIds(Long[] userIds);
+    
+    /**
+     * 根据微信OpenID查询用户
+     *
+     * @param wxOpenId 微信OpenID
+     * @return 刷题用户
+     */
+    public DamingUser selectByWxOpenId(String wxOpenId);
+    
+    /**
+     * 更新用户微信信息
+     *
+     * @param damingUser 刷题用户（包含微信信息）
+     * @return 结果
+     */
+    public int updateWxInfo(DamingUser damingUser);
 }

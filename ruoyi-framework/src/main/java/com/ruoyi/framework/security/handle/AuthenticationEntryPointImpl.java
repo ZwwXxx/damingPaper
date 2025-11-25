@@ -27,6 +27,13 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, S
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
             throws IOException
     {
+        // ⭐ 跳过微信和WebSocket路径，这些路径不需要认证，直接返回不拦截
+        String uri = request.getRequestURI();
+        if (uri.startsWith("/wx/") || uri.startsWith("/ws/") || uri.startsWith("/test/")) {
+            // 这些路径不进行401拦截，直接返回（理论上不应该到这里，因为已经permitAll了）
+            return;
+        }
+        
         int code = HttpStatus.UNAUTHORIZED;
         String msg = StringUtils.format("请求访问：{}，认证失败，无法访问系统资源", request.getRequestURI());
         ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.error(code, msg)));

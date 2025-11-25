@@ -58,7 +58,8 @@
 <script>
 import store from "@/store";
 import {VueCropper} from "vue-cropper";
-import {uploadAvatar} from "@/api/system/user";
+import {uploadFile} from "@/api/common";
+import {updateUserProfile} from "@/api/system/user";
 import {debounce} from '@/utils'
 
 export default {
@@ -135,18 +136,48 @@ export default {
         };
       }
     },
-    // 上传图片
+    // 上传图片到OSS
     uploadImg() {
-      this.$refs.cropper.getCropBlob(data => {
-        let formData = new FormData();
-        formData.append("avatarfile", data, this.options.filename);
-        uploadAvatar(formData).then(response => {
-          this.open = false;
-          this.options.img = process.env.VUE_APP_BASE_API + response.imgUrl;
-          store.commit('SET_AVATAR', this.options.img);
-          this.$modal.msgSuccess("修改成功");
-          this.visible = false;
-        });
+      this.$refs.cropper.getCropBlob(async data => {
+        try {
+          // 1. 先上传到OSS
+          this.$modal.loading("正在上传头像，请稍候...");
+          let formData = new FormData();
+          formData.append("file", data, this.options.filename);
+          
+          const uploadRes = await uploadFile(formData);
+          if (uploadRes.code !== 200) {
+            this.$modal.closeLoading();
+            this.$modal.msgError("头像上传失败");
+            return;
+          }
+          
+          // 2. 获取OSS返回的完整CDN地址
+          const avatarUrl = uploadRes.url;
+          console.log('头像上传成功:', avatarUrl);
+          
+          // 3. 更新用户信息（只更新头像字段）
+          const updateData = {
+            avatar: avatarUrl
+          };
+          
+          const updateRes = await updateUserProfile(updateData);
+          this.$modal.closeLoading();
+          
+          if (updateRes.code === 200) {
+            this.open = false;
+            this.options.img = avatarUrl;
+            store.commit('SET_AVATAR', avatarUrl);
+            this.$modal.msgSuccess("修改成功");
+            this.visible = false;
+          } else {
+            this.$modal.msgError(updateRes.msg || "更新用户信息失败");
+          }
+        } catch (error) {
+          this.$modal.closeLoading();
+          console.error('上传头像失败:', error);
+          this.$modal.msgError("上传头像失败，请重试");
+        }
       });
     },
     // 实时预览

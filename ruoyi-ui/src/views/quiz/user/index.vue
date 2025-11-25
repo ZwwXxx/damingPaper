@@ -78,10 +78,10 @@
       <el-table-column label="用户id" align="center" prop="userId"/>
       <el-table-column label="头像" align="center">
         <template slot-scope="scope">
-          <el-image v-if="apiUrl+scope.row.avatar"
-                    :src="apiUrl+scope.row.avatar"
+          <el-image
+                    :src="getAvatarUrl(scope.row.avatar)"
                     style="width: 50px;height: 50px;border-radius: 50%"
-                    :preview-src-list="[apiUrl+scope.row.avatar]"
+                    :preview-src-list="[getAvatarUrl(scope.row.avatar)]"
           ></el-image>
         </template>
       </el-table-column>
@@ -136,7 +136,7 @@
             :show-file-list="false"
 
           >
-            <img :src="blob!=''? options.img:apiUrl+options.img"
+            <img :src="getDialogAvatarUrl()"
                  class="cursor-pointer"
                  style="width: 120px;height: 120px; border-radius: 100%;box-shadow: 1px 1px 10px black ;border: 4px white solid">
           </el-upload>
@@ -165,11 +165,14 @@
 
 <script>
 import {listUser, getUser, delUser, addUser, updateUser, resetPwd} from "@/api/quiz/user";
+import {uploadFile} from "@/api/common";
 
 export default {
   name: "User",
   data() {
     return {
+      // 默认头像URL
+      defaultAvatar: 'https://cdn.zww0891.fun/image-20240801110625270.png',
       newPwd: {
         userName: '',
         password: '',
@@ -216,6 +219,32 @@ export default {
     this.getList();
   },
   methods: {
+    /** 获取头像URL，判断是否需要拼接baseUrl */
+    getAvatarUrl(avatar) {
+      if (!avatar) return this.defaultAvatar;
+      // 如果已经是完整的URL（以http或https开头），直接返回
+      if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+        return avatar;
+      }
+      // 否则拼接apiUrl
+      return this.apiUrl + avatar;
+    },
+    getDialogAvatarUrl() {
+      // 如果有新上传的blob，显示预览图
+      if (this.blob !== '') {
+        return this.options.img;
+      }
+      // 如果options.img为空，显示默认头像
+      if (!this.options.img) {
+        return this.defaultAvatar;
+      }
+      // 如果是完整URL，直接返回
+      if (this.options.img.startsWith('http://') || this.options.img.startsWith('https://')) {
+        return this.options.img;
+      }
+      // 否则拼接apiUrl
+      return this.apiUrl + this.options.img;
+    },
     handleEditClose(){
       this.blob=''
       this.form=''
@@ -299,21 +328,45 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.options.img = ''
-      this.blob = ''
       this.reset();
+      this.blob = ''
+      this.options.img = ''; // 清空头像，会显示默认头像
       this.open = true;
       this.title = "添加刷题用户";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
+      // 先清空之前的数据
+      this.blob = '';
+      this.options.img = '';
+      
       const userId = row.userId || this.ids
+      console.log('准备获取用户信息，userId:', userId);
       getUser(userId).then(response => {
+        console.log('获取用户信息响应：', response);
+        // 设置表单数据
         this.form = response.data;
-        this.options.img = this.form.avatar
+        console.log('设置的表单数据：', this.form);
+        
+        // 设置头像显示
+        if (this.form.avatar) {
+          // 如果头像是完整URL，直接使用；否则拼接baseUrl
+          if (this.form.avatar.startsWith('http://') || this.form.avatar.startsWith('https://')) {
+            this.options.img = this.form.avatar;
+          } else {
+            this.options.img = this.form.avatar;
+          }
+          console.log('设置头像：', this.options.img);
+        } else {
+          this.options.img = '';
+          console.log('头像为空');
+        }
+        
         this.open = true;
         this.title = "修改刷题用户";
+      }).catch(error => {
+        console.error('获取用户信息失败：', error);
+        this.$message.error('获取用户信息失败');
       });
     },
     // /** 提交按钮 */
@@ -338,38 +391,58 @@ export default {
     //   this.$message.error("请确认信息是否填写完毕")
     //   return false;
     // }
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          const formData = new FormData;
-          if (!this.options.img) {
-            this.$message.error("请上传头像")
-            return
-          }
-
-          if (this.blob) {
-            formData.append("avatarfile", this.blob, this.options.filename);
-          }
-          // 如果用户没有设置头像，默认为this options img
-          this.form.avatar = this.options.img
-          // 将对象转换为 JSON 字符串
-          formData.append("userForm", JSON.stringify(this.form));
-          if (this.form.userId != null) {
-            updateUser(formData).then(response => {
-              this.options.img = process.env.VUE_APP_BASE_API + response.imgUrl;
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+    async submitForm() {
+      try {
+        const valid = await this.$refs["form"].validate();
+        if (!valid) return;
+        
+        // 如果用户选择了新头像，先上传到OSS
+        if (this.blob) {
+          this.$modal.loading("正在上传头像，请稍候...");
+          const formData = new FormData();
+          formData.append("file", this.blob, this.options.filename);
+          
+          const uploadRes = await uploadFile(formData);
+          if (uploadRes.code === 200) {
+            // 使用OSS返回的完整CDN地址
+            this.form.avatar = uploadRes.url;
+            console.log('头像上传成功:', uploadRes.url);
           } else {
-            addUser(formData).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+            this.$modal.closeLoading();
+            this.$message.error('头像上传失败');
+            return;
           }
+          this.$modal.closeLoading();
+        } else if (this.options.img && this.options.img !== '') {
+          // 如果没有选择新头像但有原头像，使用原有的头像
+          this.form.avatar = this.options.img;
+        } else {
+          // 如果都没有，使用默认头像
+          this.form.avatar = this.defaultAvatar;
         }
-      });
+        
+        // 提交表单（使用JSON格式，不再使用FormData）
+        if (this.form.userId != null) {
+          updateUser(this.form).then(response => {
+            this.$modal.msgSuccess("修改成功");
+            this.open = false;
+            this.blob = '';
+            this.options.img = '';
+            this.getList();
+          });
+        } else {
+          addUser(this.form).then(response => {
+            this.$modal.msgSuccess("新增成功");
+            this.open = false;
+            this.blob = '';
+            this.options.img = '';
+            this.getList();
+          });
+        }
+      } catch (error) {
+        console.error('提交表单失败:', error);
+        this.$message.error("请确认信息是否填写完毕");
+      }
     },
     /** 删除按钮操作 */
     handleDelete(row) {

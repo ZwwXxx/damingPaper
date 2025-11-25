@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingFeedbackMapper">
+
+    <resultMap id="DamingFeedbackResult" type="com.dm.quiz.domain.DamingFeedback">
+        <id property="feedbackId" column="feedback_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="feedbackType" column="feedback_type"/>
+        <result property="feedbackTitle" column="feedback_title"/>
+        <result property="feedbackContent" column="feedback_content"/>
+        <result property="contactInfo" column="contact_info"/>
+        <result property="images" column="images"/>
+        <result property="status" column="status"/>
+        <result property="priority" column="priority"/>
+        <result property="handler" column="handler"/>
+        <result property="handleTime" column="handle_time"/>
+        <result property="replyContent" column="reply_content"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectDamingFeedbackVo">
+        select feedback_id, user_id, user_name, feedback_type, feedback_title, feedback_content, 
+               contact_info, images, status, priority, handler, handle_time, reply_content,
+               del_flag, create_user, create_time, update_user, update_time, remark
+        from daming_feedback
+    </sql>
+
+    <!-- 查询单个反馈 -->
+    <select id="selectDamingFeedbackByFeedbackId" parameterType="java.lang.Long" resultMap="DamingFeedbackResult">
+        <include refid="selectDamingFeedbackVo"/>
+        where feedback_id = #{feedbackId}
+          and del_flag = '0'
+    </select>
+
+    <!-- 查询反馈列表（后台管理） -->
+    <select id="selectDamingFeedbackList" parameterType="com.dm.quiz.domain.DamingFeedback" resultMap="DamingFeedbackResult">
+        <include refid="selectDamingFeedbackVo"/>
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name like concat('%', #{userName}, '%')
+            </if>
+            <if test="feedbackType != null">
+                and feedback_type = #{feedbackType}
+            </if>
+            <if test="feedbackTitle != null and feedbackTitle != ''">
+                and feedback_title like concat('%', #{feedbackTitle}, '%')
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="priority != null">
+                and priority = #{priority}
+            </if>
+            <if test="handler != null and handler != ''">
+                and handler = #{handler}
+            </if>
+            and del_flag = '0'
+        </where>
+        order by priority desc, status asc, create_time desc
+    </select>
+
+    <!-- 查询用户的反馈列表（前台） -->
+    <select id="selectUserFeedbackList" parameterType="java.lang.String" resultMap="DamingFeedbackResult">
+        <include refid="selectDamingFeedbackVo"/>
+        where user_id = #{userId}
+          and del_flag = '0'
+        order by create_time desc
+    </select>
+
+    <!-- 新增反馈 -->
+    <insert id="insertDamingFeedback" parameterType="com.dm.quiz.domain.DamingFeedback" useGeneratedKeys="true" keyProperty="feedbackId">
+        insert into daming_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="feedbackType != null">feedback_type,</if>
+            <if test="feedbackTitle != null and feedbackTitle != ''">feedback_title,</if>
+            <if test="feedbackContent != null">feedback_content,</if>
+            <if test="contactInfo != null">contact_info,</if>
+            <if test="images != null">images,</if>
+            <if test="status != null">status,</if>
+            <if test="priority != null">priority,</if>
+            <if test="handler != null">handler,</if>
+            <if test="handleTime != null">handle_time,</if>
+            <if test="replyContent != null">reply_content,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createUser != null">create_user,</if>
+            <if test="updateUser != null">update_user,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="feedbackType != null">#{feedbackType},</if>
+            <if test="feedbackTitle != null and feedbackTitle != ''">#{feedbackTitle},</if>
+            <if test="feedbackContent != null">#{feedbackContent},</if>
+            <if test="contactInfo != null">#{contactInfo},</if>
+            <if test="images != null">#{images},</if>
+            <if test="status != null">#{status},</if>
+            <if test="priority != null">#{priority},</if>
+            <if test="handler != null">#{handler},</if>
+            <if test="handleTime != null">#{handleTime},</if>
+            <if test="replyContent != null">#{replyContent},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createUser != null">#{createUser},</if>
+            <if test="updateUser != null">#{updateUser},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <!-- 更新反馈 -->
+    <update id="updateDamingFeedback" parameterType="com.dm.quiz.domain.DamingFeedback">
+        update daming_feedback
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="feedbackType != null">feedback_type = #{feedbackType},</if>
+            <if test="feedbackTitle != null and feedbackTitle != ''">feedback_title = #{feedbackTitle},</if>
+            <if test="feedbackContent != null">feedback_content = #{feedbackContent},</if>
+            <if test="contactInfo != null">contact_info = #{contactInfo},</if>
+            <if test="images != null">images = #{images},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="handler != null">handler = #{handler},</if>
+            <if test="handleTime != null">handle_time = #{handleTime},</if>
+            <if test="replyContent != null">reply_content = #{replyContent},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where feedback_id = #{feedbackId}
+    </update>
+
+    <!-- 删除反馈（软删除） -->
+    <delete id="deleteDamingFeedbackByFeedbackId" parameterType="java.lang.Long">
+        update daming_feedback
+        set del_flag = '1'
+        where feedback_id = #{feedbackId}
+    </delete>
+
+    <!-- 批量删除反馈（软删除） -->
+    <delete id="deleteDamingFeedbackByFeedbackIds" parameterType="java.lang.Long">
+        update daming_feedback
+        set del_flag = '1'
+        where feedback_id in
+        <foreach collection="array" item="feedbackId" open="(" separator="," close=")">
+            #{feedbackId}
+        </foreach>
+    </delete>
+
+    <!-- 统计反馈数量（按状态） -->
+    <select id="countByStatus" resultType="java.util.Map">
+        SELECT 
+            status,
+            CASE status
+                WHEN 0 THEN '待处理'
+                WHEN 1 THEN '处理中'
+                WHEN 2 THEN '已处理'
+                WHEN 3 THEN '已关闭'
+            END AS status_name,
+            COUNT(*) AS count
+        FROM daming_feedback
+        WHERE del_flag = '0'
+        GROUP BY status
+        ORDER BY status
+    </select>
+
+    <!-- 统计反馈数量（按类型） -->
+    <select id="countByType" resultType="java.util.Map">
+        SELECT 
+            feedback_type,
+            CASE feedback_type
+                WHEN 1 THEN '功能建议'
+                WHEN 2 THEN 'Bug反馈'
+                WHEN 3 THEN '使用问题'
+                WHEN 4 THEN '其他'
+            END AS type_name,
+            COUNT(*) AS count
+        FROM daming_feedback
+        WHERE del_flag = '0'
+        GROUP BY feedback_type
+        ORDER BY feedback_type
+    </select>
+
+</mapper>

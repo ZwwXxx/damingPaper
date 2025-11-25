@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.PersonalDashboardMapper">
+
+    <!-- 获取用户累计做题数 -->
+    <select id="getTotalQuestions" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT question_id)
+        FROM daming_question_answer
+        WHERE create_user = #{userId}
+    </select>
+
+    <!-- 获取用户累计考试次数 -->
+    <select id="getTotalExams" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM daming_paper_answer
+        WHERE create_user = #{userId}
+    </select>
+
+    <!-- 获取用户累计错题数 -->
+    <select id="getTotalWrongQuestions" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT question_id)
+        FROM daming_question_answer
+        WHERE create_user = #{userId}
+          AND is_correct = 0
+    </select>
+
+    <!-- 获取用户累计收藏数 -->
+    <select id="getTotalFavorites" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM daming_question_favorite
+        WHERE create_user = #{userId}
+    </select>
+
+    <!-- 获取用户最近N天做题数 -->
+    <select id="getRecentQuestions" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT question_id)
+        FROM daming_question_answer
+        WHERE create_user = #{userId}
+          AND create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+    </select>
+
+    <!-- 获取用户最近N天考试次数 -->
+    <select id="getRecentExams" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM daming_paper_answer
+        WHERE create_user = #{userId}
+          AND create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+    </select>
+
+    <!-- 获取用户累计学习时长（分钟） -->
+    <select id="getTotalStudyTime" resultType="java.lang.Long">
+        SELECT IFNULL(SUM(do_time), 0)
+        FROM daming_paper_answer
+        WHERE create_user = #{userId}
+    </select>
+
+    <!-- 获取用户最近N次考试记录 -->
+    <select id="getExamTrend" resultType="java.util.HashMap">
+        SELECT
+            pa.paper_answer_id AS paperAnswerId,
+            pa.paper_id AS paperId,
+            p.paper_name AS paperName,
+            pa.paper_score AS paperScore,
+            pa.final_score AS finalScore,
+            ROUND(pa.final_score * 100.0 / NULLIF(pa.paper_score, 0), 2) AS scorePercent,
+            pa.create_time AS createTime,
+            pa.do_time AS doTime
+        FROM daming_paper_answer pa
+        INNER JOIN daming_paper p ON pa.paper_id = p.paper_id
+        WHERE pa.create_user = #{userId}
+        <if test="paperName != null and paperName != ''">
+            AND p.paper_name = #{paperName}
+        </if>
+        ORDER BY pa.create_time DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 获取用户所有考试过的试卷列表 -->
+    <select id="getPaperList" resultType="java.lang.String">
+        SELECT DISTINCT p.paper_name
+        FROM daming_paper_answer pa
+        INNER JOIN daming_paper p ON pa.paper_id = p.paper_id
+        WHERE pa.create_user = #{userId}
+        ORDER BY p.paper_name
+    </select>
+
+    <!-- 获取用户按科目的成绩统计 -->
+    <select id="getSubjectScores" resultType="java.util.HashMap">
+        SELECT
+            s.subject_id AS subjectId,
+            s.subject_name AS subjectName,
+            ROUND(AVG(pa.final_score), 2) AS avgScore,
+            ROUND(AVG(pa.final_score * 100.0 / NULLIF(pa.paper_score, 0)), 2) AS avgScorePercent,
+            MAX(pa.final_score) AS maxScore,
+            MIN(pa.final_score) AS minScore,
+            COUNT(*) AS examCount
+        FROM daming_paper_answer pa
+        INNER JOIN daming_paper p ON pa.paper_id = p.paper_id
+        INNER JOIN daming_subject s ON p.subject_id = s.subject_id
+        WHERE pa.create_user = #{userId}
+        GROUP BY s.subject_id, s.subject_name
+        ORDER BY examCount DESC
+    </select>
+
+    <!-- 获取用户错题按科目分布 -->
+    <select id="getWrongQuestionsBySubject" resultType="java.util.HashMap">
+        SELECT
+            s.subject_name AS subjectName,
+            COUNT(DISTINCT qa.question_id) AS count
+        FROM daming_question_answer qa
+        INNER JOIN daming_question q ON qa.question_id = q.id
+        INNER JOIN daming_subject s ON q.subject_id = s.subject_id
+        WHERE qa.create_user = #{userId}
+          AND qa.is_correct = 0
+        GROUP BY s.subject_id, s.subject_name
+        ORDER BY count DESC
+    </select>
+
+    <!-- 获取用户错题按题型分布 -->
+    <select id="getWrongQuestionsByType" resultType="java.util.HashMap">
+        SELECT
+            CASE q.question_type
+                WHEN 1 THEN '单选题'
+                WHEN 2 THEN '多选题'
+                WHEN 3 THEN '判断题'
+                WHEN 4 THEN '填空题'
+                WHEN 5 THEN '简答题'
+                ELSE '其他'
+            END AS typeName,
+            COUNT(DISTINCT qa.question_id) AS count
+        FROM daming_question_answer qa
+        INNER JOIN daming_question q ON qa.question_id = q.id
+        WHERE qa.create_user = #{userId}
+          AND qa.is_correct = 0
+        GROUP BY q.question_type
+        ORDER BY count DESC
+    </select>
+
+    <!-- 获取用户学习天数（最近N天） -->
+    <select id="getStudyDays" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT DATE(create_time))
+        FROM (
+            SELECT create_time FROM daming_question_answer WHERE create_user = #{userId} AND create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+            UNION ALL
+            SELECT create_time FROM daming_paper_answer WHERE create_user = #{userId} AND create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+        ) AS study_records
+    </select>
+
+    <!-- 获取用户连续学习天数 -->
+    <select id="getContinuousStudyDays" resultType="java.lang.Long">
+        SELECT
+            IFNULL(MAX(continuous_days), 0) AS continuous_days
+        FROM (
+            SELECT
+                @days := IF(@prev_date = DATE_SUB(study_date, INTERVAL 1 DAY), @days + 1, 1) AS continuous_days,
+                @prev_date := study_date
+            FROM (
+                SELECT DISTINCT DATE(create_time) AS study_date
+                FROM (
+                    SELECT create_time FROM daming_question_answer WHERE create_user = #{userId}
+                    UNION ALL
+                    SELECT create_time FROM daming_paper_answer WHERE create_user = #{userId}
+                ) AS all_study
+                ORDER BY study_date DESC
+            ) AS dates,
+            (SELECT @days := 0, @prev_date := CURDATE()) AS vars
+        ) AS continuous_count
+    </select>
+
+    <!-- 获取用户24小时学习时间分布（最近N天） -->
+    <select id="getHourDistribution" resultType="java.util.HashMap">
+        SELECT
+            HOUR(create_time) AS hour,
+            COUNT(*) AS count
+        FROM (
+            SELECT create_time FROM daming_question_answer WHERE create_user = #{userId} AND create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+            UNION ALL
+            SELECT create_time FROM daming_paper_answer WHERE create_user = #{userId} AND create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+        ) AS study_records
+        GROUP BY HOUR(create_time)
+        ORDER BY hour
+    </select>
+
+</mapper>

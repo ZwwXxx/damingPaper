@@ -47,8 +47,19 @@ nbdist/
 !*/build/*.xml
 
 
+######################################################################
+# 敏感配置文件 - 绝不提交！
 application.yml
 application-druid.yml
-
 application-dev.yml
 application-prod.yml
+application-local.yml
+**/application.yml
+**/application-*.yml
+
+# 其他敏感文件
+*.key
+*.pem
+.env
+.env.local
+.env.production

@@ -4,10 +4,10 @@
       <el-form-item label="题目类型" prop="questionType">
         <el-select v-model="queryParams.questionType" placeholder="请选择题目类型" clearable>
           <el-option
-            v-for="dict in dict.type.question_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="option in questionTypeOptions"
+            :key="option.value"
+            :label="option.label"
+            :value="option.value"
           />
         </el-select>
       </el-form-item>
@@ -158,7 +158,11 @@
       <el-table-column label="题目id" align="center" prop="id"/>
       <el-table-column label="题目类型" align="center" prop="questionType">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.question_type" :value="scope.row.questionType"/>
+          <div class="type-chip"
+               :style="{borderColor: getTypeMeta(scope.row.questionType).color, color: getTypeMeta(scope.row.questionType).color}">
+            <i :class="getTypeMeta(scope.row.questionType).icon"></i>
+            <span class="ml-1">{{ getTypeMeta(scope.row.questionType).label }}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="题目题干内容" align="center" prop="questionTitle"/>
@@ -348,6 +352,20 @@ export default {
       },
       subjectOptions: [],
       subjectMap: {},
+      questionTypeOptions: [
+        {label: '单选题', value: '1'},
+        {label: '多选题', value: '2'},
+        {label: '主观题', value: '3'},
+        {label: '判断题', value: '4'},
+        {label: '填空题', value: '5'}
+      ],
+      questionTypeMeta: {
+        '1': {label: '单选题', icon: 'el-icon-circle-check', color: '#409EFF'},
+        '2': {label: '多选题', icon: 'el-icon-s-operation', color: '#67C23A'},
+        '3': {label: '主观题', icon: 'el-icon-edit', color: '#E6A23C'},
+        '4': {label: '判断题', icon: 'el-icon-s-check', color: '#F56C6C'},
+        '5': {label: '填空题', icon: 'el-icon-document', color: '#9C27B0'}
+      },
       upload: {
         open: false,
         title: "题目导入",
@@ -358,11 +376,44 @@ export default {
     };
   },
   created() {
+    this.ensureDictTypes();
     this.loadSubjectOptions();
     this.getList();
     console.log(this.dict)
   },
+  watch: {
+    'dict.type.question_type': {
+      handler() {
+        this.ensureDictTypes();
+      },
+      deep: true
+    }
+  },
   methods: {
+    ensureDictTypes() {
+      const fallbackTypes = [
+        {label: '单选题', value: '1', listClass: 'primary'},
+        {label: '多选题', value: '2', listClass: 'success'},
+        {label: '主观题', value: '3', listClass: 'warning'},
+        {label: '判断题', value: '4', listClass: 'info'},
+        {label: '填空题', value: '5', listClass: 'default'}
+      ];
+      const dictList = this.dict?.type?.question_type;
+      if (!Array.isArray(dictList) || !dictList.length) {
+        this.questionTypeOptions = fallbackTypes;
+        return;
+      }
+      fallbackTypes.forEach(item => {
+        const exists = dictList.some(dict => String(dict.value) === item.value);
+        if (!exists) {
+          dictList.push({...item});
+        }
+      });
+      this.questionTypeOptions = dictList.map(item => ({
+        label: item.label,
+        value: String(item.value)
+      }));
+    },
     async loadSubjectOptions() {
       const res = await optionSubject();
       const list = res.data || [];
@@ -377,6 +428,17 @@ export default {
     },
     getSubjectLabel(id) {
       return this.subjectMap[id] || '-';
+    },
+    getTypeMeta(value) {
+      const key = String(value);
+      if (this.questionTypeMeta[key]) {
+        return this.questionTypeMeta[key];
+      }
+      const dictItem = (this.dict?.type?.question_type || []).find(item => String(item.value) === key);
+      if (dictItem) {
+        return {label: dictItem.label, icon: 'el-icon-help', color: '#909399'};
+      }
+      return {label: key || '-', icon: 'el-icon-help', color: '#909399'};
     },
     addQuestionType() {
 
@@ -535,3 +597,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.type-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 16px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+</style>

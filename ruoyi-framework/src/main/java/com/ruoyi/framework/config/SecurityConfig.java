@@ -133,12 +133,21 @@ public class SecurityConfig {
                     requests
                             // 管理员认证模块
                             .antMatchers("/login", "/register", "/captchaImage").permitAll()
+                            // ⭐ 前台学生认证模块，允许匿名访问
+                            .antMatchers("/quiz/student/user/login", "/quiz/student/user/registry").permitAll()
+                            // ⭐ 论坛模块，GET请求允许匿名访问（浏览帖子和评论）
+                            .antMatchers(HttpMethod.GET, "/quiz/forum/posts/**", "/quiz/forum/comments/**").permitAll()
                             // 静态资源，可匿名访问
                             .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                             // swagger模块
                             .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
-                            // quiz模块
-                            .antMatchers("/quiz/student/user/login", "/quiz/student/user/registry").permitAll()
+                            // ⭐ WebSocket连接路径，允许匿名访问
+                            .antMatchers("/ws/**").permitAll()
+                            // ⭐ 微信公众号相关路径，允许匿名访问（GET和POST都允许）
+                            .antMatchers(HttpMethod.GET, "/wx/**").permitAll()
+                            .antMatchers(HttpMethod.POST, "/wx/**").permitAll()
+                            .antMatchers(HttpMethod.GET, "/wx/portal/public/callBack").permitAll()
+                            .antMatchers(HttpMethod.POST, "/wx/portal/public/callBack").permitAll()
                             // 除上面外的所有请求全部需要鉴权认证
                             .anyRequest().authenticated();
                 })

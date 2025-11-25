@@ -1,9 +1,8 @@
 package com.dm.quiz.service.impl;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSONArray;
@@ -12,13 +11,18 @@ import com.dm.quiz.dto.PaperAnswerDto;
 import com.dm.quiz.dto.PaperDto;
 import com.dm.quiz.dto.PaperReviewDto;
 import com.dm.quiz.dto.QuestionAnswerDto;
+import com.dm.quiz.dto.PaperReviewSubmitRequest;
+import com.dm.quiz.dto.ReviewQuestionScoreDto;
+import com.dm.quiz.dto.SubmitAnswerResult;
 import com.dm.quiz.event.PaperAnswerEvent;
 import com.dm.quiz.mapper.*;
 import com.dm.quiz.service.IDamingPaperService;
 import com.dm.quiz.viewmodel.PaperQuestionTypeVM;
 import com.dm.quiz.domain.DamingPaper;
+import com.dm.quiz.enums.QuestionTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.oss.OssSignUrlHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -32,6 +36,8 @@ import com.dm.quiz.service.IDamingPaperAnswerService;
  */
 @Service
 public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
+    private static final int REVIEW_STATUS_PENDING = 1;
+    private static final int REVIEW_STATUS_DONE = 2;
     @Autowired
     private DamingPaperAnswerMapper damingPaperAnswerMapper;
     @Autowired
@@ -45,9 +51,8 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
     @Autowired
     private DamingQuestionAnswerMapper damingQuestionAnswerMapper;
     @Autowired
-    private DamingPaperMapper damingPaperMapper;
-
-
+    private OssSignUrlHelper ossSignUrlHelper;
+    
     /**
      * 查询试卷作答情况
      *
@@ -67,9 +72,6 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
      */
     @Override
     public List<DamingPaperAnswer> selectDamingPaperAnswerList(DamingPaperAnswer damingPaperAnswer) {
-        if (!SecurityUtils.getUsername().equals("admin")) {
-            damingPaperAnswer.setCreateUser(SecurityUtils.getUsername());
-        }
         return damingPaperAnswerMapper.selectDamingPaperAnswerList(damingPaperAnswer);
     }
 
@@ -119,7 +121,7 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
     }
 
     @Override
-    public int submitAnswer(PaperAnswerDto paperAnswerDto) {
+    public SubmitAnswerResult submitAnswer(PaperAnswerDto paperAnswerDto) {
         // 一，比对用户提交的答案和原卷答案，设置做题记录的得分和是否正确,生成题目回答记录表
         // 1.获取原卷,拿到原卷里的所有原题，
         DamingPaper damingPaper = damingPaperService.selectDamingPaperByPaperId(paperAnswerDto.getPaperId());
@@ -131,6 +133,9 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
         List<DamingQuestion> damingQuestions = damingQuestionMapper.selectQuestionListByIds(questionIds);
 
         // 将题目结构的转化为题目答案，外层遍历题型，类似于变量的作用域，提升order顺序作用域 _______外层不加{}方法体隐式返回对象，类似js的res=>()
+        AtomicInteger objectiveScoreCounter = new AtomicInteger(0);
+        AtomicInteger objectiveCorrectCounter = new AtomicInteger(0);
+        AtomicBoolean hasSubjective = new AtomicBoolean(false);
         List<DamingQuestionAnswer> questionAnswerList = questionTypeVMS.stream().flatMap(questionTypeVM ->
                 // 遍历试卷题目，与用户填写试卷的 题目列表与答案进行id，比较，然后单独对比答案
                 questionTypeVM.getPaperQuestionVMS().stream().map(paperQuestionVM -> {
@@ -145,10 +150,11 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                     // 新建题目记录实体
                     DamingQuestionAnswer damingQuestionAnswer = new DamingQuestionAnswer();
                     damingQuestionAnswer.setItemOrder(paperQuestionVM.getItemOrder());
+                    boolean isSubjective = Objects.equals(matchQuestion.getQuestionType(), QuestionTypeEnum.Subjective.getCode());
                     // 如果是多选题，遍历用户答案数组与数据库里的correct转数组进行比对
                     String userAnswer = questionAnswerDto.getContent();
                     boolean isCorrect = matchQuestion.getCorrect().equals(userAnswer);
-                    if (matchQuestion.getQuestionType() == 2) {
+                    if (matchQuestion.getQuestionType() == QuestionTypeEnum.Multiple.getCode()) {
                         userAnswer = String.join(",", questionAnswerDto.getContentArray());
                         String[] matchCorrect = matchQuestion.getCorrect().split(",");
                         String[] questionAnswerDtoContentArray = questionAnswerDto.getContentArray();
@@ -166,8 +172,20 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                         userAnswer = "未填";
                     }
                     damingQuestionAnswer.setUserAnswer(userAnswer);
-                    damingQuestionAnswer.setIsCorrect(isCorrect);
-                    damingQuestionAnswer.setFinalScore(damingQuestionAnswer.getIsCorrect() ? matchQuestion.getScore() : 0);
+                    if (isSubjective) {
+                        hasSubjective.set(true);
+                        damingQuestionAnswer.setIsCorrect(Boolean.FALSE);
+                        damingQuestionAnswer.setFinalScore(0);
+                        damingQuestionAnswer.setReviewStatus(REVIEW_STATUS_PENDING);
+                    } else {
+                        damingQuestionAnswer.setIsCorrect(isCorrect);
+                        damingQuestionAnswer.setFinalScore(damingQuestionAnswer.getIsCorrect() ? matchQuestion.getScore() : 0);
+                        damingQuestionAnswer.setReviewStatus(REVIEW_STATUS_DONE);
+                        objectiveScoreCounter.addAndGet(damingQuestionAnswer.getFinalScore());
+                        if (Boolean.TRUE.equals(damingQuestionAnswer.getIsCorrect())) {
+                            objectiveCorrectCounter.incrementAndGet();
+                        }
+                    }
                     damingQuestionAnswer.setQuestionScore(matchQuestion.getScore());
                     damingQuestionAnswer.setQuestionType(matchQuestion.getQuestionType());
                     damingQuestionAnswer.setQuestionId(matchQuestion.getId());
@@ -182,9 +200,12 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
         damingPaperAnswer.setCreateUser(SecurityUtils.getUsername());
         damingPaperAnswer.setPaperId(paperAnswerDto.getPaperId());
         damingPaperAnswer.setPaperName(damingPaper.getPaperName());
-        int sum = questionAnswerList.stream().mapToInt(x -> x.getFinalScore()).sum();
-        damingPaperAnswer.setFinalScore(sum);
-        damingPaperAnswer.setCorrectCount((int) questionAnswerList.stream().filter(DamingQuestionAnswer::getIsCorrect).count());
+        int objectiveScore = objectiveScoreCounter.get();
+        damingPaperAnswer.setFinalScore(objectiveScore);
+        damingPaperAnswer.setObjectiveScore(objectiveScore);
+        damingPaperAnswer.setSubjectiveScore(0);
+        damingPaperAnswer.setReviewStatus(hasSubjective.get() ? REVIEW_STATUS_PENDING : REVIEW_STATUS_DONE);
+        damingPaperAnswer.setCorrectCount(objectiveCorrectCounter.get());
         damingPaperAnswer.setQuestionCount(damingPaper.getQuestionCount());
         damingPaperAnswer.setPaperScore(damingPaper.getScore());
         damingPaperAnswer.setSubjectId(damingPaper.getSubjectId());
@@ -198,7 +219,11 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
         paperAnswerInfo.setDamingPaperAnswer(damingPaperAnswer);
         paperAnswerInfo.setDamingQuestionAnswerList(questionAnswerList);
         applicationContext.publishEvent(new PaperAnswerEvent(paperAnswerInfo));
-        return damingPaperAnswer.getFinalScore();
+        SubmitAnswerResult result = new SubmitAnswerResult();
+        result.setFinalScore(damingPaperAnswer.getFinalScore());
+        result.setObjectiveScore(damingPaperAnswer.getObjectiveScore());
+        result.setReviewStatus(damingPaperAnswer.getReviewStatus());
+        return result;
     }
 
 
@@ -214,22 +239,40 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
         // 1.查出来数据库的答卷，然后转为DTO，该dto下的题目回答记录也得是dto,符合前端格式
         DamingPaperAnswer damingPaperAnswer = damingPaperAnswerMapper.selectDamingPaperAnswerByPaperAnswerId(paperAnswerId);
         paperAnswerDto.setPaperId(damingPaperAnswer.getPaperId());
+        paperAnswerDto.setPaperAnswerId(damingPaperAnswer.getPaperAnswerId());
         paperAnswerDto.setFinalScore(damingPaperAnswer.getFinalScore());
+        paperAnswerDto.setObjectiveScore(damingPaperAnswer.getObjectiveScore());
+        paperAnswerDto.setSubjectiveScore(damingPaperAnswer.getSubjectiveScore());
+        paperAnswerDto.setReviewStatus(damingPaperAnswer.getReviewStatus());
+        paperAnswerDto.setReviewRemark(damingPaperAnswer.getReviewRemark());
+        paperAnswerDto.setCreateUser(damingPaperAnswer.getCreateUser());
         // 根据答卷id找到所有在这张试卷上回答的答题记录
         List<DamingQuestionAnswer> damingQuestionAnswers = damingQuestionAnswerMapper.selectByPaperAnswerId(damingPaperAnswer.getPaperAnswerId());
         // 将数据库的答题记录列表转为dto
         List<QuestionAnswerDto> questionAnswerDtos = damingQuestionAnswers.stream().map(x -> {
             QuestionAnswerDto questionAnswerDto = new QuestionAnswerDto();
             if (x.getQuestionType() == 2) {
+                // 多选题
                 String[] split = x.getUserAnswer().split(",");
                 Arrays.sort(split);
                 questionAnswerDto.setContentArray(split);
             } else {
-                questionAnswerDto.setContent(x.getUserAnswer());
+                String userAnswer = x.getUserAnswer();
+                // ⭐ 主观题答案已经是完整CDN地址，无需签名处理
+                // 注释掉签名逻辑，现在答案直接存储完整CDN地址
+                // if (x.getQuestionType() == QuestionTypeEnum.Subjective.getCode() && userAnswer != null) {
+                //     userAnswer = ossSignUrlHelper.convertToSignedUrl(userAnswer);
+                // }
+                questionAnswerDto.setContent(userAnswer);
             }
             questionAnswerDto.setQuestionId(x.getQuestionId());
             questionAnswerDto.setItemOrder(x.getItemOrder());
             questionAnswerDto.setCorrect(x.getIsCorrect());
+            questionAnswerDto.setAnswerId(x.getAnswerId());
+            questionAnswerDto.setFinalScore(x.getFinalScore());
+            questionAnswerDto.setQuestionScore(x.getQuestionScore());
+            questionAnswerDto.setReviewStatus(x.getReviewStatus());
+            questionAnswerDto.setReviewComment(x.getReviewComment());
             return questionAnswerDto;
         }).collect(Collectors.toList());
         paperAnswerDto.setQuestionAnswerDtos(questionAnswerDtos);
@@ -240,5 +283,51 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
         paperReviewDto.setPaperDto(paperDto);
         return paperReviewDto;
 
+    }
+
+    @Override
+    public void reviewPaper(PaperReviewSubmitRequest request) {
+        if (request == null || request.getPaperAnswerId() == null) {
+            throw new RuntimeException("参数缺失");
+        }
+        DamingPaperAnswer paperAnswer = damingPaperAnswerMapper.selectDamingPaperAnswerByPaperAnswerId(request.getPaperAnswerId());
+        if (paperAnswer == null) {
+            throw new RuntimeException("试卷不存在");
+        }
+        if (!Objects.equals(paperAnswer.getReviewStatus(), REVIEW_STATUS_PENDING)) {
+            throw new RuntimeException("该试卷无需批改");
+        }
+        List<DamingQuestionAnswer> answers = damingQuestionAnswerMapper.selectByPaperAnswerId(paperAnswer.getPaperAnswerId());
+        Map<Long, DamingQuestionAnswer> subjectiveMap = answers.stream()
+                .filter(ans -> Objects.equals(ans.getQuestionType(), QuestionTypeEnum.Subjective.getCode()))
+                .collect(Collectors.toMap(DamingQuestionAnswer::getAnswerId, ans -> ans));
+        if (subjectiveMap.isEmpty()) {
+            throw new RuntimeException("试卷不包含主观题");
+        }
+        int subjectiveScore = 0;
+        for (ReviewQuestionScoreDto item : request.getQuestionScores()) {
+            DamingQuestionAnswer target = subjectiveMap.get(item.getAnswerId());
+            if (target == null) {
+                throw new RuntimeException("题目不存在或无需批改");
+            }
+            int score = item.getScore() == null ? 0 : item.getScore();
+            if (score < 0 || (target.getQuestionScore() != null && score > target.getQuestionScore())) {
+                throw new RuntimeException("题目评分超出范围");
+            }
+            target.setFinalScore(score);
+            target.setReviewStatus(REVIEW_STATUS_DONE);
+            target.setReviewComment(item.getComment());
+            target.setIsCorrect(null);
+            subjectiveScore += score;
+            damingQuestionAnswerMapper.updateDamingQuestionAnswer(target);
+        }
+        paperAnswer.setSubjectiveScore(subjectiveScore);
+        int objectiveScore = paperAnswer.getObjectiveScore() == null ? 0 : paperAnswer.getObjectiveScore();
+        paperAnswer.setFinalScore(objectiveScore + subjectiveScore);
+        paperAnswer.setReviewStatus(REVIEW_STATUS_DONE);
+        paperAnswer.setReviewUser(SecurityUtils.getUsername());
+        paperAnswer.setReviewTime(new Date());
+        paperAnswer.setReviewRemark(request.getReviewRemark());
+        damingPaperAnswerMapper.updateDamingPaperAnswer(paperAnswer);
     }
 }

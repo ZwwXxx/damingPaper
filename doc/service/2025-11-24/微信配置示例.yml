@@ -1,0 +1,80 @@
+# ======================================
+# 微信公众号扫码登录配置示例
+# ======================================
+
+wx:
+  mp:
+    # 是否启用微信扫码登录功能
+    enabled: true
+    
+    # 回调地址（生产环境使用线上域名）
+    callback: https://paperback.zww0891.fun
+    
+    # ⭐⭐⭐ 授权模式配置（重点）⭐⭐⭐
+    # 
+    # 可选值：
+    #   base      - 静默授权(snsapi_base) 【推荐】
+    #               优点：已关注用户扫码后自动登录，无需点击
+    #               缺点：只能获取openId，用户名显示为 wx_xxxxx
+    #               
+    #   userinfo  - 完整授权(snsapi_userinfo)
+    #               优点：可获取用户昵称、头像等详细信息
+    #               缺点：需要用户点击授权链接
+    #
+    # 默认值：base
+    authScope: base
+    
+    # 公众号配置列表(支持多个公众号)
+    configs:
+      - appId: wxeac644b6acef0405                    # 微信公众号AppID
+        secret: 22681f0abf2490d0853b5675905b557b    # 微信公众号AppSecret
+        token: b3337731ab0711ef8c1fe79208535f88     # 微信公众号Token(自定义)
+        aesKey: Hha4Su7QiNUEdj1jow5oQZtcIXVshfUXSClXRCpD1am  # EncodingAESKey
+
+# ======================================
+# 配置说明
+# ======================================
+#
+# 1. 在微信公众平台(https://mp.weixin.qq.com/)配置：
+#    - 服务器地址(URL): https://paperback.zww0891.fun/wx/portal/public
+#    - Token: 与上面的token保持一致
+#    - EncodingAESKey: 与上面的aesKey保持一致
+#    - 消息加解密方式: 安全模式
+#
+# 2. 授权模式切换：
+#    - 修改 authScope 的值
+#    - base: 静默授权（推荐，用户体验好）
+#    - userinfo: 完整授权（可获取用户昵称头像）
+#    - 修改后需要重启应用
+#
+# 3. 测试流程：
+#    - 已关注用户扫码测试
+#    - 首次关注用户扫码测试
+#    - 查看后端日志确认授权模式
+#
+# 4. 常见问题：
+#    - 静默授权模式下，部分微信版本首次关注可能需要点击链接
+#    - 完整授权模式下，每次扫码都需要用户点击授权
+#    - 配置修改后必须重启应用才能生效
+
+# ======================================
+# 不同环境的推荐配置
+# ======================================
+
+# 开发环境
+# wx:
+#   mp:
+#     authScope: base
+#     callback: http://10xh9vd648325.vicp.fun  # 内网穿透域名
+
+# 生产环境（方案A - 推荐）
+# wx:
+#   mp:
+#     authScope: base                           # 静默授权，用户体验最好
+#     callback: https://paperback.zww0891.fun
+
+# 生产环境（方案B）
+# wx:
+#   mp:
+#     authScope: userinfo                       # 完整授权，可获取用户昵称头像
+#     callback: https://paperback.zww0891.fun

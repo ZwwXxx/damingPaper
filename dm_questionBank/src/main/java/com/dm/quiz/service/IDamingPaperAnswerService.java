@@ -4,6 +4,8 @@ import java.util.List;
 import com.dm.quiz.domain.DamingPaperAnswer;
 import com.dm.quiz.dto.PaperAnswerDto;
 import com.dm.quiz.dto.PaperReviewDto;
+import com.dm.quiz.dto.PaperReviewSubmitRequest;
+import com.dm.quiz.dto.SubmitAnswerResult;
 
 /**
  * 试卷作答情况Service接口
@@ -61,7 +63,9 @@ public interface IDamingPaperAnswerService
      */
     public int deleteDamingPaperAnswerByPaperAnswerId(Long paperAnswerId);
 
-    int submitAnswer(PaperAnswerDto paperAnswerDto);
+    SubmitAnswerResult submitAnswer(PaperAnswerDto paperAnswerDto);
 
     PaperReviewDto getPaperReviewDto(Long paperAnswerId);
+
+    void reviewPaper(PaperReviewSubmitRequest request);
 }

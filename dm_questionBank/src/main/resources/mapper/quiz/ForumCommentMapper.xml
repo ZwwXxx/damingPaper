@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.quiz.mapper.ForumCommentMapper">
+    
+    <resultMap type="com.ruoyi.common.core.domain.entity.ForumComment" id="ForumCommentResult">
+        <id     property="commentId"         column="comment_id"       />
+        <result property="postId"            column="post_id"          />
+        <result property="userId"            column="user_id"          />
+        <result property="userName"          column="user_name"        />
+        <result property="nickName"          column="nick_name"        />
+        <result property="avatar"            column="avatar"           />
+        <result property="content"           column="content"          />
+        <result property="parentId"          column="parent_id"        />
+        <result property="replyToUserId"     column="reply_to_user_id" />
+        <result property="replyToUserName"   column="reply_to_user_name" />
+        <result property="replyToNickName"   column="reply_to_nick_name" />
+        <result property="likeCount"         column="like_count"       />
+        <result property="status"            column="status"           />
+        <result property="createTime"        column="create_time"      />
+        <result property="updateTime"        column="update_time"      />
+    </resultMap>
+
+    <sql id="selectForumCommentVo">
+        select fc.comment_id, fc.post_id, fc.user_id, fc.user_name, fc.nick_name, fc.avatar, fc.content, 
+               fc.parent_id, fc.reply_to_user_id, fc.reply_to_user_name, 
+               u.nick_name as reply_to_nick_name,
+               fc.like_count, fc.status, fc.create_time, fc.update_time
+        from forum_comment fc
+        left join daming_user u on fc.reply_to_user_id = u.user_id
+    </sql>
+
+    <select id="selectForumCommentList" parameterType="com.ruoyi.common.core.domain.entity.ForumComment" resultMap="ForumCommentResult">
+        <include refid="selectForumCommentVo"/>
+        <where>
+            <if test="postId != null">
+                AND fc.post_id = #{postId}
+            </if>
+            <if test="userId != null">
+                AND fc.user_id = #{userId}
+            </if>
+            <if test="parentId != null">
+                AND fc.parent_id = #{parentId}
+            </if>
+            <if test="status != null">
+                AND fc.status = #{status}
+            </if>
+        </where>
+        ORDER BY fc.create_time ASC
+    </select>
+
+    <select id="selectCommentsByPostId" parameterType="Long" resultMap="ForumCommentResult">
+        <include refid="selectForumCommentVo"/>
+        where fc.post_id = #{postId} AND fc.status = 1
+        ORDER BY fc.create_time ASC
+    </select>
+
+    <select id="selectForumCommentById" parameterType="Long" resultMap="ForumCommentResult">
+        <include refid="selectForumCommentVo"/>
+        where fc.comment_id = #{commentId} AND fc.status = 1
+    </select>
+
+    <insert id="insertForumComment" parameterType="com.ruoyi.common.core.domain.entity.ForumComment" useGeneratedKeys="true" keyProperty="commentId">
+        insert into forum_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="postId != null">post_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="replyToUserId != null">reply_to_user_id,</if>
+            <if test="replyToUserName != null and replyToUserName != ''">reply_to_user_name,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="postId != null">#{postId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="replyToUserId != null">#{replyToUserId},</if>
+            <if test="replyToUserName != null and replyToUserName != ''">#{replyToUserName},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateForumComment" parameterType="com.ruoyi.common.core.domain.entity.ForumComment">
+        update forum_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteForumCommentById" parameterType="Long">
+        update forum_comment set status = 0 where comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteForumCommentByIds" parameterType="Long">
+        update forum_comment set status = 0 where comment_id in
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+
+    <update id="incrementLikeCount" parameterType="Long">
+        update forum_comment set like_count = like_count + 1 where comment_id = #{commentId}
+    </update>
+
+    <update id="decrementLikeCount" parameterType="Long">
+        update forum_comment set like_count = GREATEST(like_count - 1, 0) where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteCommentsByPostId" parameterType="Long">
+        update forum_comment set status = 0 where post_id = #{postId}
+    </delete>
+
+</mapper>

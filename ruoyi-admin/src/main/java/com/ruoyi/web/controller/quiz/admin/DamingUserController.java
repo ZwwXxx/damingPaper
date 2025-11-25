@@ -68,17 +68,13 @@ public class DamingUserController extends BaseController {
 
     /**
      * 新增刷题用户
+     * 头像已在前端上传到OSS，这里直接接收完整的用户信息（JSON格式）
      */
     @PreAuthorize("@ss.hasPermi('quiz:user:add')")
     @Log(title = "刷题用户", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult addUser(@RequestParam(value = "avatarfile", required = false) MultipartFile avatarFile,
-                              @RequestParam("userForm") String newUserStr) throws Exception {
-
-        String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), avatarFile, MimeTypeUtils.IMAGE_EXTENSION);
-        DamingUser newUser = JSON.parseObject(newUserStr, DamingUser.class);
-        newUser.setAvatar(avatar);
-        System.out.println(newUser);
+    public AjaxResult addUser(@RequestBody DamingUser newUser) {
+        System.out.println("新增用户信息: " + newUser);
         newUser.setCreateTime(new Date());
         newUser.setUpdateTime(new Date());
         return toAjax(damingUserService.insertDamingUser(newUser));
@@ -86,21 +82,15 @@ public class DamingUserController extends BaseController {
 
     /**
      * 修改刷题用户
+     * 头像已在前端上传到OSS，这里直接接收完整的用户信息（JSON格式）
      */
     @PreAuthorize("@ss.hasPermi('quiz:user:edit')")
     @Log(title = "刷题用户", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult updateInfo(@RequestParam(value = "avatarfile", required = false) MultipartFile avatarFile,
-                                 @RequestParam("userForm") String newUserStr) throws Exception {
-
-        DamingUser newUser = JSON.parseObject(newUserStr, DamingUser.class);
-        // 上传文件
-        String avatar = "";
-        if (avatarFile != null) {
-            avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), avatarFile, MimeTypeUtils.IMAGE_EXTENSION);
-            newUser.setAvatar(avatar);
-        }
-
+    public AjaxResult updateInfo(@RequestBody DamingUser newUser) {
+        System.out.println("更新用户信息: " + newUser);
+        newUser.setUpdateTime(new Date());
+        
         if (damingUserService.updateDamingUser(newUser) > 0) {
             AjaxResult ajax = AjaxResult.success();
             ajax.put("imgUrl", newUser.getAvatar());

@@ -22,6 +22,7 @@ import com.dm.quiz.enums.QuestionTypeEnum;
 import com.dm.quiz.viewmodel.PaperQuestionTypeVM;
 import com.dm.quiz.viewmodel.PaperQuestionVM;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,13 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         damingPaper.setDelFlag(0);
         damingPaper.setPaperType(paperDto.getPaperType());
         damingPaper.setEnableAntiCheat(Boolean.TRUE.equals(paperDto.getEnableAntiCheat()));
+        // 手动处理时间字段转换
+        if (StringUtils.isNotEmpty(paperDto.getStartTime())) {
+            damingPaper.setStartTime(DateUtils.parseDate(paperDto.getStartTime()));
+        }
+        if (StringUtils.isNotEmpty(paperDto.getEndTime())) {
+            damingPaper.setEndTime(DateUtils.parseDate(paperDto.getEndTime()));
+        }
         damingPaperMapper.insertDamingPaper(damingPaper);
         return damingPaper;
     }
@@ -175,6 +183,13 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         // 2.映射paperDto给查询到的paper
         modelMapper.map(paperDto, damingPaper);
         damingPaper.setEnableAntiCheat(Boolean.TRUE.equals(paperDto.getEnableAntiCheat()));
+        // 手动处理时间字段转换
+        if (StringUtils.isNotEmpty(paperDto.getStartTime())) {
+            damingPaper.setStartTime(DateUtils.parseDate(paperDto.getStartTime()));
+        }
+        if (StringUtils.isNotEmpty(paperDto.getEndTime())) {
+            damingPaper.setEndTime(DateUtils.parseDate(paperDto.getEndTime()));
+        }
         // 3.根据paperInfoId查出来，然后根据最新的paperDto里的题型，设置（先转为vm）给contentInfo然后update
         DamingContentInfo damingContentInfo = damingContentInfoMapper.selectDamingContentInfoById(damingPaper.getPaperInfoId());
         List<PaperQuestionTypeDto> paperQuestionTypeDto = paperDto.getPaperQuestionTypeDto();
@@ -264,6 +279,13 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         paperDto.setPaperQuestionTypeDto(paperQuestionTypeDtos);
         paperDto.setEnableAntiCheat(damingPaper.getEnableAntiCheat());
         paperDto.setQuestionCount(damingPaper.getQuestionCount());
+        // 手动处理Date到String的转换
+        if (damingPaper.getStartTime() != null) {
+            paperDto.setStartTime(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, damingPaper.getStartTime()));
+        }
+        if (damingPaper.getEndTime() != null) {
+            paperDto.setEndTime(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, damingPaper.getEndTime()));
+        }
         return paperDto;
         // 搞到底就是为了给题目设置一个顺序，不容易啊，如果序号一开始就设置在DTO上不转存到VM上然后单独加Order就不用引起列表不一致了。(不行，这样VM会有很多空属性，不必要的属性在前后端流通)
         // 噢噢那样的话就写死了好像，这样存到数据库即使没有入卷也会有一个顺序，只有在入卷的时候才会对题型里的题目做一个序号处理，使其后续能递增或是乱序,

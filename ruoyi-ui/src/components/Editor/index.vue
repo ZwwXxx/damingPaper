@@ -14,6 +14,15 @@
     >
     </el-upload>
     <div class="editor" ref="editor" :style="styles"></div>
+    
+    <!-- 图片预览 - 使用自定义ImageViewer组件 -->
+    <image-viewer
+      v-if="imagePreview.visible"
+      :url-list="imagePreview.urls"
+      :initial-index="imagePreview.index"
+      :on-close="closeImagePreview"
+      :z-index="3000"
+    />
   </div>
 </template>
 
@@ -23,9 +32,13 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import { getToken } from "@/utils/auth";
+import ImageViewer from "@/components/ImageViewer";
 
 export default {
   name: "Editor",
+  components: {
+    ImageViewer
+  },
   props: {
     /* 编辑器的内容 */
     value: {
@@ -66,6 +79,12 @@ export default {
       },
       Quill: null,
       currentValue: "",
+      imagePreview: {
+        visible: false,
+        urls: [],
+        index: 0
+      },
+      imageClickHandler: null,
       options: {
         theme: "snow",
         bounds: document.body,
@@ -119,6 +138,7 @@ export default {
     this.init();
   },
   beforeDestroy() {
+    this.removeImagePreviewEvents();
     this.Quill = null;
   },
   methods: {
@@ -154,6 +174,8 @@ export default {
       this.Quill.on("editor-change", (eventName, ...args) => {
         this.$emit("on-editor-change", eventName, ...args);
       });
+      // 绑定图片预览事件
+      this.bindImagePreviewEvents();
     },
     // 上传前校检格式和大小
     handleBeforeUpload(file) {
@@ -181,8 +203,10 @@ export default {
         let quill = this.Quill;
         // 获取光标所在位置
         let length = quill.getSelection().index;
-        // 插入图片  res.url为服务器返回的图片地址
-        quill.insertEmbed(length, "image", process.env.VUE_APP_BASE_API + res.fileName);
+        // ⭐ 直接使用后端返回的完整CDN URL（统一前后台逻辑）
+        // 后端已经返回完整的CDN地址，不需要再拼接
+        const imageUrl = res.url ;
+        quill.insertEmbed(length, "image", imageUrl);
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {
@@ -192,6 +216,51 @@ export default {
     handleUploadError() {
       this.$message.error("图片插入失败");
     },
+    // 绑定图片预览事件
+    bindImagePreviewEvents() {
+      if (!this.Quill || !this.Quill.root) {
+        return;
+      }
+      this.removeImagePreviewEvents();
+      this.imageClickHandler = (event) => {
+        const target = event.target || event.srcElement;
+        if (!target || target.tagName !== "IMG") {
+          return;
+        }
+        event.preventDefault();
+        // 获取所有图片URL
+        const images = Array.from(this.Quill.root.querySelectorAll("img"));
+        const urls = images.map(img => img.getAttribute("src")).filter(Boolean);
+        if (!urls.length) {
+          return;
+        }
+        // 找到当前点击图片的索引
+        const index = Math.max(images.indexOf(target), 0);
+        this.openImagePreview(urls, index);
+      };
+      this.Quill.root.addEventListener("click", this.imageClickHandler);
+    },
+    // 移除图片预览事件
+    removeImagePreviewEvents() {
+      if (this.Quill && this.Quill.root && this.imageClickHandler) {
+        this.Quill.root.removeEventListener("click", this.imageClickHandler);
+        this.imageClickHandler = null;
+      }
+    },
+    // 打开图片预览
+    openImagePreview(urls, index) {
+      this.imagePreview = {
+        visible: true,
+        urls: urls,
+        index: index
+      };
+    },
+    // 关闭图片预览
+    closeImagePreview() {
+      this.imagePreview.visible = false;
+      this.imagePreview.urls = [];
+      this.imagePreview.index = 0;
+    }
   },
 };
 </script>
@@ -270,5 +339,18 @@ export default {
 .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="monospace"]::before,
 .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="monospace"]::before {
   content: "等宽字体";
+}
+/* 限制图片大小并添加预览样式 */
+.ql-editor img {
+  max-width: 200px;
+  max-height: 200px;
+  height: auto;
+  width: auto;
+  cursor: zoom-in;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.ql-editor img:hover {
+  transform: scale(1.02);
 }
 </style>

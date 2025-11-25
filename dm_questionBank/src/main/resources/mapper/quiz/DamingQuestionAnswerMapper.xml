@@ -18,6 +18,8 @@
         <result property="questionScore" column="question_score"/>
         <result property="isCorrect" column="is_correct"/>
         <result property="itemOrder" column="item_order"/>
+        <result property="reviewStatus" column="review_status"/>
+        <result property="reviewComment" column="review_comment"/>
     </resultMap>
 
     <sql id="selectDamingQuestionAnswerVo">
@@ -33,7 +35,9 @@
                final_score,
                question_score,
                is_correct,
-               item_order
+               item_order,
+               review_status,
+               review_comment
         from daming_question_answer
     </sql>
 
@@ -52,11 +56,12 @@
             <if test="questionScore != null ">and question_score = #{questionScore}</if>
             <if test="isCorrect != null ">and is_correct = #{isCorrect}</if>
             <if test="itemOrder != null ">and item_order = #{itemOrder}</if>
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+            <if test="reviewStatus != null ">and review_status = #{reviewStatus}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{beginTime},'%Y%m%d')
             </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{endTime},'%Y%m%d')
             </if>
         </where>
     </select>
@@ -95,6 +100,8 @@
             <if test="questionScore != null">question_score,</if>
             <if test="isCorrect != null">is_correct,</if>
             <if test="itemOrder != null">item_order,</if>
+            <if test="reviewStatus != null">review_status,</if>
+            <if test="reviewComment != null">review_comment,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="createUser != null">#{createUser},</if>
@@ -127,6 +134,8 @@
             <if test="list[0].questionScore != null">question_score,</if>
             <if test="list[0].isCorrect != null">is_correct,</if>
             <if test="list[0].itemOrder != null">item_order,</if>
+            <if test="list[0].reviewStatus != null">review_status,</if>
+            <if test="list[0].reviewComment != null">review_comment,</if>
         </trim>
         <trim prefix="VALUES " suffix="" suffixOverrides=",">
             <foreach collection="list" item="answer" separator=",">
@@ -143,6 +152,8 @@
                     <if test="answer.questionScore != null">#{answer.questionScore},</if>
                     <if test="answer.isCorrect != null">#{answer.isCorrect},</if>
                     <if test="answer.itemOrder != null">#{answer.itemOrder},</if>
+                    <if test="answer.reviewStatus != null">#{answer.reviewStatus},</if>
+                    <if test="answer.reviewComment != null">#{answer.reviewComment},</if>
                 </trim>
             </foreach>
         </trim>
@@ -163,6 +174,8 @@
             <if test="questionScore != null">question_score = #{questionScore},</if>
             <if test="isCorrect != null">is_correct = #{isCorrect},</if>
             <if test="itemOrder != null">item_order = #{itemOrder},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
+            <if test="reviewComment != null">review_comment = #{reviewComment},</if>
         </trim>
         where answer_id = #{answerId}
     </update>

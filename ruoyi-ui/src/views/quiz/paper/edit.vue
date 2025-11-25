@@ -4,7 +4,7 @@
       <el-form ref="elForm1" :model="formData" :rules="rules" size="medium" label-width="100px">
         <el-col :span="12">
           <el-form-item label="科目" prop="subjectId">
-            <el-select v-model="formData.subjectId" placeholder="请输入科目" clearable :style="{width: '100%'}">
+            <el-select v-model="formData.subjectId" placeholder="请选择科目" clearable :style="{width: '100%'}">
               <el-option v-for="(item, index) in subjectIdOptions" :key="index" :label="item.label"
                          :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
@@ -18,7 +18,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="试卷类型" prop="paperType">
-            <el-select v-model="formData.paperType" placeholder="请输入试卷类型" clearable :style="{width: '100%'}">
+            <el-select v-model="formData.paperType" placeholder="请选择试卷类型" clearable :style="{width: '100%'}">
               <el-option v-for="(item, index) in paperTypeOptions" :key="index" :label="item.label"
                          :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
@@ -30,7 +30,31 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="开启防作弊">
+          <el-form-item label="开始时间" prop="startTime">
+            <el-date-picker
+              v-model="formData.startTime"
+              type="datetime"
+              placeholder="请选择开始时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              format="yyyy-MM-dd HH:mm:ss"
+              :style="{width: '100%'}">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="截止时间" prop="endTime">
+            <el-date-picker
+              v-model="formData.endTime"
+              type="datetime"
+              placeholder="请选择截止时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              format="yyyy-MM-dd HH:mm:ss"
+              :style="{width: '100%'}">
+            </el-date-picker>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="防作弊">
             <el-switch
               v-model="formData.enableAntiCheat"
               active-text="开启"
@@ -118,9 +142,20 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="id" prop="id">
-              <el-input v-model="formData.id" placeholder="请输入id" clearable
-                        :style="{width: '100%'}"></el-input>
+            <el-form-item label="题干" prop="questionTitle">
+              <el-input
+                v-model="questionList.queryParams.questionTitle"
+                placeholder="请输入题干关键字"
+                clearable
+                :style="{width: '100%'}"
+                @keyup.enter.native="queryQuestionList"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="ID" prop="id">
+              <el-input v-model="questionList.queryParams.id" placeholder="请输入ID" clearable
+                        :style="{width: '100%'}" @keyup.enter.native="queryQuestionList"></el-input>
             </el-form-item>
           </el-col>
           <el-col style="margin-bottom: 10px;">
@@ -129,7 +164,10 @@
         </el-form>
       </el-row>
       <!--表格区域，展示题目，和题型-->
-      <el-table v-loading="questionList.loading" :data="questionList.tableData"
+      <el-table
+        ref="questionTable"
+        v-loading="questionList.loading"
+        :data="questionList.tableData"
                 @selection-change="handleSelectionChange" border fit highlight-current-row style="width: 100%">
         <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column prop="id" label="Id" width="60px"/>
@@ -195,7 +233,8 @@ export default {
         1: '单选题',
         2: '多选题',
         3: '主观题',
-        // 其他题型...
+        4: '判断题',
+        5: '填空题'
       },
       // 控制新增题目的弹框显示
       open: false,
@@ -210,12 +249,19 @@ export default {
       }, {
         "label": "主观题",
         "value": 3
+      }, {
+        "label": "判断题",
+        "value": 4
+      }, {
+        "label": "填空题",
+        "value": 5
       }],
       subjectOptions: [],
       questionList: {
         selectionList: [],
         queryParams: {
           id: undefined,
+          questionTitle: undefined,
           questionType: undefined,
           subjectId: undefined,
           pageNum: 1,
@@ -232,6 +278,8 @@ export default {
         subjectId: undefined,
         paperName: undefined,
         suggestTime: undefined,
+        startTime: '',
+        endTime: '',
         enableAntiCheat: false,
         score: 0,
         questionCount: 0,
@@ -345,13 +393,51 @@ export default {
       console.log(this.formData)
       this.autoCompose.form.subjectId = this.formData.subjectId
     },
-    getQuestList() {
-      listQuestion(this.questionList.queryParams).then(response => {
-          this.questionList.tableData = response.rows;
-          this.total = response.total;
-          this.questionList.loading = false;
+    getExistingQuestionIds() {
+      const ids = new Set();
+      (this.formData.paperQuestionTypeDto || []).forEach(section => {
+        (section.questionDtos || []).forEach(item => {
+          if (item && item.id !== undefined && item.id !== null) {
+            ids.add(item.id);
+          }
+        });
+      });
+      return ids;
+    },
+    filterExistingQuestions(rows) {
+      if (!Array.isArray(rows) || !rows.length) {
+        return [];
+      }
+      const existingIds = this.getExistingQuestionIds();
+      const keyword = (this.questionList.queryParams.questionTitle || '').trim().toLowerCase();
+      return rows.filter(row => {
+        if (existingIds.has(row.id)) {
+          return false;
         }
-      );
+        if (keyword) {
+          const title = (row.questionTitle || '').toLowerCase();
+          return title.includes(keyword);
+        }
+        return true;
+      });
+    },
+    async getQuestList() {
+      this.questionList.loading = true;
+      try {
+        const params = {
+          ...this.questionList.queryParams,
+          questionTitle: undefined
+        };
+        const response = await listQuestion(params);
+        const filteredRows = this.filterExistingQuestions(response.rows || []);
+        this.questionList.tableData = filteredRows;
+        this.questionList.total = filteredRows.length;
+        this.$nextTick(() => {
+          this.$refs.questionTable && this.$refs.questionTable.clearSelection();
+        });
+      } finally {
+        this.questionList.loading = false;
+      }
     },
     queryQuestionList() {
       this.getQuestList()
@@ -375,10 +461,17 @@ export default {
       this.open = false
     },
     addQuestionConfirm() {
-      // 根据勾选的题目的id遍历查询然后push到
+      const existingIds = this.getExistingQuestionIds()
       this.questionList.selectionList.forEach(q => {
+        if (existingIds.has(q.id)) {
+          return
+        }
         getQuestion(q.id).then(res => {
-          this.currQuestionType.questionDtos.push(res.data)
+          const data = res.data
+          if (!existingIds.has(data.id)) {
+            this.currQuestionType.questionDtos.push(data)
+            existingIds.add(data.id)
+          }
         })
       })
       this.close()
@@ -389,6 +482,12 @@ export default {
       // 拷贝一份当前的题型，标识给哪个题型加题目
       this.currQuestionType = questionType
       this.questionList.loading = true
+      if (!this.questionList.queryParams.subjectId && this.formData.subjectId) {
+        this.questionList.queryParams.subjectId = this.formData.subjectId
+      }
+      if (questionType && questionType.questionType && !this.questionList.queryParams.questionType) {
+        this.questionList.queryParams.questionType = questionType.questionType
+      }
       this.getQuestList()
     },
     addQuestionTypeInput() {
@@ -412,6 +511,9 @@ export default {
         }
       })
       if (noSubmit) return
+      if (this.formData.startTime && this.formData.endTime && new Date(this.formData.startTime) >= new Date(this.formData.endTime)) {
+        return this.$message.error('开始时间必须早于截止时间')
+      }
       this.$refs['elForm1'].validate(valid => {
         if (!valid) return
         // TODO 提交表单

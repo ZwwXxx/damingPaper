@@ -10,13 +10,15 @@
         <result property="password"    column="password"    />
         <result property="nickName"    column="nick_name"    />
         <result property="avatar"    column="avatar"    />
+        <result property="wxOpenId"    column="wx_open_id"    />
+        <result property="wxUnionId"    column="wx_union_id"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectDamingUserVo">
-        select user_id, user_name, password, nick_name, avatar, del_flag, create_time, update_time from daming_user
+        select user_id, user_name, password, nick_name, avatar, wx_open_id, wx_union_id, del_flag, create_time, update_time from daming_user
     </sql>
 
     <select id="selectDamingUserList" parameterType="DamingUser" resultMap="DamingUserResult">
@@ -48,16 +50,22 @@
         insert into daming_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userName != null and userName != ''">user_name,</if>
+            <if test="password != null and password != ''">password,</if>
             <if test="nickName != null and nickName != ''">nick_name,</if>
             <if test="avatar != null">avatar,</if>
+            <if test="wxOpenId != null and wxOpenId != ''">wx_open_id,</if>
+            <if test="wxUnionId != null and wxUnionId != ''">wx_union_id,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="password != null and password != ''">#{password},</if>
             <if test="nickName != null and nickName != ''">#{nickName},</if>
             <if test="avatar != null">#{avatar},</if>
+            <if test="wxOpenId != null and wxOpenId != ''">#{wxOpenId},</if>
+            <if test="wxUnionId != null and wxUnionId != ''">#{wxUnionId},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
@@ -70,7 +78,7 @@
             <if test="userName != null and userName != ''">user_name = #{userName},</if>
             <if test="password != null and password != ''">password = #{password},</if>
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
-            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -89,5 +97,21 @@
         <foreach item="userId" collection="array" open="(" separator="," close=")">
             #{userId}
         </foreach>
+    </update>
+    
+    <!-- 根据微信OpenID查询用户 -->
+    <select id="selectByWxOpenId" parameterType="String" resultMap="DamingUserResult">
+        <include refid="selectDamingUserVo"/>
+        WHERE wx_open_id = #{wxOpenId} AND del_flag = '0'
+    </select>
+    
+    <!-- 更新用户微信信息 -->
+    <update id="updateWxInfo" parameterType="DamingUser">
+        UPDATE daming_user
+        SET nick_name = #{nickName},
+            avatar = #{avatar},
+            wx_union_id = #{wxUnionId},
+            update_time = NOW()
+        WHERE user_id = #{userId}
     </update>
 </mapper>

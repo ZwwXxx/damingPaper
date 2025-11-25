@@ -76,6 +76,8 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
             questionDto.setCorrect(questionInfoContentVM.getCorrect());
         } else if (questionType.equals(QuestionTypeEnum.Multiple.getCode())) {
             questionDto.setCorrectArray(questionInfoContentVM.getCorrect().split(","));
+        } else {
+            questionDto.setCorrect(questionInfoContentVM.getCorrect());
         }
         return questionDto;
     }
@@ -105,8 +107,7 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         if (questionDto == null) {
             return 0;
         }
-        // 2.组装题目实体,塞到数据库里
-        // 将选项数组转为列表，单选没有score信息，多选有。
+        standardizeQuestionOptions(questionDto);
         String dtoToString = QuestionDtoToString(questionDto);
         DamingContentInfo questionInfo = new DamingContentInfo();
         questionInfo.setContent(dtoToString);
@@ -135,13 +136,16 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
      * @param questionDto
      */
     private static String QuestionDtoToString(QuestionDto questionDto) {
-        List<QuestionOptionVM> questionOptionVMList = questionDto.getItems().stream().map(i -> {
-            QuestionOptionVM questionOptionVM = new QuestionOptionVM();
-            questionOptionVM.setContent(i.getContent());
-            questionOptionVM.setPrefix(i.getPrefix());
-            questionOptionVM.setScore(i.getScore() == null ? null : i.getScore());
-            return questionOptionVM;
-        }).collect(Collectors.toList());
+        List<QuestionOptionVM> items = questionDto.getItems();
+        List<QuestionOptionVM> questionOptionVMList = CollectionUtils.isEmpty(items)
+                ? Collections.emptyList()
+                : items.stream().map(i -> {
+                    QuestionOptionVM questionOptionVM = new QuestionOptionVM();
+                    questionOptionVM.setContent(i.getContent());
+                    questionOptionVM.setPrefix(i.getPrefix());
+                    questionOptionVM.setScore(i.getScore() == null ? null : i.getScore());
+                    return questionOptionVM;
+                }).collect(Collectors.toList());
         QuestionInfoContentVM questionInfoContentVM = new QuestionInfoContentVM();
         questionInfoContentVM.setQuestionTitle(questionDto.getQuestionTitle());
         questionInfoContentVM.setAnalysis(questionDto.getAnalysis());
@@ -167,7 +171,7 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         damingQuestion.setScore(questionDto.getScore());
         damingQuestion.setSubjectId(questionDto.getSubjectId());
         damingQuestionMapper.updateDamingQuestion(damingQuestion);
-        // 2.题目信息实体也是这样
+        standardizeQuestionOptions(questionDto);
         DamingContentInfo damingContentInfo = damingContentInfoMapper.selectDamingContentInfoById(damingQuestion.getQuestionInfoId());
         String dtoToString = QuestionDtoToString(questionDto);
         damingContentInfo.setContent(dtoToString);
@@ -206,6 +210,21 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         return damingQuestionMapper.deleteDamingQuestionById(id);
     }
 
+    private void standardizeQuestionOptions(QuestionDto questionDto) {
+        if (questionDto == null || questionDto.getQuestionType() == null) {
+            return;
+        }
+        if (Objects.equals(questionDto.getQuestionType(), QuestionTypeEnum.Judge.getCode())) {
+            QuestionOptionVM trueOption = new QuestionOptionVM();
+            trueOption.setPrefix("A");
+            trueOption.setContent("正确");
+            QuestionOptionVM falseOption = new QuestionOptionVM();
+            falseOption.setPrefix("B");
+            falseOption.setContent("错误");
+            questionDto.setItems(Arrays.asList(trueOption, falseOption));
+        }
+    }
+
     @Override
     public List<QuestionExportVO> selectQuestionExportList(List<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
@@ -239,7 +258,7 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
     @Transactional
     public String importQuestions(List<QuestionExportVO> questionList, String operName) {
         if (CollectionUtils.isEmpty(questionList)) {
-            throw new ServiceException("导入题目数据不能为空！");
+            throw new ServiceException("导入题目数据不能为空");
         }
         int successNum = 0;
         int failureNum = 0;
@@ -250,18 +269,18 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
                 QuestionDto questionDto = convertExportVOToDto(questionExportVO);
                 insertDamingQuestion(questionDto);
                 successNum++;
-                successMsg.append("<br/>").append(successNum).append("、题干 ").append(questionDto.getQuestionTitle()).append(" 导入成功");
+                successMsg.append("<br/>").append(successNum).append("、题目：" ).append(questionDto.getQuestionTitle()).append(" 导入成功");
             } catch (Exception e) {
                 failureNum++;
-                String msg = "<br/>" + failureNum + "、题干 " + questionExportVO.getQuestionTitle() + " 导入失败：" + e.getMessage();
+                String msg = "<br/>" + failureNum + "、题目：" + questionExportVO.getQuestionTitle() + " 导入失败，原因：" + e.getMessage();
                 failureMsg.append(msg);
             }
         }
         if (failureNum > 0) {
-            failureMsg.insert(0, "很抱歉，部分数据导入失败！共 " + failureNum + " 条，错误如下：");
+            failureMsg.insert(0, "很抱歉，部分数据导入失败！共 " + failureNum + " 条数据");
             throw new ServiceException(failureMsg.toString());
         }
-        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，操作人：" + operName + "，明细如下：");
+        successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条数据，操作人：" + operName);
         return successMsg.toString();
     }
 
@@ -270,29 +289,51 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
             throw new ServiceException("科目ID不能为空");
         }
         if (exportVO.getQuestionType() == null) {
-            throw new ServiceException("题目类型不能为空");
+            throw new ServiceException("题型不能为空");
         }
         if (StringUtils.isBlank(exportVO.getQuestionTitle())) {
-            throw new ServiceException("题干不能为空");
+            throw new ServiceException("题目标题不能为空");
         }
         if (exportVO.getScore() == null) {
             throw new ServiceException("分数不能为空");
         }
-        if (StringUtils.isBlank(exportVO.getOptionsJson())) {
-            throw new ServiceException("选项内容不能为空");
+
+        Integer questionType = exportVO.getQuestionType();
+        boolean isSingle = Objects.equals(questionType, QuestionTypeEnum.Single.getCode());
+        boolean isMultiple = Objects.equals(questionType, QuestionTypeEnum.Multiple.getCode());
+        boolean isJudge = Objects.equals(questionType, QuestionTypeEnum.Judge.getCode());
+        boolean isSubjective = Objects.equals(questionType, QuestionTypeEnum.Subjective.getCode());
+        boolean isFillBlank = Objects.equals(questionType, QuestionTypeEnum.FillBlank.getCode());
+        if (!isSingle && !isMultiple && !isJudge && !isSubjective && !isFillBlank) {
+            throw new ServiceException("不支持的题目类型：" + questionType);
         }
-        List<QuestionOptionVM> optionList = JSON.parseArray(exportVO.getOptionsJson(), QuestionOptionVM.class);
-        if (CollectionUtils.isEmpty(optionList)) {
-            throw new ServiceException("选项内容解析失败，请检查JSON格式");
+
+        List<QuestionOptionVM> optionList = Collections.emptyList();
+        if (StringUtils.isNotBlank(exportVO.getOptionsJson())) {
+            optionList = JSON.parseArray(exportVO.getOptionsJson(), QuestionOptionVM.class);
         }
+        if (isSingle || isMultiple) {
+            if (CollectionUtils.isEmpty(optionList)) {
+                throw new ServiceException("单选/多选题的选项内容不能为空");
+            }
+        } else if (isJudge && CollectionUtils.isEmpty(optionList)) {
+            QuestionOptionVM optionTrue = new QuestionOptionVM();
+            optionTrue.setPrefix("A");
+            optionTrue.setContent("正确");
+            QuestionOptionVM optionFalse = new QuestionOptionVM();
+            optionFalse.setPrefix("B");
+            optionFalse.setContent("错误");
+            optionList = Arrays.asList(optionTrue, optionFalse);
+        }
+
         QuestionDto questionDto = new QuestionDto();
         questionDto.setSubjectId(exportVO.getSubjectId());
         questionDto.setQuestionType(exportVO.getQuestionType());
         questionDto.setQuestionTitle(exportVO.getQuestionTitle());
-        questionDto.setAnalysis(StringUtils.isBlank(exportVO.getAnalysis()) ? "无" : exportVO.getAnalysis());
+        questionDto.setAnalysis(StringUtils.isBlank(exportVO.getAnalysis()) ? "" : exportVO.getAnalysis());
         questionDto.setScore(exportVO.getScore());
         questionDto.setItems(optionList);
-        if (Objects.equals(exportVO.getQuestionType(), QuestionTypeEnum.Multiple.getCode())) {
+        if (isMultiple) {
             if (StringUtils.isBlank(exportVO.getCorrect())) {
                 throw new ServiceException("多选题正确答案不能为空");
             }
@@ -305,10 +346,11 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
             }
             questionDto.setCorrectArray(answers);
         } else {
-            if (StringUtils.isBlank(exportVO.getCorrect())) {
+            // 主观题可以没有标准答案，其他题型必须有答案
+            if (StringUtils.isBlank(exportVO.getCorrect()) && !isSubjective && !isFillBlank) {
                 throw new ServiceException("正确答案不能为空");
             }
-            questionDto.setCorrect(exportVO.getCorrect().trim());
+            questionDto.setCorrect(StringUtils.defaultString(exportVO.getCorrect()).trim());
         }
         return questionDto;
     }

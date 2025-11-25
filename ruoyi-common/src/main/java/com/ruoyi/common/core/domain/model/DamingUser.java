@@ -34,6 +34,12 @@ public class DamingUser extends BaseEntity
     @Excel(name = "头像地址")
     private String avatar;
 
+    /** 微信OpenID */
+    private String wxOpenId;
+
+    /** 微信UnionID */
+    private String wxUnionId;
+
     /** 删除标志 */
     private String delFlag;
 
@@ -90,6 +96,26 @@ public class DamingUser extends BaseEntity
     public String getDelFlag()
     {
         return delFlag;
+    }
+
+    public void setWxOpenId(String wxOpenId)
+    {
+        this.wxOpenId = wxOpenId;
+    }
+
+    public String getWxOpenId()
+    {
+        return wxOpenId;
+    }
+
+    public void setWxUnionId(String wxUnionId)
+    {
+        this.wxUnionId = wxUnionId;
+    }
+
+    public String getWxUnionId()
+    {
+        return wxUnionId;
     }
 
     @Override

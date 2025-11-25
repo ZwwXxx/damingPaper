@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DashboardMapper">
+
+    <!-- 统计总用户数 -->
+    <select id="countTotalUsers" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM (
+            SELECT user_id FROM sys_user WHERE del_flag = '0'
+            UNION ALL
+            SELECT user_id FROM daming_user WHERE del_flag = '0'
+        ) AS all_users
+    </select>
+
+    <!-- 统计指定日期范围内的新增用户数 -->
+    <select id="countNewUsers" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM (
+            SELECT user_id, create_time FROM sys_user WHERE del_flag = '0'
+            UNION ALL
+            SELECT user_id, create_time FROM daming_user WHERE del_flag = '0'
+        ) AS all_users
+        WHERE create_time >= #{startDate}
+          AND create_time &lt; #{endDate}
+    </select>
+
+    <!-- 统计总题目数 -->
+    <select id="countTotalQuestions" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM daming_question
+        WHERE del_flag = 0
+    </select>
+
+    <!-- 统计指定日期范围内的新增题目数 -->
+    <select id="countNewQuestions" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM daming_question
+        WHERE del_flag = 0
+          AND create_time >= #{startDate}
+          AND create_time &lt; #{endDate}
+    </select>
+
+    <!-- 统计总试卷数 -->
+    <select id="countTotalPapers" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM daming_paper
+        WHERE del_flag = 0
+    </select>
+
+    <!-- 统计指定日期范围内的新增试卷数 -->
+    <select id="countNewPapers" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM daming_paper
+        WHERE del_flag = 0
+          AND create_time >= #{startDate}
+          AND create_time &lt; #{endDate}
+    </select>
+
+    <!-- 统计总考试次数 -->
+    <select id="countTotalExams" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM daming_paper_answer
+    </select>
+
+    <!-- 统计指定日期范围内的考试次数 -->
+    <select id="countExamsByDateRange" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM daming_paper_answer
+        WHERE create_time >= #{startDate}
+          AND create_time &lt; #{endDate}
+    </select>
+
+    <!-- 统计指定日期范围内的唯一登录用户数 -->
+    <select id="countUniqueLoginUsers" resultType="java.lang.Long">
+        SELECT COUNT(DISTINCT user_name)
+        FROM sys_logininfor
+        WHERE status = '0'
+          AND login_time >= #{startDate}
+          AND login_time &lt; #{endDate}
+    </select>
+
+    <!-- 查询最近N天的登录趋势 -->
+    <select id="getLoginTrend" resultType="java.util.HashMap">
+        SELECT
+            DATE_FORMAT(login_time, '%Y-%m-%d') AS date,
+            COUNT(*) AS logins,
+            COUNT(DISTINCT user_name) AS uniqueUsers
+        FROM sys_logininfor
+        WHERE status = '0'
+          AND login_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+        GROUP BY DATE_FORMAT(login_time, '%Y-%m-%d')
+        ORDER BY date ASC
+    </select>
+
+    <!-- 查询最近N天的考试趋势（按日期） -->
+    <select id="getExamTrend" resultType="java.util.HashMap">
+        SELECT
+            DATE_FORMAT(create_time, '%Y-%m-%d') AS date,
+            COUNT(*) AS count
+        FROM daming_paper_answer
+        WHERE create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d')
+        ORDER BY date ASC
+    </select>
+
+    <!-- 按试卷统计考试趋势（最近N天的热门试卷） -->
+    <select id="getExamTrendByPaper" resultType="java.util.HashMap">
+        SELECT
+            p.paper_id AS paperId,
+            p.paper_name AS paperName,
+            COUNT(pa.paper_answer_id) AS examCount,
+            ROUND(AVG(pa.final_score * 100.0 / NULLIF(pa.paper_score, 0)), 2) AS avgScorePercent,
+            ROUND(AVG(pa.final_score), 2) AS avgScore,
+            MAX(pa.paper_score) AS totalScore
+        FROM daming_paper p
+        INNER JOIN daming_paper_answer pa ON p.paper_id = pa.paper_id
+        WHERE p.del_flag != 2
+        <if test="days != null and days > 0">
+          AND pa.create_time >= DATE_SUB(CURDATE(), INTERVAL #{days} DAY)
+        </if>
+        GROUP BY p.paper_id, p.paper_name
+        ORDER BY examCount DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 统计平均分（废弃 - 不同试卷平均分没有可比性） -->
+    <select id="getAvgScore" resultType="java.lang.Double">
+        SELECT 0.0
+    </select>
+
+    <!-- 统计及格率 -->
+    <select id="getPassRate" resultType="java.lang.Double">
+        SELECT
+            CASE
+                WHEN COUNT(*) = 0 THEN 0
+                ELSE ROUND(
+                    COUNT(CASE WHEN final_score * 100.0 / paper_score >= #{passScore} THEN 1 END) * 100.0 / COUNT(*),
+                    2
+                )
+            END AS passRate
+        FROM daming_paper_answer
+    </select>
+
+    <!-- 统计优秀率 -->
+    <select id="getExcellentRate" resultType="java.lang.Double">
+        SELECT
+            CASE
+                WHEN COUNT(*) = 0 THEN 0
+                ELSE ROUND(
+                    COUNT(CASE WHEN final_score * 100.0 / paper_score >= #{excellentScore} THEN 1 END) * 100.0 / COUNT(*),
+                    2
+                )
+            END AS excellentRate
+        FROM daming_paper_answer
+    </select>
+
+    <!-- 统计批改进度 -->
+    <select id="getReviewProgress" resultType="java.util.HashMap">
+        SELECT
+            COUNT(CASE WHEN review_status = 1 THEN 1 END) AS pending,
+            COUNT(CASE WHEN review_status = 2 THEN 1 END) AS reviewed,
+            CASE
+                WHEN COUNT(CASE WHEN review_status IN (1, 2) THEN 1 END) = 0 THEN 0
+                ELSE ROUND(
+                    COUNT(CASE WHEN review_status = 2 THEN 1 END) * 100.0 / 
+                    COUNT(CASE WHEN review_status IN (1, 2) THEN 1 END),
+                    2
+                )
+            END AS rate
+        FROM daming_paper_answer
+    </select>
+
+    <!-- 按科目统计题目分布 -->
+    <select id="getQuestionDistributionBySubject" resultType="java.util.HashMap">
+        SELECT
+            s.subject_name AS subjectName,
+            COUNT(q.id) AS count
+        FROM daming_question q
+        INNER JOIN daming_subject s ON q.subject_id = s.subject_id
+        WHERE q.del_flag = 0
+          AND s.del_flag = 0
+        GROUP BY s.subject_id, s.subject_name
+        ORDER BY count DESC
+    </select>
+
+    <!-- 按题型统计题目分布 -->
+    <select id="getQuestionDistributionByType" resultType="java.util.HashMap">
+        SELECT
+            question_type AS type,
+            CASE question_type
+                WHEN 1 THEN '单选题'
+                WHEN 2 THEN '多选题'
+                WHEN 3 THEN '判断题'
+                WHEN 4 THEN '填空题'
+                WHEN 5 THEN '简答题'
+                ELSE '未知类型'
+            END AS typeName,
+            COUNT(*) AS count
+        FROM daming_question
+        WHERE del_flag = 0
+        GROUP BY question_type
+        ORDER BY question_type ASC
+    </select>
+
+    <!-- 查询热门收藏题目TOP N -->
+    <select id="getTopFavoriteQuestions" resultType="java.util.HashMap">
+        SELECT
+            f.question_id AS questionId,
+            SUBSTRING(c.content, 1, 50) AS preview,
+            COUNT(f.favorite_id) AS favCount
+        FROM daming_question_favorite f
+        INNER JOIN daming_question q ON f.question_id = q.id
+        LEFT JOIN daming_content_info c ON q.question_info_id = c.id
+        WHERE q.del_flag = 0
+        GROUP BY f.question_id, c.content
+        ORDER BY favCount DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询热门试卷TOP N -->
+    <select id="getTopPapers" resultType="java.util.HashMap">
+        SELECT
+            p.paper_id AS paperId,
+            p.paper_name AS paperName,
+            COUNT(pa.paper_answer_id) AS examCount,
+            ROUND(AVG(pa.final_score), 2) AS avgScore,
+            s.subject_name AS subjectName
+        FROM daming_paper p
+        INNER JOIN daming_paper_answer pa ON p.paper_id = pa.paper_id
+        INNER JOIN daming_subject s ON p.subject_id = s.subject_id
+        WHERE p.del_flag = 0
+          AND s.del_flag = 0
+        GROUP BY p.paper_id, p.paper_name, s.subject_name
+        ORDER BY examCount DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 统计试卷使用情况 -->
+    <select id="getPaperUsage" resultType="java.util.HashMap">
+        SELECT
+            COUNT(DISTINCT p.paper_id) AS publishedCount,
+            COUNT(DISTINCT pa.paper_id) AS usedCount,
+            CASE
+                WHEN COUNT(DISTINCT p.paper_id) = 0 THEN 0
+                ELSE ROUND(
+                    COUNT(DISTINCT pa.paper_id) * 100.0 / COUNT(DISTINCT p.paper_id),
+                    2
+                )
+            END AS usageRate
+        FROM daming_paper p
+        LEFT JOIN daming_paper_answer pa ON p.paper_id = pa.paper_id
+        WHERE p.del_flag = 0
+    </select>
+
+    <!-- 按小时统计考试时间分布 -->
+    <select id="getExamHourlyDistribution" resultType="java.util.HashMap">
+        SELECT
+            HOUR(create_time) AS hour,
+            COUNT(*) AS count
+        FROM daming_paper_answer
+        WHERE create_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        GROUP BY HOUR(create_time)
+        ORDER BY hour ASC
+    </select>
+
+</mapper>
