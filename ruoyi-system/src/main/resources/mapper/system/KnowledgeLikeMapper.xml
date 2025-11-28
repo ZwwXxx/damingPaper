@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.KnowledgeLikeMapper">
+    
+    <resultMap type="KnowledgeLike" id="KnowledgeLikeResult">
+        <result property="likeId"       column="like_id"        />
+        <result property="userId"       column="user_id"        />
+        <result property="pointId"      column="point_id"       />
+        <result property="createTime"   column="create_time"    />
+    </resultMap>
+    
+    <select id="selectByUserAndPoint" resultMap="KnowledgeLikeResult">
+        select like_id, user_id, point_id, create_time
+        from knowledge_like
+        where user_id = #{userId} and point_id = #{pointId}
+    </select>
+    
+    <insert id="insertKnowledgeLike" parameterType="KnowledgeLike">
+        insert into knowledge_like(user_id, point_id, create_time)
+        values(#{userId}, #{pointId}, sysdate())
+    </insert>
+    
+    <delete id="deleteByUserAndPoint">
+        delete from knowledge_like
+        where user_id = #{userId} and point_id = #{pointId}
+    </delete>
+    
+</mapper>

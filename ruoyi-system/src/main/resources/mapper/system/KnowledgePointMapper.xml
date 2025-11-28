@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.KnowledgePointMapper">
+    
+    <resultMap type="KnowledgePoint" id="KnowledgePointResult">
+        <result property="pointId"       column="point_id"       />
+        <result property="subjectId"     column="subject_id"     />
+        <result property="chapterId"     column="chapter_id"     />
+        <result property="title"         column="title"          />
+        <result property="summary"       column="summary"        />
+        <result property="content"       column="content"        />
+        <result property="contentHtml"   column="content_html"   />
+        <result property="difficulty"    column="difficulty"     />
+        <result property="importance"    column="importance"     />
+        <result property="authorId"      column="author_id"      />
+        <result property="authorName"    column="author_name"    />
+        <result property="viewCount"     column="view_count"     />
+        <result property="likeCount"     column="like_count"     />
+        <result property="collectCount"  column="collect_count"  />
+        <result property="commentCount"  column="comment_count"  />
+        <result property="learnCount"    column="learn_count"    />
+        <result property="isRecommend"   column="is_recommend"   />
+        <result property="isTop"         column="is_top"         />
+        <result property="status"        column="status"         />
+        <result property="auditStatus"   column="audit_status"   />
+        <result property="auditRemark"   column="audit_remark"   />
+        <result property="version"       column="version"        />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="publishTime"   column="publish_time"   />
+        <result property="subjectName"   column="subject_name"   />
+        <result property="chapterName"   column="chapter_name"   />
+    </resultMap>
+    
+    <sql id="selectKnowledgePointVo">
+        select 
+            kp.point_id, kp.subject_id, kp.chapter_id, kp.title, kp.summary,
+            kp.content, kp.content_html, kp.difficulty, kp.importance,
+            kp.author_id, kp.author_name, kp.view_count, kp.like_count,
+            kp.collect_count, kp.comment_count, kp.learn_count,
+            kp.is_recommend, kp.is_top, kp.status, kp.audit_status,
+            kp.audit_remark, kp.version, kp.create_time, kp.update_time, kp.publish_time,
+            ks.subject_name, kc.chapter_name
+        from knowledge_point kp
+        left join knowledge_subject ks on kp.subject_id = ks.subject_id
+        left join knowledge_chapter kc on kp.chapter_id = kc.chapter_id
+    </sql>
+    
+    <select id="selectKnowledgePointByPointId" parameterType="Long" resultMap="KnowledgePointResult">
+        <include refid="selectKnowledgePointVo"/>
+        where kp.point_id = #{pointId}
+    </select>
+    
+    <select id="selectKnowledgePointList" parameterType="KnowledgePoint" resultMap="KnowledgePointResult">
+        <include refid="selectKnowledgePointVo"/>
+        <where>
+            <if test="subjectId != null">
+                AND kp.subject_id = #{subjectId}
+            </if>
+            <if test="chapterId != null">
+                AND kp.chapter_id = #{chapterId}
+            </if>
+            <if test="title != null and title != ''">
+                AND kp.title like concat('%', #{title}, '%')
+            </if>
+            <if test="difficulty != null">
+                AND kp.difficulty = #{difficulty}
+            </if>
+            <if test="status != null">
+                AND kp.status = #{status}
+            </if>
+            <if test="auditStatus != null">
+                AND kp.audit_status = #{auditStatus}
+            </if>
+            <if test="authorId != null">
+                AND kp.author_id = #{authorId}
+            </if>
+            <if test="isRecommend != null">
+                AND kp.is_recommend = #{isRecommend}
+            </if>
+            <if test="isTop != null">
+                AND kp.is_top = #{isTop}
+            </if>
+        </where>
+        order by kp.is_top desc, kp.create_time desc
+    </select>
+    
+    <select id="selectHotKnowledgePoints" resultMap="KnowledgePointResult">
+        <include refid="selectKnowledgePointVo"/>
+        where kp.status = 1
+        order by kp.view_count desc, kp.like_count desc
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+    </select>
+    
+    <select id="selectLatestKnowledgePoints" resultMap="KnowledgePointResult">
+        <include refid="selectKnowledgePointVo"/>
+        where kp.status = 1
+        order by kp.create_time desc
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+    </select>
+    
+    <select id="selectRecommendKnowledgePoints" resultMap="KnowledgePointResult">
+        <include refid="selectKnowledgePointVo"/>
+        where kp.status = 1 and kp.is_recommend = 1
+        order by kp.view_count desc
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+    </select>
+    
+    <insert id="insertKnowledgePoint" parameterType="KnowledgePoint" useGeneratedKeys="true" keyProperty="pointId">
+        insert into knowledge_point(
+            <if test="subjectId != null">subject_id,</if>
+            <if test="chapterId != null">chapter_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="summary != null">summary,</if>
+            <if test="content != null">content,</if>
+            <if test="contentHtml != null">content_html,</if>
+            <if test="difficulty != null">difficulty,</if>
+            <if test="importance != null">importance,</if>
+            <if test="authorId != null">author_id,</if>
+            <if test="authorName != null and authorName != ''">author_name,</if>
+            <if test="status != null">status,</if>
+            <if test="auditStatus != null">audit_status,</if>
+            create_time
+        )values(
+            <if test="subjectId != null">#{subjectId},</if>
+            <if test="chapterId != null">#{chapterId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="summary != null">#{summary},</if>
+            <if test="content != null">#{content},</if>
+            <if test="contentHtml != null">#{contentHtml},</if>
+            <if test="difficulty != null">#{difficulty},</if>
+            <if test="importance != null">#{importance},</if>
+            <if test="authorId != null">#{authorId},</if>
+            <if test="authorName != null and authorName != ''">#{authorName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="auditStatus != null">#{auditStatus},</if>
+            sysdate()
+        )
+    </insert>
+    
+    <update id="updateKnowledgePoint" parameterType="KnowledgePoint">
+        update knowledge_point
+        <set>
+            <if test="subjectId != null">subject_id = #{subjectId},</if>
+            <if test="chapterId != null">chapter_id = #{chapterId},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="summary != null">summary = #{summary},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="contentHtml != null">content_html = #{contentHtml},</if>
+            <if test="difficulty != null">difficulty = #{difficulty},</if>
+            <if test="importance != null">importance = #{importance},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="auditStatus != null">audit_status = #{auditStatus},</if>
+            <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
+            <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="publishTime != null">publish_time = #{publishTime},</if>
+            update_time = sysdate()
+        </set>
+        where point_id = #{pointId}
+    </update>
+    
+    <delete id="deleteKnowledgePointByPointId" parameterType="Long">
+        delete from knowledge_point where point_id = #{pointId}
+    </delete>
+    
+    <delete id="deleteKnowledgePointByPointIds" parameterType="Long">
+        delete from knowledge_point where point_id in
+        <foreach item="pointId" collection="array" open="(" separator="," close=")">
+            #{pointId}
+        </foreach>
+    </delete>
+    
+    <update id="increaseViewCount" parameterType="Long">
+        update knowledge_point set view_count = view_count + 1 where point_id = #{pointId}
+    </update>
+    
+    <update id="increaseLikeCount" parameterType="Long">
+        update knowledge_point set like_count = like_count + 1 where point_id = #{pointId}
+    </update>
+    
+    <update id="decreaseLikeCount" parameterType="Long">
+        update knowledge_point set like_count = like_count - 1 where point_id = #{pointId} and like_count > 0
+    </update>
+    
+    <update id="increaseCollectCount" parameterType="Long">
+        update knowledge_point set collect_count = collect_count + 1 where point_id = #{pointId}
+    </update>
+    
+    <update id="decreaseCollectCount" parameterType="Long">
+        update knowledge_point set collect_count = collect_count - 1 where point_id = #{pointId} and collect_count > 0
+    </update>
+    
+    <update id="increaseCommentCount" parameterType="Long">
+        update knowledge_point set comment_count = comment_count + 1 where point_id = #{pointId}
+    </update>
+    
+    <update id="decreaseCommentCount" parameterType="Long">
+        update knowledge_point set comment_count = comment_count - 1 where point_id = #{pointId} and comment_count > 0
+    </update>
+    
+</mapper>

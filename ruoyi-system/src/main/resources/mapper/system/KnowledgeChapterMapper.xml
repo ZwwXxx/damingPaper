@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.KnowledgeChapterMapper">
+    
+    <resultMap type="KnowledgeChapter" id="KnowledgeChapterResult">
+        <result property="chapterId"    column="chapter_id"     />
+        <result property="subjectId"    column="subject_id"     />
+        <result property="parentId"     column="parent_id"      />
+        <result property="chapterName"  column="chapter_name"   />
+        <result property="chapterCode"  column="chapter_code"   />
+        <result property="description"  column="description"    />
+        <result property="sortOrder"    column="sort_order"     />
+        <result property="level"        column="level"          />
+        <result property="status"       column="status"         />
+        <result property="createBy"     column="create_by"      />
+        <result property="createTime"   column="create_time"    />
+        <result property="updateTime"   column="update_time"    />
+    </resultMap>
+    
+    <sql id="selectKnowledgeChapterVo">
+        select chapter_id, subject_id, parent_id, chapter_name, chapter_code, description, sort_order, level, status, create_by, create_time, update_time
+        from knowledge_chapter
+    </sql>
+    
+    <select id="selectKnowledgeChapterByChapterId" parameterType="Long" resultMap="KnowledgeChapterResult">
+        <include refid="selectKnowledgeChapterVo"/>
+        where chapter_id = #{chapterId}
+    </select>
+    
+    <select id="selectKnowledgeChapterList" parameterType="KnowledgeChapter" resultMap="KnowledgeChapterResult">
+        <include refid="selectKnowledgeChapterVo"/>
+        <where>
+            <if test="subjectId != null">
+                AND subject_id = #{subjectId}
+            </if>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="chapterName != null and chapterName != ''">
+                AND chapter_name like concat('%', #{chapterName}, '%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        order by sort_order asc, create_time desc
+    </select>
+    
+    <insert id="insertKnowledgeChapter" parameterType="KnowledgeChapter" useGeneratedKeys="true" keyProperty="chapterId">
+        insert into knowledge_chapter(
+            <if test="subjectId != null">subject_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="chapterName != null and chapterName != ''">chapter_name,</if>
+            <if test="chapterCode != null">chapter_code,</if>
+            <if test="description != null">description,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="level != null">level,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time
+        )values(
+            <if test="subjectId != null">#{subjectId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="chapterName != null and chapterName != ''">#{chapterName},</if>
+            <if test="chapterCode != null">#{chapterCode},</if>
+            <if test="description != null">#{description},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="level != null">#{level},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            sysdate()
+        )
+    </insert>
+    
+    <update id="updateKnowledgeChapter" parameterType="KnowledgeChapter">
+        update knowledge_chapter
+        <set>
+            <if test="subjectId != null">subject_id = #{subjectId},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="chapterName != null and chapterName != ''">chapter_name = #{chapterName},</if>
+            <if test="chapterCode != null">chapter_code = #{chapterCode},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="status != null">status = #{status},</if>
+            update_time = sysdate()
+        </set>
+        where chapter_id = #{chapterId}
+    </update>
+    
+    <delete id="deleteKnowledgeChapterByChapterId" parameterType="Long">
+        delete from knowledge_chapter where chapter_id = #{chapterId}
+    </delete>
+    
+    <delete id="deleteKnowledgeChapterByChapterIds" parameterType="Long">
+        delete from knowledge_chapter where chapter_id in
+        <foreach item="chapterId" collection="array" open="(" separator="," close=")">
+            #{chapterId}
+        </foreach>
+    </delete>
+    
+</mapper>
