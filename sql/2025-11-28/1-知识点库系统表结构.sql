@@ -378,3 +378,78 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- 3. 已配置后台管理菜单权限
 -- 4. 可直接在现有系统中执行此SQL
 -- ========================================
+
+-- ========================================
+-- 评论系统升级脚本
+-- 日期: 2025-11-28
+-- 说明: 为知识点评论表添加缺失字段，创建评论点赞表
+-- ========================================
+
+-- 1. 为 knowledge_comment 表添加缺失字段
+-- 添加回复昵称字段（如果不存在）
+SET @count = 0;
+SELECT COUNT(*) INTO @count FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'knowledge_comment' AND COLUMN_NAME = 'reply_to_nick_name';
+SET @sql = IF(@count = 0, 
+'ALTER TABLE `knowledge_comment` ADD COLUMN `reply_to_nick_name` VARCHAR(64) DEFAULT NULL COMMENT "回复目标用户昵称" AFTER `reply_to_user_name`', 
+'SELECT "字段 reply_to_nick_name 已存在"');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- 添加回复目标评论ID字段（如果不存在）
+SET @count = 0;
+SELECT COUNT(*) INTO @count FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'knowledge_comment' AND COLUMN_NAME = 'reply_to_comment_id';
+SET @sql = IF(@count = 0, 
+'ALTER TABLE `knowledge_comment` ADD COLUMN `reply_to_comment_id` BIGINT(20) DEFAULT NULL COMMENT "回复目标评论ID" AFTER `reply_to_nick_name`', 
+'SELECT "字段 reply_to_comment_id 已存在"');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- 添加创建者字段（如果不存在）
+SET @count = 0;
+SELECT COUNT(*) INTO @count FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'knowledge_comment' AND COLUMN_NAME = 'create_by';
+SET @sql = IF(@count = 0, 
+'ALTER TABLE `knowledge_comment` ADD COLUMN `create_by` VARCHAR(64) DEFAULT "" COMMENT "创建者" AFTER `status`', 
+'SELECT "字段 create_by 已存在"');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- 添加更新者字段（如果不存在）
+SET @count = 0;
+SELECT COUNT(*) INTO @count FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'knowledge_comment' AND COLUMN_NAME = 'update_by';
+SET @sql = IF(@count = 0, 
+'ALTER TABLE `knowledge_comment` ADD COLUMN `update_by` VARCHAR(64) DEFAULT "" COMMENT "更新者" AFTER `update_time`', 
+'SELECT "字段 update_by 已存在"');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- 修改like_count字段类型为bigint（如果需要）
+SET @count = 0;
+SELECT COUNT(*) INTO @count FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'knowledge_comment' AND COLUMN_NAME = 'like_count' AND DATA_TYPE = 'int';
+SET @sql = IF(@count > 0, 
+'ALTER TABLE `knowledge_comment` MODIFY COLUMN `like_count` BIGINT(20) DEFAULT 0 COMMENT "点赞数"', 
+'SELECT "字段 like_count 已为正确类型"');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- 2. 创建知识点评论点赞表（如果不存在）
+CREATE TABLE IF NOT EXISTS `knowledge_comment_like` (
+  `like_id` BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '点赞ID',
+  `comment_id` BIGINT(20) NOT NULL COMMENT '评论ID',
+  `user_id` BIGINT(20) NOT NULL COMMENT '用户ID',
+  `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`like_id`),
+  UNIQUE KEY `uk_user_comment` (`user_id`,`comment_id`),
+  KEY `idx_comment_id` (`comment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='知识点评论点赞表';
+
+-- ========================================

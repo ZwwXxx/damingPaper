@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.KnowledgeCommentMapper">
+    
+    <resultMap type="KnowledgeComment" id="KnowledgeCommentResult">
+        <result property="commentId"     column="comment_id"     />
+        <result property="pointId"       column="point_id"       />
+        <result property="userId"        column="user_id"        />
+        <result property="userName"      column="user_name"      />
+        <result property="nickName"      column="nick_name"      />
+        <result property="avatar"        column="avatar"         />
+        <result property="content"       column="content"        />
+        <result property="parentId"      column="parent_id"      />
+        <result property="replyToUserId" column="reply_to_user_id" />
+        <result property="replyToUserName" column="reply_to_user_name" />
+        <result property="replyToNickName" column="reply_to_nick_name" />
+        <result property="replyToCommentId" column="reply_to_comment_id" />
+        <result property="likeCount"     column="like_count"     />
+        <result property="status"        column="status"         />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectKnowledgeCommentVo">
+        select comment_id, point_id, user_id, user_name, nick_name, avatar, content, parent_id, 
+               reply_to_user_id, reply_to_user_name, reply_to_nick_name, reply_to_comment_id, like_count, 
+               status, create_by, create_time, update_by, update_time 
+        from knowledge_comment
+    </sql>
+
+    <select id="selectKnowledgeCommentList" parameterType="KnowledgeComment" resultMap="KnowledgeCommentResult">
+        <include refid="selectKnowledgeCommentVo"/>
+        <where>
+            <if test="pointId != null "> and point_id = #{pointId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectKnowledgeCommentByCommentId" parameterType="Long" resultMap="KnowledgeCommentResult">
+        <include refid="selectKnowledgeCommentVo"/>
+        where comment_id = #{commentId}
+    </select>
+
+    <select id="selectRootCommentsByPointId" parameterType="Long" resultMap="KnowledgeCommentResult">
+        <include refid="selectKnowledgeCommentVo"/>
+        where point_id = #{pointId} and parent_id = 0 and status = 1
+        order by create_time desc
+    </select>
+
+    <select id="selectChildCommentsByParentId" parameterType="Long" resultMap="KnowledgeCommentResult">
+        <include refid="selectKnowledgeCommentVo"/>
+        where parent_id = #{parentId} and status = 1
+        order by create_time asc
+    </select>
+
+    <select id="countCommentsByPointId" parameterType="Long" resultType="int">
+        select count(*) from knowledge_comment 
+        where point_id = #{pointId} and status = 1
+    </select>
+        
+    <insert id="insertKnowledgeComment" parameterType="KnowledgeComment" useGeneratedKeys="true" keyProperty="commentId">
+        insert into knowledge_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pointId != null">point_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="content != null">content,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="replyToUserId != null">reply_to_user_id,</if>
+            <if test="replyToUserName != null">reply_to_user_name,</if>
+            <if test="replyToNickName != null">reply_to_nick_name,</if>
+            <if test="replyToCommentId != null">reply_to_comment_id,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pointId != null">#{pointId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="content != null">#{content},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="replyToUserId != null">#{replyToUserId},</if>
+            <if test="replyToUserName != null">#{replyToUserName},</if>
+            <if test="replyToNickName != null">#{replyToNickName},</if>
+            <if test="replyToCommentId != null">#{replyToCommentId},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            sysdate(),
+        </trim>
+    </insert>
+
+    <update id="updateKnowledgeComment" parameterType="KnowledgeComment">
+        update knowledge_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pointId != null">point_id = #{pointId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="replyToUserId != null">reply_to_user_id = #{replyToUserId},</if>
+            <if test="replyToUserName != null">reply_to_user_name = #{replyToUserName},</if>
+            <if test="replyToNickName != null">reply_to_nick_name = #{replyToNickName},</if>
+            <if test="replyToCommentId != null">reply_to_comment_id = #{replyToCommentId},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteKnowledgeCommentByCommentId" parameterType="Long">
+        update knowledge_comment set status = 0 where comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteKnowledgeCommentByCommentIds" parameterType="String">
+        update knowledge_comment set status = 0 where comment_id in 
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+
+    <update id="increaseLikeCount" parameterType="Long">
+        update knowledge_comment set like_count = like_count + 1 where comment_id = #{commentId}
+    </update>
+
+    <update id="decreaseLikeCount" parameterType="Long">
+        update knowledge_comment set like_count = like_count - 1 where comment_id = #{commentId} and like_count > 0
+    </update>
+</mapper>

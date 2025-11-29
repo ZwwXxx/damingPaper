@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.KnowledgeCommentLikeMapper">
+    
+    <resultMap type="KnowledgeCommentLike" id="KnowledgeCommentLikeResult">
+        <result property="likeId"     column="like_id"     />
+        <result property="commentId"  column="comment_id"  />
+        <result property="userId"     column="user_id"     />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <sql id="selectKnowledgeCommentLikeVo">
+        select like_id, comment_id, user_id, create_time from knowledge_comment_like
+    </sql>
+
+    <select id="selectKnowledgeCommentLikeList" parameterType="KnowledgeCommentLike" resultMap="KnowledgeCommentLikeResult">
+        <include refid="selectKnowledgeCommentLikeVo"/>
+        <where>  
+            <if test="commentId != null "> and comment_id = #{commentId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectKnowledgeCommentLikeByLikeId" parameterType="Long" resultMap="KnowledgeCommentLikeResult">
+        <include refid="selectKnowledgeCommentLikeVo"/>
+        where like_id = #{likeId}
+    </select>
+
+    <select id="selectByUserIdAndCommentId" parameterType="map" resultMap="KnowledgeCommentLikeResult">
+        <include refid="selectKnowledgeCommentLikeVo"/>
+        where user_id = #{userId} and comment_id = #{commentId}
+    </select>
+        
+    <insert id="insertKnowledgeCommentLike" parameterType="KnowledgeCommentLike" useGeneratedKeys="true" keyProperty="likeId">
+        insert into knowledge_comment_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commentId != null">comment_id,</if>
+            <if test="userId != null">user_id,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commentId != null">#{commentId},</if>
+            <if test="userId != null">#{userId},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <delete id="deleteKnowledgeCommentLikeByLikeId" parameterType="Long">
+        delete from knowledge_comment_like where like_id = #{likeId}
+    </delete>
+
+    <delete id="deleteByUserIdAndCommentId" parameterType="map">
+        delete from knowledge_comment_like where user_id = #{userId} and comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteKnowledgeCommentLikeByLikeIds" parameterType="String">
+        delete from knowledge_comment_like where like_id in 
+        <foreach item="likeId" collection="array" open="(" separator="," close=")">
+            #{likeId}
+        </foreach>
+    </delete>
+</mapper>

@@ -90,4 +90,28 @@ public interface IKnowledgePointService
      * @return 结果
      */
     public int increaseViewCount(Long pointId);
+
+    /**
+     * 审核知识点
+     * 
+     * @param knowledgePoint 知识点
+     * @return 结果
+     */
+    public int auditKnowledgePoint(KnowledgePoint knowledgePoint);
+
+    /**
+     * 批量审核知识点
+     * 
+     * @param knowledgePoint 知识点
+     * @return 结果
+     */
+    public int batchAuditKnowledgePoint(KnowledgePoint knowledgePoint);
+
+    /**
+     * 更新知识点状态
+     * 
+     * @param knowledgePoint 知识点
+     * @return 结果
+     */
+    public int updateKnowledgePointStatus(KnowledgePoint knowledgePoint);
 }

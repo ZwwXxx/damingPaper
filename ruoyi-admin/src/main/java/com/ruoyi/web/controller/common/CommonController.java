@@ -103,6 +103,20 @@ public class CommonController
     {
         try
         {
+            // ⭐ 文件大小限制：2MB
+            long maxFileSize = 2 * 1024 * 1024; // 2MB = 2 * 1024 * 1024 bytes
+            if (file.getSize() > maxFileSize) 
+            {
+                return AjaxResult.error("文件大小不能超过2MB，当前文件大小：" + formatFileSize(file.getSize()));
+            }
+            
+            // ⭐ 文件类型限制：仅允许图片
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) 
+            {
+                return AjaxResult.error("只允许上传图片文件，当前文件类型：" + contentType);
+            }
+            
             if (useOss())
             {
                 // ⭐ 直接返回完整的CDN地址
@@ -116,6 +130,7 @@ public class CommonController
                 ajax.put("fileName", result.getObjectName());  // 纯文件路径（不带域名）
                 ajax.put("newFileName", FileUtils.getName(result.getObjectName()));
                 ajax.put("originalFilename", file.getOriginalFilename());
+                ajax.put("fileSize", formatFileSize(file.getSize())); // 返回文件大小
                 return ajax;
             }
             // 上传文件路径
@@ -128,6 +143,7 @@ public class CommonController
             ajax.put("fileName", fileName);
             ajax.put("newFileName", FileUtils.getName(fileName));
             ajax.put("originalFilename", file.getOriginalFilename());
+            ajax.put("fileSize", formatFileSize(file.getSize())); // 返回文件大小
             return ajax;
         }
         catch (Exception e)
@@ -146,6 +162,20 @@ public class CommonController
     {
         try
         {
+            // ⭐ 批量上传：每个文件都需要检查大小和类型
+            long maxFileSize = 2 * 1024 * 1024; // 2MB
+            for (MultipartFile file : files) {
+                if (file.getSize() > maxFileSize) {
+                    return AjaxResult.error("文件'" + file.getOriginalFilename() + 
+                        "'大小超过2MB，当前大小：" + formatFileSize(file.getSize()));
+                }
+                String contentType = file.getContentType();
+                if (contentType == null || !contentType.startsWith("image/")) {
+                    return AjaxResult.error("文件'" + file.getOriginalFilename() + 
+                        "'不是图片文件，类型：" + contentType);
+                }
+            }
+            
             if (useOss())
             {
                 // ⭐ OSS模式：只返回ObjectName，不返回URL
@@ -255,5 +285,22 @@ public class CommonController
         ajax.put("newFileName", FileUtils.getName(result.getObjectName()));
         ajax.put("originalFilename", originalFilename);
         return ajax;
+    }
+    
+    /**
+     * 格式化文件大小
+     * @param size 文件大小（字节）
+     * @return 格式化后的大小字符串
+     */
+    private String formatFileSize(long size) {
+        if (size < 1024) {
+            return size + "B";
+        } else if (size < 1024 * 1024) {
+            return String.format("%.1fKB", size / 1024.0);
+        } else if (size < 1024 * 1024 * 1024) {
+            return String.format("%.1fMB", size / (1024.0 * 1024.0));
+        } else {
+            return String.format("%.1fGB", size / (1024.0 * 1024.0 * 1024.0));
+        }
     }
 }

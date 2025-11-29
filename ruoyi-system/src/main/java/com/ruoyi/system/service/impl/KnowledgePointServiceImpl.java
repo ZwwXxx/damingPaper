@@ -138,4 +138,42 @@ public class KnowledgePointServiceImpl implements IKnowledgePointService
     {
         return knowledgePointMapper.increaseViewCount(pointId);
     }
+
+    /**
+     * 审核知识点
+     * 
+     * @param knowledgePoint 知识点
+     * @return 结果
+     */
+    @Override
+    public int auditKnowledgePoint(KnowledgePoint knowledgePoint)
+    {
+        return knowledgePointMapper.updateKnowledgePoint(knowledgePoint);
+    }
+
+    /**
+     * 批量审核知识点
+     * 
+     * @param knowledgePoint 知识点
+     * @return 结果
+     */
+    @Override
+    public int batchAuditKnowledgePoint(KnowledgePoint knowledgePoint)
+    {
+        // 这里可以实现批量审核逻辑
+        // 暂时使用单个审核的方式
+        return knowledgePointMapper.updateKnowledgePoint(knowledgePoint);
+    }
+
+    /**
+     * 更新知识点状态
+     * 
+     * @param knowledgePoint 知识点
+     * @return 结果
+     */
+    @Override
+    public int updateKnowledgePointStatus(KnowledgePoint knowledgePoint)
+    {
+        return knowledgePointMapper.updateKnowledgePoint(knowledgePoint);
+    }
 }
