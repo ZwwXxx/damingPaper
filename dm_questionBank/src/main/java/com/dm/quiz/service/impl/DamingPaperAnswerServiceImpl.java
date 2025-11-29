@@ -122,9 +122,18 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
 
     @Override
     public SubmitAnswerResult submitAnswer(PaperAnswerDto paperAnswerDto) {
+        DamingPaper damingPaper = damingPaperService.selectDamingPaperByPaperId(paperAnswerDto.getPaperId());
+        
+        Date now = new Date();
+        if (damingPaper.getStartTime() != null && now.before(damingPaper.getStartTime())) {
+            throw new RuntimeException("考试未开始，开始时间：" + DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, damingPaper.getStartTime()));
+        }
+        if (damingPaper.getEndTime() != null && now.after(damingPaper.getEndTime())) {
+            throw new RuntimeException("考试已截止，截止时间：" + DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, damingPaper.getEndTime()));
+        }
+        
         // 一，比对用户提交的答案和原卷答案，设置做题记录的得分和是否正确,生成题目回答记录表
         // 1.获取原卷,拿到原卷里的所有原题，
-        DamingPaper damingPaper = damingPaperService.selectDamingPaperByPaperId(paperAnswerDto.getPaperId());
         String content = damingContentInfoMapper.selectDamingContentInfoById(damingPaper.getPaperInfoId()).getContent();
         List<PaperQuestionTypeVM> questionTypeVMS = JSONArray.parseArray(content, PaperQuestionTypeVM.class);
         List<Long> questionIds = questionTypeVMS.stream().flatMap(paperQuestionTypeVM -> paperQuestionTypeVM

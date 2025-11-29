@@ -20,9 +20,6 @@ public class KnowledgeSubject extends BaseEntity
     /** 科目名称 */
     private String subjectName;
 
-    /** 科目编码 */
-    private String subjectCode;
-
     /** 科目描述 */
     private String description;
 
@@ -53,16 +50,6 @@ public class KnowledgeSubject extends BaseEntity
     public String getSubjectName() 
     {
         return subjectName;
-    }
-
-    public void setSubjectCode(String subjectCode) 
-    {
-        this.subjectCode = subjectCode;
-    }
-
-    public String getSubjectCode() 
-    {
-        return subjectCode;
     }
 
     public void setDescription(String description) 
@@ -110,7 +97,6 @@ public class KnowledgeSubject extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("subjectId", getSubjectId())
             .append("subjectName", getSubjectName())
-            .append("subjectCode", getSubjectCode())
             .append("description", getDescription())
             .append("icon", getIcon())
             .append("sortOrder", getSortOrder())

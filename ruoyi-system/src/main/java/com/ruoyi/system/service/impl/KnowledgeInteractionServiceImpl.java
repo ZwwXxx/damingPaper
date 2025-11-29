@@ -7,10 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ruoyi.system.domain.KnowledgeCollect;
 import com.ruoyi.system.domain.KnowledgeLike;
 import com.ruoyi.system.domain.KnowledgePoint;
+import com.ruoyi.system.domain.KnowledgeFolder;
 import com.ruoyi.system.mapper.KnowledgeCollectMapper;
 import com.ruoyi.system.mapper.KnowledgeLikeMapper;
 import com.ruoyi.system.mapper.KnowledgePointMapper;
+import com.ruoyi.system.mapper.KnowledgeFolderMapper;
 import com.ruoyi.system.service.IKnowledgeInteractionService;
+import com.ruoyi.system.service.IKnowledgeFolderService;
 
 /**
  * 知识点互动Service业务层处理
@@ -29,6 +32,12 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
 
     @Autowired
     private KnowledgePointMapper knowledgePointMapper;
+    
+    @Autowired
+    private KnowledgeFolderMapper knowledgeFolderMapper;
+    
+    @Autowired
+    private IKnowledgeFolderService knowledgeFolderService;
 
     /**
      * 切换点赞状态
@@ -68,32 +77,15 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
     }
 
     /**
-     * 切换收藏状态
+     * 切换收藏状态（收藏到默认收藏夹）
      */
     @Override
     @Transactional
     public boolean toggleCollect(Long userId, Long pointId)
     {
-        KnowledgeCollect collect = knowledgeCollectMapper.selectByUserAndPoint(userId, pointId);
-        
-        if (collect != null)
-        {
-            // 已收藏，则取消收藏
-            knowledgeCollectMapper.deleteByUserAndPoint(userId, pointId);
-            knowledgePointMapper.decreaseCollectCount(pointId);
-            return false;
-        }
-        else
-        {
-            // 未收藏，则添加收藏
-            KnowledgeCollect newCollect = new KnowledgeCollect();
-            newCollect.setUserId(userId);
-            newCollect.setPointId(pointId);
-            newCollect.setFolderId(0L); // 默认收藏夹
-            knowledgeCollectMapper.insertKnowledgeCollect(newCollect);
-            knowledgePointMapper.increaseCollectCount(pointId);
-            return true;
-        }
+        // 获取或创建默认收藏夹
+        KnowledgeFolder defaultFolder = knowledgeFolderService.getOrCreateDefaultFolder(userId);
+        return toggleCollectToFolder(userId, pointId, defaultFolder.getFolderId());
     }
 
     /**
@@ -112,5 +104,41 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
     public List<KnowledgePoint> getCollectedPoints(Long userId)
     {
         return knowledgeCollectMapper.selectCollectedPoints(userId);
+    }
+
+    /**
+     * 收藏知识点到指定收藏夹
+     */
+    @Override
+    @Transactional
+    public boolean toggleCollectToFolder(Long userId, Long pointId, Long folderId)
+    {
+        KnowledgeCollect existingCollect = knowledgeCollectMapper.selectByUserAndPoint(userId, pointId);
+        
+        if (existingCollect != null)
+        {
+            // 已收藏，则取消收藏
+            // 更新收藏夹数量（减少）
+            knowledgeFolderMapper.updateFolderCollectCount(existingCollect.getFolderId(), -1);
+            // 删除收藏记录
+            knowledgeCollectMapper.deleteByUserAndPoint(userId, pointId);
+            // 更新知识点收藏数
+            knowledgePointMapper.decreaseCollectCount(pointId);
+            return false;
+        }
+        else
+        {
+            // 未收藏，则添加收藏到指定收藏夹
+            KnowledgeCollect newCollect = new KnowledgeCollect();
+            newCollect.setUserId(userId);
+            newCollect.setPointId(pointId);
+            newCollect.setFolderId(folderId);
+            knowledgeCollectMapper.insertKnowledgeCollect(newCollect);
+            // 更新收藏夹数量（增加）
+            knowledgeFolderMapper.updateFolderCollectCount(folderId, 1);
+            // 更新知识点收藏数
+            knowledgePointMapper.increaseCollectCount(pointId);
+            return true;
+        }
     }
 }

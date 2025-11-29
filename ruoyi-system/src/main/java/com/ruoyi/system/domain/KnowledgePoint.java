@@ -23,9 +23,6 @@ public class KnowledgePoint extends BaseEntity
     /** 所属科目ID */
     private Long subjectId;
 
-    /** 所属章节ID */
-    private Long chapterId;
-
     /** 知识点标题 */
     private String title;
 
@@ -104,6 +101,9 @@ public class KnowledgePoint extends BaseEntity
     /** 当前用户是否已收藏 */
     private Boolean isCollected;
 
+    /** 排序字段 */
+    private String orderBy;
+
     public void setPointId(Long pointId) 
     {
         this.pointId = pointId;
@@ -122,16 +122,6 @@ public class KnowledgePoint extends BaseEntity
     public Long getSubjectId() 
     {
         return subjectId;
-    }
-
-    public void setChapterId(Long chapterId) 
-    {
-        this.chapterId = chapterId;
-    }
-
-    public Long getChapterId() 
-    {
-        return chapterId;
     }
 
     public void setTitle(String title) 
@@ -384,12 +374,21 @@ public class KnowledgePoint extends BaseEntity
         this.isCollected = isCollected;
     }
 
+    public String getOrderBy()
+    {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy)
+    {
+        this.orderBy = orderBy;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("pointId", getPointId())
             .append("subjectId", getSubjectId())
-            .append("chapterId", getChapterId())
             .append("title", getTitle())
             .append("summary", getSummary())
             .append("content", getContent())

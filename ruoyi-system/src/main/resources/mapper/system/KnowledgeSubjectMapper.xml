@@ -7,7 +7,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="KnowledgeSubject" id="KnowledgeSubjectResult">
         <result property="subjectId"    column="subject_id"     />
         <result property="subjectName"  column="subject_name"   />
-        <result property="subjectCode"  column="subject_code"   />
         <result property="description"  column="description"    />
         <result property="icon"         column="icon"           />
         <result property="sortOrder"    column="sort_order"     />
@@ -19,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     
     <sql id="selectKnowledgeSubjectVo">
-        select subject_id, subject_name, subject_code, description, icon, sort_order, status, create_by, create_time, update_by, update_time
+        select subject_id, subject_name, description, icon, sort_order, status, create_by, create_time, update_by, update_time
         from knowledge_subject
     </sql>
     
@@ -34,9 +33,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="subjectName != null and subjectName != ''">
                 AND subject_name like concat('%', #{subjectName}, '%')
             </if>
-            <if test="subjectCode != null and subjectCode != ''">
-                AND subject_code = #{subjectCode}
-            </if>
             <if test="status != null">
                 AND status = #{status}
             </if>
@@ -47,7 +43,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertKnowledgeSubject" parameterType="KnowledgeSubject" useGeneratedKeys="true" keyProperty="subjectId">
         insert into knowledge_subject(
             <if test="subjectName != null and subjectName != ''">subject_name,</if>
-            <if test="subjectCode != null and subjectCode != ''">subject_code,</if>
             <if test="description != null">description,</if>
             <if test="icon != null">icon,</if>
             <if test="sortOrder != null">sort_order,</if>
@@ -56,7 +51,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             create_time
         )values(
             <if test="subjectName != null and subjectName != ''">#{subjectName},</if>
-            <if test="subjectCode != null and subjectCode != ''">#{subjectCode},</if>
             <if test="description != null">#{description},</if>
             <if test="icon != null">#{icon},</if>
             <if test="sortOrder != null">#{sortOrder},</if>
@@ -70,7 +64,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update knowledge_subject
         <set>
             <if test="subjectName != null and subjectName != ''">subject_name = #{subjectName},</if>
-            <if test="subjectCode != null and subjectCode != ''">subject_code = #{subjectCode},</if>
             <if test="description != null">description = #{description},</if>
             <if test="icon != null">icon = #{icon},</if>
             <if test="sortOrder != null">sort_order = #{sortOrder},</if>

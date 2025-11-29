@@ -7,45 +7,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="KnowledgePoint" id="KnowledgePointResult">
         <result property="pointId"       column="point_id"       />
         <result property="subjectId"     column="subject_id"     />
-        <result property="chapterId"     column="chapter_id"     />
         <result property="title"         column="title"          />
         <result property="summary"       column="summary"        />
         <result property="content"       column="content"        />
         <result property="contentHtml"   column="content_html"   />
         <result property="difficulty"    column="difficulty"     />
-        <result property="importance"    column="importance"     />
         <result property="authorId"      column="author_id"      />
         <result property="authorName"    column="author_name"    />
         <result property="viewCount"     column="view_count"     />
         <result property="likeCount"     column="like_count"     />
         <result property="collectCount"  column="collect_count"  />
         <result property="commentCount"  column="comment_count"  />
-        <result property="learnCount"    column="learn_count"    />
         <result property="isRecommend"   column="is_recommend"   />
         <result property="isTop"         column="is_top"         />
         <result property="status"        column="status"         />
         <result property="auditStatus"   column="audit_status"   />
         <result property="auditRemark"   column="audit_remark"   />
-        <result property="version"       column="version"        />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
-        <result property="publishTime"   column="publish_time"   />
         <result property="subjectName"   column="subject_name"   />
-        <result property="chapterName"   column="chapter_name"   />
     </resultMap>
     
     <sql id="selectKnowledgePointVo">
         select 
-            kp.point_id, kp.subject_id, kp.chapter_id, kp.title, kp.summary,
-            kp.content, kp.content_html, kp.difficulty, kp.importance,
+            kp.point_id, kp.subject_id, kp.title, kp.summary,
+            kp.content, kp.content_html, kp.difficulty,
             kp.author_id, kp.author_name, kp.view_count, kp.like_count,
-            kp.collect_count, kp.comment_count, kp.learn_count,
+            kp.collect_count, kp.comment_count,
             kp.is_recommend, kp.is_top, kp.status, kp.audit_status,
-            kp.audit_remark, kp.version, kp.create_time, kp.update_time, kp.publish_time,
-            ks.subject_name, kc.chapter_name
+            kp.audit_remark, kp.create_time, kp.update_time,
+            ks.subject_name
         from knowledge_point kp
         left join knowledge_subject ks on kp.subject_id = ks.subject_id
-        left join knowledge_chapter kc on kp.chapter_id = kc.chapter_id
     </sql>
     
     <select id="selectKnowledgePointByPointId" parameterType="Long" resultMap="KnowledgePointResult">
@@ -58,9 +51,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="subjectId != null">
                 AND kp.subject_id = #{subjectId}
-            </if>
-            <if test="chapterId != null">
-                AND kp.chapter_id = #{chapterId}
             </if>
             <if test="title != null and title != ''">
                 AND kp.title like concat('%', #{title}, '%')
@@ -84,7 +74,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND kp.is_top = #{isTop}
             </if>
         </where>
-        order by kp.is_top desc, kp.create_time desc
+        order by kp.is_top desc,
+        <choose>
+            <when test="orderBy != null and orderBy == 'view_count'">
+                kp.view_count desc
+            </when>
+            <when test="orderBy != null and orderBy == 'like_count'">
+                kp.like_count desc
+            </when>
+            <when test="orderBy != null and orderBy == 'collect_count'">
+                kp.collect_count desc
+            </when>
+            <otherwise>
+                kp.create_time desc
+            </otherwise>
+        </choose>
     </select>
     
     <select id="selectHotKnowledgePoints" resultMap="KnowledgePointResult">
@@ -107,8 +111,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectRecommendKnowledgePoints" resultMap="KnowledgePointResult">
         <include refid="selectKnowledgePointVo"/>
-        where kp.status = 1 and kp.is_recommend = 1
-        order by kp.view_count desc
+        where kp.status = 1
+        order by (
+            COALESCE(kp.view_count * 40.0 / NULLIF((select max(view_count) from knowledge_point where status = 1), 0), 0) +
+            COALESCE((kp.like_count + kp.collect_count * 2 + kp.comment_count * 1.5) * 30.0 / NULLIF((select max(like_count + collect_count * 2 + comment_count * 1.5) from knowledge_point where status = 1), 0), 0) +
+            CASE 
+                WHEN DATEDIFF(NOW(), COALESCE(kp.publish_time, kp.create_time)) <![CDATA[<=]]> 30 THEN 20.0
+                WHEN DATEDIFF(NOW(), COALESCE(kp.publish_time, kp.create_time)) <![CDATA[<=]]> 90 THEN 15.0
+                WHEN DATEDIFF(NOW(), COALESCE(kp.publish_time, kp.create_time)) <![CDATA[<=]]> 180 THEN 10.0
+                ELSE 5.0
+            END +
+            COALESCE(kp.difficulty * 10.0 / 3, 0) +
+            CASE WHEN kp.is_recommend = 1 THEN 15.0 ELSE 0 END +
+            CASE WHEN kp.is_top = 1 THEN 10.0 ELSE 0 END
+        ) desc
         <if test="limit != null">
             limit #{limit}
         </if>
@@ -117,13 +133,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertKnowledgePoint" parameterType="KnowledgePoint" useGeneratedKeys="true" keyProperty="pointId">
         insert into knowledge_point(
             <if test="subjectId != null">subject_id,</if>
-            <if test="chapterId != null">chapter_id,</if>
             <if test="title != null and title != ''">title,</if>
             <if test="summary != null">summary,</if>
             <if test="content != null">content,</if>
             <if test="contentHtml != null">content_html,</if>
             <if test="difficulty != null">difficulty,</if>
-            <if test="importance != null">importance,</if>
             <if test="authorId != null">author_id,</if>
             <if test="authorName != null and authorName != ''">author_name,</if>
             <if test="status != null">status,</if>
@@ -131,13 +145,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             create_time
         )values(
             <if test="subjectId != null">#{subjectId},</if>
-            <if test="chapterId != null">#{chapterId},</if>
             <if test="title != null and title != ''">#{title},</if>
             <if test="summary != null">#{summary},</if>
             <if test="content != null">#{content},</if>
             <if test="contentHtml != null">#{contentHtml},</if>
             <if test="difficulty != null">#{difficulty},</if>
-            <if test="importance != null">#{importance},</if>
             <if test="authorId != null">#{authorId},</if>
             <if test="authorName != null and authorName != ''">#{authorName},</if>
             <if test="status != null">#{status},</if>
@@ -150,19 +162,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update knowledge_point
         <set>
             <if test="subjectId != null">subject_id = #{subjectId},</if>
-            <if test="chapterId != null">chapter_id = #{chapterId},</if>
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="summary != null">summary = #{summary},</if>
             <if test="content != null">content = #{content},</if>
             <if test="contentHtml != null">content_html = #{contentHtml},</if>
             <if test="difficulty != null">difficulty = #{difficulty},</if>
-            <if test="importance != null">importance = #{importance},</if>
             <if test="status != null">status = #{status},</if>
             <if test="auditStatus != null">audit_status = #{auditStatus},</if>
             <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
             <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
             <if test="isTop != null">is_top = #{isTop},</if>
-            <if test="publishTime != null">publish_time = #{publishTime},</if>
             update_time = sysdate()
         </set>
         where point_id = #{pointId}

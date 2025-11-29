@@ -54,4 +54,14 @@ public interface IKnowledgeInteractionService
      * @return 知识点集合
      */
     public List<KnowledgePoint> getCollectedPoints(Long userId);
+
+    /**
+     * 收藏知识点到指定收藏夹（收藏/取消收藏）
+     * 
+     * @param userId 用户ID
+     * @param pointId 知识点ID
+     * @param folderId 收藏夹ID
+     * @return 收藏后的状态（true-已收藏 false-已取消）
+     */
+    public boolean toggleCollectToFolder(Long userId, Long pointId, Long folderId);
 }

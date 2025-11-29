@@ -14,16 +14,16 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.system.domain.KnowledgeChapter;
 import com.ruoyi.system.domain.KnowledgeComment;
 import com.ruoyi.system.domain.KnowledgePoint;
 import com.ruoyi.system.domain.KnowledgeSubject;
+import com.ruoyi.system.domain.KnowledgeFolder;
 import com.ruoyi.common.core.domain.model.DamingUser;
-import com.ruoyi.system.service.IKnowledgeChapterService;
 import com.ruoyi.system.service.IKnowledgeCommentService;
 import com.ruoyi.system.service.IKnowledgeInteractionService;
 import com.ruoyi.system.service.IKnowledgePointService;
 import com.ruoyi.system.service.IKnowledgeSubjectService;
+import com.ruoyi.system.service.IKnowledgeFolderService;
 import com.dm.quiz.service.IDamingUserService;
 
 /**
@@ -43,20 +43,17 @@ public class KnowledgeController extends BaseController
     private IKnowledgeSubjectService knowledgeSubjectService;
 
     @Autowired
-    private IKnowledgeChapterService knowledgeChapterService;
-
-    @Autowired
     private IKnowledgeInteractionService knowledgeInteractionService;
 
     @Autowired
     private IKnowledgeCommentService knowledgeCommentService;
 
     @Autowired
-    private IDamingUserService damingUserService;
+    private IDamingUserService userService;
 
-    /**
-     * 查询科目列表
-     */
+    @Autowired
+    private IKnowledgeFolderService knowledgeFolderService;
+
     @GetMapping("/subjects")
     public AjaxResult listSubjects()
     {
@@ -67,13 +64,48 @@ public class KnowledgeController extends BaseController
     }
 
     /**
-     * 查询章节树（根据科目ID）
+     * 创建新科目
      */
-    @GetMapping("/chapters/{subjectId}")
-    public AjaxResult getChapterTree(@PathVariable Long subjectId)
+    @PostMapping("/subject")
+    public AjaxResult createSubject(@RequestBody KnowledgeSubject subject)
     {
-        List<KnowledgeChapter> tree = knowledgeChapterService.buildChapterTree(subjectId);
-        return success(tree);
+        try {
+            Long userId = SecurityUtils.getUserId();
+            if (userId == null) {
+                return error("请先登录");
+            }
+
+            // 获取用户信息
+            DamingUser user = userService.selectDamingUserByUserId(userId);
+            if (user == null) {
+                return error("用户信息不存在");
+            }
+
+            // 设置创建者信息
+            subject.setCreateBy(user.getUserName());
+            subject.setUpdateBy(user.getUserName());
+            subject.setStatus(1); // 设置为启用状态
+            
+            // 检查科目名称是否已存在
+            KnowledgeSubject existingSubject = new KnowledgeSubject();
+            existingSubject.setSubjectName(subject.getSubjectName());
+            List<KnowledgeSubject> existingList = knowledgeSubjectService.selectKnowledgeSubjectList(existingSubject);
+            if (existingList != null && existingList.size() > 0) {
+                return error("科目名称已存在");
+            }
+
+            // 保存科目
+            int result = knowledgeSubjectService.insertKnowledgeSubject(subject);
+            if (result > 0) {
+                return AjaxResult.success("创建科目成功", subject);
+            } else {
+                return error("创建科目失败");
+            }
+            
+        } catch (Exception e) {
+            logger.error("创建科目失败", e);
+            return error("创建科目失败：" + e.getMessage());
+        }
     }
 
     /**
@@ -210,7 +242,7 @@ public class KnowledgeController extends BaseController
                 return AjaxResult.error("请先登录");
             }
             
-            DamingUser user = damingUserService.selectDamingUserByUserId(userId);
+            DamingUser user = userService.selectDamingUserByUserId(userId);
             if (user == null) {
                 return AjaxResult.error("用户信息不存在，请重新登录");
             }
@@ -333,7 +365,7 @@ public class KnowledgeController extends BaseController
             }
 
             // 获取用户信息
-            DamingUser user = damingUserService.selectDamingUserByUserId(userId);
+            DamingUser user = userService.selectDamingUserByUserId(userId);
             if (user == null) {
                 return error("用户信息不存在");
             }
@@ -341,6 +373,8 @@ public class KnowledgeController extends BaseController
             // 设置发布者信息
             knowledgePoint.setCreateBy(user.getUserName());
             knowledgePoint.setUpdateBy(user.getUserName());
+            knowledgePoint.setAuthorId(userId);  // 设置作者ID
+            knowledgePoint.setAuthorName(user.getNickName() != null ? user.getNickName() : user.getUserName());  // 设置作者名称
             
             // 设置审核状态为待审核
             knowledgePoint.setAuditStatus(0); // 0-待审核
@@ -350,6 +384,7 @@ public class KnowledgeController extends BaseController
             knowledgePoint.setViewCount(0);
             knowledgePoint.setLikeCount(0);
             knowledgePoint.setCollectCount(0);
+            knowledgePoint.setCommentCount(0);  // 初始化评论数
 
             // 保存知识点
             int result = knowledgePointService.insertKnowledgePoint(knowledgePoint);
@@ -363,6 +398,163 @@ public class KnowledgeController extends BaseController
         } catch (Exception e) {
             logger.error("发布知识点失败", e);
             return error("发布失败：" + e.getMessage());
+        }
+    }
+
+    // ==================== 收藏夹管理接口 ====================
+
+    /**
+     * 获取用户的收藏夹列表
+     */
+    @GetMapping("/folders")
+    public AjaxResult getUserFolders()
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            List<KnowledgeFolder> folders = knowledgeFolderService.selectFoldersByUserId(userId);
+            return success(folders);
+        } catch (Exception e) {
+            logger.error("获取收藏夹列表失败", e);
+            return error("获取收藏夹列表失败");
+        }
+    }
+
+    /**
+     * 创建新收藏夹
+     */
+    @PostMapping("/folder")
+    public AjaxResult createFolder(@RequestBody KnowledgeFolder folder)
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            
+            folder.setUserId(userId);
+            folder.setIsDefault(0); // 非默认收藏夹
+            folder.setCollectCount(0);
+            
+            int result = knowledgeFolderService.insertKnowledgeFolder(folder);
+            if (result > 0) {
+                return success("创建收藏夹成功");
+            } else {
+                return error("创建收藏夹失败");
+            }
+        } catch (Exception e) {
+            logger.error("创建收藏夹失败", e);
+            return error("创建收藏夹失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 修改收藏夹
+     */
+    @PostMapping("/folder/update")
+    public AjaxResult updateFolder(@RequestBody KnowledgeFolder folder)
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            
+            // 验证收藏夹是否属于当前用户
+            KnowledgeFolder existFolder = knowledgeFolderService.selectKnowledgeFolderByFolderId(folder.getFolderId());
+            if (existFolder == null || !existFolder.getUserId().equals(userId)) {
+                return error("无权修改此收藏夹");
+            }
+            
+            int result = knowledgeFolderService.updateKnowledgeFolder(folder);
+            if (result > 0) {
+                return success("修改收藏夹成功");
+            } else {
+                return error("修改收藏夹失败");
+            }
+        } catch (Exception e) {
+            logger.error("修改收藏夹失败", e);
+            return error("修改收藏夹失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 删除收藏夹
+     */
+    @DeleteMapping("/folder/{folderId}")
+    public AjaxResult deleteFolder(@PathVariable Long folderId)
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            
+            // 验证收藏夹是否属于当前用户
+            KnowledgeFolder folder = knowledgeFolderService.selectKnowledgeFolderByFolderId(folderId);
+            if (folder == null || !folder.getUserId().equals(userId)) {
+                return error("无权删除此收藏夹");
+            }
+            
+            // 不能删除默认收藏夹
+            if (folder.getIsDefault() == 1) {
+                return error("不能删除默认收藏夹");
+            }
+            
+            int result = knowledgeFolderService.deleteKnowledgeFolderByFolderId(folderId);
+            if (result > 0) {
+                return success("删除收藏夹成功");
+            } else {
+                return error("删除收藏夹失败");
+            }
+        } catch (Exception e) {
+            logger.error("删除收藏夹失败", e);
+            return error("删除收藏夹失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 收藏知识点到指定收藏夹
+     */
+    @PostMapping("/collect/{pointId}/folder/{folderId}")
+    public AjaxResult collectToFolder(@PathVariable Long pointId, @PathVariable Long folderId)
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            
+            // 验证收藏夹是否属于当前用户
+            KnowledgeFolder folder = knowledgeFolderService.selectKnowledgeFolderByFolderId(folderId);
+            if (folder == null || !folder.getUserId().equals(userId)) {
+                return error("无权访问此收藏夹");
+            }
+            
+            boolean isCollected = knowledgeInteractionService.toggleCollectToFolder(userId, pointId, folderId);
+            return AjaxResult.success(isCollected ? "收藏成功" : "取消收藏", isCollected);
+        } catch (Exception e) {
+            logger.error("收藏到指定收藏夹失败", e);
+            return error("操作失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 删除知识点
+     */
+    @DeleteMapping("/point/{pointId}")
+    public AjaxResult deleteKnowledgePoint(@PathVariable Long pointId)
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            
+            // 验证知识点是否存在
+            KnowledgePoint point = knowledgePointService.selectKnowledgePointByPointId(pointId);
+            if (point == null) {
+                return error("知识点不存在");
+            }
+            
+            // 验证是否为作者本人
+            if (!point.getAuthorId().equals(userId)) {
+                return error("只能删除自己发布的知识点");
+            }
+            
+            int result = knowledgePointService.deleteKnowledgePointByPointId(pointId);
+            if (result > 0) {
+                return success("删除知识点成功");
+            } else {
+                return error("删除知识点失败");
+            }
+        } catch (Exception e) {
+            logger.error("删除知识点失败", e);
+            return error("删除知识点失败：" + e.getMessage());
         }
     }
 }

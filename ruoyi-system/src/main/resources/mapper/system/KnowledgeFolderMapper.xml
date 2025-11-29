@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.KnowledgeFolderMapper">
+    
+    <resultMap type="KnowledgeFolder" id="KnowledgeFolderResult">
+        <result property="folderId"       column="folder_id"       />
+        <result property="folderName"     column="folder_name"     />
+        <result property="description"    column="description"     />
+        <result property="userId"         column="user_id"         />
+        <result property="isDefault"      column="is_default"      />
+        <result property="isPublic"       column="is_public"       />
+        <result property="collectCount"   column="collect_count"   />
+        <result property="createTime"     column="create_time"     />
+        <result property="updateTime"     column="update_time"     />
+    </resultMap>
+
+    <sql id="selectKnowledgeFolderVo">
+        select folder_id, folder_name, description, user_id, is_default, is_public, collect_count, create_time, update_time from knowledge_folder
+    </sql>
+
+    <select id="selectKnowledgeFolderList" parameterType="KnowledgeFolder" resultMap="KnowledgeFolderResult">
+        <include refid="selectKnowledgeFolderVo"/>
+        <where>  
+            <if test="folderName != null  and folderName != ''"> and folder_name like concat('%', #{folderName}, '%')</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="isDefault != null "> and is_default = #{isDefault}</if>
+            <if test="isPublic != null "> and is_public = #{isPublic}</if>
+        </where>
+    </select>
+    
+    <select id="selectKnowledgeFolderByFolderId" parameterType="Long" resultMap="KnowledgeFolderResult">
+        <include refid="selectKnowledgeFolderVo"/>
+        where folder_id = #{folderId}
+    </select>
+
+    <select id="selectFoldersByUserId" parameterType="Long" resultMap="KnowledgeFolderResult">
+        <include refid="selectKnowledgeFolderVo"/>
+        where user_id = #{userId}
+        order by is_default desc, create_time asc
+    </select>
+
+    <select id="selectDefaultFolderByUserId" parameterType="Long" resultMap="KnowledgeFolderResult">
+        <include refid="selectKnowledgeFolderVo"/>
+        where user_id = #{userId} and is_default = 1
+        limit 1
+    </select>
+        
+    <insert id="insertKnowledgeFolder" parameterType="KnowledgeFolder" useGeneratedKeys="true" keyProperty="folderId">
+        insert into knowledge_folder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="folderName != null and folderName != ''">folder_name,</if>
+            <if test="description != null">description,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isDefault != null">is_default,</if>
+            <if test="isPublic != null">is_public,</if>
+            <if test="collectCount != null">collect_count,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="folderName != null and folderName != ''">#{folderName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isDefault != null">#{isDefault},</if>
+            <if test="isPublic != null">#{isPublic},</if>
+            <if test="collectCount != null">#{collectCount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateKnowledgeFolder" parameterType="KnowledgeFolder">
+        update knowledge_folder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="folderName != null and folderName != ''">folder_name = #{folderName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="isPublic != null">is_public = #{isPublic},</if>
+            <if test="collectCount != null">collect_count = #{collectCount},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where folder_id = #{folderId}
+    </update>
+
+    <delete id="deleteKnowledgeFolderByFolderId" parameterType="Long">
+        delete from knowledge_folder where folder_id = #{folderId}
+    </delete>
+
+    <delete id="deleteKnowledgeFolderByFolderIds" parameterType="String">
+        delete from knowledge_folder where folder_id in 
+        <foreach item="folderId" collection="array" open="(" separator="," close=")">
+            #{folderId}
+        </foreach>
+    </delete>
+
+    <update id="updateFolderCollectCount">
+        update knowledge_folder 
+        set collect_count = collect_count + #{count}
+        where folder_id = #{folderId}
+    </update>
+</mapper>

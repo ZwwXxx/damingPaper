@@ -18,16 +18,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where user_id = #{userId} and point_id = #{pointId}
     </select>
     
-    <select id="selectCollectedPoints" resultType="KnowledgePoint">
+    <select id="selectCollectedPoints" resultMap="com.ruoyi.system.mapper.KnowledgePointMapper.KnowledgePointResult">
         select 
-            kp.point_id, kp.subject_id, kp.chapter_id, kp.title, kp.summary,
-            kp.difficulty, kp.importance, kp.author_name, kp.view_count,
-            kp.like_count, kp.collect_count, kp.create_time,
-            ks.subject_name, kc.chapter_name
+            kp.point_id, kp.subject_id, kp.title, kp.summary,
+            kp.difficulty, kp.author_name, kp.view_count,
+            kp.like_count, kp.collect_count, kp.create_time, kp.publish_time,
+            ks.subject_name
         from knowledge_collect kc
         left join knowledge_point kp on kc.point_id = kp.point_id
         left join knowledge_subject ks on kp.subject_id = ks.subject_id
-        left join knowledge_chapter kch on kp.chapter_id = kch.chapter_id
         where kc.user_id = #{userId} and kp.status = 1
         order by kc.create_time desc
     </select>
