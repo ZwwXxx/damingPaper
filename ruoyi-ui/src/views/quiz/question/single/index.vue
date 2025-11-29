@@ -80,6 +80,34 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
+          <el-form-item label="关联知识点">
+            <el-select
+              v-model="formData.knowledgePointIds"
+              multiple
+              filterable
+              remote
+              placeholder="请输入关键词搜索知识点"
+              :remote-method="searchKnowledgePoints"
+              :loading="knowledgeLoading"
+              @change="handleKnowledgePointChange"
+              style="width: 100%">
+              <el-option
+                v-for="item in knowledgePointOptions"
+                :key="item.pointId"
+                :label="item.title"
+                :value="item.pointId">
+                <span style="float: left">{{ item.title }}</span>
+                <span style="float: right; color: #8492a6; font-size: 12px">
+                  难度: {{ ['简单', '中等', '困难'][item.difficulty - 1] || '未知' }}
+                </span>
+              </el-option>
+            </el-select>
+            <div style="margin-top: 5px; color: #909399; font-size: 12px">
+              💡 提示：可关联1-3个知识点，帮助学生错题后精准学习
+            </div>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
           <el-form-item size="large">
             <el-button type="primary" @click="submitForm">提交</el-button>
             <el-button @click="resetForm">重置</el-button>
@@ -95,7 +123,7 @@
   </div>
 </template>
 <script>
-import { addQuestion, getQuestion, updateQuestion } from "@/api/quiz/question";
+import { addQuestion, getQuestion, updateQuestion, bindKnowledgePoints, getQuestionKnowledgePoints, listKnowledgePoints } from "@/api/quiz/question";
 import { optionSubject } from "@/api/quiz/subject";
 import Editor from "@/components/Editor";
 
@@ -140,12 +168,15 @@ export default {
         correctArray: [],
         analysis: '无',
         score: 1,
+        knowledgePointIds: [],
         items: initialType === 3
             ? []
             : initialType === 4
                 ? defaultJudgeOptions()
                 : defaultChoiceOptions()
       },
+      knowledgePointOptions: [],
+      knowledgeLoading: false,
       rules: {
         subjectId: [{
           required: true,
@@ -272,12 +303,43 @@ export default {
         this.formData = {
           ...response.data,
           correctArray: response.data.correctArray || [],
-          items: response.data.items || []
+          items: response.data.items || [],
+          knowledgePointIds: []
         };
         this.applyQuestionTypeDefaults(this.formData.questionType, { preserveAnswer: true });
+        
+        const kpResponse = await getQuestionKnowledgePoints(id);
+        if (kpResponse.code === 200 && kpResponse.data) {
+          this.formData.knowledgePointIds = kpResponse.data.map(kp => kp.pointId);
+          this.knowledgePointOptions = kpResponse.data;
+        }
       } finally {
         this.loading = false;
       }
+    },
+    async searchKnowledgePoints(query) {
+      if (!query) {
+        this.knowledgePointOptions = [];
+        return;
+      }
+      this.knowledgeLoading = true;
+      try {
+        const response = await listKnowledgePoints({ title: query, pageSize: 20 });
+        if (response.code === 200) {
+          this.knowledgePointOptions = response.rows || [];
+        }
+      } finally {
+        this.knowledgeLoading = false;
+      }
+    },
+    handleKnowledgePointChange() {
+      // 选中后只保留已选中的知识点选项，清空搜索结果
+      this.$nextTick(() => {
+        const selectedIds = this.formData.knowledgePointIds || [];
+        this.knowledgePointOptions = this.knowledgePointOptions.filter(
+          item => selectedIds.includes(item.pointId)
+        );
+      });
     },
     async submitForm() {
       const valid = await this.$refs['elForm'].validate();
@@ -309,6 +371,15 @@ export default {
       });
 
       if (res.code === 200) {
+        const questionId = this.formData.id || res.data;
+        if (this.formData.knowledgePointIds && this.formData.knowledgePointIds.length > 0) {
+          await bindKnowledgePoints({
+            questionId: questionId,
+            knowledgePointIds: this.formData.knowledgePointIds,
+            relationType: 1
+          });
+        }
+        
         if (this.formData.id === undefined) {
           // 新增成功后，保留科目和题型，只清空题干、选项、答案、解析
           const keepSubjectId = this.formData.subjectId;

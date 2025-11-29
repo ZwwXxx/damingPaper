@@ -101,6 +101,12 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
 
         // 2.每个题型下的题目数量size做一个sum，得到总数量，
         // 映射基本属性，科目，等乱七八糟的属性， 加工前端没有传来的值，题目数量和总分
+        if (StringUtils.isEmpty(paperDto.getStartTime())) {
+            paperDto.setStartTime(null);
+        }
+        if (StringUtils.isEmpty(paperDto.getEndTime())) {
+            paperDto.setEndTime(null);
+        }
         DamingPaper damingPaper = modelMapper.map(paperDto, DamingPaper.class);
         ComputeCountAndScoreResult result = getComputeCountAndScoreResult(paperDto);
         // 同时别忘了还得设置一个内容id，后续根据这个id数据库里找内容，转题型的列表list（VM类型的）
@@ -112,7 +118,6 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         damingPaper.setDelFlag(0);
         damingPaper.setPaperType(paperDto.getPaperType());
         damingPaper.setEnableAntiCheat(Boolean.TRUE.equals(paperDto.getEnableAntiCheat()));
-        // 手动处理时间字段转换
         if (StringUtils.isNotEmpty(paperDto.getStartTime())) {
             damingPaper.setStartTime(DateUtils.parseDate(paperDto.getStartTime()));
         }
@@ -181,9 +186,14 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         // 1.根据paperDto的paperId查询paper
         DamingPaper damingPaper = damingPaperMapper.selectDamingPaperByPaperId(paperDto.getPaperId());
         // 2.映射paperDto给查询到的paper
+        if (StringUtils.isEmpty(paperDto.getStartTime())) {
+            paperDto.setStartTime(null);
+        }
+        if (StringUtils.isEmpty(paperDto.getEndTime())) {
+            paperDto.setEndTime(null);
+        }
         modelMapper.map(paperDto, damingPaper);
         damingPaper.setEnableAntiCheat(Boolean.TRUE.equals(paperDto.getEnableAntiCheat()));
-        // 手动处理时间字段转换
         if (StringUtils.isNotEmpty(paperDto.getStartTime())) {
             damingPaper.setStartTime(DateUtils.parseDate(paperDto.getStartTime()));
         }

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.QuestionKnowledgeRelationMapper">
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO question_knowledge_relation
+        (question_id, knowledge_point_id, relation_type, reason, create_time, create_by)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.questionId}, #{item.knowledgePointId}, #{item.relationType}, #{item.reason}, NOW(), #{item.createBy})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByQuestionId" parameterType="Long">
+        DELETE FROM question_knowledge_relation
+        WHERE question_id = #{questionId}
+    </delete>
+
+    <select id="selectKnowledgePointsByQuestionId" parameterType="Long" resultType="com.ruoyi.system.domain.KnowledgePoint">
+        SELECT 
+            kp.point_id as pointId,
+            kp.title,
+            kp.difficulty,
+            kp.subject_id as subjectId,
+            qkr.relation_type as relationType
+        FROM question_knowledge_relation qkr
+        LEFT JOIN knowledge_point kp ON qkr.knowledge_point_id = kp.point_id
+        WHERE qkr.question_id = #{questionId}
+        AND kp.status = 1
+        ORDER BY qkr.relation_type ASC
+    </select>
+
+    <select id="selectQuestionIdsByKnowledgePointId" parameterType="Long" resultType="Long">
+        SELECT question_id
+        FROM question_knowledge_relation
+        WHERE knowledge_point_id = #{knowledgePointId}
+    </select>
+
+    <select id="selectWeakKnowledgePoints" resultType="com.ruoyi.system.domain.KnowledgePoint">
+        SELECT 
+            kp.point_id as pointId,
+            kp.title,
+            kp.difficulty,
+            kp.subject_id as subjectId,
+            COUNT(*) as wrongCount
+        FROM question_knowledge_relation qkr
+        LEFT JOIN knowledge_point kp ON qkr.knowledge_point_id = kp.point_id
+        WHERE qkr.question_id IN
+        <foreach collection="questionIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND kp.status = 1
+        GROUP BY kp.point_id
+        ORDER BY wrongCount DESC
+        LIMIT 3
+    </select>
+
+</mapper>

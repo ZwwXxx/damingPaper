@@ -74,7 +74,13 @@
                         v-for="(questionType,qtypeIndex) in formData.paperQuestionTypeDto"
                         :key="qtypeIndex"
           >
-            <el-input style="width: 80%;margin-right: 10px;" v-model="questionType.name"></el-input>
+            <el-autocomplete
+              v-model="questionType.name"
+              :fetch-suggestions="queryQuestionTypeSearch"
+              placeholder="输入或选择题型名称"
+              style="width: 80%;margin-right: 10px;"
+              clearable
+            ></el-autocomplete>
             <el-button type="text" @click="handleAddQuestion(questionType)">添加题目</el-button>
             <el-button type="text" @click="formData.paperQuestionTypeDto.splice(qtypeIndex,1)">删除题型</el-button>
             <el-card style="margin-top: 10px;" v-if="questionType.questionDtos.length>0">
@@ -236,6 +242,13 @@ export default {
         4: '判断题',
         5: '填空题'
       },
+      questionTypeSuggestions: [
+        { value: '单选题' },
+        { value: '多选题' },
+        { value: '主观题' },
+        { value: '判断题' },
+        { value: '填空题' }
+      ],
       // 控制新增题目的弹框显示
       open: false,
       // 当前题型，用于指定给哪个题型push题目
@@ -374,6 +387,13 @@ export default {
   mounted() {
   },
   methods: {
+    queryQuestionTypeSearch(queryString, cb) {
+      const suggestions = this.questionTypeSuggestions;
+      const results = queryString ? suggestions.filter(item => {
+        return item.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0;
+      }) : suggestions;
+      cb(results);
+    },
     async loadSubjectOptions() {
       const res = await optionSubject();
       const list = res.data || [];

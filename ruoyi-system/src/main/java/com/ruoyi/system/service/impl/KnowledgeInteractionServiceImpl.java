@@ -8,6 +8,7 @@ import com.ruoyi.system.domain.KnowledgeCollect;
 import com.ruoyi.system.domain.KnowledgeLike;
 import com.ruoyi.system.domain.KnowledgePoint;
 import com.ruoyi.system.domain.KnowledgeFolder;
+import com.ruoyi.system.domain.dto.KnowledgePointListDTO;
 import com.ruoyi.system.mapper.KnowledgeCollectMapper;
 import com.ruoyi.system.mapper.KnowledgeLikeMapper;
 import com.ruoyi.system.mapper.KnowledgePointMapper;
@@ -104,6 +105,56 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
     public List<KnowledgePoint> getCollectedPoints(Long userId)
     {
         return knowledgeCollectMapper.selectCollectedPoints(userId);
+    }
+
+    /**
+     * 查询用户在指定收藏夹中的知识点列表
+     */
+    @Override
+    public List<KnowledgePoint> getCollectedPointsByFolder(Long userId, Long folderId)
+    {
+        return knowledgeCollectMapper.selectCollectedPointsByFolder(userId, folderId);
+    }
+
+    /**
+     * 查询用户收藏的知识点列表（精简版）
+     */
+    @Override
+    public List<KnowledgePointListDTO> getCollectedPointsLite(Long userId)
+    {
+        List<KnowledgePointListDTO> list = knowledgeCollectMapper.selectCollectedPointsLite(userId);
+        fillUserStatusForDTO(list, userId);
+        return list;
+    }
+
+    /**
+     * 查询用户在指定收藏夹中的知识点列表（精简版）
+     */
+    @Override
+    public List<KnowledgePointListDTO> getCollectedPointsByFolderLite(Long userId, Long folderId)
+    {
+        List<KnowledgePointListDTO> list = knowledgeCollectMapper.selectCollectedPointsByFolderLite(userId, folderId);
+        fillUserStatusForDTO(list, userId);
+        return list;
+    }
+
+    /**
+     * 为精简DTO填充用户交互状态
+     */
+    private void fillUserStatusForDTO(List<KnowledgePointListDTO> list, Long userId)
+    {
+        try {
+            for (KnowledgePointListDTO dto : list) {
+                dto.setIsLiked(isLiked(userId, dto.getPointId()));
+                dto.setIsCollected(isCollected(userId, dto.getPointId()));
+            }
+        } catch (Exception e) {
+            // 异常情况下设置默认状态
+            for (KnowledgePointListDTO dto : list) {
+                dto.setIsLiked(false);
+                dto.setIsCollected(false);
+            }
+        }
     }
 
     /**

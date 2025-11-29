@@ -27,6 +27,8 @@ import com.dm.quiz.domain.DamingQuestion;
 import com.dm.quiz.service.IDamingQuestionService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.dm.quiz.service.IQuestionKnowledgeService;
+import com.dm.quiz.dto.QuestionKnowledgeBindDto;
 
 /**
  * 题目表Controller
@@ -41,6 +43,8 @@ public class DamingQuestionController extends BaseController {
     private IDamingQuestionService damingQuestionService;
     @Autowired
     private DamingContentInfoMapper damingContentInfoMapper;
+    @Autowired
+    private IQuestionKnowledgeService questionKnowledgeService;
 
     /**
      * 查询题目表列表
@@ -206,6 +210,18 @@ public class DamingQuestionController extends BaseController {
         sample.setScore(score);
         sample.setAnalysis(analysis);
         return sample;
+    }
+
+    @PreAuthorize("@ss.hasPermi('quiz:question:edit')")
+    @PostMapping("/relation/bind")
+    public AjaxResult bindKnowledgePoints(@RequestBody QuestionKnowledgeBindDto dto) {
+        questionKnowledgeService.bindKnowledgePoints(dto);
+        return success("关联成功");
+    }
+
+    @GetMapping("/{questionId}/knowledge-points")
+    public AjaxResult getKnowledgePoints(@PathVariable Long questionId) {
+        return success(questionKnowledgeService.getKnowledgePointsByQuestionId(questionId));
     }
 }
 

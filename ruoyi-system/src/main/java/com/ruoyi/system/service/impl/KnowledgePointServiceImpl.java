@@ -88,6 +88,10 @@ public class KnowledgePointServiceImpl implements IKnowledgePointService
     @Override
     public int insertKnowledgePoint(KnowledgePoint knowledgePoint)
     {
+        // 如果摘要为空，自动从内容中提取
+        if (isEmptyOrNull(knowledgePoint.getSummary()) && !isEmptyOrNull(knowledgePoint.getContent())) {
+            knowledgePoint.setSummary(generateSummaryFromContent(knowledgePoint.getContent()));
+        }
         return knowledgePointMapper.insertKnowledgePoint(knowledgePoint);
     }
 
@@ -100,6 +104,10 @@ public class KnowledgePointServiceImpl implements IKnowledgePointService
     @Override
     public int updateKnowledgePoint(KnowledgePoint knowledgePoint)
     {
+        // 如果摘要为空且内容不为空，自动从内容中提取
+        if (isEmptyOrNull(knowledgePoint.getSummary()) && !isEmptyOrNull(knowledgePoint.getContent())) {
+            knowledgePoint.setSummary(generateSummaryFromContent(knowledgePoint.getContent()));
+        }
         return knowledgePointMapper.updateKnowledgePoint(knowledgePoint);
     }
 
@@ -175,5 +183,61 @@ public class KnowledgePointServiceImpl implements IKnowledgePointService
     public int updateKnowledgePointStatus(KnowledgePoint knowledgePoint)
     {
         return knowledgePointMapper.updateKnowledgePoint(knowledgePoint);
+    }
+    
+    /**
+     * 判断字符串是否为空或null
+     */
+    private boolean isEmptyOrNull(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+    
+    /**
+     * 从内容中生成摘要
+     * @param content 原始内容
+     * @return 生成的摘要
+     */
+    private String generateSummaryFromContent(String content) {
+        if (isEmptyOrNull(content)) {
+            return "";
+        }
+        
+        // 清除 Markdown 标记和 HTML 标签
+        String cleanContent = content
+            .replaceAll("#+\\s*", "")  // 移除标题标记 #
+            .replaceAll("\\*\\*([^*]+)\\*\\*", "$1")  // 移除粗体 **text**
+            .replaceAll("\\*([^*]+)\\*", "$1")  // 移除斜体 *text*
+            .replaceAll("`([^`]+)`", "$1")  // 移除行内代码 `code`
+            .replaceAll("\\[([^\\]]+)\\]\\([^)]+\\)", "$1")  // 移除链接 [text](url)
+            .replaceAll("!\\[([^\\]]*)\\]\\([^)]+\\)", "")  // 移除图片 ![alt](url)
+            .replaceAll("```[\\s\\S]*?```", "")  // 移除代码块
+            .replaceAll("<[^>]+>", "")  // 移除HTML标签
+            .replaceAll("\\n+", " ")  // 将换行符替换为空格
+            .trim();
+        
+        // 提取前150个字符作为摘要
+        int maxLength = 150;
+        if (cleanContent.length() <= maxLength) {
+            return cleanContent;
+        }
+        
+        // 尽量在句号、问号、感叹号处截断
+        String truncated = cleanContent.substring(0, maxLength);
+        int lastPunctuation = Math.max(
+            Math.max(truncated.lastIndexOf('。'), truncated.lastIndexOf('？')),
+            truncated.lastIndexOf('！')
+        );
+        
+        if (lastPunctuation > 50) { // 确保不会太短
+            return truncated.substring(0, lastPunctuation + 1);
+        } else {
+            // 如果没有合适的标点，在最后一个空格处截断
+            int lastSpace = truncated.lastIndexOf(' ');
+            if (lastSpace > 50) {
+                return truncated.substring(0, lastSpace) + "...";
+            } else {
+                return truncated + "...";
+            }
+        }
     }
 }

@@ -1,11 +1,13 @@
 package com.ruoyi.web.controller.quiz.student;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +20,7 @@ import com.ruoyi.system.domain.KnowledgeComment;
 import com.ruoyi.system.domain.KnowledgePoint;
 import com.ruoyi.system.domain.KnowledgeSubject;
 import com.ruoyi.system.domain.KnowledgeFolder;
+import com.ruoyi.system.domain.dto.KnowledgePointListDTO;
 import com.ruoyi.common.core.domain.model.DamingUser;
 import com.ruoyi.system.service.IKnowledgeCommentService;
 import com.ruoyi.system.service.IKnowledgeInteractionService;
@@ -25,6 +28,9 @@ import com.ruoyi.system.service.IKnowledgePointService;
 import com.ruoyi.system.service.IKnowledgeSubjectService;
 import com.ruoyi.system.service.IKnowledgeFolderService;
 import com.dm.quiz.service.IDamingUserService;
+import com.dm.quiz.service.IQuestionKnowledgeService;
+import com.dm.quiz.service.IDamingQuestionService;
+import com.dm.quiz.domain.DamingQuestion;
 
 /**
  * 前台知识点Controller
@@ -47,6 +53,12 @@ public class KnowledgeController extends BaseController
 
     @Autowired
     private IKnowledgeCommentService knowledgeCommentService;
+    
+    @Autowired
+    private IQuestionKnowledgeService questionKnowledgeService;
+    
+    @Autowired
+    private IDamingQuestionService damingQuestionService;
 
     @Autowired
     private IDamingUserService userService;
@@ -147,6 +159,78 @@ public class KnowledgeController extends BaseController
     }
 
     /**
+     * 获取知识点编辑数据
+     */
+    @GetMapping("/point/{pointId}/edit")
+    public AjaxResult getPointForEdit(@PathVariable Long pointId)
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            KnowledgePoint point = knowledgePointService.selectKnowledgePointByPointId(pointId);
+            
+            if (point == null) {
+                return AjaxResult.error("知识点不存在");
+            }
+            
+            // 检查权限 - 只有作者可以编辑
+            if (!point.getAuthorId().equals(userId)) {
+                return AjaxResult.error("无权编辑此知识点");
+            }
+            
+            return success(point);
+        } catch (RuntimeException e) {
+            logger.error("用户认证失败: {}", e.getMessage());
+            return AjaxResult.error("请先登录");
+        } catch (Exception e) {
+            logger.error("获取知识点编辑数据失败: {}", e.getMessage(), e);
+            return AjaxResult.error("系统异常，请稍后重试");
+        }
+    }
+
+    /**
+     * 更新知识点
+     */
+    @PutMapping("/point/{pointId}")
+    public AjaxResult updatePoint(@PathVariable Long pointId, @RequestBody KnowledgePoint knowledgePoint)
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            String username = SecurityUtils.getUsername();
+            
+            KnowledgePoint existingPoint = knowledgePointService.selectKnowledgePointByPointId(pointId);
+            if (existingPoint == null) {
+                return AjaxResult.error("知识点不存在");
+            }
+            
+            // 检查权限 - 只有作者可以编辑
+            if (!existingPoint.getAuthorId().equals(userId)) {
+                return AjaxResult.error("无权编辑此知识点");
+            }
+            
+            // 设置更新信息
+            knowledgePoint.setPointId(pointId);
+            knowledgePoint.setUpdateBy(username);
+            knowledgePoint.setUpdateTime(new Date());
+            
+            // 更新后需要重新审核
+            knowledgePoint.setAuditStatus(0);
+            
+            int result = knowledgePointService.updateKnowledgePoint(knowledgePoint);
+            if (result > 0) {
+                return AjaxResult.success("更新成功，请等待管理员审核");
+            } else {
+                return AjaxResult.error("更新失败");
+            }
+        } catch (RuntimeException e) {
+            logger.error("用户认证失败: {}", e.getMessage());
+            return AjaxResult.error("请先登录");
+        } catch (Exception e) {
+            logger.error("更新知识点失败: {}", e.getMessage(), e);
+            return AjaxResult.error("系统异常，请稍后重试");
+        }
+    }
+
+    /**
      * 获取热门知识点
      */
     @GetMapping("/point/hot")
@@ -202,14 +286,24 @@ public class KnowledgeController extends BaseController
     }
 
     /**
-     * 获取我的收藏列表
+     * 获取我的收藏列表（精简版 - 性能优化）
      */
     @GetMapping("/my/collects")
-    public AjaxResult getMyCollects()
+    public AjaxResult getMyCollects(@RequestParam(required = false) Long folderId)
     {
         Long userId = SecurityUtils.getUserId();
-        List<KnowledgePoint> list = knowledgeInteractionService.getCollectedPoints(userId);
-        fillUserStatus(list);
+        List<KnowledgePointListDTO> list;
+        
+        if (folderId != null) {
+            // 获取指定收藏夹的收藏（精简版）
+            list = knowledgeInteractionService.getCollectedPointsByFolderLite(userId, folderId);
+            logger.info("用户 {} 查询收藏夹 {} 的收藏，返回 {} 条精简数据", userId, folderId, list.size());
+        } else {
+            // 获取所有收藏（精简版）
+            list = knowledgeInteractionService.getCollectedPointsLite(userId);
+            logger.info("用户 {} 查询所有收藏，返回 {} 条精简数据", userId, list.size());
+        }
+        
         return success(list);
     }
 
@@ -556,5 +650,26 @@ public class KnowledgeController extends BaseController
             logger.error("删除知识点失败", e);
             return error("删除知识点失败：" + e.getMessage());
         }
+    }
+
+    @GetMapping("/{pointId}/related-questions")
+    public TableDataInfo getRelatedQuestions(@PathVariable Long pointId, 
+                                            @RequestParam(required = false) Integer questionType,
+                                            @RequestParam(required = false) Integer difficulty) {
+        List<Long> questionIds = questionKnowledgeService.getQuestionIdsByKnowledgePointId(pointId);
+        
+        if (questionIds == null || questionIds.isEmpty()) {
+            return getDataTable(new java.util.ArrayList<>());
+        }
+        
+        DamingQuestion queryParam = new DamingQuestion();
+        startPage();
+        List<DamingQuestion> questions = damingQuestionService.selectDamingQuestionList(queryParam);
+        questions = questions.stream()
+            .filter(q -> questionIds.contains(q.getId()))
+            .filter(q -> questionType == null || q.getQuestionType().equals(questionType))
+            .collect(java.util.stream.Collectors.toList());
+        
+        return getDataTable(questions);
     }
 }
