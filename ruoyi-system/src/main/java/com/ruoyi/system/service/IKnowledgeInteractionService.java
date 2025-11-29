@@ -2,7 +2,7 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.KnowledgePoint;
-import com.ruoyi.system.domain.dto.KnowledgePointListDTO;
+import com.ruoyi.system.domain.dto.KnowledgePointBaseDTO;
 
 /**
  * 知识点互动Service接口（点赞、收藏）
@@ -71,7 +71,7 @@ public interface IKnowledgeInteractionService
      * @param userId 用户ID
      * @return 知识点精简信息集合
      */
-    public List<KnowledgePointListDTO> getCollectedPointsLite(Long userId);
+    public List<KnowledgePointBaseDTO> getCollectedPointsLite(Long userId);
 
     /**
      * 查询用户在指定收藏夹中的知识点列表（精简版）- 用于列表展示，提升性能
@@ -80,7 +80,7 @@ public interface IKnowledgeInteractionService
      * @param folderId 收藏夹ID
      * @return 知识点精简信息集合
      */
-    public List<KnowledgePointListDTO> getCollectedPointsByFolderLite(Long userId, Long folderId);
+    public List<KnowledgePointBaseDTO> getCollectedPointsByFolderLite(Long userId, Long folderId);
 
     /**
      * 收藏知识点到指定收藏夹（收藏/取消收藏）

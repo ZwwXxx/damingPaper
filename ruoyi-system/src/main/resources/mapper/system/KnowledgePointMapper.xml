@@ -4,13 +4,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.KnowledgePointMapper">
     
-    <resultMap type="KnowledgePoint" id="KnowledgePointResult">
+    
+    <!-- 知识点基础信息DTO结果映射 -->
+    <resultMap type="com.ruoyi.system.domain.dto.KnowledgePointBaseDTO" id="KnowledgePointBaseDTOResult">
         <result property="pointId"       column="point_id"       />
         <result property="subjectId"     column="subject_id"     />
         <result property="title"         column="title"          />
         <result property="summary"       column="summary"        />
-        <result property="content"       column="content"        />
-        <result property="contentHtml"   column="content_html"   />
         <result property="difficulty"    column="difficulty"     />
         <result property="authorId"      column="author_id"      />
         <result property="authorName"    column="author_name"    />
@@ -22,33 +22,51 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="isTop"         column="is_top"         />
         <result property="status"        column="status"         />
         <result property="auditStatus"   column="audit_status"   />
-        <result property="auditRemark"   column="audit_remark"   />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="publishTime"   column="publish_time"   />
         <result property="subjectName"   column="subject_name"   />
     </resultMap>
     
-    <sql id="selectKnowledgePointVo">
+    <!-- 知识点内容详情DTO结果映射 -->
+    <resultMap type="com.ruoyi.system.domain.dto.KnowledgePointContentDTO" id="KnowledgePointContentDTOResult">
+        <result property="pointId"       column="point_id"       />
+        <result property="content"       column="content"        />
+        <result property="contentHtml"   column="content_html"   />
+        <result property="auditRemark"   column="audit_remark"   />
+    </resultMap>
+    
+    <!-- 列表查询：只查询base表（性能优化，不包含大字段） -->
+    <sql id="selectKnowledgePointListVo">
         select 
-            kp.point_id, kp.subject_id, kp.title, kp.summary,
-            kp.content, kp.content_html, kp.difficulty,
+            kp.point_id, kp.subject_id, kp.title, kp.summary, kp.difficulty,
             kp.author_id, kp.author_name, kp.view_count, kp.like_count,
             kp.collect_count, kp.comment_count,
             kp.is_recommend, kp.is_top, kp.status, kp.audit_status,
-            kp.audit_remark, kp.create_time, kp.update_time,
+            kp.create_time, kp.update_time, kp.publish_time,
             ks.subject_name
-        from knowledge_point kp
+        from knowledge_point_base kp
         left join knowledge_subject ks on kp.subject_id = ks.subject_id
     </sql>
+
     
-    <select id="selectKnowledgePointByPointId" parameterType="Long" resultMap="KnowledgePointResult">
-        <include refid="selectKnowledgePointVo"/>
-        where kp.point_id = #{pointId}
+    
+    
+    <!-- 内容查询：仅查询content表，返回ContentDTO -->
+    <select id="selectKnowledgePointContentByPointId" parameterType="Long" resultMap="KnowledgePointContentDTOResult">
+        select 
+            kpc.point_id, kpc.content, kpc.content_html, kpc.audit_remark
+        from knowledge_point_content kpc
+        where kpc.point_id = #{pointId}
     </select>
     
-    <select id="selectKnowledgePointList" parameterType="KnowledgePoint" resultMap="KnowledgePointResult">
-        <include refid="selectKnowledgePointVo"/>
+    <!-- 列表查询：使用base表（不包含大字段，性能优化） -->
+    <select id="selectKnowledgePointList" parameterType="KnowledgePoint" resultMap="KnowledgePointBaseDTOResult">
+        <include refid="selectKnowledgePointListVo"/>
         <where>
+            <if test="pointId != null">
+                AND kp.point_id = #{pointId}
+            </if>
             <if test="subjectId != null">
                 AND kp.subject_id = #{subjectId}
             </if>
@@ -91,30 +109,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </choose>
     </select>
     
-    <select id="selectHotKnowledgePoints" resultMap="KnowledgePointResult">
-        <include refid="selectKnowledgePointVo"/>
-        where kp.status = 1
-        order by kp.view_count desc, kp.like_count desc
-        <if test="limit != null">
-            limit #{limit}
-        </if>
-    </select>
     
-    <select id="selectLatestKnowledgePoints" resultMap="KnowledgePointResult">
-        <include refid="selectKnowledgePointVo"/>
-        where kp.status = 1
-        order by kp.create_time desc
-        <if test="limit != null">
-            limit #{limit}
-        </if>
-    </select>
-    
-    <select id="selectRecommendKnowledgePoints" resultMap="KnowledgePointResult">
-        <include refid="selectKnowledgePointVo"/>
+    <!-- 推荐知识点：使用base表 -->
+    <select id="selectRecommendKnowledgePoints" resultMap="KnowledgePointBaseDTOResult">
+        <include refid="selectKnowledgePointListVo"/>
         where kp.status = 1
         order by (
-            COALESCE(kp.view_count * 40.0 / NULLIF((select max(view_count) from knowledge_point where status = 1), 0), 0) +
-            COALESCE((kp.like_count + kp.collect_count * 2 + kp.comment_count * 1.5) * 30.0 / NULLIF((select max(like_count + collect_count * 2 + comment_count * 1.5) from knowledge_point where status = 1), 0), 0) +
+            COALESCE(kp.view_count * 40.0 / NULLIF((select max(view_count) from knowledge_point_base where status = 1), 0), 0) +
+            COALESCE((kp.like_count + kp.collect_count * 2 + kp.comment_count * 1.5) * 30.0 / NULLIF((select max(like_count + collect_count * 2 + comment_count * 1.5) from knowledge_point_base where status = 1), 0), 0) +
             CASE 
                 WHEN DATEDIFF(NOW(), COALESCE(kp.publish_time, kp.create_time)) <![CDATA[<=]]> 30 THEN 20.0
                 WHEN DATEDIFF(NOW(), COALESCE(kp.publish_time, kp.create_time)) <![CDATA[<=]]> 90 THEN 15.0
@@ -130,13 +132,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </if>
     </select>
     
+    
+    <!-- 插入知识点：先插入base表，获取ID后再插入content表 -->
     <insert id="insertKnowledgePoint" parameterType="KnowledgePoint" useGeneratedKeys="true" keyProperty="pointId">
-        insert into knowledge_point(
+        insert into knowledge_point_base(
             <if test="subjectId != null">subject_id,</if>
             <if test="title != null and title != ''">title,</if>
             <if test="summary != null">summary,</if>
-            <if test="content != null">content,</if>
-            <if test="contentHtml != null">content_html,</if>
             <if test="difficulty != null">difficulty,</if>
             <if test="authorId != null">author_id,</if>
             <if test="authorName != null and authorName != ''">author_name,</if>
@@ -147,8 +149,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="subjectId != null">#{subjectId},</if>
             <if test="title != null and title != ''">#{title},</if>
             <if test="summary != null">#{summary},</if>
-            <if test="content != null">#{content},</if>
-            <if test="contentHtml != null">#{contentHtml},</if>
             <if test="difficulty != null">#{difficulty},</if>
             <if test="authorId != null">#{authorId},</if>
             <if test="authorName != null and authorName != ''">#{authorName},</if>
@@ -157,63 +157,81 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             sysdate()
         )
     </insert>
+
+    <!-- 插入知识点内容到content表 -->
+    <insert id="insertKnowledgePointContent" parameterType="KnowledgePoint">
+        insert into knowledge_point_content(point_id, content, content_html)
+        values(#{pointId}, #{content}, #{contentHtml})
+    </insert>
     
+    <!-- 更新知识点base表 -->
     <update id="updateKnowledgePoint" parameterType="KnowledgePoint">
-        update knowledge_point
+        update knowledge_point_base
         <set>
             <if test="subjectId != null">subject_id = #{subjectId},</if>
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="summary != null">summary = #{summary},</if>
-            <if test="content != null">content = #{content},</if>
-            <if test="contentHtml != null">content_html = #{contentHtml},</if>
             <if test="difficulty != null">difficulty = #{difficulty},</if>
             <if test="status != null">status = #{status},</if>
             <if test="auditStatus != null">audit_status = #{auditStatus},</if>
-            <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
             <if test="isRecommend != null">is_recommend = #{isRecommend},</if>
             <if test="isTop != null">is_top = #{isTop},</if>
             update_time = sysdate()
         </set>
         where point_id = #{pointId}
     </update>
+
+    <!-- 更新知识点content表 -->
+    <update id="updateKnowledgePointContent" parameterType="KnowledgePoint">
+        update knowledge_point_content
+        <set>
+            <if test="content != null">content = #{content},</if>
+            <if test="contentHtml != null">content_html = #{contentHtml},</if>
+            <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
+            update_time = sysdate()
+        </set>
+        where point_id = #{pointId}
+    </update>
     
+    <!-- 删除知识点：删除base表，content表通过外键CASCADE自动删除 -->
     <delete id="deleteKnowledgePointByPointId" parameterType="Long">
-        delete from knowledge_point where point_id = #{pointId}
+        delete from knowledge_point_base where point_id = #{pointId}
     </delete>
     
     <delete id="deleteKnowledgePointByPointIds" parameterType="Long">
-        delete from knowledge_point where point_id in
+        delete from knowledge_point_base where point_id in
         <foreach item="pointId" collection="array" open="(" separator="," close=")">
             #{pointId}
         </foreach>
     </delete>
     
+    <!-- 统计更新：更新base表 -->
     <update id="increaseViewCount" parameterType="Long">
-        update knowledge_point set view_count = view_count + 1 where point_id = #{pointId}
+        update knowledge_point_base set view_count = view_count + 1 where point_id = #{pointId}
     </update>
     
     <update id="increaseLikeCount" parameterType="Long">
-        update knowledge_point set like_count = like_count + 1 where point_id = #{pointId}
+        update knowledge_point_base set like_count = like_count + 1 where point_id = #{pointId}
     </update>
     
     <update id="decreaseLikeCount" parameterType="Long">
-        update knowledge_point set like_count = like_count - 1 where point_id = #{pointId} and like_count > 0
+        update knowledge_point_base set like_count = like_count - 1 where point_id = #{pointId} and like_count > 0
     </update>
     
     <update id="increaseCollectCount" parameterType="Long">
-        update knowledge_point set collect_count = collect_count + 1 where point_id = #{pointId}
+        update knowledge_point_base set collect_count = collect_count + 1 where point_id = #{pointId}
     </update>
     
     <update id="decreaseCollectCount" parameterType="Long">
-        update knowledge_point set collect_count = collect_count - 1 where point_id = #{pointId} and collect_count > 0
+        update knowledge_point_base set collect_count = collect_count - 1 where point_id = #{pointId} and collect_count > 0
     </update>
     
     <update id="increaseCommentCount" parameterType="Long">
-        update knowledge_point set comment_count = comment_count + 1 where point_id = #{pointId}
+        update knowledge_point_base set comment_count = comment_count + 1 where point_id = #{pointId}
     </update>
     
     <update id="decreaseCommentCount" parameterType="Long">
-        update knowledge_point set comment_count = comment_count - 1 where point_id = #{pointId} and comment_count > 0
+        update knowledge_point_base set comment_count = comment_count - 1 where point_id = #{pointId} and comment_count > 0
     </update>
     
 </mapper>

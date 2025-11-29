@@ -3,7 +3,7 @@ package com.ruoyi.system.mapper;
 import java.util.List;
 import com.ruoyi.system.domain.KnowledgeCollect;
 import com.ruoyi.system.domain.KnowledgePoint;
-import com.ruoyi.system.domain.dto.KnowledgePointListDTO;
+import com.ruoyi.system.domain.dto.KnowledgePointBaseDTO;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -46,7 +46,7 @@ public interface KnowledgeCollectMapper
      * @param userId 用户ID
      * @return 知识点精简信息集合
      */
-    public List<KnowledgePointListDTO> selectCollectedPointsLite(Long userId);
+    public List<KnowledgePointBaseDTO> selectCollectedPointsLite(Long userId);
 
     /**
      * 查询用户在指定收藏夹中的知识点列表（精简版 - 用于列表展示）
@@ -55,7 +55,7 @@ public interface KnowledgeCollectMapper
      * @param folderId 收藏夹ID
      * @return 知识点精简信息集合
      */
-    public List<KnowledgePointListDTO> selectCollectedPointsByFolderLite(@Param("userId") Long userId, @Param("folderId") Long folderId);
+    public List<KnowledgePointBaseDTO> selectCollectedPointsByFolderLite(@Param("userId") Long userId, @Param("folderId") Long folderId);
 
     /**
      * 新增收藏

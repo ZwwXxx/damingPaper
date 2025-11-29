@@ -78,7 +78,7 @@ SELECT
     author_id, author_name, IFNULL(view_count,0), IFNULL(like_count,0), IFNULL(collect_count,0), IFNULL(comment_count,0),
     IFNULL(is_recommend,0), IFNULL(is_top,0), IFNULL(status,1), IFNULL(audit_status,0),
     create_by, create_time, update_by, update_time, publish_time
-FROM knowledge_point;
+FROM knowledge_point_back;
 
 -- 【步骤2】数据迁移 - 从原表迁移内容到新的content表
 INSERT INTO knowledge_point_content (
@@ -86,7 +86,7 @@ INSERT INTO knowledge_point_content (
 )
 SELECT 
     point_id, content, content_html, audit_remark
-FROM knowledge_point;
+FROM knowledge_point_back;
 
 -- 【步骤3】验证数据迁移
 SELECT 
@@ -180,11 +180,11 @@ CREATE INDEX idx_base_author_status ON knowledge_point_base(author_id, status);
 -- 创建视图兼容旧代码（可选）
 CREATE OR REPLACE VIEW v_knowledge_point AS
 SELECT 
-    b.point_id, b.subject_id, b.title, b.summary, b.difficulty, b.importance,
+    b.point_id, b.subject_id, b.title, b.summary, b.difficulty,
     b.author_id, b.author_name, b.view_count, b.like_count, b.collect_count,
     b.comment_count, b.is_recommend, b.is_top, b.status, b.audit_status,
     b.create_by, b.create_time, b.update_by, b.update_time, b.publish_time,
-    c.content, c.content_html, c.tags, c.chapter_name, c.audit_remark, c.version,
+    c.content, c.content_html, c.audit_remark,
     s.subject_name
 FROM knowledge_point_base b
 LEFT JOIN knowledge_point_content c ON b.point_id = c.point_id

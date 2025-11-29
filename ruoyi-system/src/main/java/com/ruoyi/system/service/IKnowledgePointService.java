@@ -2,6 +2,8 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.KnowledgePoint;
+import com.ruoyi.system.domain.dto.KnowledgePointBaseDTO;
+import com.ruoyi.system.domain.dto.KnowledgePointContentDTO;
 
 /**
  * 知识点Service接口
@@ -11,45 +13,51 @@ import com.ruoyi.system.domain.KnowledgePoint;
  */
 public interface IKnowledgePointService 
 {
+
+
     /**
-     * 查询知识点
+     * 查询知识点内容详情（仅content等大字段）
      * 
      * @param pointId 知识点主键
-     * @return 知识点
+     * @return 知识点内容DTO
+     */
+    public KnowledgePointContentDTO selectKnowledgePointContentByPointId(Long pointId);
+
+    /**
+     * 查询知识点列表（前台用）
+     * 
+     * @param knowledgePoint 知识点
+     * @return 知识点基础信息集合
+     */
+    public List<KnowledgePointBaseDTO> selectKnowledgePointList(KnowledgePoint knowledgePoint);
+    
+    /**
+     * 查询知识点列表（管理后台用）
+     * 
+     * @param knowledgePoint 知识点
+     * @return 完整知识点集合
+     */
+    public List<KnowledgePoint> selectKnowledgePointListForAdmin(KnowledgePoint knowledgePoint);
+    
+    /**
+     * 获取知识点完整信息（管理后台用）
+     * 
+     * @param pointId 知识点ID
+     * @return 完整知识点信息
      */
     public KnowledgePoint selectKnowledgePointByPointId(Long pointId);
 
-    /**
-     * 查询知识点列表
-     * 
-     * @param knowledgePoint 知识点
-     * @return 知识点集合
-     */
-    public List<KnowledgePoint> selectKnowledgePointList(KnowledgePoint knowledgePoint);
+
+
 
     /**
-     * 查询热门知识点
+     * 查询推荐知识点列表
      * 
-     * @param limit 数量限制
-     * @return 知识点集合
+     * @param limit 限制数量
+     * @return 知识点列表
      */
-    public List<KnowledgePoint> selectHotKnowledgePoints(Integer limit);
+    public List<KnowledgePointBaseDTO> selectRecommendKnowledgePoints(Integer limit);
 
-    /**
-     * 查询最新知识点
-     * 
-     * @param limit 数量限制
-     * @return 知识点集合
-     */
-    public List<KnowledgePoint> selectLatestKnowledgePoints(Integer limit);
-
-    /**
-     * 查询推荐知识点
-     * 
-     * @param limit 数量限制
-     * @return 知识点集合
-     */
-    public List<KnowledgePoint> selectRecommendKnowledgePoints(Integer limit);
 
     /**
      * 新增知识点

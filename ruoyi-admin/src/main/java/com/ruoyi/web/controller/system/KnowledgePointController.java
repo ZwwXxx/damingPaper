@@ -43,7 +43,7 @@ public class KnowledgePointController extends BaseController
     public TableDataInfo list(KnowledgePoint knowledgePoint)
     {
         startPage();
-        List<KnowledgePoint> list = knowledgePointService.selectKnowledgePointList(knowledgePoint);
+        List<KnowledgePoint> list = knowledgePointService.selectKnowledgePointListForAdmin(knowledgePoint);
         return getDataTable(list);
     }
 
@@ -55,7 +55,7 @@ public class KnowledgePointController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, KnowledgePoint knowledgePoint)
     {
-        List<KnowledgePoint> list = knowledgePointService.selectKnowledgePointList(knowledgePoint);
+        List<KnowledgePoint> list = knowledgePointService.selectKnowledgePointListForAdmin(knowledgePoint);
         ExcelUtil<KnowledgePoint> util = new ExcelUtil<KnowledgePoint>(KnowledgePoint.class);
         util.exportExcel(response, list, "知识点数据");
     }
