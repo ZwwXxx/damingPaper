@@ -11,7 +11,7 @@
  Target Server Version : 50744 (5.7.44-log)
  File Encoding         : 65001
 
- Date: 22/11/2025 20:55:00
+ Date: 15/12/2025 10:18:10
 */
 
 SET NAMES utf8mb4;
@@ -26,7 +26,7 @@ CREATE TABLE `daming_content_info`  (
   `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 233 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 262 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of daming_content_info
@@ -129,8 +129,111 @@ INSERT INTO `daming_content_info` VALUES (227, '{\"analysis\":\"\",\"correct\":\
 INSERT INTO `daming_content_info` VALUES (228, '{\"analysis\":\"\",\"correct\":\"(1) 结果 -101100，按 5 位字长溢出；(2) 结果 +101101，按 5 位字长溢出\",\"questionOptionList\":[],\"questionTitle\":\"已知 x 和 y，用变形补码计算 x+y，同时指出结果是否溢出。（1）x=-11011，y=-10001 （2）x=+11100，y=+10001\"}', '2025-11-21 13:37:07');
 INSERT INTO `daming_content_info` VALUES (229, '{\"analysis\":\"\",\"correct\":\"X=-1.01011×2^-6，Y=1.110×2^-5；对阶相加得约 1.001101×2^-4，正数，未溢出（尾数按 6 位截断/舍入）。\",\"questionOptionList\":[],\"questionTitle\":\"若 X= -43/2048, Y=14/256，设阶码 3 位，尾数 6 位（均不含符号位），阶码和尾数均采用双符号位，且都用补码表示，按浮点运算步骤计算 X+Y。\"}', '2025-11-21 13:37:07');
 INSERT INTO `daming_content_info` VALUES (230, '{\"analysis\":\"无\",\"correct\":\"B,C\",\"questionOptionList\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"测试多选题\"}', '2025-11-21 15:45:22');
-INSERT INTO `daming_content_info` VALUES (231, '[{\"name\":\"单选题\",\"paperQuestionVMS\":[{\"id\":112,\"itemOrder\":0},{\"id\":111,\"itemOrder\":1},{\"id\":117,\"itemOrder\":2},{\"id\":110,\"itemOrder\":3},{\"id\":72,\"itemOrder\":4},{\"id\":120,\"itemOrder\":5},{\"id\":116,\"itemOrder\":6},{\"id\":66,\"itemOrder\":7},{\"id\":115,\"itemOrder\":8},{\"id\":67,\"itemOrder\":9},{\"id\":113,\"itemOrder\":10},{\"id\":114,\"itemOrder\":11}]},{\"name\":\"判断题\",\"paperQuestionVMS\":[{\"id\":123,\"itemOrder\":12},{\"id\":129,\"itemOrder\":13},{\"id\":128,\"itemOrder\":14},{\"id\":131,\"itemOrder\":15},{\"id\":127,\"itemOrder\":16},{\"id\":124,\"itemOrder\":17},{\"id\":122,\"itemOrder\":18},{\"id\":126,\"itemOrder\":19},{\"id\":125,\"itemOrder\":20}]},{\"name\":\"主观题\",\"paperQuestionVMS\":[{\"id\":132,\"itemOrder\":21},{\"id\":133,\"itemOrder\":22},{\"id\":134,\"itemOrder\":23},{\"id\":135,\"itemOrder\":24}]}]', '2025-11-21 17:26:14');
+INSERT INTO `daming_content_info` VALUES (231, '[{\"name\":\"单选题\",\"paperQuestionVMS\":[{\"id\":112,\"itemOrder\":0},{\"id\":111,\"itemOrder\":1},{\"id\":117,\"itemOrder\":2},{\"id\":110,\"itemOrder\":3},{\"id\":72,\"itemOrder\":4},{\"id\":120,\"itemOrder\":5},{\"id\":116,\"itemOrder\":6},{\"id\":66,\"itemOrder\":7},{\"id\":115,\"itemOrder\":8},{\"id\":67,\"itemOrder\":9},{\"id\":113,\"itemOrder\":10},{\"id\":114,\"itemOrder\":11},{\"id\":142,\"itemOrder\":12}]},{\"name\":\"判断题\",\"paperQuestionVMS\":[{\"id\":123,\"itemOrder\":13},{\"id\":129,\"itemOrder\":14},{\"id\":128,\"itemOrder\":15},{\"id\":131,\"itemOrder\":16},{\"id\":127,\"itemOrder\":17},{\"id\":124,\"itemOrder\":18},{\"id\":122,\"itemOrder\":19},{\"id\":126,\"itemOrder\":20},{\"id\":125,\"itemOrder\":21}]},{\"name\":\"主观题\",\"paperQuestionVMS\":[{\"id\":132,\"itemOrder\":22},{\"id\":133,\"itemOrder\":23},{\"id\":134,\"itemOrder\":24},{\"id\":135,\"itemOrder\":25}]},{\"name\":\"填空题\",\"paperQuestionVMS\":[{\"id\":140,\"itemOrder\":26},{\"id\":138,\"itemOrder\":27},{\"id\":139,\"itemOrder\":28}]}]', '2025-11-21 17:26:14');
 INSERT INTO `daming_content_info` VALUES (232, '[{\"name\":\"单选题\",\"paperQuestionVMS\":[{\"id\":95,\"itemOrder\":0},{\"id\":93,\"itemOrder\":1},{\"id\":96,\"itemOrder\":2},{\"id\":84,\"itemOrder\":3},{\"id\":91,\"itemOrder\":4}]}]', '2025-11-22 16:08:05');
+INSERT INTO `daming_content_info` VALUES (233, '{\"analysis\":\"无\",\"correct\":\"111\",\"questionOptionList\":[],\"questionTitle\":\"测试填空题\"}', '2025-11-24 09:38:28');
+INSERT INTO `daming_content_info` VALUES (234, '{\"analysis\":\"无\",\"correct\":\"测试填空题\",\"questionOptionList\":[],\"questionTitle\":\"测试填空题\"}', '2025-11-24 09:39:59');
+INSERT INTO `daming_content_info` VALUES (235, '{\"analysis\":\"无\",\"correct\":\"测试填空题2\",\"questionOptionList\":[],\"questionTitle\":\"测试填空题2\"}', '2025-11-24 09:40:30');
+INSERT INTO `daming_content_info` VALUES (236, '{\"analysis\":\"无\",\"correct\":\"增加填空题2\",\"questionOptionList\":[],\"questionTitle\":\"增加填空题2\"}', '2025-11-24 09:41:15');
+INSERT INTO `daming_content_info` VALUES (237, '{\"analysis\":\"<p>6666</p><p><br></p><p><img src=\\\"/dev-apiquiz/paper/answer/2025/11/24/e8279544864f48299cf4afedd815ed6d.jpg\\\"></p>\",\"correct\":\"B\",\"questionOptionList\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"1+1等于几\"}', '2025-11-24 20:16:14');
+INSERT INTO `daming_content_info` VALUES (238, '{\"analysis\":\"<p>无<img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/bf00f01f7f5e4c7da84078278ae49642.jpg\\\"></p><p><br></p><p><br></p>\",\"correct\":\"B\",\"questionOptionList\":[{\"content\":\"34\",\"prefix\":\"A\"},{\"content\":\"534\",\"prefix\":\"B\"},{\"content\":\"5\",\"prefix\":\"C\"},{\"content\":\"35\",\"prefix\":\"D\"}],\"questionTitle\":\"345\"}', '2025-11-24 20:29:41');
+INSERT INTO `daming_content_info` VALUES (239, '{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/730a7d39f808440cb4ef3b92e2ebdc5e.jpg\\\"></p><p><br></p><p>6666</p>\",\"correct\":\"B\",\"questionOptionList\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"一加一等于几\"}', '2025-11-24 20:42:34');
+INSERT INTO `daming_content_info` VALUES (240, '{\"analysis\":\"<p>6666</p>\",\"correct\":\"C,B\",\"questionOptionList\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\"}', '2025-11-24 20:43:28');
+INSERT INTO `daming_content_info` VALUES (241, '{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"questionOptionList\":[],\"questionTitle\":\"输入666\"}', '2025-11-24 20:43:47');
+INSERT INTO `daming_content_info` VALUES (242, '{\"analysis\":\"<p>无</p>\",\"correct\":\"A\",\"questionOptionList\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"选对的\"}', '2025-11-24 20:43:55');
+INSERT INTO `daming_content_info` VALUES (243, '{\"analysis\":\"<p>666</p>\",\"correct\":\"666\",\"questionOptionList\":[],\"questionTitle\":\"填666\"}', '2025-11-24 20:44:05');
+INSERT INTO `daming_content_info` VALUES (244, '[{\"name\":\"单选题\",\"paperQuestionVMS\":[{\"id\":143,\"itemOrder\":0}]},{\"name\":\"多选题\",\"paperQuestionVMS\":[{\"id\":144,\"itemOrder\":1}]},{\"name\":\"判断题\",\"paperQuestionVMS\":[{\"id\":146,\"itemOrder\":2}]},{\"name\":\"填空题\",\"paperQuestionVMS\":[{\"id\":147,\"itemOrder\":3}]},{\"name\":\"主观题\",\"paperQuestionVMS\":[{\"id\":145,\"itemOrder\":4}]},{\"name\":\"999\",\"paperQuestionVMS\":[{\"id\":148,\"itemOrder\":5},{\"id\":149,\"itemOrder\":6}]}]', '2025-11-24 20:48:06');
+INSERT INTO `daming_content_info` VALUES (245, '[{\"name\":\"单选题\",\"paperQuestionVMS\":[{\"id\":71,\"itemOrder\":0},{\"id\":66,\"itemOrder\":1},{\"id\":119,\"itemOrder\":2}]},{\"name\":\"多选题\",\"paperQuestionVMS\":[{\"id\":144,\"itemOrder\":3},{\"id\":136,\"itemOrder\":4}]},{\"name\":\"主观题\",\"paperQuestionVMS\":[{\"id\":145,\"itemOrder\":5},{\"id\":132,\"itemOrder\":6}]},{\"name\":\"判断题\",\"paperQuestionVMS\":[{\"id\":126,\"itemOrder\":7},{\"id\":131,\"itemOrder\":8}]},{\"name\":\"填空题\",\"paperQuestionVMS\":[{\"id\":147,\"itemOrder\":9}]}]', '2025-11-24 20:49:22');
+INSERT INTO `daming_content_info` VALUES (246, '{\"analysis\":\"无\",\"correct\":\"A\",\"questionOptionList\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/c2a8f21c843f4b6c9cef5dfe0dfb477e.jpg\\\"></p><p><br></p><p>6666</p>\"}', '2025-11-25 14:08:12');
+INSERT INTO `daming_content_info` VALUES (247, '{\"analysis\":\"<p>A ：右侧的 + 被省略，包含两个意思，可以生成二者，也可以生成二者之一</p><p>B ：加号外一圈的符号叫做<strong style=\\\"background-color: rgb(255, 255, 255);\\\">异或关系符号，</strong><span style=\\\"background-color: rgb(255, 255, 255);\\\">二者之中只能存在其一，不能同时存在，这里说他是和，因此错误</span></p><p><span style=\\\"background-color: rgb(255, 255, 255);\\\">C：正确，*号表示和，二者必须同时存在</span></p><p><span style=\\\"background-color: rgb(255, 255, 255);\\\">D：此处的+号可以省略，两层意思，一层为A或B可以同时输入变成C，也可以二者其中之一输入变成C</span></p>\",\"correct\":\"C\",\"questionOptionList\":[{\"content\":\"<p><span style=\\\"background-color: rgb(255, 255, 255); color: rgb(85, 85, 85);\\\">数据A变换成B和C</span></p><p><br></p><p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/e5327749a2584b259743e2fcbe899e0a.png\\\"></p>\",\"prefix\":\"A\"},{\"content\":\"<p>数据A变换成B和C</p><p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/e706e27d6f014595987550aedadc2230.png\\\"></p>\",\"prefix\":\"B\"},{\"content\":\"<p>数据A和B同时输入变成C</p><p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/3c340e8f35204113b462d44736b24068.png\\\"></p>\",\"prefix\":\"C\"},{\"content\":\"<p>数据A或数据B（不能同时）输入，变换成C</p><p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/c3be7db3650e41a3aad622dda2c29628.png\\\"></p>\",\"prefix\":\"D\"}],\"questionTitle\":\"<p><span style=\\\"background-color: rgb(255, 255, 255); color: rgb(32, 32, 32);\\\">对于下列各图，有关描述中正确的是（ ）。</span></p>\"}', '2025-11-25 14:40:43');
+INSERT INTO `daming_content_info` VALUES (248, '{\"analysis\":\"解析：单选题只有一个正确答案，这里选择A\",\"correct\":\"A\",\"questionOptionList\":[{\"content\":\"选项A内容\",\"prefix\":\"A\"},{\"content\":\"选项B内容\",\"prefix\":\"B\"},{\"content\":\"选项C内容\",\"prefix\":\"C\"},{\"content\":\"选项D内容\",\"prefix\":\"D\"}],\"questionTitle\":\"示例：这是一道单选题题干？\"}', '2025-11-25 18:13:24');
+INSERT INTO `daming_content_info` VALUES (249, '{\"analysis\":\"解析：多选题有多个正确答案，答案用英文逗号分隔，这里选择A、B、C\",\"correct\":\"A,B,C\",\"questionOptionList\":[{\"content\":\"选项A内容\",\"prefix\":\"A\"},{\"content\":\"选项B内容\",\"prefix\":\"B\"},{\"content\":\"选项C内容\",\"prefix\":\"C\"},{\"content\":\"选项D内容\",\"prefix\":\"D\"}],\"questionTitle\":\"示例：这是一道多选题题干？（多选）\"}', '2025-11-25 18:13:24');
+INSERT INTO `daming_content_info` VALUES (250, '{\"analysis\":\"解析：主观题需要人工批阅，可以设置参考答案供批阅参考\",\"correct\":\"参考答案：主观题可以提供参考答案，也可以不提供\",\"questionOptionList\":[],\"questionTitle\":\"示例：这是一道主观题题干，请简述xxx的特点？\"}', '2025-11-25 18:13:24');
+INSERT INTO `daming_content_info` VALUES (251, '{\"analysis\":\"解析：判断题选项会自动生成为正确/错误，答案填A表示正确，填B表示错误\",\"correct\":\"A\",\"questionOptionList\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"示例：这是一道判断题题干，xxx说法是否正确？\"}', '2025-11-25 18:13:24');
+INSERT INTO `daming_content_info` VALUES (252, '{\"analysis\":\"解析：填空题答案为标准答案，支持多个空格的情况\",\"correct\":\"答案内容\",\"questionOptionList\":[],\"questionTitle\":\"示例：这是一道填空题题干，请填写____的值\"}', '2025-11-25 18:13:24');
+INSERT INTO `daming_content_info` VALUES (253, '{\"analysis\":\"解析：单选题只有一个正确答案，这里选择A\",\"correct\":\"A\",\"questionOptionList\":[{\"content\":\"选项A内容\",\"prefix\":\"A\"},{\"content\":\"选项B内容\",\"prefix\":\"B\"},{\"content\":\"选项C内容\",\"prefix\":\"C\"},{\"content\":\"选项D内容\",\"prefix\":\"D\"}],\"questionTitle\":\"示例：这是一道单选题题干？\"}', '2025-11-25 18:16:21');
+INSERT INTO `daming_content_info` VALUES (254, '{\"analysis\":\"解析：多选题有多个正确答案，答案用英文逗号分隔，这里选择A、B、C\",\"correct\":\"A,B,C\",\"questionOptionList\":[{\"content\":\"选项A内容\",\"prefix\":\"A\"},{\"content\":\"选项B内容\",\"prefix\":\"B\"},{\"content\":\"选项C内容\",\"prefix\":\"C\"},{\"content\":\"选项D内容\",\"prefix\":\"D\"}],\"questionTitle\":\"示例：这是一道多选题题干？（多选）\"}', '2025-11-25 18:16:21');
+INSERT INTO `daming_content_info` VALUES (255, '{\"analysis\":\"解析：主观题需要人工批阅，可以设置参考答案供批阅参考\",\"correct\":\"参考答案：主观题可以提供参考答案，也可以不提供\",\"questionOptionList\":[],\"questionTitle\":\"示例：这是一道主观题题干，请简述xxx的特点？\"}', '2025-11-25 18:16:21');
+INSERT INTO `daming_content_info` VALUES (256, '{\"analysis\":\"解析：判断题选项会自动生成为正确/错误，答案填A表示正确，填B表示错误\",\"correct\":\"A\",\"questionOptionList\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"示例：这是一道判断题题干，xxx说法是否正确？\"}', '2025-11-25 18:16:21');
+INSERT INTO `daming_content_info` VALUES (257, '{\"analysis\":\"解析：填空题答案为标准答案，支持多个空格的情况\",\"correct\":\"答案内容\",\"questionOptionList\":[],\"questionTitle\":\"示例：这是一道填空题题干，请填写____的值\"}', '2025-11-25 18:16:21');
+INSERT INTO `daming_content_info` VALUES (258, '{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><p><br></p><p><br></p><p><br></p><p><br></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul>\",\"correct\":\"操作码 + 操作数\",\"questionOptionList\":[],\"questionTitle\":\"<p><strong style=\\\"background-color: rgb(255, 255, 255); color: var(--strong-color);\\\">指令由哪两部分组成？</strong></p>\"}', '2025-11-29 16:44:42');
+INSERT INTO `daming_content_info` VALUES (261, '[{\"name\":\"主观题\",\"paperQuestionVMS\":[{\"id\":160,\"itemOrder\":0}]}]', '2025-11-29 17:06:56');
+
+-- ----------------------------
+-- Table structure for daming_feedback
+-- ----------------------------
+DROP TABLE IF EXISTS `daming_feedback`;
+CREATE TABLE `daming_feedback`  (
+  `feedback_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '反馈ID',
+  `user_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户ID',
+  `user_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户名称',
+  `feedback_type` tinyint(4) NOT NULL DEFAULT 1 COMMENT '反馈类型：1=功能建议 2=Bug反馈 3=使用问题 4=其他',
+  `feedback_title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '反馈标题',
+  `feedback_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '反馈内容',
+  `contact_info` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系方式（手机/邮箱）',
+  `images` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '截图附件（多个用逗号分隔）',
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '处理状态：0=待处理 1=处理中 2=已处理 3=已关闭',
+  `priority` tinyint(4) NOT NULL DEFAULT 1 COMMENT '优先级：1=低 2=中 3=高',
+  `handler` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '处理人',
+  `handle_time` datetime NULL DEFAULT NULL COMMENT '处理时间',
+  `reply_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '回复内容',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '删除标志：0=正常 1=删除',
+  `create_user` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_user` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`feedback_id`) USING BTREE,
+  INDEX `idx_user_id`(`user_id`) USING BTREE COMMENT '用户ID索引',
+  INDEX `idx_status`(`status`) USING BTREE COMMENT '状态索引',
+  INDEX `idx_create_time`(`create_time`) USING BTREE COMMENT '创建时间索引',
+  INDEX `idx_feedback_type`(`feedback_type`) USING BTREE COMMENT '反馈类型索引'
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户反馈表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of daming_feedback
+-- ----------------------------
+INSERT INTO `daming_feedback` VALUES (1, 'student1', '张三', 1, '建议增加错题本导出功能', '希望能够将错题本导出为PDF或Word文档，方便线下复习。目前只能在线查看，不太方便。', '13800138000', NULL, 1, 2, NULL, NULL, NULL, '0', 'student1', '2025-11-23 14:07:27', NULL, '2025-11-23 14:07:27', NULL);
+INSERT INTO `daming_feedback` VALUES (2, 'student2', '李四', 2, '考试页面刷新后答案丢失', '在做题过程中，如果不小心刷新了页面，之前选择的答案会全部丢失，导致需要重新答题。希望能够自动保存答题进度。', 'lisi@example.com', NULL, 2, 3, NULL, NULL, NULL, '0', 'student2', '2025-11-23 14:07:27', NULL, '2025-11-23 14:07:27', NULL);
+INSERT INTO `daming_feedback` VALUES (3, 'student3', '王五', 3, '如何查看历史考试记录？', '我想查看之前所有的考试记录和成绩，但是在个人中心没有找到相关入口，请问应该在哪里查看？', '13900139000', NULL, 2, 1, 'admin', '2025-11-23 14:07:27', '您好！感谢您的反馈。关于查看历史考试记录，您可以在【个人中心】→【考试记录】中查看所有的考试历史和详细成绩。如有其他问题，欢迎继续反馈！', '0', 'student3', '2025-11-23 14:07:27', NULL, '2025-11-23 14:07:27', NULL);
+INSERT INTO `daming_feedback` VALUES (4, 'student4', '赵六', 1, '希望增加夜间模式', '晚上学习时屏幕太亮，希望能够增加夜间模式，保护眼睛。', 'zhaoliu@example.com', NULL, 0, 1, NULL, NULL, NULL, '0', 'student4', '2025-11-23 14:07:27', NULL, '2025-11-23 14:07:27', NULL);
+INSERT INTO `daming_feedback` VALUES (5, 'zww', 'zww', 1, '000000000000000000', '000000000000000000', '1626016153@qq.com', NULL, 0, 1, NULL, NULL, NULL, '0', 'zww', '2025-11-23 14:33:02', NULL, '2025-11-23 14:33:02', NULL);
+INSERT INTO `daming_feedback` VALUES (6, 'zww', 'zww', 1, '1111111111111111111111', '1111111111111111111111', '1626016153@qq.com', NULL, 2, 1, 'admin', '2025-11-23 14:46:29', '已处理', '0', 'zww', '2025-11-23 14:35:05', NULL, '2025-11-23 14:46:28', NULL);
+INSERT INTO `daming_feedback` VALUES (7, 'test666', 'testzww', 1, '有问题有问题', '有问题有问题有问题有问题', '1626016153@qq.com', NULL, 2, 1, 'admin', '2025-11-24 21:37:43', '已解决已解决已解决已解决', '0', 'test666', '2025-11-24 21:37:05', NULL, '2025-11-24 21:37:43', NULL);
+
+-- ----------------------------
+-- Table structure for daming_notice
+-- ----------------------------
+DROP TABLE IF EXISTS `daming_notice`;
+CREATE TABLE `daming_notice`  (
+  `notice_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '公告ID',
+  `notice_title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '公告标题',
+  `notice_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '公告内容',
+  `notice_type` tinyint(4) NOT NULL DEFAULT 1 COMMENT '公告类型：1=通知 2=公告 3=活动',
+  `is_top` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否置顶：0=否 1=是',
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '发布状态：0=草稿 1=已发布',
+  `publish_time` datetime NULL DEFAULT NULL COMMENT '发布时间',
+  `sort_order` int(11) NOT NULL DEFAULT 0 COMMENT '排序序号（越大越靠前）',
+  `view_count` int(11) NOT NULL DEFAULT 0 COMMENT '浏览次数',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '删除标志：0=正常 1=删除',
+  `create_user` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_user` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`notice_id`) USING BTREE,
+  INDEX `idx_status_isTop_sort`(`status`, `is_top`, `sort_order`) USING BTREE COMMENT '发布状态+置顶+排序索引',
+  INDEX `idx_create_time`(`create_time`) USING BTREE COMMENT '创建时间索引',
+  INDEX `idx_publish_time`(`publish_time`) USING BTREE COMMENT '发布时间索引'
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公告管理表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of daming_notice
+-- ----------------------------
+INSERT INTO `daming_notice` VALUES (1, '系统维护通知666', '尊敬的用户，系统将于本周六（2025年11月23日）凌晨2:00-4:00进行系统维护升级，期间将暂停服务，请各位用户合理安排考试时间。给您带来的不便敬请谅解！', 1, 1, 1, '2025-11-23 14:02:03', 100, 6, '0', 'admin', '2025-11-23 14:02:03', 'admin', '2025-11-29 17:18:34', '系统维护公告');
+INSERT INTO `daming_notice` VALUES (2, '新功能上线公告', '亲爱的用户们，我们很高兴地宣布，数据大屏功能正式上线！您可以在个人中心查看详细的学习数据统计，包括考试成绩趋势、错题分析、学习时间分布等，快来体验吧！', 2, 1, 0, '2025-11-23 14:02:03', 90, 1, '0', 'admin', '2025-11-23 14:02:03', 'admin', '2025-11-23 14:42:36', '新功能发布');
+INSERT INTO `daming_notice` VALUES (3, '考试规则说明', '为了保证考试的公平公正，请各位考生注意以下事项：\n1. 考试过程中请独立完成，不得借助任何外部资源\n2. 每道题目都有时间限制，请合理分配答题时间\n3. 提交后不可修改答案，请仔细检查后再提交\n4. 系统会自动记录考试过程，请诚信考试', 1, 0, 1, '2025-11-23 14:02:03', 80, 5, '0', 'admin', '2025-11-23 14:02:03', NULL, '2025-11-29 17:18:44', '考试规则');
+INSERT INTO `daming_notice` VALUES (4, '学习资料更新', '本周新增了100道Java高级编程题目和50道数据库优化题目，欢迎大家前往题库练习。同时，我们还整理了常见错题解析文档，可在错题本中查看详细解答。', 3, 0, 1, '2025-11-23 14:02:03', 70, 3, '0', 'admin', '2025-11-23 14:02:03', NULL, '2025-11-29 17:18:48', '题库更新');
 
 -- ----------------------------
 -- Table structure for daming_paper
@@ -151,8 +254,11 @@ CREATE TABLE `daming_paper`  (
   `enable_anti_cheat` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否开启防作弊',
   `start_time` datetime NULL DEFAULT NULL COMMENT '考试开始时间',
   `end_time` datetime NULL DEFAULT NULL COMMENT '考试截止时间',
-  PRIMARY KEY (`paper_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 93 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`paper_id`) USING BTREE,
+  INDEX `idx_subject_id`(`subject_id`) USING BTREE COMMENT '科目ID索引',
+  INDEX `idx_delflag_create`(`del_flag`, `create_time`) USING BTREE COMMENT '删除标志和创建时间组合索引',
+  INDEX `idx_del_flag`(`del_flag`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 96 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of daming_paper
@@ -162,8 +268,10 @@ INSERT INTO `daming_paper` VALUES (87, '1234', 1, 270, 156, 5, 2134, 2, '2024-10
 INSERT INTO `daming_paper` VALUES (88, '测试试卷', 1, 5, 167, 5, 1, 0, '2024-10-26 14:48:46', '2025-11-19 10:28:55', '1', 0, NULL, NULL);
 INSERT INTO `daming_paper` VALUES (89, 'lll', 1, 10, 168, 10, 1, 0, '2025-11-11 21:20:42', '2025-11-19 10:28:55', '1', 1, NULL, NULL);
 INSERT INTO `daming_paper` VALUES (90, '期中考试', 1, 20, 172, 20, 60, 0, '2025-11-19 16:37:15', '2025-11-19 16:37:15', '1', 0, NULL, NULL);
-INSERT INTO `daming_paper` VALUES (91, '期中考试复习', 2, 25, 231, 25, 25, 0, '2025-11-21 17:26:14', '2025-11-21 17:26:14', '1', 0, NULL, NULL);
+INSERT INTO `daming_paper` VALUES (91, '期中考试复习', 2, 29, 231, 29, 25, 0, '2025-11-21 17:26:14', '2025-11-21 17:26:14', '1', 0, NULL, NULL);
 INSERT INTO `daming_paper` VALUES (92, '测试开始和结束时间', 1, 5, 232, 5, 2, 0, '2025-11-22 16:08:05', '2025-11-22 16:08:05', '1', 0, '2025-11-22 16:33:44', '2025-11-22 16:35:48');
+INSERT INTO `daming_paper` VALUES (93, '测试试卷', 2, 7, 244, 7, 1, 0, '2025-11-24 20:48:06', '2025-11-24 20:48:06', '1', 0, '2025-11-24 20:45:51', '2025-12-06 00:00:00');
+INSERT INTO `daming_paper` VALUES (95, '知识点跳转', 3, 1, 261, 1, 1, 0, '2025-11-29 17:06:56', '2025-11-29 17:06:56', '1', 0, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for daming_paper_answer
@@ -188,9 +296,15 @@ CREATE TABLE `daming_paper_answer`  (
   `subject_id` int(11) NOT NULL,
   `do_time` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`paper_answer_id`) USING BTREE,
-  INDEX `paper_id`(`paper_id`) USING BTREE,
-  CONSTRAINT `daming_paper_answer_ibfk_1` FOREIGN KEY (`paper_id`) REFERENCES `daming_paper` (`paper_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 254 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  INDEX `idx_create_time`(`create_time`) USING BTREE COMMENT '创建时间索引',
+  INDEX `idx_create_user`(`create_user`) USING BTREE COMMENT '创建用户索引',
+  INDEX `idx_review_status`(`review_status`) USING BTREE COMMENT '批改状态索引',
+  INDEX `idx_paper_create`(`paper_id`, `create_time`) USING BTREE COMMENT '试卷ID和创建时间组合索引',
+  INDEX `idx_subject_create`(`subject_id`, `create_time`) USING BTREE COMMENT '科目ID和创建时间组合索引',
+  INDEX `idx_user_time`(`create_user`, `create_time`) USING BTREE,
+  INDEX `idx_paper_id`(`paper_id`) USING BTREE,
+  CONSTRAINT `daming_paper_answer_ibfk_1` FOREIGN KEY (`paper_id`) REFERENCES `daming_paper` (`paper_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 296 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of daming_paper_answer
@@ -349,6 +463,48 @@ INSERT INTO `daming_paper_answer` VALUES (250, '期中考试复习', 91, 'zww', 
 INSERT INTO `daming_paper_answer` VALUES (251, '期中考试复习', 91, 'zww', 25, 0, 0, 0, 1, NULL, NULL, NULL, 25, 0, '2025-11-22 11:20:55', 2, 20);
 INSERT INTO `daming_paper_answer` VALUES (252, '期中考试复习', 91, 'zww', 25, 0, 0, 0, 1, NULL, NULL, NULL, 25, 0, '2025-11-22 11:39:09', 2, 15);
 INSERT INTO `daming_paper_answer` VALUES (253, '期中考试复习', 91, 'zww', 25, 4, 0, 4, 2, 'admin', '2025-11-22 12:05:42', '66', 25, 0, '2025-11-22 12:05:21', 2, 24);
+INSERT INTO `daming_paper_answer` VALUES (254, 'lll', 89, 'zww', 10, 0, 0, 0, 2, NULL, NULL, NULL, 10, 0, '2025-11-23 11:34:02', 1, 1);
+INSERT INTO `daming_paper_answer` VALUES (255, '期中考试复习', 91, 'zww', 25, 0, 0, 0, 1, NULL, NULL, NULL, 25, 0, '2025-11-23 11:34:19', 2, 1);
+INSERT INTO `daming_paper_answer` VALUES (256, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 09:42:17', 2, 6);
+INSERT INTO `daming_paper_answer` VALUES (257, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 15:46:19', 2, 8);
+INSERT INTO `daming_paper_answer` VALUES (258, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 17:50:21', 2, 23);
+INSERT INTO `daming_paper_answer` VALUES (259, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:10:09', 2, 14);
+INSERT INTO `daming_paper_answer` VALUES (260, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:11:14', 2, 11);
+INSERT INTO `daming_paper_answer` VALUES (261, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:21:20', 2, 12);
+INSERT INTO `daming_paper_answer` VALUES (262, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:26:25', 2, 19);
+INSERT INTO `daming_paper_answer` VALUES (263, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:28:38', 2, 11);
+INSERT INTO `daming_paper_answer` VALUES (264, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:30:26', 2, 8);
+INSERT INTO `daming_paper_answer` VALUES (265, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:31:59', 2, 78);
+INSERT INTO `daming_paper_answer` VALUES (266, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:32:28', 2, 13);
+INSERT INTO `daming_paper_answer` VALUES (267, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:37:20', 2, 8);
+INSERT INTO `daming_paper_answer` VALUES (268, '期中考试复习', 91, 'zww', 28, 0, 0, 0, 1, NULL, NULL, NULL, 28, 0, '2025-11-24 19:38:39', 2, 10);
+INSERT INTO `daming_paper_answer` VALUES (269, '期中考试复习', 91, 'zww', 29, 0, 0, 0, 1, NULL, NULL, NULL, 29, 0, '2025-11-24 20:30:22', 2, 5);
+INSERT INTO `daming_paper_answer` VALUES (270, '测试试卷', 93, 'test666', 5, 4, 4, 0, 1, NULL, NULL, NULL, 5, 4, '2025-11-24 20:56:49', 2, 19);
+INSERT INTO `daming_paper_answer` VALUES (271, '测试试卷', 93, 'test666', 5, 1, 1, 0, 1, NULL, NULL, NULL, 5, 1, '2025-11-24 20:58:39', 2, 3);
+INSERT INTO `daming_paper_answer` VALUES (272, '测试试卷', 93, 'test666', 5, 4, 4, 0, 1, NULL, NULL, NULL, 5, 4, '2025-11-24 20:59:40', 2, 26);
+INSERT INTO `daming_paper_answer` VALUES (273, '测试试卷', 93, 'test666', 5, 5, 4, 1, 2, 'admin', '2025-11-24 21:09:35', '6666', 5, 4, '2025-11-24 21:08:59', 2, 20);
+INSERT INTO `daming_paper_answer` VALUES (274, '测试试卷', 93, 'test666', 5, 4, 4, 0, 1, NULL, NULL, NULL, 5, 4, '2025-11-24 21:17:33', 2, 29);
+INSERT INTO `daming_paper_answer` VALUES (275, '测试试卷', 93, 'test666', 5, 1, 1, 0, 1, NULL, NULL, NULL, 5, 1, '2025-11-24 21:18:41', 2, 60);
+INSERT INTO `daming_paper_answer` VALUES (276, '测试试卷', 93, 'test666', 5, 1, 1, 0, 1, NULL, NULL, NULL, 5, 1, '2025-11-24 21:23:22', 2, 60);
+INSERT INTO `daming_paper_answer` VALUES (277, '测试试卷', 93, 'test666', 5, 1, 1, 0, 1, NULL, NULL, NULL, 5, 1, '2025-11-24 21:25:54', 2, 13);
+INSERT INTO `daming_paper_answer` VALUES (278, '测试试卷', 93, 'test666', 5, 1, 1, 0, 1, NULL, NULL, NULL, 5, 1, '2025-11-24 21:26:19', 2, 5);
+INSERT INTO `daming_paper_answer` VALUES (279, '测试试卷', 93, 'test666', 5, 3, 3, 0, 1, NULL, NULL, NULL, 5, 3, '2025-11-24 21:26:35', 2, 5);
+INSERT INTO `daming_paper_answer` VALUES (280, '测试试卷', 93, 'test666', 5, 3, 3, 0, 1, NULL, NULL, NULL, 5, 3, '2025-11-24 21:27:25', 2, 5);
+INSERT INTO `daming_paper_answer` VALUES (281, '测试试卷', 93, 'test666', 5, 5, 4, 1, 2, 'admin', '2025-11-24 21:31:17', 'ok', 5, 4, '2025-11-24 21:30:23', 2, 32);
+INSERT INTO `daming_paper_answer` VALUES (282, '测试试卷', 93, 'test666', 5, 0, 0, 0, 1, NULL, NULL, NULL, 5, 0, '2025-11-24 21:32:44', 2, 6);
+INSERT INTO `daming_paper_answer` VALUES (283, '测试试卷', 93, 'test666', 5, 0, 0, 0, 1, NULL, NULL, NULL, 5, 0, '2025-11-24 21:33:43', 2, 4);
+INSERT INTO `daming_paper_answer` VALUES (284, '测试试卷', 93, 'test666', 5, 0, 0, 0, 1, NULL, NULL, NULL, 5, 0, '2025-11-24 21:39:29', 2, 60);
+INSERT INTO `daming_paper_answer` VALUES (285, '测试试卷', 93, 'test666', 5, 0, 0, 0, 1, NULL, NULL, NULL, 5, 0, '2025-11-24 21:40:40', 2, 60);
+INSERT INTO `daming_paper_answer` VALUES (286, '测试试卷', 93, 'test666', 5, 0, 0, 0, 1, NULL, NULL, NULL, 5, 0, '2025-11-24 21:42:37', 2, 50);
+INSERT INTO `daming_paper_answer` VALUES (287, '测试试卷', 93, 'test666', 5, 0, 0, 0, 1, NULL, NULL, NULL, 5, 0, '2025-11-24 21:43:46', 2, 60);
+INSERT INTO `daming_paper_answer` VALUES (288, '测试试卷', 93, 'zwww', 5, 0, 0, 0, 1, NULL, NULL, NULL, 5, 0, '2025-11-24 21:45:04', 2, 4);
+INSERT INTO `daming_paper_answer` VALUES (289, '测试试卷', 93, 'test666', 5, 0, 0, 0, 1, NULL, NULL, NULL, 5, 0, '2025-11-24 21:46:55', 2, 60);
+INSERT INTO `daming_paper_answer` VALUES (290, '测试试卷', 93, 'zww', 6, 0, 0, 0, 1, NULL, NULL, NULL, 6, 0, '2025-11-25 14:10:22', 2, 39);
+INSERT INTO `daming_paper_answer` VALUES (291, '测试试卷', 93, 'zww', 6, 0, 0, 0, 1, NULL, NULL, NULL, 6, 0, '2025-11-25 14:13:33', 2, 60);
+INSERT INTO `daming_paper_answer` VALUES (292, '测试试卷', 93, 'zww', 7, 0, 0, 0, 1, NULL, NULL, NULL, 7, 0, '2025-11-25 14:47:16', 2, 60);
+INSERT INTO `daming_paper_answer` VALUES (293, '测试试卷', 93, 'zww', 7, 0, 0, 0, 1, NULL, NULL, NULL, 7, 0, '2025-11-25 14:56:57', 2, 60);
+INSERT INTO `daming_paper_answer` VALUES (294, '知识点跳转', 95, 'test666', 1, 0, 0, 0, 1, NULL, NULL, NULL, 1, 0, '2025-11-29 17:10:51', 3, 47);
+INSERT INTO `daming_paper_answer` VALUES (295, '知识点跳转', 95, 'test666', 1, 0, 0, 0, 1, NULL, NULL, NULL, 1, 0, '2025-11-29 22:07:42', 3, 3);
 
 -- ----------------------------
 -- Table structure for daming_question
@@ -364,8 +520,11 @@ CREATE TABLE `daming_question`  (
   `subject_id` int(11) NOT NULL,
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 137 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_subject_id`(`subject_id`) USING BTREE COMMENT '科目ID索引',
+  INDEX `idx_question_type`(`question_type`) USING BTREE COMMENT '题目类型索引',
+  INDEX `idx_delflag_subject`(`del_flag`, `subject_id`) USING BTREE COMMENT '删除标志和科目ID组合索引'
+) ENGINE = InnoDB AUTO_INCREMENT = 161 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of daming_question
@@ -443,6 +602,30 @@ INSERT INTO `daming_question` VALUES (133, 3, 227, '1.硬件层；2.微程序层
 INSERT INTO `daming_question` VALUES (134, 3, 228, '(1) 结果 -101100，按 5 位字长溢出；(2) 结果 +101101，按 5 位字长溢出', 1, 0, 2, '2025-11-21 13:37:07', '2025-11-21 13:37:07');
 INSERT INTO `daming_question` VALUES (135, 3, 229, 'X=-1.01011×2^-6，Y=1.110×2^-5；对阶相加得约 1.001101×2^-4，正数，未溢出（尾数按 6 位截断/舍入）。', 1, 0, 2, '2025-11-21 13:37:07', '2025-11-21 13:37:07');
 INSERT INTO `daming_question` VALUES (136, 2, 230, 'B,C', 1, 0, 2, '2025-11-21 15:45:22', '2025-11-21 15:45:22');
+INSERT INTO `daming_question` VALUES (137, 5, 233, '111', 1, 2, 1, '2025-11-24 09:38:28', '2025-11-24 09:39:50');
+INSERT INTO `daming_question` VALUES (138, 5, 234, '测试填空题', 1, 0, 1, '2025-11-24 09:39:59', '2025-11-24 09:39:59');
+INSERT INTO `daming_question` VALUES (139, 5, 235, '测试填空题2', 1, 0, 1, '2025-11-24 09:40:30', '2025-11-24 09:40:30');
+INSERT INTO `daming_question` VALUES (140, 5, 236, '增加填空题2', 1, 0, 1, '2025-11-24 09:41:15', '2025-11-24 09:41:15');
+INSERT INTO `daming_question` VALUES (141, 1, 237, 'B', 1, 0, 1, '2025-11-24 20:16:14', '2025-11-24 20:16:14');
+INSERT INTO `daming_question` VALUES (142, 1, 238, 'B', 1, 0, 1, '2025-11-24 20:29:41', '2025-11-24 20:29:41');
+INSERT INTO `daming_question` VALUES (143, 1, 239, 'B', 1, 0, 2, '2025-11-24 20:42:34', '2025-11-24 20:42:34');
+INSERT INTO `daming_question` VALUES (144, 2, 240, 'C,B', 1, 0, 2, '2025-11-24 20:43:28', '2025-11-24 20:43:28');
+INSERT INTO `daming_question` VALUES (145, 3, 241, '666', 1, 0, 2, '2025-11-24 20:43:47', '2025-11-24 20:43:47');
+INSERT INTO `daming_question` VALUES (146, 4, 242, 'A', 1, 0, 2, '2025-11-24 20:43:55', '2025-11-24 20:43:55');
+INSERT INTO `daming_question` VALUES (147, 5, 243, '666', 1, 0, 2, '2025-11-24 20:44:05', '2025-11-24 20:44:05');
+INSERT INTO `daming_question` VALUES (148, 1, 246, 'A', 1, 0, 1, '2025-11-25 14:08:12', '2025-11-25 14:08:12');
+INSERT INTO `daming_question` VALUES (149, 1, 247, 'C', 1, 0, 1, '2025-11-25 14:40:43', '2025-11-25 14:40:43');
+INSERT INTO `daming_question` VALUES (150, 1, 248, 'A', 5, 2, 1, '2025-11-25 18:13:24', '2025-11-25 18:15:02');
+INSERT INTO `daming_question` VALUES (151, 2, 249, 'A,B,C', 10, 2, 1, '2025-11-25 18:13:24', '2025-11-25 18:15:02');
+INSERT INTO `daming_question` VALUES (152, 3, 250, '参考答案：主观题可以提供参考答案，也可以不提供', 20, 2, 1, '2025-11-25 18:13:24', '2025-11-25 18:15:02');
+INSERT INTO `daming_question` VALUES (153, 4, 251, 'A', 5, 2, 1, '2025-11-25 18:13:24', '2025-11-25 18:15:02');
+INSERT INTO `daming_question` VALUES (154, 5, 252, '答案内容', 8, 2, 1, '2025-11-25 18:13:24', '2025-11-25 18:15:02');
+INSERT INTO `daming_question` VALUES (155, 1, 253, 'A', 5, 0, 1, '2025-11-25 18:16:21', '2025-11-25 18:16:21');
+INSERT INTO `daming_question` VALUES (156, 2, 254, 'A,B,C', 10, 0, 1, '2025-11-25 18:16:21', '2025-11-25 18:16:21');
+INSERT INTO `daming_question` VALUES (157, 3, 255, '参考答案：主观题可以提供参考答案，也可以不提供', 20, 0, 1, '2025-11-25 18:16:21', '2025-11-25 18:16:21');
+INSERT INTO `daming_question` VALUES (158, 4, 256, 'A', 5, 0, 1, '2025-11-25 18:16:21', '2025-11-25 18:16:21');
+INSERT INTO `daming_question` VALUES (159, 5, 257, '答案内容', 8, 0, 1, '2025-11-25 18:16:21', '2025-11-25 18:16:21');
+INSERT INTO `daming_question` VALUES (160, 3, 258, '操作码 + 操作数', 1, 0, 3, '2025-11-29 16:44:42', '2025-11-29 16:44:42');
 
 -- ----------------------------
 -- Table structure for daming_question_answer
@@ -465,11 +648,15 @@ CREATE TABLE `daming_question_answer`  (
   `review_status` tinyint(4) NULL DEFAULT 0 COMMENT '批改状态 0-无需 1-待批改 2-已批改',
   `review_comment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '批改备注',
   PRIMARY KEY (`answer_id`) USING BTREE,
-  INDEX `paper_id`(`paper_id`) USING BTREE,
-  INDEX `question_id`(`question_id`) USING BTREE,
-  CONSTRAINT `daming_question_answer_ibfk_1` FOREIGN KEY (`paper_id`) REFERENCES `daming_paper` (`paper_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `daming_question_answer_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `daming_question` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1517 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  INDEX `idx_paperanswer_question`(`paper_answer_id`, `question_id`) USING BTREE COMMENT '答卷ID和题目ID组合索引',
+  INDEX `idx_user_create`(`create_user`, `create_time`) USING BTREE COMMENT '创建用户和创建时间组合索引',
+  INDEX `idx_user_time`(`create_user`, `create_time`) USING BTREE,
+  INDEX `idx_user_question_correct`(`create_user`, `question_id`, `is_correct`) USING BTREE,
+  INDEX `daming_question_answer_ibfk_1`(`paper_id`) USING BTREE,
+  INDEX `daming_question_answer_ibfk_2`(`question_id`) USING BTREE,
+  CONSTRAINT `daming_question_answer_ibfk_1` FOREIGN KEY (`paper_id`) REFERENCES `daming_paper` (`paper_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `daming_question_answer_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `daming_question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB AUTO_INCREMENT = 2073 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of daming_question_answer
@@ -1707,6 +1894,562 @@ INSERT INTO `daming_question_answer` VALUES (1513, 'zww', 91, 253, '未填', '20
 INSERT INTO `daming_question_answer` VALUES (1514, 'zww', 91, 253, '<p><img src=\"quiz/paper/answer/2025/11/22/276b6473b1a54f3492006d15aaa23cc3.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/22/276b6473b1a54f3492006d15aaa23cc3.jpg\" data-src=\"quiz/paper/answer/2025/11/22/276b6473b1a54f3492006d15aaa23cc3.jpg\"></p><p><br></p><p><br></p><p><br></p><p>666</p>', '2025-11-22 12:05:21', 3, 133, 2, 1, 1, 0, 22, 2, '66');
 INSERT INTO `daming_question_answer` VALUES (1515, 'zww', 91, 253, '未填', '2025-11-22 12:05:21', 3, 134, 2, 1, 1, 0, 23, 2, '66');
 INSERT INTO `daming_question_answer` VALUES (1516, 'zww', 91, 253, '未填', '2025-11-22 12:05:21', 3, 135, 2, 1, 1, 0, 24, 2, '66');
+INSERT INTO `daming_question_answer` VALUES (1517, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 74, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1518, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 71, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1519, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 70, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1520, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 67, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1521, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 69, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1522, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 68, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1523, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 72, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1524, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 73, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1525, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 75, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1526, 'zww', 89, 254, '未填', '2025-11-23 11:34:02', 1, 66, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1527, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1528, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1529, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1530, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1531, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1532, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1533, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1534, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1535, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1536, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1537, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1538, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1539, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1540, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1541, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1542, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1543, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1544, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1545, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1546, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1547, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1548, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1549, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1550, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1551, 'zww', 91, 255, '未填', '2025-11-23 11:34:19', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1552, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1553, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1554, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1555, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1556, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1557, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1558, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1559, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1560, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1561, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1562, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1563, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1564, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1565, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1566, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1567, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1568, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1569, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1570, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1571, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1572, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1573, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1574, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1575, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1576, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1577, 'zww', 91, 256, '666', '2025-11-24 09:42:17', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1578, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1579, 'zww', 91, 256, '未填', '2025-11-24 09:42:17', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1580, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1581, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1582, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1583, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1584, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1585, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1586, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1587, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1588, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1589, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1590, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1591, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1592, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1593, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1594, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1595, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1596, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1597, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1598, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1599, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1600, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1601, 'zww', 91, 257, '<p><img src=\"quiz/paper/answer/2025/11/24/58297f2763a449dfb358cabeb7ac83a3.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/58297f2763a449dfb358cabeb7ac83a3.jpg\" data-src=\"quiz/paper/answer/2025/11/24/58297f2763a449dfb358cabeb7ac83a3.jpg\"></p>', '2025-11-24 15:46:19', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1602, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1603, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1604, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1605, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1606, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1607, 'zww', 91, 257, '未填', '2025-11-24 15:46:19', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1608, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1609, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1610, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1611, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1612, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1613, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1614, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1615, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1616, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1617, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1618, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1619, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1620, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1621, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1622, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1623, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1624, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1625, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1626, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1627, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1628, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1629, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1630, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1631, 'zww', 91, 258, '<p><img src=\"quiz/paper/answer/2025/11/24/67498e37aa864e3dbc0d31a83e60758f.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/67498e37aa864e3dbc0d31a83e60758f.jpg\" data-src=\"quiz/paper/answer/2025/11/24/67498e37aa864e3dbc0d31a83e60758f.jpg\"></p>', '2025-11-24 17:50:21', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1632, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1633, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1634, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1635, 'zww', 91, 258, '未填', '2025-11-24 17:50:21', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1636, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1637, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1638, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1639, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1640, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1641, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1642, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1643, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1644, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1645, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1646, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1647, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1648, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1649, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1650, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1651, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1652, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1653, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1654, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1655, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1656, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1657, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1658, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1659, 'zww', 91, 259, '<p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/3a8b0589eed9417abb599ffc45fc28e3.jpg\" data-oss-key=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/3a8b0589eed9417abb599ffc45fc28e3.jpg\" data-src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/3a8b0589eed9417abb599ffc45fc28e3.jpg\"></p><p><br></p><p><br></p><p>测试图片上传</p>', '2025-11-24 19:10:09', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1660, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1661, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1662, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1663, 'zww', 91, 259, '未填', '2025-11-24 19:10:09', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1664, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1665, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1666, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1667, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1668, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1669, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1670, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1671, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1672, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1673, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1674, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1675, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1676, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1677, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1678, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1679, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1680, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1681, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1682, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1683, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1684, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1685, 'zww', 91, 260, '<p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/90abbd5770664a2bae4d998b7af5df8a.jpg\" data-oss-key=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/90abbd5770664a2bae4d998b7af5df8a.jpg\" data-src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/90abbd5770664a2bae4d998b7af5df8a.jpg\"></p><p><br></p><p><br></p><p>测试图片2323</p>', '2025-11-24 19:11:14', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1686, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1687, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1688, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1689, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1690, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1691, 'zww', 91, 260, '未填', '2025-11-24 19:11:14', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1692, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1693, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1694, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1695, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1696, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1697, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1698, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1699, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1700, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1701, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1702, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1703, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1704, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1705, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1706, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1707, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1708, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1709, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1710, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1711, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1712, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1713, 'zww', 91, 261, '<p><img src=\"quiz/paper/answer/2025/11/24/dfb9089ce7e444ebbd45a51de0675542.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/dfb9089ce7e444ebbd45a51de0675542.jpg\" data-src=\"quiz/paper/answer/2025/11/24/dfb9089ce7e444ebbd45a51de0675542.jpg\"></p><p><br></p><p>测水水水水水水</p>', '2025-11-24 19:21:20', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1714, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1715, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1716, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1717, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1718, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1719, 'zww', 91, 261, '未填', '2025-11-24 19:21:20', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1720, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1721, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1722, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1723, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1724, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1725, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1726, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1727, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1728, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1729, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1730, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1731, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1732, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1733, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1734, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1735, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1736, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1737, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1738, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1739, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1740, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1741, 'zww', 91, 262, '<p><img src=\"quiz/paper/answer/2025/11/24/a98c2de2b3ac490390daca63d7330084.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/a98c2de2b3ac490390daca63d7330084.jpg\" data-src=\"quiz/paper/answer/2025/11/24/a98c2de2b3ac490390daca63d7330084.jpg\"></p>', '2025-11-24 19:26:25', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1742, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1743, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1744, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1745, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1746, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1747, 'zww', 91, 262, '未填', '2025-11-24 19:26:25', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1748, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1749, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1750, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1751, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1752, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1753, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1754, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1755, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1756, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1757, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1758, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1759, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1760, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1761, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1762, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1763, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1764, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1765, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1766, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1767, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1768, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1769, 'zww', 91, 263, '<p><img src=\"quiz/paper/answer/2025/11/24/0eb74cddcd5d4069a35e6c0403e6a576.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/0eb74cddcd5d4069a35e6c0403e6a576.jpg\" data-src=\"quiz/paper/answer/2025/11/24/0eb74cddcd5d4069a35e6c0403e6a576.jpg\"></p>', '2025-11-24 19:28:38', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1770, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1771, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1772, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1773, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1774, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1775, 'zww', 91, 263, '未填', '2025-11-24 19:28:38', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1776, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1777, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1778, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1779, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1780, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1781, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1782, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1783, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1784, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1785, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1786, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1787, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1788, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1789, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1790, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1791, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1792, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1793, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1794, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1795, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1796, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1797, 'zww', 91, 264, '<p><img src=\"quiz/paper/answer/2025/11/24/f31270bdc87542d8b4ce3be3e8d8dcba.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/f31270bdc87542d8b4ce3be3e8d8dcba.jpg\" data-src=\"quiz/paper/answer/2025/11/24/f31270bdc87542d8b4ce3be3e8d8dcba.jpg\"></p>', '2025-11-24 19:30:26', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1798, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1799, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1800, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1801, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1802, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1803, 'zww', 91, 264, '未填', '2025-11-24 19:30:26', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1804, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1805, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1806, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1807, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1808, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1809, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1810, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1811, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1812, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1813, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1814, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1815, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1816, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1817, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1818, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1819, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1820, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1821, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1822, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1823, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1824, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1825, 'zww', 91, 265, '<p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/13a8b228d97c47258ee6105875b24ac1.jpg\"></p>', '2025-11-24 19:31:59', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1826, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1827, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1828, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1829, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1830, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1831, 'zww', 91, 265, '未填', '2025-11-24 19:31:59', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1832, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1833, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1834, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1835, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1836, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1837, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1838, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1839, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1840, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1841, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1842, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1843, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1844, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1845, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1846, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1847, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1848, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1849, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1850, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1851, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1852, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1853, 'zww', 91, 266, '<p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/8be31671ac784885a6e3ef8c41bfd9e0.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/8be31671ac784885a6e3ef8c41bfd9e0.jpg\" data-src=\"quiz/paper/answer/2025/11/24/8be31671ac784885a6e3ef8c41bfd9e0.jpg\"></p><p><br></p><p><br></p><p><strong>测试数据啊啊啊啊</strong></p>', '2025-11-24 19:32:28', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1854, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1855, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1856, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1857, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1858, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1859, 'zww', 91, 266, '未填', '2025-11-24 19:32:28', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1860, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1861, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1862, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1863, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1864, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1865, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1866, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1867, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1868, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1869, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1870, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1871, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1872, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1873, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1874, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1875, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1876, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1877, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1878, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1879, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1880, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1881, 'zww', 91, 267, '<p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/1d3b21c412c84a46b92bc74c98b8548d.jpg\"></p>', '2025-11-24 19:37:21', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1882, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1883, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1884, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1885, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1886, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1887, 'zww', 91, 267, '未填', '2025-11-24 19:37:21', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1888, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1889, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1890, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1891, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1892, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1893, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1894, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1895, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1896, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1897, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1898, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1899, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1900, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 4, 123, 2, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1901, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 4, 129, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1902, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 4, 128, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1903, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 4, 131, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1904, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 4, 127, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1905, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 4, 124, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1906, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 4, 122, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1907, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 4, 126, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1908, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 4, 125, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1909, 'zww', 91, 268, '<p><strong>啊但是发射点发手动阀 </strong><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/2aab74717d444f9682401298578c2643.jpg\"></p>', '2025-11-24 19:38:39', 3, 132, 2, 0, 1, 0, 21, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1910, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 3, 133, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1911, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 3, 134, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1912, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 3, 135, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1913, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 5, 140, 1, 0, 1, 0, 25, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1914, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 5, 138, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1915, 'zww', 91, 268, '未填', '2025-11-24 19:38:39', 5, 139, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1916, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 112, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1917, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 111, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1918, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 117, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1919, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 110, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1920, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 72, 2, 0, 1, 0, 4, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1921, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 120, 2, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1922, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 116, 2, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1923, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 66, 2, 0, 1, 0, 7, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1924, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 115, 2, 0, 1, 0, 8, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1925, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 67, 2, 0, 1, 0, 9, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1926, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 113, 2, 0, 1, 0, 10, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1927, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 114, 2, 0, 1, 0, 11, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1928, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 1, 142, 1, 0, 1, 0, 12, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1929, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 4, 123, 2, 0, 1, 0, 13, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1930, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 4, 129, 2, 0, 1, 0, 14, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1931, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 4, 128, 2, 0, 1, 0, 15, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1932, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 4, 131, 2, 0, 1, 0, 16, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1933, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 4, 127, 2, 0, 1, 0, 17, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1934, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 4, 124, 2, 0, 1, 0, 18, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1935, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 4, 122, 2, 0, 1, 0, 19, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1936, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 4, 126, 2, 0, 1, 0, 20, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1937, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 4, 125, 2, 0, 1, 0, 21, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1938, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 3, 132, 2, 0, 1, 0, 22, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1939, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 3, 133, 2, 0, 1, 0, 23, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1940, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 3, 134, 2, 0, 1, 0, 24, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1941, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 3, 135, 2, 0, 1, 0, 25, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1942, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 5, 140, 1, 0, 1, 0, 26, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1943, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 5, 138, 1, 0, 1, 0, 27, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1944, 'zww', 91, 269, '未填', '2025-11-24 20:30:22', 5, 139, 1, 0, 1, 0, 28, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1945, 'test666', 93, 270, 'B', '2025-11-24 20:56:49', 1, 143, 2, 1, 1, 1, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1946, 'test666', 93, 270, 'B,C', '2025-11-24 20:56:49', 2, 144, 2, 1, 1, 1, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1947, 'test666', 93, 270, 'A', '2025-11-24 20:56:49', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1948, 'test666', 93, 270, '666', '2025-11-24 20:56:49', 5, 147, 2, 1, 1, 1, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1949, 'test666', 93, 270, '<p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/729c719917d3420e8b856b10f9d60752.jpg\"></p>', '2025-11-24 20:56:49', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1950, 'test666', 93, 271, '未填', '2025-11-24 20:58:39', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1951, 'test666', 93, 271, '未填', '2025-11-24 20:58:39', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1952, 'test666', 93, 271, 'A', '2025-11-24 20:58:39', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1953, 'test666', 93, 271, '未填', '2025-11-24 20:58:39', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1954, 'test666', 93, 271, '未填', '2025-11-24 20:58:39', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1955, 'test666', 93, 272, 'B', '2025-11-24 20:59:40', 1, 143, 2, 1, 1, 1, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1956, 'test666', 93, 272, 'B,C', '2025-11-24 20:59:40', 2, 144, 2, 1, 1, 1, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1957, 'test666', 93, 272, 'A', '2025-11-24 20:59:40', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1958, 'test666', 93, 272, '666', '2025-11-24 20:59:40', 5, 147, 2, 1, 1, 1, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1959, 'test666', 93, 272, '<p>666</p>', '2025-11-24 20:59:40', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1960, 'test666', 93, 273, 'B', '2025-11-24 21:08:59', 1, 143, 2, 1, 1, 1, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1961, 'test666', 93, 273, 'B,C', '2025-11-24 21:08:59', 2, 144, 2, 1, 1, 1, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1962, 'test666', 93, 273, 'A', '2025-11-24 21:08:59', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1963, 'test666', 93, 273, '666', '2025-11-24 21:08:59', 5, 147, 2, 1, 1, 1, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1964, 'test666', 93, 273, '<p>666<img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/7f8138ea6456432f86f83fb54103fe89.jpg\"></p>', '2025-11-24 21:08:59', 3, 145, 2, 1, 1, 0, 4, 2, '1111');
+INSERT INTO `daming_question_answer` VALUES (1965, 'test666', 93, 274, 'B', '2025-11-24 21:17:33', 1, 143, 2, 1, 1, 1, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1966, 'test666', 93, 274, 'B,C', '2025-11-24 21:17:33', 2, 144, 2, 1, 1, 1, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1967, 'test666', 93, 274, 'A', '2025-11-24 21:17:33', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1968, 'test666', 93, 274, '666', '2025-11-24 21:17:33', 5, 147, 2, 1, 1, 1, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1969, 'test666', 93, 274, '<p>牛逼</p><p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/ee7c2fe4d71c4ad7b7b309705ac4a52a.jpg\"></p>', '2025-11-24 21:17:33', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1970, 'test666', 93, 275, '未填', '2025-11-24 21:18:41', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1971, 'test666', 93, 275, '未填', '2025-11-24 21:18:41', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1972, 'test666', 93, 275, 'A', '2025-11-24 21:18:41', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1973, 'test666', 93, 275, '66', '2025-11-24 21:18:41', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1974, 'test666', 93, 275, '<p>666</p>', '2025-11-24 21:18:41', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1975, 'test666', 93, 276, '未填', '2025-11-24 21:23:22', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1976, 'test666', 93, 276, 'B', '2025-11-24 21:23:22', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1977, 'test666', 93, 276, 'A', '2025-11-24 21:23:22', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1978, 'test666', 93, 276, '额', '2025-11-24 21:23:22', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1979, 'test666', 93, 276, '未填', '2025-11-24 21:23:22', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1980, 'test666', 93, 277, 'B', '2025-11-24 21:25:54', 1, 143, 2, 1, 1, 1, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1981, 'test666', 93, 277, 'B', '2025-11-24 21:25:54', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1982, 'test666', 93, 277, '未填', '2025-11-24 21:25:54', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1983, 'test666', 93, 277, '额', '2025-11-24 21:25:54', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1984, 'test666', 93, 277, '<p>额额</p>', '2025-11-24 21:25:54', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1985, 'test666', 93, 278, '未填', '2025-11-24 21:26:19', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1986, 'test666', 93, 278, '未填', '2025-11-24 21:26:19', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1987, 'test666', 93, 278, 'A', '2025-11-24 21:26:19', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1988, 'test666', 93, 278, '未填', '2025-11-24 21:26:19', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1989, 'test666', 93, 278, '未填', '2025-11-24 21:26:19', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1990, 'test666', 93, 279, 'B', '2025-11-24 21:26:35', 1, 143, 2, 1, 1, 1, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1991, 'test666', 93, 279, 'B,C', '2025-11-24 21:26:35', 2, 144, 2, 1, 1, 1, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1992, 'test666', 93, 279, 'A', '2025-11-24 21:26:35', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1993, 'test666', 93, 279, '未填', '2025-11-24 21:26:35', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1994, 'test666', 93, 279, '未填', '2025-11-24 21:26:35', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (1995, 'test666', 93, 280, 'B', '2025-11-24 21:27:25', 1, 143, 2, 1, 1, 1, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1996, 'test666', 93, 280, 'B', '2025-11-24 21:27:25', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1997, 'test666', 93, 280, 'A', '2025-11-24 21:27:25', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1998, 'test666', 93, 280, '666', '2025-11-24 21:27:25', 5, 147, 2, 1, 1, 1, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (1999, 'test666', 93, 280, '<p>666</p>', '2025-11-24 21:27:25', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2000, 'test666', 93, 281, 'B', '2025-11-24 21:30:23', 1, 143, 2, 1, 1, 1, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2001, 'test666', 93, 281, 'B,C', '2025-11-24 21:30:23', 2, 144, 2, 1, 1, 1, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2002, 'test666', 93, 281, 'A', '2025-11-24 21:30:23', 4, 146, 2, 1, 1, 1, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2003, 'test666', 93, 281, '666', '2025-11-24 21:30:23', 5, 147, 2, 1, 1, 1, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2004, 'test666', 93, 281, '<p>666</p><p><br></p><p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/8c05125792674a6a8fe25d3ea5999d8f.jpg\"></p>', '2025-11-24 21:30:23', 3, 145, 2, 1, 1, 0, 4, 2, 'ok');
+INSERT INTO `daming_question_answer` VALUES (2005, 'test666', 93, 282, 'C', '2025-11-24 21:32:44', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2006, 'test666', 93, 282, 'D', '2025-11-24 21:32:44', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2007, 'test666', 93, 282, 'B', '2025-11-24 21:32:44', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2008, 'test666', 93, 282, '234234', '2025-11-24 21:32:44', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2009, 'test666', 93, 282, '<p>23423</p>', '2025-11-24 21:32:44', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2010, 'test666', 93, 283, '未填', '2025-11-24 21:33:43', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2011, 'test666', 93, 283, '未填', '2025-11-24 21:33:43', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2012, 'test666', 93, 283, '未填', '2025-11-24 21:33:43', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2013, 'test666', 93, 283, '未填', '2025-11-24 21:33:43', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2014, 'test666', 93, 283, '<p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/72a8f43355bc4133994e3f66d42fbd4c.jpg\"></p>', '2025-11-24 21:33:43', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2015, 'test666', 93, 284, '未填', '2025-11-24 21:39:29', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2016, 'test666', 93, 284, '未填', '2025-11-24 21:39:29', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2017, 'test666', 93, 284, '未填', '2025-11-24 21:39:29', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2018, 'test666', 93, 284, '未填', '2025-11-24 21:39:29', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2019, 'test666', 93, 284, '未填', '2025-11-24 21:39:29', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2020, 'test666', 93, 285, '未填', '2025-11-24 21:40:40', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2021, 'test666', 93, 285, '未填', '2025-11-24 21:40:40', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2022, 'test666', 93, 285, '未填', '2025-11-24 21:40:40', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2023, 'test666', 93, 285, '未填', '2025-11-24 21:40:40', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2024, 'test666', 93, 285, '未填', '2025-11-24 21:40:40', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2025, 'test666', 93, 286, '未填', '2025-11-24 21:42:37', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2026, 'test666', 93, 286, '未填', '2025-11-24 21:42:37', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2027, 'test666', 93, 286, '未填', '2025-11-24 21:42:37', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2028, 'test666', 93, 286, '未填', '2025-11-24 21:42:37', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2029, 'test666', 93, 286, '未填', '2025-11-24 21:42:37', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2030, 'test666', 93, 287, '未填', '2025-11-24 21:43:46', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2031, 'test666', 93, 287, '未填', '2025-11-24 21:43:46', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2032, 'test666', 93, 287, '未填', '2025-11-24 21:43:46', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2033, 'test666', 93, 287, '未填', '2025-11-24 21:43:46', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2034, 'test666', 93, 287, '未填', '2025-11-24 21:43:46', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2035, 'zwww', 93, 288, '未填', '2025-11-24 21:45:04', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2036, 'zwww', 93, 288, '未填', '2025-11-24 21:45:04', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2037, 'zwww', 93, 288, '未填', '2025-11-24 21:45:04', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2038, 'zwww', 93, 288, '未填', '2025-11-24 21:45:04', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2039, 'zwww', 93, 288, '未填', '2025-11-24 21:45:04', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2040, 'test666', 93, 289, '未填', '2025-11-24 21:46:55', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2041, 'test666', 93, 289, '未填', '2025-11-24 21:46:55', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2042, 'test666', 93, 289, '未填', '2025-11-24 21:46:55', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2043, 'test666', 93, 289, '未填', '2025-11-24 21:46:55', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2044, 'test666', 93, 289, '未填', '2025-11-24 21:46:55', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2045, 'zww', 93, 290, '未填', '2025-11-25 14:10:22', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2046, 'zww', 93, 290, '未填', '2025-11-25 14:10:22', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2047, 'zww', 93, 290, '未填', '2025-11-25 14:10:22', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2048, 'zww', 93, 290, '未填', '2025-11-25 14:10:22', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2049, 'zww', 93, 290, '未填', '2025-11-25 14:10:22', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2050, 'zww', 93, 290, '未填', '2025-11-25 14:10:22', 1, 148, 1, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2051, 'zww', 93, 291, '未填', '2025-11-25 14:13:33', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2052, 'zww', 93, 291, '未填', '2025-11-25 14:13:33', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2053, 'zww', 93, 291, '未填', '2025-11-25 14:13:33', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2054, 'zww', 93, 291, '未填', '2025-11-25 14:13:33', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2055, 'zww', 93, 291, '未填', '2025-11-25 14:13:33', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2056, 'zww', 93, 291, '未填', '2025-11-25 14:13:33', 1, 148, 1, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2057, 'zww', 93, 292, '未填', '2025-11-25 14:47:16', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2058, 'zww', 93, 292, '未填', '2025-11-25 14:47:16', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2059, 'zww', 93, 292, '未填', '2025-11-25 14:47:16', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2060, 'zww', 93, 292, '未填', '2025-11-25 14:47:16', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2061, 'zww', 93, 292, '未填', '2025-11-25 14:47:16', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2062, 'zww', 93, 292, '未填', '2025-11-25 14:47:16', 1, 148, 1, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2063, 'zww', 93, 292, '未填', '2025-11-25 14:47:16', 1, 149, 1, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2064, 'zww', 93, 293, '未填', '2025-11-25 14:56:57', 1, 143, 2, 0, 1, 0, 0, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2065, 'zww', 93, 293, '未填', '2025-11-25 14:56:57', 2, 144, 2, 0, 1, 0, 1, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2066, 'zww', 93, 293, '未填', '2025-11-25 14:56:57', 4, 146, 2, 0, 1, 0, 2, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2067, 'zww', 93, 293, '未填', '2025-11-25 14:56:57', 5, 147, 2, 0, 1, 0, 3, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2068, 'zww', 93, 293, '未填', '2025-11-25 14:56:57', 3, 145, 2, 0, 1, 0, 4, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2069, 'zww', 93, 293, '未填', '2025-11-25 14:56:57', 1, 148, 1, 0, 1, 0, 5, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2070, 'zww', 93, 293, '未填', '2025-11-25 14:56:57', 1, 149, 1, 0, 1, 0, 6, 2, NULL);
+INSERT INTO `daming_question_answer` VALUES (2071, 'test666', 95, 294, '<p><span style=\"color: rgb(51, 51, 51);\">操作码 + 操作数</span></p>', '2025-11-29 17:10:52', 3, 160, 3, 0, 1, 0, 0, 1, NULL);
+INSERT INTO `daming_question_answer` VALUES (2072, 'test666', 95, 295, '<p>6666</p>', '2025-11-29 22:07:42', 3, 160, 3, 0, 1, 0, 0, 1, NULL);
 
 -- ----------------------------
 -- Table structure for daming_question_favorite
@@ -1723,14 +2466,17 @@ CREATE TABLE `daming_question_favorite`  (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`favorite_id`) USING BTREE,
   UNIQUE INDEX `uk_user_question`(`create_user`, `question_id`) USING BTREE,
-  INDEX `idx_user_answer`(`create_user`, `paper_answer_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '题目收藏表' ROW_FORMAT = Dynamic;
+  INDEX `idx_user_answer`(`create_user`, `paper_answer_id`) USING BTREE,
+  INDEX `idx_create_time`(`create_time`) USING BTREE COMMENT '创建时间索引'
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '题目收藏表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of daming_question_favorite
 -- ----------------------------
 INSERT INTO `daming_question_favorite` VALUES (3, 112, 91, 235, 2, 'zww', NULL, '2025-11-21 18:23:25');
 INSERT INTO `daming_question_favorite` VALUES (4, 120, 91, 235, 2, 'zww', NULL, '2025-11-21 18:23:43');
+INSERT INTO `daming_question_favorite` VALUES (5, 143, 93, 270, 2, 'test666', NULL, '2025-11-24 20:57:06');
+INSERT INTO `daming_question_favorite` VALUES (6, 145, 93, 283, 2, 'test666', NULL, '2025-11-24 21:33:47');
 
 -- ----------------------------
 -- Table structure for daming_subject
@@ -1743,13 +2489,14 @@ CREATE TABLE `daming_subject`  (
   `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`subject_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of daming_subject
 -- ----------------------------
 INSERT INTO `daming_subject` VALUES (1, '软件工程', 0, '2025-11-19 10:28:43', '2025-11-19 16:00:33');
 INSERT INTO `daming_subject` VALUES (2, '计算机组成原理', 0, '2025-11-20 19:49:15', '2025-11-20 19:49:15');
+INSERT INTO `daming_subject` VALUES (3, '计算机系统结构', 0, '2025-11-29 16:43:45', '2025-11-29 16:43:45');
 
 -- ----------------------------
 -- Table structure for daming_user
@@ -1761,18 +2508,146 @@ CREATE TABLE `daming_user`  (
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户密码',
   `nick_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户昵称',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '头像地址',
+  `wx_open_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信OpenID',
+  `wx_union_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信UnionID',
+  `wx_nickname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信昵称',
+  `wx_avatar` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信头像URL',
+  `wx_bind_time` datetime NULL DEFAULT NULL COMMENT '微信绑定时间',
   `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '删除标志',
   `create_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`user_id`) USING BTREE,
-  UNIQUE INDEX `唯一`(`user_name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `唯一`(`user_name`) USING BTREE,
+  UNIQUE INDEX `idx_wx_open_id`(`wx_open_id`) USING BTREE,
+  INDEX `idx_wx_union_id`(`wx_union_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of daming_user
 -- ----------------------------
-INSERT INTO `daming_user` VALUES (1, '123', '$2a$10$mYToWMFHZjqCTKXvhaZBieT9oDu4aqgp3JNCkekXE4eW9ysHmwzOq', 'Jafferen', '/profile/avatar/2024/10/25/northern_20241025211920A001.jpg', '0', '2025-04-04 16:16:17', '2025-04-04 16:16:17');
-INSERT INTO `daming_user` VALUES (3, 'zww', '$2a$10$mYToWMFHZjqCTKXvhaZBieT9oDu4aqgp3JNCkekXE4eW9ysHmwzOq', '1234', '/profile/avatar/2024/10/25/northern_20241025231040A001.jpg', '0', '2025-04-04 16:16:15', '2025-04-04 16:16:15');
+INSERT INTO `daming_user` VALUES (1, '123', '$2a$10$mYToWMFHZjqCTKXvhaZBieT9oDu4aqgp3JNCkekXE4eW9ysHmwzOq', 'Jafferen', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/eb971a79209b4157952748788f557206.jpg', NULL, NULL, NULL, NULL, NULL, '0', '2025-11-24 18:40:36', '2025-11-25 12:17:41');
+INSERT INTO `daming_user` VALUES (3, 'zww', '$2a$10$mYToWMFHZjqCTKXvhaZBieT9oDu4aqgp3JNCkekXE4eW9ysHmwzOq', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/29/aea28aaf7fcb42569f4492b58c68281b.jpg', NULL, NULL, NULL, NULL, NULL, '0', '2025-11-29 21:24:06', '2025-11-29 21:24:06');
+INSERT INTO `daming_user` VALUES (4, 'wx_pRx5GO7o', NULL, 'Zww999', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/1b1a3ec609bb48b99ee6790e06da212c.jpg', 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, NULL, '0', '2025-11-24 18:49:39', '2025-11-24 18:49:39');
+INSERT INTO `daming_user` VALUES (5, 'test', NULL, 'zww2', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/8bdc8be71c3342be9275b0836b1f4055.jpg', NULL, NULL, NULL, NULL, NULL, '0', '2025-11-25 12:17:55', '2025-11-25 12:17:55');
+INSERT INTO `daming_user` VALUES (6, 'test2', '$2a$10$UP9WkpotDvFtpHF/2f9yQeA8xUQ358Brj8Zem8Saj9/nSkQWaQhIa', 'test2', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/6c3f5474645346dc87774cdbe78c8699.jpg', NULL, NULL, NULL, NULL, NULL, '0', '2025-11-25 12:18:00', '2025-11-25 12:18:00');
+INSERT INTO `daming_user` VALUES (7, 'zwww', '$2a$10$NI9h6E/HAua/2gDcv5GJnuBwfj6xYT2QFMTOTSYH7zcs01ejohlPS', 'zwww', NULL, NULL, NULL, NULL, NULL, NULL, '0', NULL, NULL);
+INSERT INTO `daming_user` VALUES (8, 'test666', '$2a$10$NYpbdjYWgpdB7Io6eEHtm.9mFTSluMW9J8aAzMqaaogVR783uT3gu', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/29/4db7f9a2283b4ecb811a593b3f5a8d70.jpg', NULL, NULL, NULL, NULL, NULL, '0', '2025-11-29 21:21:30', '2025-11-29 21:21:30');
+
+-- ----------------------------
+-- Table structure for forum_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `forum_comment`;
+CREATE TABLE `forum_comment`  (
+  `comment_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '评论ID',
+  `post_id` bigint(20) NOT NULL COMMENT '帖子ID',
+  `user_id` bigint(20) NOT NULL COMMENT '评论人ID',
+  `user_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论人用户名',
+  `nick_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '评论人昵称',
+  `avatar` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '评论人头像',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论内容',
+  `parent_id` bigint(20) NULL DEFAULT NULL COMMENT '父评论ID（回复评论时使用）',
+  `reply_to_user_id` bigint(20) NULL DEFAULT NULL COMMENT '被回复的用户ID',
+  `reply_to_user_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '被回复的用户名',
+  `like_count` int(11) NULL DEFAULT 0 COMMENT '点赞数',
+  `status` tinyint(1) NULL DEFAULT 1 COMMENT '状态（0删除 1正常）',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`comment_id`) USING BTREE,
+  INDEX `idx_post_id`(`post_id`) USING BTREE,
+  INDEX `idx_user_id`(`user_id`) USING BTREE,
+  INDEX `idx_parent_id`(`parent_id`) USING BTREE,
+  INDEX `idx_create_time`(`create_time`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '论坛评论表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of forum_comment
+-- ----------------------------
+INSERT INTO `forum_comment` VALUES (25, 1, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '测试评论', NULL, NULL, NULL, 0, 1, '2025-11-24 20:06:36', '2025-11-24 20:06:36');
+INSERT INTO `forum_comment` VALUES (26, 1, 7, 'zwww', 'zwww', NULL, '很好', 25, 3, 'zww', 0, 1, '2025-11-24 20:07:12', '2025-11-24 20:07:12');
+INSERT INTO `forum_comment` VALUES (27, 1, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '你好', 25, 7, 'zwww', 0, 1, '2025-11-24 20:07:21', '2025-11-24 20:07:21');
+INSERT INTO `forum_comment` VALUES (28, 1, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '666', 25, 7, 'zwww', 0, 1, '2025-11-24 21:53:53', '2025-11-24 21:53:53');
+INSERT INTO `forum_comment` VALUES (29, 5, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '666', NULL, NULL, NULL, 0, 1, '2025-11-24 21:54:15', '2025-11-24 21:54:15');
+INSERT INTO `forum_comment` VALUES (30, 5, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '666', 29, 3, 'zww', 0, 1, '2025-11-24 21:54:17', '2025-11-24 21:54:17');
+INSERT INTO `forum_comment` VALUES (31, 5, 8, 'test666', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/5d9d1e6218f64117831b42d0546bf1de.jpg', '666', 29, 3, 'zww', 0, 1, '2025-11-24 21:54:35', '2025-11-24 21:54:35');
+INSERT INTO `forum_comment` VALUES (32, 5, 8, 'test666', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/5d9d1e6218f64117831b42d0546bf1de.jpg', '666', 29, 3, 'zww', 0, 1, '2025-11-24 21:54:43', '2025-11-24 21:54:43');
+INSERT INTO `forum_comment` VALUES (33, 14, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '你好', NULL, NULL, NULL, 0, 1, '2025-11-24 21:58:52', '2025-11-24 21:58:52');
+INSERT INTO `forum_comment` VALUES (34, 14, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '666', 33, 3, 'zww', 0, 1, '2025-11-24 21:58:56', '2025-11-24 21:58:56');
+INSERT INTO `forum_comment` VALUES (35, 14, 8, 'test666', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/5d9d1e6218f64117831b42d0546bf1de.jpg', '666', 33, 3, 'zww', 0, 1, '2025-11-24 21:59:07', '2025-11-24 21:59:07');
+INSERT INTO `forum_comment` VALUES (36, 14, 8, 'test666', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/5d9d1e6218f64117831b42d0546bf1de.jpg', '6666', 33, 3, 'zww', 0, 1, '2025-11-24 21:59:13', '2025-11-24 21:59:13');
+INSERT INTO `forum_comment` VALUES (37, 14, 8, 'test666', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/5d9d1e6218f64117831b42d0546bf1de.jpg', '666', 33, 3, 'zww', 0, 1, '2025-11-24 21:59:27', '2025-11-24 21:59:27');
+INSERT INTO `forum_comment` VALUES (38, 14, 8, 'test666', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/5d9d1e6218f64117831b42d0546bf1de.jpg', '你好', 33, 3, 'zww', 0, 1, '2025-11-24 22:03:56', '2025-11-24 22:03:56');
+INSERT INTO `forum_comment` VALUES (39, 14, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '你好', 33, 8, 'test666', 0, 1, '2025-11-24 22:05:03', '2025-11-24 22:05:03');
+
+-- ----------------------------
+-- Table structure for forum_like
+-- ----------------------------
+DROP TABLE IF EXISTS `forum_like`;
+CREATE TABLE `forum_like`  (
+  `like_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '点赞ID',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `target_id` bigint(20) NOT NULL COMMENT '目标ID（帖子ID或评论ID）',
+  `target_type` tinyint(1) NOT NULL COMMENT '目标类型（1帖子 2评论）',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`like_id`) USING BTREE,
+  UNIQUE INDEX `uk_user_target`(`user_id`, `target_id`, `target_type`) USING BTREE,
+  INDEX `idx_target`(`target_id`, `target_type`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '论坛点赞表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of forum_like
+-- ----------------------------
+INSERT INTO `forum_like` VALUES (2, 4, 2, 2, '2025-11-24 15:06:11');
+INSERT INTO `forum_like` VALUES (3, 4, 1, 2, '2025-11-24 15:07:14');
+INSERT INTO `forum_like` VALUES (4, 4, 1, 1, '2025-11-24 15:10:56');
+INSERT INTO `forum_like` VALUES (5, 4, 3, 2, '2025-11-24 15:11:57');
+INSERT INTO `forum_like` VALUES (6, 3, 1, 1, '2025-11-24 15:14:24');
+INSERT INTO `forum_like` VALUES (9, 3, 5, 1, '2025-11-24 21:54:13');
+
+-- ----------------------------
+-- Table structure for forum_post
+-- ----------------------------
+DROP TABLE IF EXISTS `forum_post`;
+CREATE TABLE `forum_post`  (
+  `post_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '帖子ID',
+  `user_id` bigint(20) NOT NULL COMMENT '发帖人ID',
+  `user_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '发帖人用户名',
+  `nick_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发帖人昵称',
+  `avatar` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '发帖人头像',
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '帖子标题',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '帖子内容',
+  `images` json NULL COMMENT '图片列表（JSON数组）',
+  `view_count` int(11) NULL DEFAULT 0 COMMENT '浏览次数',
+  `like_count` int(11) NULL DEFAULT 0 COMMENT '点赞数',
+  `comment_count` int(11) NULL DEFAULT 0 COMMENT '评论数',
+  `is_top` tinyint(1) NULL DEFAULT 0 COMMENT '是否置顶（0否 1是）',
+  `is_hot` tinyint(1) NULL DEFAULT 0 COMMENT '是否热门（0否 1是）',
+  `status` tinyint(1) NULL DEFAULT 1 COMMENT '状态（0删除 1正常 2审核中）',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`post_id`) USING BTREE,
+  INDEX `idx_user_id`(`user_id`) USING BTREE,
+  INDEX `idx_create_time`(`create_time`) USING BTREE,
+  INDEX `idx_is_top`(`is_top`) USING BTREE,
+  INDEX `idx_is_hot`(`is_hot`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '论坛帖子表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of forum_post
+-- ----------------------------
+INSERT INTO `forum_post` VALUES (1, 1, 'admin', '管理员', 'https://cdn.zww0891.fun/northern-lights-6862969_1920.jpg', '欢迎来到刷题论坛！', '大家好，这里是刷题系统的论坛板块，欢迎大家交流学习心得、分享做题技巧！\n\n有任何问题都可以在这里发帖讨论哦～', NULL, 205, 25, 27, 1, 1, 1, '2025-11-23 22:08:18', '2025-11-24 21:53:54');
+INSERT INTO `forum_post` VALUES (2, 1, 'admin', '管理员', 'https://cdn.zww0891.fun/northern-lights-6862969_1920.jpg', '如何高效刷题？分享我的经验', '经过一段时间的刷题，我总结了一些经验：\n\n1. **制定计划**：每天固定时间刷题，养成习惯\n2. **循序渐进**：从简单到困难，逐步提升\n3. **总结归纳**：做完题要总结知识点\n4. **温故知新**：定期复习做过的题\n\n大家有什么好的方法也可以分享！', NULL, 94, 15, 1, 0, 1, 1, '2025-11-23 22:08:18', '2025-11-24 19:40:54');
+INSERT INTO `forum_post` VALUES (3, 1, 'admin', '管理员', 'https://cdn.zww0891.fun/northern-lights-6862969_1920.jpg', '计算机组成原理重点知识点整理', '最近在复习计组，整理了一些重点：\n\n## 1. 冯·诺依曼结构\n- 存储程序工作方式\n- 五大组成部分\n\n## 2. 存储系统\n- Cache映射方式\n- 虚拟存储\n\n希望对大家有帮助！', NULL, 55, 10, 0, 0, 0, 1, '2025-11-23 22:08:18', '2025-11-24 17:06:53');
+INSERT INTO `forum_post` VALUES (4, 3, 'zww2', '6666', '', '测试测试测试测试测试', '测试测试测试测试测试', '[\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/23/e6149daf60b9488ca1c6c40b9c36991d.jpg\"]', 3, 0, 0, 0, 0, 0, '2025-11-23 22:08:59', '2025-11-24 15:58:13');
+INSERT INTO `forum_post` VALUES (5, 5, 'zww2', '6666', '', '测试测试测试测试测试测试测试测试', '测试测试测试测试测试测试测试测试', NULL, 36, 1, 4, 0, 0, 1, '2025-11-23 22:09:52', '2025-11-24 21:54:44');
+INSERT INTO `forum_post` VALUES (6, 3, 'zww', '1234', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/7d76ae475ca84ca29e13c3fc1fcfede9.jpg', '111111111111', '111111111111', NULL, 4, 0, 0, 0, 0, 0, '2025-11-24 15:19:22', '2025-11-24 17:06:45');
+INSERT INTO `forum_post` VALUES (7, 3, 'zww', '1234', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/7d76ae475ca84ca29e13c3fc1fcfede9.jpg', '了了了了了了了了了了了了', '了了了了了了了了了了了了', '[\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/e32e70270289462bb8d68120b154f40f.jpg\"]', 21, 1, 0, 0, 0, 0, '2025-11-24 15:24:02', '2025-11-24 17:06:41');
+INSERT INTO `forum_post` VALUES (8, 3, 'zww', '6666', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/7d76ae475ca84ca29e13c3fc1fcfede9.jpg', '666666666666666666666', '<p><img src=\"quiz/paper/answer/2025/11/24/2a7b0e6cff144a5691979b554e2672a8.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/2a7b0e6cff144a5691979b554e2672a8.jpg\" data-src=\"quiz/paper/answer/2025/11/24/2a7b0e6cff144a5691979b554e2672a8.jpg\"></p>', NULL, 16, 0, 0, 0, 0, 0, '2025-11-24 17:10:09', '2025-11-24 18:56:55');
+INSERT INTO `forum_post` VALUES (9, 3, 'zww', '6666', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/c84e86715f3b4c64a06c652e61c241e5.jpg', '测试图片帖子', '<p><img src=\"quiz/paper/answer/2025/11/24/6cc1275348904075ad4d529ccaebe54c.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/6cc1275348904075ad4d529ccaebe54c.jpg\" data-src=\"quiz/paper/answer/2025/11/24/6cc1275348904075ad4d529ccaebe54c.jpg\"></p><p><br></p><p><br></p><p><br></p><blockquote><strong><em>呃呃呃呃呃呃呃呃呃</em></strong></blockquote>', NULL, 5, 0, 0, 0, 0, 0, '2025-11-24 19:04:48', '2025-11-24 19:40:50');
+INSERT INTO `forum_post` VALUES (10, 3, 'zww', '6666', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/c84e86715f3b4c64a06c652e61c241e5.jpg', '测试图片回显OSS', '<p><img src=\"quiz/paper/answer/2025/11/24/c429ef1aad0e411d96736f4028e09320.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/c429ef1aad0e411d96736f4028e09320.jpg\" data-src=\"quiz/paper/answer/2025/11/24/c429ef1aad0e411d96736f4028e09320.jpg\"></p>', NULL, 3, 0, 0, 0, 0, 0, '2025-11-24 19:06:52', '2025-11-24 19:40:47');
+INSERT INTO `forum_post` VALUES (11, 3, 'zww', '6666', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/c84e86715f3b4c64a06c652e61c241e5.jpg', '顶顶顶顶顶顶顶顶顶顶顶', '<p><img src=\"quiz/paper/answer/2025/11/24/0aef9de674814b78b8bf13a60d7040a9.jpg\" data-oss-key=\"quiz/paper/answer/2025/11/24/0aef9de674814b78b8bf13a60d7040a9.jpg\" data-src=\"quiz/paper/answer/2025/11/24/0aef9de674814b78b8bf13a60d7040a9.jpg\"></p>', NULL, 3, 0, 0, 0, 0, 0, '2025-11-24 19:08:25', '2025-11-24 19:40:39');
+INSERT INTO `forum_post` VALUES (12, 3, 'zww', '6666', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/c84e86715f3b4c64a06c652e61c241e5.jpg', '3333333333333', '<p><br></p><p><img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/e9cb18c71e704511a8e2144176763f60.jpg\" data-oss-key=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/e9cb18c71e704511a8e2144176763f60.jpg\" data-src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/e9cb18c71e704511a8e2144176763f60.jpg\">2222222222233333</p><p><br></p><p><br></p><p><strong>撒旦发射点发山东发山东 </strong></p>', NULL, 6, 0, 0, 0, 0, 0, '2025-11-24 19:09:41', '2025-11-24 19:40:45');
+INSERT INTO `forum_post` VALUES (13, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '发布图片测试', '<p>发布图片测试<img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/2feaa48c7ed145e8a40393313ac25982.jpg\"></p>', NULL, 21, 0, 0, 0, 0, 0, '2025-11-24 19:41:34', '2025-11-24 21:54:08');
+INSERT INTO `forum_post` VALUES (14, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/110763d128d746baa195acb3b5dbfbfb.jpg', '666666666666', '<p>6<img src=\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/5b93d1037cd143478c1a274da66a23e0.jpg\"></p>', NULL, 14, 0, 7, 0, 0, 1, '2025-11-24 21:56:34', '2025-11-29 15:49:43');
 
 -- ----------------------------
 -- Table structure for gen_table
@@ -1945,6 +2820,490 @@ INSERT INTO `gen_table_column` VALUES (103, 12, 'del_flag', '删除标志', 'cha
 INSERT INTO `gen_table_column` VALUES (104, 12, 'create_time', '创建时间', 'datetime', 'Date', 'createTime', '0', '0', '0', '1', NULL, NULL, NULL, 'EQ', 'datetime', '', 7, '', '2024-10-18 11:14:39', '', '2024-10-18 11:15:16');
 INSERT INTO `gen_table_column` VALUES (105, 12, 'update_time', '更新时间', 'datetime', 'Date', 'updateTime', '0', '0', '0', '1', '1', NULL, NULL, 'EQ', 'datetime', '', 8, '', '2024-10-18 11:14:39', '', '2024-10-18 11:15:16');
 INSERT INTO `gen_table_column` VALUES (107, 2, 'paper_type', NULL, 'varchar(255)', 'String', 'paperType', '0', '0', '0', '1', '1', '1', '1', 'EQ', 'select', 'paper_type', 11, '', '2024-10-18 16:48:48', '', '2024-10-26 00:21:25');
+
+-- ----------------------------
+-- Table structure for knowledge_attachment
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_attachment`;
+CREATE TABLE `knowledge_attachment`  (
+  `attachment_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '附件ID',
+  `point_id` bigint(20) NOT NULL COMMENT '知识点ID',
+  `file_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件名',
+  `file_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '文件URL',
+  `file_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件类型（image/video/pdf等）',
+  `file_size` bigint(20) NULL DEFAULT 0 COMMENT '文件大小（字节）',
+  `sort_order` int(11) NULL DEFAULT 0 COMMENT '排序',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`attachment_id`) USING BTREE,
+  INDEX `idx_point_id`(`point_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点附件表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_attachment
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for knowledge_collect
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_collect`;
+CREATE TABLE `knowledge_collect`  (
+  `collect_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '收藏ID',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `point_id` bigint(20) NOT NULL COMMENT '知识点ID',
+  `folder_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '收藏夹ID',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',
+  PRIMARY KEY (`collect_id`) USING BTREE,
+  UNIQUE INDEX `uk_user_point`(`user_id`, `point_id`) USING BTREE,
+  INDEX `idx_user_id`(`user_id`) USING BTREE,
+  INDEX `idx_point_id`(`point_id`) USING BTREE,
+  INDEX `idx_folder_id`(`folder_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点收藏表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_collect
+-- ----------------------------
+INSERT INTO `knowledge_collect` VALUES (1, 1, 1, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_collect` VALUES (2, 1, 4, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_collect` VALUES (3, 1, 6, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_collect` VALUES (4, 2, 2, 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_collect` VALUES (5, 2, 5, 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_collect` VALUES (6, 2, 7, 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_collect` VALUES (9, 8, 3, 3, '2025-11-29 19:38:46');
+
+-- ----------------------------
+-- Table structure for knowledge_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_comment`;
+CREATE TABLE `knowledge_comment`  (
+  `comment_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '评论ID',
+  `point_id` bigint(20) NOT NULL COMMENT '知识点ID',
+  `user_id` bigint(20) NOT NULL COMMENT '评论人ID',
+  `user_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论人用户名',
+  `nick_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '评论人昵称',
+  `avatar` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '评论人头像',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '评论内容',
+  `parent_id` bigint(20) NULL DEFAULT 0 COMMENT '父评论ID（0表示一级评论）',
+  `reply_to_user_id` bigint(20) NULL DEFAULT NULL COMMENT '被回复的用户ID',
+  `reply_to_user_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '被回复的用户名',
+  `reply_to_nick_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '被回复的昵称',
+  `reply_to_comment_id` bigint(20) NULL DEFAULT NULL COMMENT '回复目标评论ID',
+  `like_count` bigint(20) NULL DEFAULT 0 COMMENT '点赞数',
+  `status` tinyint(1) NULL DEFAULT 1 COMMENT '状态（0-删除 1-正常）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`comment_id`) USING BTREE,
+  INDEX `idx_point_id`(`point_id`) USING BTREE,
+  INDEX `idx_user_id`(`user_id`) USING BTREE,
+  INDEX `idx_parent_id`(`parent_id`) USING BTREE,
+  INDEX `idx_create_time`(`create_time`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点评论表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_comment
+-- ----------------------------
+INSERT INTO `knowledge_comment` VALUES (1, 1, 1, 'student1', '小明', NULL, '讲解得非常清楚，终于理解了Cache映射的区别！', 0, NULL, NULL, NULL, NULL, 0, 1, '', '2025-11-29 11:29:16', '', '2025-11-29 11:29:16');
+INSERT INTO `knowledge_comment` VALUES (2, 1, 2, 'student2', '小红', NULL, '组相联映射是最常用的，感谢分享', 0, NULL, NULL, NULL, NULL, 0, 1, '', '2025-11-29 11:29:16', '', '2025-11-29 11:29:16');
+INSERT INTO `knowledge_comment` VALUES (3, 3, 1, 'student1', '小明', NULL, '快排的平均时间复杂度是O(n log n)，但最坏情况要注意优化', 0, NULL, NULL, NULL, NULL, 0, 1, '', '2025-11-29 11:29:16', '', '2025-11-29 11:29:16');
+INSERT INTO `knowledge_comment` VALUES (4, 6, 2, 'student2', '小红', NULL, 'TIME_WAIT状态在面试中经常被问到', 0, NULL, NULL, NULL, NULL, 0, 1, '', '2025-11-29 11:29:16', '', '2025-11-29 11:29:16');
+INSERT INTO `knowledge_comment` VALUES (5, 1, 2, 'student2', '小红', NULL, '同感！之前一直搞不懂，现在清楚多了', 1, 1, 'student1', '小明', NULL, 0, 1, '', '2025-11-29 11:29:16', '', '2025-11-29 11:29:16');
+INSERT INTO `knowledge_comment` VALUES (6, 12, 8, 'test666', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/5d9d1e6218f64117831b42d0546bf1de.jpg', '写的太好了哥们', 0, NULL, NULL, NULL, NULL, 0, 1, 'test666', '2025-11-29 21:21:07', '', '2025-11-29 21:21:07');
+INSERT INTO `knowledge_comment` VALUES (7, 15, 8, 'test666', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/29/4db7f9a2283b4ecb811a593b3f5a8d70.jpg', '牛逼', 0, NULL, NULL, NULL, NULL, 0, 1, 'test666', '2025-11-29 22:06:25', '', '2025-11-29 22:06:25');
+INSERT INTO `knowledge_comment` VALUES (8, 15, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/29/aea28aaf7fcb42569f4492b58c68281b.jpg', '厉害了', 7, 8, 'test666', 'testzww', 7, 0, 1, 'zww', '2025-11-29 22:06:51', '', '2025-11-29 22:06:51');
+INSERT INTO `knowledge_comment` VALUES (9, 15, 8, 'test666', 'testzww', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/29/4db7f9a2283b4ecb811a593b3f5a8d70.jpg', '666', 7, 8, 'test666', 'testzww', 7, 0, 1, 'test666', '2025-11-29 22:06:56', '', '2025-11-29 22:06:56');
+INSERT INTO `knowledge_comment` VALUES (10, 15, 3, 'zww', '大米面膜', 'https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/29/aea28aaf7fcb42569f4492b58c68281b.jpg', '做的太好了', 7, 8, 'test666', 'testzww', 9, 0, 1, 'zww', '2025-11-29 22:07:06', '', '2025-11-29 22:07:06');
+
+-- ----------------------------
+-- Table structure for knowledge_comment_like
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_comment_like`;
+CREATE TABLE `knowledge_comment_like`  (
+  `like_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '点赞ID',
+  `comment_id` bigint(20) NOT NULL COMMENT '评论ID',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`like_id`) USING BTREE,
+  UNIQUE INDEX `uk_user_comment`(`user_id`, `comment_id`) USING BTREE,
+  INDEX `idx_comment_id`(`comment_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点评论点赞表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_comment_like
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for knowledge_folder
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_folder`;
+CREATE TABLE `knowledge_folder`  (
+  `folder_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '收藏夹ID',
+  `folder_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '收藏夹名称',
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '收藏夹描述',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `is_default` tinyint(1) NULL DEFAULT 0 COMMENT '是否默认收藏夹(1是0否)',
+  `is_public` tinyint(1) NULL DEFAULT 0 COMMENT '是否公开(1是0否)',
+  `collect_count` int(11) NULL DEFAULT 0 COMMENT '收藏数量',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`folder_id`) USING BTREE,
+  INDEX `idx_user_id`(`user_id`) USING BTREE,
+  INDEX `idx_user_default`(`user_id`, `is_default`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点收藏夹表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_folder
+-- ----------------------------
+INSERT INTO `knowledge_folder` VALUES (2, '前端学习', '前端相关知识点收藏', 8, 0, 1, 0, '2025-11-29 14:09:37', '2025-11-29 18:50:20');
+INSERT INTO `knowledge_folder` VALUES (3, '算法练习', '数据结构与算法相关', 8, 0, 0, 1, '2025-11-29 14:09:37', '2025-11-29 19:38:46');
+INSERT INTO `knowledge_folder` VALUES (4, '默认收藏夹', '系统自动创建的默认收藏夹', 8, 1, 0, 0, '2025-11-29 16:01:15', '2025-11-29 22:09:22');
+INSERT INTO `knowledge_folder` VALUES (5, '888', '', 8, 0, 0, 0, '2025-11-29 18:30:53', '2025-11-29 21:28:29');
+INSERT INTO `knowledge_folder` VALUES (6, '计组', '', 8, 0, 0, 0, '2025-11-29 22:09:20', '2025-11-29 22:10:06');
+INSERT INTO `knowledge_folder` VALUES (7, '计网', '', 8, 0, 0, 0, '2025-11-29 22:09:45', '2025-11-29 22:09:45');
+
+-- ----------------------------
+-- Table structure for knowledge_learn_record
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_learn_record`;
+CREATE TABLE `knowledge_learn_record`  (
+  `record_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '记录ID',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `point_id` bigint(20) NOT NULL COMMENT '知识点ID',
+  `learn_duration` int(11) NULL DEFAULT 0 COMMENT '学习时长（秒）',
+  `learn_progress` int(11) NULL DEFAULT 0 COMMENT '学习进度（0-100）',
+  `mastery_level` tinyint(1) NULL DEFAULT 0 COMMENT '掌握程度（0-未学 1-了解 2-理解 3-掌握 4-精通）',
+  `last_learn_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后学习时间',
+  `learn_count` int(11) NULL DEFAULT 1 COMMENT '学习次数',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '首次学习时间',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`record_id`) USING BTREE,
+  UNIQUE INDEX `uk_user_point`(`user_id`, `point_id`) USING BTREE,
+  INDEX `idx_user_id`(`user_id`) USING BTREE,
+  INDEX `idx_last_learn_time`(`last_learn_time`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点学习记录表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_learn_record
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for knowledge_like
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_like`;
+CREATE TABLE `knowledge_like`  (
+  `like_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '点赞ID',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `point_id` bigint(20) NOT NULL COMMENT '知识点ID',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '点赞时间',
+  PRIMARY KEY (`like_id`) USING BTREE,
+  UNIQUE INDEX `uk_user_point`(`user_id`, `point_id`) USING BTREE,
+  INDEX `idx_point_id`(`point_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点点赞表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_like
+-- ----------------------------
+INSERT INTO `knowledge_like` VALUES (1, 1, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_like` VALUES (2, 1, 2, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_like` VALUES (3, 1, 6, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_like` VALUES (4, 2, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_like` VALUES (5, 2, 3, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_like` VALUES (6, 2, 5, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_like` VALUES (11, 8, 1, '2025-11-29 14:05:19');
+
+-- ----------------------------
+-- Table structure for knowledge_point_back
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_point_back`;
+CREATE TABLE `knowledge_point_back`  (
+  `point_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '知识点ID',
+  `subject_id` bigint(20) NOT NULL COMMENT '所属科目ID',
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '知识点标题',
+  `summary` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '摘要',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '知识点内容（Markdown格式）',
+  `content_html` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'HTML内容（前端渲染用）',
+  `difficulty` tinyint(1) NULL DEFAULT 1 COMMENT '难度等级（1-简单 2-中等 3-困难）',
+  `author_id` bigint(20) NOT NULL COMMENT '作者ID',
+  `author_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '作者名称',
+  `view_count` int(11) NULL DEFAULT 0 COMMENT '浏览次数',
+  `like_count` int(11) NULL DEFAULT 0 COMMENT '点赞数',
+  `collect_count` int(11) NULL DEFAULT 0 COMMENT '收藏数',
+  `comment_count` int(11) NULL DEFAULT 0 COMMENT '评论数',
+  `is_recommend` tinyint(1) NULL DEFAULT 0 COMMENT '是否推荐（0-否 1-是）',
+  `is_top` tinyint(1) NULL DEFAULT 0 COMMENT '是否置顶（0-否 1-是）',
+  `status` tinyint(1) NULL DEFAULT 1 COMMENT '状态（0-草稿 1-已发布 2-已下架）',
+  `audit_status` tinyint(1) NULL DEFAULT 0 COMMENT '审核状态（0-待审核 1-通过 2-拒绝）',
+  `audit_remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核备注',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `publish_time` datetime NULL DEFAULT NULL COMMENT '发布时间',
+  PRIMARY KEY (`point_id`) USING BTREE,
+  INDEX `idx_subject_id`(`subject_id`) USING BTREE,
+  INDEX `idx_author_id`(`author_id`) USING BTREE,
+  INDEX `idx_status`(`status`) USING BTREE,
+  INDEX `idx_difficulty`(`difficulty`) USING BTREE,
+  INDEX `idx_create_time`(`create_time`) USING BTREE,
+  INDEX `idx_like_count`(`like_count`) USING BTREE,
+  INDEX `idx_audit_status`(`audit_status`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_point_back
+-- ----------------------------
+INSERT INTO `knowledge_point_back` VALUES (1, 1, 'Cache映射方式详解', '介绍直接映射、全相联映射、组相联映射三种Cache映射方式的原理、优缺点和应用场景', '## 一、Cache映射概述\n\nCache映射是指主存地址与Cache地址之间的对应关系。主要有三种映射方式：\n\n### 1. 直接映射（Direct Mapping）\n\n**原理**：主存的每个块只能映射到Cache的固定位置。\n\n**映射规则**：\n```\nCache块号 = 主存块号 % Cache块数\n```\n\n**优点**：实现简单、成本低、查找速度快\n\n**缺点**：冲突率高、灵活性差\n\n### 2. 全相联映射（Fully Associative Mapping）\n\n**原理**：主存的任何一块都可以映射到Cache的任意位置。\n\n**优点**：冲突率最低、Cache利用率高\n\n**缺点**：硬件成本高、查找速度慢\n\n### 3. 组相联映射（Set Associative Mapping）\n\n**原理**：将Cache分成若干组，主存块可以映射到某一组的任意位置。是直接映射和全相联映射的折中方案。', NULL, 2, 1, 'admin', 163, 3, 1, 3, 0, 0, 1, 1, NULL, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 15:45:41', '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_back` VALUES (2, 2, '二叉树的遍历方法', '详细讲解前序、中序、后序和层序遍历的递归与非递归实现方法', '## 二叉树遍历概述\n\n二叉树的遍历是树结构中最基本的操作之一。\n\n### 1. 前序遍历（Pre-order）\n访问顺序：根 → 左 → 右\n\n**递归实现**：\n```java\nvoid preOrder(TreeNode root) {\n    if (root == null) return;\n    System.out.print(root.val + \" \");\n    preOrder(root.left);\n    preOrder(root.right);\n}\n```\n\n### 2. 中序遍历（In-order）\n访问顺序：左 → 根 → 右\n\n### 3. 后序遍历（Post-order）\n访问顺序：左 → 右 → 根\n\n### 4. 层序遍历（Level-order）\n使用队列实现按层访问', NULL, 1, 1, 'admin', 128, 1, 1, 0, 0, 0, 1, 1, NULL, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 14:02:41', '2025-11-27 11:29:16');
+INSERT INTO `knowledge_point_back` VALUES (3, 2, '快速排序算法详解', '深入理解快速排序的分治思想、时间复杂度分析及优化方法', '## 快速排序原理\n\n快速排序是一种高效的排序算法，采用分治法思想。\n\n### 算法步骤\n1. 选择基准元素（pivot）\n2. 分区操作：比基准小的放左边，大的放右边\n3. 递归地对左右子数组进行快排\n\n### 代码实现\n```java\npublic void quickSort(int[] arr, int left, int right) {\n    if (left >= right) return;\n    int pivot = partition(arr, left, right);\n    quickSort(arr, left, pivot - 1);\n    quickSort(arr, pivot + 1, right);\n}\n```\n\n### 时间复杂度\n- 平均：O(n log n)\n- 最坏：O(n²)\n- 最好：O(n log n)', NULL, 2, 1, 'admin', 235, 1, 1, 1, 0, 0, 1, 1, NULL, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 19:38:46', '2025-11-24 11:29:16');
+INSERT INTO `knowledge_point_back` VALUES (4, 3, '进程与线程的区别', '从资源分配、调度、通信等多个角度对比进程和线程的异同', '## 进程 vs 线程\n\n### 定义\n- **进程**：资源分配的基本单位\n- **线程**：CPU调度的基本单位\n\n### 主要区别\n\n| 对比项 | 进程 | 线程 |\n|--------|------|------|\n| 资源 | 独立的地址空间 | 共享进程资源 |\n| 开销 | 创建销毁开销大 | 开销小 |\n| 通信 | IPC机制 | 直接读写 |\n| 崩溃影响 | 独立 | 影响整个进程 |\n\n### 使用场景\n- 进程：需要资源隔离的场景\n- 线程：需要频繁切换和通信的场景', NULL, 1, 1, 'admin', 67, 0, 1, 0, 0, 0, 1, 1, NULL, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16', '2025-11-28 11:29:16');
+INSERT INTO `knowledge_point_back` VALUES (5, 3, '死锁的产生与预防', '分析死锁产生的四个必要条件及预防、避免、检测和解除死锁的方法', '## 死锁概念\n\n多个进程因竞争资源而造成的僵局，若无外力作用，这些进程都将无法继续执行。\n\n### 死锁的四个必要条件\n1. **互斥条件**：资源不能共享\n2. **请求与保持**：持有资源的同时请求新资源\n3. **不可剥夺**：已获得的资源不能强行剥夺\n4. **循环等待**：存在进程资源的循环等待链\n\n### 死锁预防\n破坏四个必要条件之一：\n- 破坏互斥：资源共享（不现实）\n- 破坏请求与保持：一次性申请所有资源\n- 破坏不可剥夺：资源可抢占\n- 破坏循环等待：资源有序分配\n\n### 银行家算法\n著名的死锁避免算法，通过安全性检测避免系统进入不安全状态。', NULL, 3, 1, 'admin', 179, 1, 1, 0, 0, 0, 1, 1, NULL, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 17:18:16', '2025-11-26 11:29:16');
+INSERT INTO `knowledge_point_back` VALUES (6, 4, 'TCP三次握手与四次挥手', '详解TCP连接建立和断开的完整过程及各个状态的含义', '## TCP连接管理\n\n### 三次握手（建立连接）\n1. **SYN**：客户端发送SYN=1，seq=x\n2. **SYN+ACK**：服务器回复SYN=1，ACK=1，seq=y，ack=x+1\n3. **ACK**：客户端发送ACK=1，seq=x+1，ack=y+1\n\n### 为什么是三次？\n- 防止旧的重复连接初始化\n- 同步双方的序列号\n- 避免资源浪费\n\n### 四次挥手（断开连接）\n1. **FIN**：主动方发送FIN=1\n2. **ACK**：被动方确认\n3. **FIN**：被动方发送FIN=1\n4. **ACK**：主动方确认\n\n### TIME_WAIT状态\n主动关闭方等待2MSL，确保被动方收到最后的ACK。', NULL, 2, 1, 'admin', 320, 1, 2, 1, 0, 0, 1, 1, NULL, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 19:30:10', '2025-11-25 11:29:16');
+INSERT INTO `knowledge_point_back` VALUES (7, 4, 'HTTP与HTTPS的区别', '对比HTTP和HTTPS的安全性、性能、应用场景等方面的差异', '## HTTP vs HTTPS\n\n### 核心区别\n- **HTTP**：超文本传输协议，明文传输\n- **HTTPS**：HTTP + SSL/TLS，加密传输\n\n### HTTPS加密流程\n1. 客户端发起HTTPS请求\n2. 服务器返回数字证书\n3. 客户端验证证书有效性\n4. 生成随机对称密钥\n5. 用服务器公钥加密发送\n6. 服务器私钥解密获得密钥\n7. 后续通信使用对称加密\n\n### 性能对比\n- HTTPS比HTTP慢（加密解密开销）\n- 现代优化：HTTP/2、TLS 1.3大幅提升性能\n\n### 端口\n- HTTP：80\n- HTTPS：443', NULL, 1, 1, 'admin', 45, 0, 1, 0, 0, 0, 1, 1, NULL, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16', '2025-11-23 11:29:16');
+INSERT INTO `knowledge_point_back` VALUES (8, 5, '数据库事务的ACID特性', '详细解释原子性、一致性、隔离性、持久性四大特性及其实现原理', '## ACID特性\n\n### 1. 原子性（Atomicity）\n事务中的所有操作要么全部完成，要么全部不完成。\n\n**实现**：通过undo log实现回滚\n\n### 2. 一致性（Consistency）\n事务执行前后，数据库从一个一致性状态转换到另一个一致性状态。\n\n### 3. 隔离性（Isolation）\n并发事务之间相互隔离，互不干扰。\n\n**隔离级别**：\n- READ UNCOMMITTED\n- READ COMMITTED\n- REPEATABLE READ（MySQL默认）\n- SERIALIZABLE\n\n### 4. 持久性（Durability）\n事务提交后，修改永久保存。\n\n**实现**：通过redo log保证', NULL, 2, 1, 'admin', 203, 0, 0, 0, 0, 0, 1, 1, NULL, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16', '2025-11-22 11:29:16');
+INSERT INTO `knowledge_point_back` VALUES (9, 5, 'MySQL索引优化实战', '深入讲解B+树索引原理、索引设计原则和常见优化技巧', '## MySQL索引优化\n\n### 索引类型\n1. **B+树索引**：最常用，适合范围查询\n2. **哈希索引**：等值查询快，不支持排序\n3. **全文索引**：文本搜索\n\n### 索引设计原则\n1. 选择区分度高的列\n2. 最左前缀原则\n3. 避免索引列上使用函数\n4. 覆盖索引减少回表\n5. 避免使用SELECT *\n\n### 常见优化\n```sql\n-- 复合索引\nCREATE INDEX idx_user ON user(age, city, name);\n\n-- 覆盖索引\nSELECT id, name FROM user WHERE age = 20;\n```\n\n### 索引失效场景\n- 使用!=、<>、NOT IN\n- 使用OR连接\n- 在索引列上做运算', NULL, 3, 1, 'admin', 0, 0, 0, 0, 0, 0, 1, 1, NULL, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16', '2025-11-21 11:29:16');
+INSERT INTO `knowledge_point_back` VALUES (11, 1, 'lllll', 'lll', '**指令由哪两部分组成**\n\n**考点：指令格式**\n\n- **两部分：** 操作码 + 操作数\n- **一句话：** 操作码说明“干什么”，操作数说明“对谁干”。\n- **例子：** 指令 `ADD R1, R2, R3`**操作码：** `ADD`（执行加法操作）**操作数：** `R1, R2, R3`（把寄存器R2和R3的值相加，结果存到R1）\n\n\n\n', NULL, 1, 8, 'testzww', 4, 0, 0, 0, 0, 0, 1, 0, NULL, NULL, '2025-11-29 15:46:10', NULL, '2025-11-29 15:53:31', NULL);
+INSERT INTO `knowledge_point_back` VALUES (12, 8, '指令由哪两部分组成', '考点：指令格式 - 两部分： 操作码 + 操作数 - 一句话： 操作码说明“干什么”，操作数说明“对谁干”。 - 例子： 指令 ADD R1, R2, R3操作码： ADD（执行加法操作）操作数： R1, R2, R3（把寄存器R2和R3的值相加，结果存到R1）', '**考点：指令格式**\n\n- **两部分：** 操作码 + 操作数\n- **一句话：** 操作码说明“干什么”，操作数说明“对谁干”。\n- **例子：** 指令 `ADD R1, R2, R3`**操作码：** `ADD`（执行加法操作）**操作数：** `R1, R2, R3`（把寄存器R2和R3的值相加，结果存到R1）\n\n', NULL, 1, 8, 'testzww', 13, 0, 1, 0, 0, 0, 1, 0, NULL, NULL, '2025-11-29 17:42:22', NULL, '2025-11-29 19:32:51', NULL);
+
+-- ----------------------------
+-- Table structure for knowledge_point_base
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_point_base`;
+CREATE TABLE `knowledge_point_base`  (
+  `point_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '知识点ID',
+  `subject_id` bigint(20) NOT NULL COMMENT '科目ID',
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
+  `summary` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '摘要(限制500字)',
+  `difficulty` tinyint(4) NULL DEFAULT 1 COMMENT '难度等级(1简单 2中等 3困难)',
+  `author_id` bigint(20) NULL DEFAULT NULL COMMENT '作者用户ID',
+  `author_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '作者姓名',
+  `view_count` int(11) NULL DEFAULT 0 COMMENT '浏览次数',
+  `like_count` int(11) NULL DEFAULT 0 COMMENT '点赞数',
+  `collect_count` int(11) NULL DEFAULT 0 COMMENT '收藏数',
+  `comment_count` int(11) NULL DEFAULT 0 COMMENT '评论数',
+  `is_recommend` tinyint(4) NULL DEFAULT 0 COMMENT '是否推荐(0否 1是)',
+  `is_top` tinyint(4) NULL DEFAULT 0 COMMENT '是否置顶(0否 1是)',
+  `status` tinyint(4) NULL DEFAULT 1 COMMENT '状态(0草稿 1正常 2下架)',
+  `audit_status` tinyint(4) NULL DEFAULT 0 COMMENT '审核状态(0待审核 1通过 2拒绝)',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `publish_time` datetime NULL DEFAULT NULL COMMENT '发布时间',
+  PRIMARY KEY (`point_id`) USING BTREE,
+  INDEX `idx_subject`(`subject_id`) USING BTREE,
+  INDEX `idx_author`(`author_id`) USING BTREE,
+  INDEX `idx_status`(`status`) USING BTREE,
+  INDEX `idx_create_time`(`create_time`) USING BTREE,
+  INDEX `idx_view_count`(`view_count`) USING BTREE,
+  INDEX `idx_like_count`(`like_count`) USING BTREE,
+  INDEX `idx_base_status_time`(`status`, `create_time`) USING BTREE,
+  INDEX `idx_base_subject_status`(`subject_id`, `status`) USING BTREE,
+  INDEX `idx_base_author_status`(`author_id`, `status`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点基础信息表(热数据)' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_point_base
+-- ----------------------------
+INSERT INTO `knowledge_point_base` VALUES (1, 1, 'Cache映射方式详解', '介绍直接映射、全相联映射、组相联映射三种Cache映射方式的原理、优缺点和应用场景', 2, 1, 'admin', 163, 3, 1, 3, 0, 0, 1, 1, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 15:45:41', '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_base` VALUES (2, 2, '二叉树的遍历方法', '详细讲解前序、中序、后序和层序遍历的递归与非递归实现方法', 1, 1, 'admin', 128, 1, 1, 0, 0, 0, 1, 1, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 14:02:41', '2025-11-27 11:29:16');
+INSERT INTO `knowledge_point_base` VALUES (3, 2, '快速排序算法详解', '深入理解快速排序的分治思想、时间复杂度分析及优化方法', 2, 1, 'admin', 235, 1, 1, 1, 0, 0, 1, 1, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 19:38:46', '2025-11-24 11:29:16');
+INSERT INTO `knowledge_point_base` VALUES (4, 3, '进程与线程的区别', '从资源分配、调度、通信等多个角度对比进程和线程的异同', 1, 1, 'admin', 67, 0, 1, 0, 0, 0, 1, 1, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16', '2025-11-28 11:29:16');
+INSERT INTO `knowledge_point_base` VALUES (5, 3, '死锁的产生与预防', '分析死锁产生的四个必要条件及预防、避免、检测和解除死锁的方法', 3, 1, 'admin', 179, 1, 1, 0, 0, 0, 1, 1, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 17:18:16', '2025-11-26 11:29:16');
+INSERT INTO `knowledge_point_base` VALUES (6, 4, 'TCP三次握手与四次挥手', '详解TCP连接建立和断开的完整过程及各个状态的含义', 2, 1, 'admin', 322, 1, 1, 1, 0, 0, 1, 1, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 22:10:06', '2025-11-25 11:29:16');
+INSERT INTO `knowledge_point_base` VALUES (7, 4, 'HTTP与HTTPS的区别', '对比HTTP和HTTPS的安全性、性能、应用场景等方面的差异', 1, 1, 'admin', 45, 0, 1, 0, 0, 0, 1, 1, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16', '2025-11-23 11:29:16');
+INSERT INTO `knowledge_point_base` VALUES (8, 5, '数据库事务的ACID特性', '详细解释原子性、一致性、隔离性、持久性四大特性及其实现原理', 2, 1, 'admin', 203, 0, 0, 0, 0, 0, 1, 1, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16', '2025-11-22 11:29:16');
+INSERT INTO `knowledge_point_base` VALUES (9, 5, 'MySQL索引优化实战', '深入讲解B+树索引原理、索引设计原则和常见优化技巧', 3, 1, 'admin', 0, 0, 0, 0, 0, 0, 1, 1, NULL, '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16', '2025-11-21 11:29:16');
+INSERT INTO `knowledge_point_base` VALUES (15, 8, '指令由哪两部分组成', '考点：指令格式 - 两部分： 操作码 + 操作数 - 一句话： 操作码说明“干什么”，操作数说明“对谁干”。 - 例子： 指令 ADD R1, R2, R3操作码： ADD（执行加法操作）操作数： R1, R2, R3（把寄存器R2和R3的值相加，结果存到R1）', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-29 21:53:45', NULL, NULL, NULL);
+INSERT INTO `knowledge_point_base` VALUES (16, 11, '微服务搭建', '0）版本说明 - JDK 19 - springboot 3.0 - springCloud 2022 1）新建父子项目 1.0）创建空Maven项目，引入依赖 !image-20251010094000654 1.1）修改本地maven文件夹地址 !image-20251010094141146...', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-29 22:02:53', NULL, NULL, NULL);
+INSERT INTO `knowledge_point_base` VALUES (17, 8, '冯·诺依曼体系结构核心思想', '考点：冯·诺依曼体系结构核心思想    五大部件： 运算器、控制器、存储器、输入设备、输出设备。    一句话： “存储程序”，即程序和数据都以二进制的形式放在同一个存储器中。 *   例子： 你电脑开机流程：     1.  输入设备（键盘鼠标）接受指令。', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-30 12:47:55', NULL, NULL, NULL);
+INSERT INTO `knowledge_point_base` VALUES (18, 8, '2.1）指令集体系结构分类（ISA - Instruction Set Architecture）', '考点：指令集体系结构分类（ISA - Instruction Set Architecture） 这题考的是CPU处理数据时，数据存放在哪里的4种不同方式。 --- 核心概念 问题：CPU做运算时，操作数（比如A、B这些数）存在哪？', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-30 14:59:17', NULL, '2025-11-30 15:55:58', NULL);
+INSERT INTO `knowledge_point_base` VALUES (19, 8, '2.2）指令集架构设计（CISC vs RISC、指令格式、面向目标程序优化）', '!image-20251130150457756 通用寄存器型指令集的3种结构 RR结构（Register-Register，寄存器-寄存器） - 全称：Register-Register - 大白话：数据只能在寄存器之间操作，比如 ADD R1, R2, R3（把R2和R3加起来放到R1） -...', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-30 15:29:46', NULL, '2025-11-30 15:55:49', NULL);
+INSERT INTO `knowledge_point_base` VALUES (20, 8, '2.3）指令寻址方式（操作数获取方法）', '寄存器寻址 - 大白话：数据直接在CPU内部的小盒子（寄存器）里 - 实例：Add R4, R3  - 含义：把R3寄存器的值加到R4寄存器上 - 特点：最快，因为数据就在CPU内部 立即值寻址（Immediate Addressing） - 大白话：数据直接写在指令里，是个固定数字 -...', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-30 15:48:27', NULL, '2025-11-30 15:55:40', NULL);
+INSERT INTO `knowledge_point_base` VALUES (21, 8, '2.4）指令集设计基本要求、控制流指令、基本汇编指令', '指令集结构的4个基本要求 完整性 - 大白话：指令要够全，什么活都能干 - 解释：加减乘除、内存操作、跳转判断，该有的都得有，不能缺功能 规整性  - 大白话：指令格式要统一，不能乱七八糟 - 解释：同类指令的写法要一致，程序员容易记忆和使用 高效率 - 大白话：常用的指令要快，执行效率要高 -...', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-30 15:54:56', NULL, '2025-11-30 15:55:34', NULL);
+INSERT INTO `knowledge_point_base` VALUES (22, 8, '3.1）什么是流水线？和流水线的特点', '!image-20251130155658249 什么是流水线？ 大白话：把复杂工作拆成多个简单步骤，每个步骤专人负责，大家同时干活 生活类比： - 像汽车装配线：A工人装轮子，B工人装发动机，C工人装座椅 - 不用等一辆车完全装完再装下一辆，而是同时装多辆车的不同部分 -...', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-30 16:06:22', NULL, '2025-11-30 16:31:27', NULL);
+INSERT INTO `knowledge_point_base` VALUES (23, 8, '3.2）流水线的分类 ', '单功能流水线 vs 多功能流水线： - 单功能例子：专门做浮点加法的流水线，只能处理 3.14 + 2.5 这种运算 - 多功能例子：可以做加法、乘法、除法的流水线，既能算 3+5，又能算 3×5 静态流水线 vs 动态流水线： - 静态例子：汽车装配线，永远是装轮子→装发动机→装座椅，顺序不能变...', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-30 17:01:11', NULL, NULL, NULL);
+INSERT INTO `knowledge_point_base` VALUES (24, 8, '3.3）流水线性能', '!image-20251130171310690 吞吐量TP计算 例子：3级流水线处理5个任务，每段用时2ns >TP的全称：Throughput（吞吐量） > >- Throughput：大白话就是\"通过量\"，表示单位时间内能处理多少个任务 >- 例子：工厂每小时生产100个产品，TP =...', 3, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-11-30 17:13:50', NULL, '2025-12-01 16:57:49', NULL);
+INSERT INTO `knowledge_point_base` VALUES (25, 8, '3.4）流水线相关', '什么是相关？ 大白话：两条指令之间有\"扯不清的关系\"，后面的指令依赖前面指令的结果 生活例子： - 你要先烧水，再泡茶 → 泡茶依赖烧水的结果 - 这两个动作就是\"相关\"的 三种相关类型 数据相关（真数据相关）：写后读（RAW） RAW全称：Read After Write（写后读）...', 1, 8, 'testzww', 0, 0, 0, 0, 0, 0, 1, 0, NULL, '2025-12-01 17:55:10', NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for knowledge_point_content
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_point_content`;
+CREATE TABLE `knowledge_point_content`  (
+  `content_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '内容ID',
+  `point_id` bigint(20) NOT NULL COMMENT '知识点ID(外键)',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '知识点内容(Markdown)',
+  `content_html` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '知识点内容(HTML渲染后)',
+  `audit_remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '审核备注',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`content_id`) USING BTREE,
+  UNIQUE INDEX `point_id`(`point_id`) USING BTREE,
+  INDEX `idx_point_id`(`point_id`) USING BTREE,
+  CONSTRAINT `knowledge_point_content_ibfk_1` FOREIGN KEY (`point_id`) REFERENCES `knowledge_point_base` (`point_id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 29 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点内容详情表(冷数据)' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_point_content
+-- ----------------------------
+INSERT INTO `knowledge_point_content` VALUES (1, 1, '## 一、Cache映射概述\n\nCache映射是指主存地址与Cache地址之间的对应关系。主要有三种映射方式：\n\n### 1. 直接映射（Direct Mapping）\n\n**原理**：主存的每个块只能映射到Cache的固定位置。\n\n**映射规则**：\n```\nCache块号 = 主存块号 % Cache块数\n```\n\n**优点**：实现简单、成本低、查找速度快\n\n**缺点**：冲突率高、灵活性差\n\n### 2. 全相联映射（Fully Associative Mapping）\n\n**原理**：主存的任何一块都可以映射到Cache的任意位置。\n\n**优点**：冲突率最低、Cache利用率高\n\n**缺点**：硬件成本高、查找速度慢\n\n### 3. 组相联映射（Set Associative Mapping）\n\n**原理**：将Cache分成若干组，主存块可以映射到某一组的任意位置。是直接映射和全相联映射的折中方案。', NULL, NULL, '2025-11-29 20:13:04', NULL);
+INSERT INTO `knowledge_point_content` VALUES (2, 2, '## 二叉树遍历概述\n\n二叉树的遍历是树结构中最基本的操作之一。\n\n### 1. 前序遍历（Pre-order）\n访问顺序：根 → 左 → 右\n\n**递归实现**：\n```java\nvoid preOrder(TreeNode root) {\n    if (root == null) return;\n    System.out.print(root.val + \" \");\n    preOrder(root.left);\n    preOrder(root.right);\n}\n```\n\n### 2. 中序遍历（In-order）\n访问顺序：左 → 根 → 右\n\n### 3. 后序遍历（Post-order）\n访问顺序：左 → 右 → 根\n\n### 4. 层序遍历（Level-order）\n使用队列实现按层访问', NULL, NULL, '2025-11-29 20:13:04', NULL);
+INSERT INTO `knowledge_point_content` VALUES (3, 3, '## 快速排序原理\n\n快速排序是一种高效的排序算法，采用分治法思想。\n\n### 算法步骤\n1. 选择基准元素（pivot）\n2. 分区操作：比基准小的放左边，大的放右边\n3. 递归地对左右子数组进行快排\n\n### 代码实现\n```java\npublic void quickSort(int[] arr, int left, int right) {\n    if (left >= right) return;\n    int pivot = partition(arr, left, right);\n    quickSort(arr, left, pivot - 1);\n    quickSort(arr, pivot + 1, right);\n}\n```\n\n### 时间复杂度\n- 平均：O(n log n)\n- 最坏：O(n²)\n- 最好：O(n log n)', NULL, NULL, '2025-11-29 20:13:04', NULL);
+INSERT INTO `knowledge_point_content` VALUES (4, 4, '## 进程 vs 线程\n\n### 定义\n- **进程**：资源分配的基本单位\n- **线程**：CPU调度的基本单位\n\n### 主要区别\n\n| 对比项 | 进程 | 线程 |\n|--------|------|------|\n| 资源 | 独立的地址空间 | 共享进程资源 |\n| 开销 | 创建销毁开销大 | 开销小 |\n| 通信 | IPC机制 | 直接读写 |\n| 崩溃影响 | 独立 | 影响整个进程 |\n\n### 使用场景\n- 进程：需要资源隔离的场景\n- 线程：需要频繁切换和通信的场景', NULL, NULL, '2025-11-29 20:13:04', NULL);
+INSERT INTO `knowledge_point_content` VALUES (5, 5, '## 死锁概念\n\n多个进程因竞争资源而造成的僵局，若无外力作用，这些进程都将无法继续执行。\n\n### 死锁的四个必要条件\n1. **互斥条件**：资源不能共享\n2. **请求与保持**：持有资源的同时请求新资源\n3. **不可剥夺**：已获得的资源不能强行剥夺\n4. **循环等待**：存在进程资源的循环等待链\n\n### 死锁预防\n破坏四个必要条件之一：\n- 破坏互斥：资源共享（不现实）\n- 破坏请求与保持：一次性申请所有资源\n- 破坏不可剥夺：资源可抢占\n- 破坏循环等待：资源有序分配\n\n### 银行家算法\n著名的死锁避免算法，通过安全性检测避免系统进入不安全状态。', NULL, NULL, '2025-11-29 20:13:04', NULL);
+INSERT INTO `knowledge_point_content` VALUES (6, 6, '## TCP连接管理\n\n### 三次握手（建立连接）\n1. **SYN**：客户端发送SYN=1，seq=x\n2. **SYN+ACK**：服务器回复SYN=1，ACK=1，seq=y，ack=x+1\n3. **ACK**：客户端发送ACK=1，seq=x+1，ack=y+1\n\n### 为什么是三次？\n- 防止旧的重复连接初始化\n- 同步双方的序列号\n- 避免资源浪费\n\n### 四次挥手（断开连接）\n1. **FIN**：主动方发送FIN=1\n2. **ACK**：被动方确认\n3. **FIN**：被动方发送FIN=1\n4. **ACK**：主动方确认\n\n### TIME_WAIT状态\n主动关闭方等待2MSL，确保被动方收到最后的ACK。', NULL, NULL, '2025-11-29 20:13:04', NULL);
+INSERT INTO `knowledge_point_content` VALUES (7, 7, '## HTTP vs HTTPS\n\n### 核心区别\n- **HTTP**：超文本传输协议，明文传输\n- **HTTPS**：HTTP + SSL/TLS，加密传输\n\n### HTTPS加密流程\n1. 客户端发起HTTPS请求\n2. 服务器返回数字证书\n3. 客户端验证证书有效性\n4. 生成随机对称密钥\n5. 用服务器公钥加密发送\n6. 服务器私钥解密获得密钥\n7. 后续通信使用对称加密\n\n### 性能对比\n- HTTPS比HTTP慢（加密解密开销）\n- 现代优化：HTTP/2、TLS 1.3大幅提升性能\n\n### 端口\n- HTTP：80\n- HTTPS：443', NULL, NULL, '2025-11-29 20:13:04', NULL);
+INSERT INTO `knowledge_point_content` VALUES (8, 8, '## ACID特性\n\n### 1. 原子性（Atomicity）\n事务中的所有操作要么全部完成，要么全部不完成。\n\n**实现**：通过undo log实现回滚\n\n### 2. 一致性（Consistency）\n事务执行前后，数据库从一个一致性状态转换到另一个一致性状态。\n\n### 3. 隔离性（Isolation）\n并发事务之间相互隔离，互不干扰。\n\n**隔离级别**：\n- READ UNCOMMITTED\n- READ COMMITTED\n- REPEATABLE READ（MySQL默认）\n- SERIALIZABLE\n\n### 4. 持久性（Durability）\n事务提交后，修改永久保存。\n\n**实现**：通过redo log保证', NULL, NULL, '2025-11-29 20:13:04', NULL);
+INSERT INTO `knowledge_point_content` VALUES (9, 9, '## MySQL索引优化\n\n### 索引类型\n1. **B+树索引**：最常用，适合范围查询\n2. **哈希索引**：等值查询快，不支持排序\n3. **全文索引**：文本搜索\n\n### 索引设计原则\n1. 选择区分度高的列\n2. 最左前缀原则\n3. 避免索引列上使用函数\n4. 覆盖索引减少回表\n5. 避免使用SELECT *\n\n### 常见优化\n```sql\n-- 复合索引\nCREATE INDEX idx_user ON user(age, city, name);\n\n-- 覆盖索引\nSELECT id, name FROM user WHERE age = 20;\n```\n\n### 索引失效场景\n- 使用!=、<>、NOT IN\n- 使用OR连接\n- 在索引列上做运算', NULL, NULL, '2025-11-29 20:13:04', NULL);
+INSERT INTO `knowledge_point_content` VALUES (18, 15, '**考点：指令格式**\n\n- **两部分：** 操作码 + 操作数\n- **一句话：** 操作码说明“干什么”，操作数说明“对谁干”。\n- **例子：** 指令 `ADD R1, R2, R3`**操作码：** `ADD`（执行加法操作）**操作数：** `R1, R2, R3`（把寄存器R2和R3的值相加，结果存到R1）\n\n\n\n', NULL, NULL, '2025-11-29 21:53:45', NULL);
+INSERT INTO `knowledge_point_content` VALUES (19, 16, '# 0）版本说明\n\n- JDK 19\n- springboot 3.0\n- springCloud 2022\n\n# 1）新建父子项目\n\n## 1.0）创建空Maven项目，引入依赖\n\n![image-20251010094000654](https://cdn.zww0891.fun/image-20251010094000654.png)\n\n## 1.1）修改本地maven文件夹地址\n\n![image-20251010094141146](https://cdn.zww0891.fun/image-20251010094141146.png)\n\n## 1.2）配置父项目\n\n配置父项目pom.xml文件\n\n- 修改打包方式，\n- 增加模块标签，后续引入子服务\n- 增加dependencyManagement标签，后续管理子服务依赖版本\n\n![](https://cdn.zww0891.fun/image-20251010095011306.png)\n\n```xml\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n\n    <groupId>com.zww0891</groupId>\n    <artifactId>springCloudAlibaba</artifactId>\n    <version>1.0-SNAPSHOT</version>\n    <!-- 1.修改打包方式 -->\n    <packaging>pom</packaging>\n    <!-- 2.添加子模块 -->\n    <modules>\n\n    </modules>\n    <properties>\n        <maven.compiler.source>19</maven.compiler.source>\n        <maven.compiler.target>19</maven.compiler.target>\n        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    </properties>\n    <!--  3.管理子模块的依赖版本 -->\n    <dependencyManagement>\n        <dependencies>\n            <!-- springcloud的依赖-->\n            <dependency>\n                <groupId>org.springframework.cloud</groupId>\n                <artifactId>spring-cloud-dependencies</artifactId>\n                <version>2022.0.0</version>\n                <type>pom</type>\n                <scope>import</scope>\n            </dependency>\n\n            <!--spring-cloud-alibaba-->\n            <dependency>\n                <groupId>com.alibaba.cloud</groupId>\n                <artifactId>spring-cloud-alibaba-dependencies</artifactId>\n                <version>2022.0.0.0-RC1</version>\n                <type>pom</type>\n                <scope>import</scope>\n            </dependency>\n\n            <!-- springboot的依赖-->\n            <dependency>\n                <groupId>org.springframework.boot</groupId>\n                <artifactId>spring-boot-dependencies</artifactId>\n                <version>3.0.0</version>\n                <type>pom</type>\n                <scope>import</scope>\n            </dependency>\n        </dependencies>\n    </dependencyManagement>\n</project>\n\n```\n\nSpring Cloud 版本对照表 https://baijiahao.baidu.com/s?id=1771358714767361684&wfr=spider&for=pc\n\n## 1.3）配置子项目\n\n### 创建springBoot项目\n\n删除父项目的src文件，创建springboot子项目\n\n![image-20251010100137135](https://cdn.zww0891.fun/image-20251010100137135.png)\n\n### 修改pom.xml\n\n修改父模块的版本，组id和工程id\n\n![image-20251010183417259](https://cdn.zww0891.fun/image-20251010183417259.png)\n\n引入spring  web 依赖，不指定版本号，由父模块管理\n\n```xml\n<dependency>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-web</artifactId>\n</dependency>\n```\n\n\n\n### 修改application.yml\n\n指定端口号\n\n![image-20251010183742535](https://cdn.zww0891.fun/image-20251010183742535.png)\n\n### 加入父模块里的子模块里\n\n![image-20251010184233865](https://cdn.zww0891.fun/image-20251010184233865.png)\n\n写一个测试接口，使用postman或rest插件测试\n\n![image-20251010185620435](https://cdn.zww0891.fun/image-20251010185620435.png)\n\n同样的操作在复刻一个子项目，\n\n方便后续\n\n- openFeign远程调用\n- 网关路由\n- 多实例负载均衡\n\n# 2）配置Nacos注册中心\n\n## 2.0）组件对应版本\n\n[spring cloud alibaba 版本对应关系 – 每天进步一点点](https://www.longkui.site/program/java/spring-cloud-alibaba/6051/)\n\n![image-20251010185957136](https://cdn.zww0891.fun/image-20251010185957136.png)\n\nnacos**下载地址**\n\n[发布历史 | Nacos 官网](https://nacos.io/download/release-history/?spm=5238cd80.2ef5001f.0.0.3f613b7c790pld)\n\n## 2.1）修改nacos配置文件\n\n\"E:\\nacos-server-2.2.1\\nacos\\conf\\application.properties\"\n\n![image-20251010191854631](https://cdn.zww0891.fun/image-20251010191854631.png)\n\n**修改三个鉴权相关的配置**\n\n![image-20251010191458536](https://cdn.zww0891.fun/image-20251010191458536.png)\n\n```\nnacos.core.auth.server.identity.key=chenXuYuanJiage\nnacos.core.auth.server.identity.value=chenXuYuanJiage\nnacos.core.auth.plugin.nacos.token.secret.key=YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY=\n```\n\n>nacos.core.auth.plugin.nacos.token.secret.key要是32字节进行base64编码后的值\n>\n>![image-20251010192201001](https://cdn.zww0891.fun/image-20251010192201001.png)\n>\n>1. `nacos.core.auth.server.identity.key`/`value`：集群模式下 Nacos 节点的 “身份凭证”，确保只有合法节点能互相通信（如同步数据、检测心跳）；\n>2. `nacos.core.auth.plugin.nacos.token.secret.key`：生成、验证客户端 “访问令牌（Token）” 的密钥，控制客户端能否合法访问 Nacos。\n\n## 2.2）以单机模式启动\n\n```shell\nE:\\nacos-server-2.2.1\\nacos\\bin>\nstartup.cmd -m standalone\n```\n\n![image-20251010192258256](https://cdn.zww0891.fun/image-20251010192258256.png)\n\n## 2.3）访问前端页面\n\nhttp://localhost:8848/nacos\n\n账号密码均为nacos\n\n## 2.4）spring项目服务发现和配置注册\n\n**添加依赖**\n\n```xml\n<!-- nacos-->\n<dependency>\n    <groupId>com.alibaba.cloud</groupId>\n    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>\n</dependency>\n<dependency>\n    <groupId>com.alibaba.cloud</groupId>\n    <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>\n</dependency>\n```\n\n**配置文件**\n\n服务名和nacos地址\n\n这里把服务器的端口号配置在nacos配置中心，后续不需重新启动项目就能加载最新配置\n\n```yml\n# ====================================================================\n# Order Service 订单服务配置文件\n# ====================================================================\n\n# 服务器配置\n#server:\n#  port: 6660  # 订单服务端口号\n\n# Spring Boot 配置\nspring:\n  application:\n    name: order-service  # 服务名称，用于服务注册与发现\n  \n  # 配置导入设置（Spring Cloud 2020+ 新特性）\n  config:\n    # 从Nacos配置中心导入配置文件\n    # optional: 表示配置文件不存在时不会导致启动失败\n    # nacos: 指定配置中心类型为Nacos\n    # order-service-dev.yml: 配置文件名（开发环境）\n    import: optional:nacos:order-service-dev.yml\n  \n  # Spring Cloud 配置\n  cloud:\n    nacos:\n      # 服务发现配置\n      discovery:\n        server-addr: localhost:8848  # Nacos服务器地址\n      \n      # 配置中心配置\n      config:\n        server-addr: localhost:8848  # Nacos配置中心地址\n        file-extension: yml          # 配置文件扩展名\n\n```\n\n![image-20251011144221688](https://cdn.zww0891.fun/image-20251011144221688.png)\n\n然后要开启此热重载功能还需要加@RefreshScope注解\n\n## 2.5）测试热重载配置文件\n\n测试能否不重启服务达到配置生效的效果\n\n![](https://cdn.zww0891.fun/image-20251011144823945.png)\n\n![image-20251011145025922](https://cdn.zww0891.fun/image-20251011145025922.png)\n\n# 3）OpenFeign远程调用\n\n## 3.1）创建common模块存放实体\n\n把启动类和配置文件删掉，指创实体包，当前模块指定父模块，父模块引入当前模块，其他模块引入该模块依赖\n\n![image-20251011145821592](https://cdn.zww0891.fun/image-20251011145821592.png)\n\n![image-20251011150400564](https://cdn.zww0891.fun/image-20251011150400564.png)\n\n## 3.2）设置FeignClient接口\n\n在需要调用的地方设置client和依赖，如这里payment需要调用order的接口，那就在payment服务设置接口\n\n1.添加依赖\n\n2.feign客户端添加注解@FeignClient(value = \"order-service\") //value填远程调用的服务名，然后设置远程调用的接口方法签名（无函数体）\n\n3.启动类加注解@EnableFeignClients\n\n4.autowired注入接口并调用\n\n==1.==\n\n```xml\n<!-- openfeign-->\n            <dependency>\n                <groupId>org.springframework.cloud</groupId>\n                <artifactId>spring-cloud-starter-openfeign</artifactId>\n            </dependency>\n            <dependency>\n                <groupId>org.springframework.cloud</groupId>\n                <artifactId>spring-cloud-starter-loadbalancer</artifactId>\n            </dependency>\n```\n\n==2.==\n\n```java\n@FeignClient(value = \"order-service\")\npublic interface OrderServiceFeignClient {\n    @PostMapping(\"/payForOrder\")\n    public void payForOrder(Order orderId);\n}\n\n```\n\n==3.==\n\n```java\n@SpringBootApplication\n@EnableFeignClients\npublic class PaymentServiceApplication {\n\n    public static void main(String[] args) {\n        SpringApplication.run(PaymentServiceApplication.class, args);\n    }\n\n}\n```\n\n==4.==\n\n```java\npackage com.zww0891.paymentservice.controller;\n\nimport com.zww0891.commonmodule.entity.Order;\nimport com.zww0891.paymentservice.feignClient.OrderServiceFeignClient;\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.web.bind.annotation.GetMapping;\nimport org.springframework.web.bind.annotation.RequestParam;\nimport org.springframework.web.bind.annotation.RestController;\n\n@RestController\npublic class TestController {\n    @Autowired\n    private OrderServiceFeignClient orderServiceFeignClient;\n\n    @GetMapping(\"/payment-test\")\n    public String test() {\n        return \"payment-test\";\n    }\n\n    @GetMapping(\"/payment-order\")\n    public String  payMoney (@RequestParam String orderId) {\n        System.out.println(\"模拟支付成功...\");\n        // 调用订单服务的添加订单\n        Order order = new Order(666L, \"苹果\");\n 		orderServiceFeignClient.payForOrder(order);\n        return \"ok\";\n    }\n\n}\n\n```\n\n## 3.3）测试调用\n\n![image-20251011153953714](https://cdn.zww0891.fun/image-20251011153953714.png)\n\n# 4）多实例\n\n**概述**\n\n用httpClient发请求跨服务器调用太麻烦，用接口方法调用方法的方式符合习惯\n\n## 4.1）新增启动配置\n\n![image-20251011154321208](https://cdn.zww0891.fun/image-20251011154321208.png)\n\n## 4.2）新增配置文件\n\n![](https://cdn.zww0891.fun/image-20251011154718073.png)\n\n**然后修改一下配置文件再启动，方便指向远程nacos的yml配置文件**\n\n![image-20251011154829927](https://cdn.zww0891.fun/image-20251011154829927.png)\n\n**修改控制器，标识是新的实例**\n\n![image-20251011154932946](https://cdn.zww0891.fun/image-20251011154932946.png)\n\n**最后启动，nacos查看和发请求测试**\n\n![image-20251011155021526](https://cdn.zww0891.fun/image-20251011155021526.png)\n\n这里端口太大报错了，可以搞小一点\n\n![image-20251011155053971](https://cdn.zww0891.fun/image-20251011155053971.png)\n\n\n\n![image-20251011155459361](https://cdn.zww0891.fun/image-20251011155459361.png)\n\n# 5）网关\n\n**概述**\n\n前端遇到多个服务所要写不同的请求端口 \n\nhttp://localhost:6601/order-test\n\nhttp://localhost:6602/order-test\n\nhttp://localhost:6603/order-test.....\n\n非常麻烦，用了网关后就能和之前单体服务的请求路径一样了\n\nhttp://localhost:网关端口/服务名/order-test.....\n\n这样一来后续还能负载均衡，同个服务根据调度规则分发请求\n\n- 统一入口端口，内部转发各个服务器\n\n## 5.1）配置过程\n\n1.新建网关服务（省略...）\n\n2.引入网关,nacos发现和配置依赖\n\n```xml\n        <!-- nacos-->\n        <dependency>\n            <groupId>com.alibaba.cloud</groupId>\n            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>\n        </dependency>\n        <dependency>\n            <groupId>com.alibaba.cloud</groupId>\n            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>\n        </dependency>\n\n        <!-- gateway-->\n        <dependency>\n            <groupId>org.springframework.cloud</groupId>\n            <artifactId>spring-cloud-starter-gateway</artifactId>\n        </dependency>\n        <dependency>\n            <groupId>org.springframework.cloud</groupId>\n            <artifactId>spring-cloud-starter-loadbalancer</artifactId>\n        </dependency>\n```\n\n3.服务注册nacos\n\n**application.yml**\n\n```yml\n# ====================================================================\n# Gateway Service 网关服务配置文件\n# ====================================================================\n\n# 服务器配置\n#server:\n#  port: 8800  # 网关服务端口号\n\n# Spring Boot 配置\nspring:\n  application:\n    name: gateway-service  # 服务名称，用于服务注册与发现\n\n  # 配置导入设置（Spring Cloud 2020+ 新特性）\n  config:\n    # 从Nacos配置中心导入配置文件\n    # optional: 表示配置文件不存在时不会导致启动失败\n    # nacos: 指定配置中心类型为Nacos\n    # gateway-service-dev.yml: 配置文件名（开发环境）\n    import: optional:nacos:gateway-service-dev.yml\n\n  # Spring Cloud 配置\n  cloud:\n    nacos:\n      # 服务发现配置\n      discovery:\n        server-addr: localhost:8848  # Nacos服务器地址\n\n      # 配置中心配置\n      config:\n        server-addr: localhost:8848  # Nacos配置中心地址\n        file-extension: yml          # 配置文件扩展名\n\n```\n\n**gateway-service-dev.yml**\n\n```yml\n# 服务器配置\nserver:\n  port: 8800  # 网关服务端口号\n```\n\n![image-20251011160829773](https://cdn.zww0891.fun/image-20251011160829773.png)\n\n4.nacos配置网关路由，规则  /服务ID/xxxx->具体服务\n\n```yml\nserver:\n  port: 8800\nspring:\n  redis:\n    host: localhost\n    port: 6379\n    #password: 123456  \n  cloud:\n    sentinel:\n      transport:\n        dashboard: localhost:8858\n        port: 8719  \n    gateway:\n      default-filters:\n        - AddRequestHeader=origin,gateway # 添加名为origin的请求头，值为gateway\n      globalcors:\n        cors-configurations:\n          \'[/**]\': # 匹配所有请求\n            allowedOrigins: \"*\" #跨域处理 允许所有的域\n            allowedMethods: # 支持的方法\n              - GET\n              - POST\n              - PUT\n              - DELETE\n      discovery:\n        locator:\n          enabled: true #开启注册中心路由功能\n      routes:  # 路由\n        - id: order-service #路由ID，没有固定要求，但是要保证唯一，建议配合服务名\n          uri: lb://order-service # 匹配提供服务的路由地址\n          predicates: # 断言\n            - Path=/order/** # 断言，路径相匹配进行路由\n        - id: payment-service #路由ID，没有固定要求，但是要保证唯一，建议配合服务名\n          uri: lb://payment-service # 匹配提供服务的路由地址\n          predicates: # 断言\n            - Path=/payment/** # 断言，路径相匹配进行路由\nconfig:\n  redisTimeout: 60\n```\n\n## 5.2）测试网关路由\n\n```java\n	/**\n     * TestController\n		测试网关路由\n     */\n@GetMapping(\"/order/add\")\npublic String addOrder() {\n    return \"成功根据网关路由到对应的服务！\";\n}\n```\n\n使用网关端口发送请求，查看是否有转发\n\n![image-20251011161916279](https://cdn.zww0891.fun/image-20251011161916279.png)\n\n# 6）网关鉴权\n\n## 6.1）思路\n\n1.写user-service服务，写登录方法拿token（固定返回一个，然后存到redis里）\n\n1.实现过滤器，重写方法，所有请求经过该方法\n\n2.请求获取请求头，拿到token与redis里的进行比对校验，过期则拦截，反之放行\n\n3.加入gateway路由规则\n\n## 6.2）相关依赖/配置文件\n\n### jwt（common-module）\n\n```xml\n<!-- jwt -->\n<dependency>\n    <groupId>com.auth0</groupId>\n    <artifactId>java-jwt</artifactId>\n    <version>4.4.0</version>\n</dependency>\n```\n\n### redis（common-module）\n\n```xml\n<dependency>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-data-redis</artifactId>\n</dependency>\n```\n\n### json序列器（common-module）\n\n```xml\n<!-- jackson -->\n        <dependency>\n            <groupId>com.fasterxml.jackson.core</groupId>\n            <artifactId>jackson-databind</artifactId>\n        </dependency>\n        <dependency>\n            <groupId>com.fasterxml.jackson.core</groupId>\n            <artifactId>jackson-core</artifactId>\n        </dependency>\n        <dependency>\n            <groupId>com.fasterxml.jackson.core</groupId>\n            <artifactId>jackson-annotations</artifactId>\n        </dependency>\n```\n\n\n\n### user-service配置文件\n\n**application.yml**\n\n```yml\nspring:\n  application:\n    name: user-service\n  config:\n    import: nacos:user-service-dev.yml\n  cloud:\n    nacos:\n      discovery:\n        server-addr: localhost:8848\n      config:\n        server-addr: localhost:8848\n        file-extension: yml\n\n```\n\n**user-service-dev.yml**\n\n```yml\nserver:\n  port: 5500\nspring:\n  cloud:\n    sentinel:\n      transport:\n        dashboard: localhost:8080\n        port: 8719\n  redis:\n    host: localhost\n    port: 6379\n    #password: 123456\nredis:\n  timeout: 60\n```\n\n**gateway-service-dev.yml**\n\n```yml\n- id: user-service #路由ID，没有固定要求，但是要保证唯一，建议配合服务名\n          uri: lb://user-service # 匹配提供服务的路由地址\n          predicates: # 断言\n            - Path=/user/** # 断言，路径相匹配进行路由\n```\n\n### redisConfig\n\n```\n\n```\n\n### gateway和userservice服务pom引入common\n\n```xml\n <!-- 公共模块依赖 -->\n        <dependency>\n            <groupId>com.zww0891</groupId>\n            <artifactId>common-module</artifactId>\n            <version>0.0.1-SNAPSHOT</version>\n        </dependency>\n```\n\n\n\n## 6.4）测试\n\n\n\n## 6.3）相关类\n\n### jwtUtil（common->util）\n\n```java\npackage com.ushio.commonmodule.entity.util;\n\n\nimport com.auth0.jwt.JWT;\nimport com.auth0.jwt.JWTCreator;\nimport com.auth0.jwt.JWTVerifier;\nimport com.auth0.jwt.algorithms.Algorithm;\nimport com.auth0.jwt.interfaces.Claim;\nimport com.auth0.jwt.interfaces.DecodedJWT;\n\nimport java.util.Date;\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class JwtUtil {\n    //用户的用户名\n    private static final String USERNAME = \"admin\";\n\n    //用于签名加密的密钥，为一个字符串（需严格保密）\n    private static final String KEY = \"token_key\";\n\n    private static final int TOKEN_TIME_OUT = 1000 * 60 * 60;\n\n    public static String getToken(String userId) {\n\n        //获取jwt生成器\n        JWTCreator.Builder jwtBuilder = JWT.create();\n\n        //由于该生成器设置Header的参数为一个<String, Object>的Map,\n        //所以我们提前准备好\n        Map<String, Object> headers = new HashMap<>();\n\n        headers.put(\"typ\", \"jwt\");   //设置token的type为jwt\n        headers.put(\"alg\", \"hs256\");  //表明加密的算法为HS256\n\n        //开始生成token\n        //我们将之前准备好的header设置进去\n        String token = jwtBuilder.withHeader(headers)\n\n                //接下来为设置PayLoad,Claim中的键值对可自定义\n\n                //设置用户id\n                .withClaim(\"userId\", userId)\n\n                //token失效时间，这里为一消失后失效\n                .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_TIME_OUT))\n                //设置该jwt的发行时间，一般为当前系统时间\n                .withIssuedAt(new Date(System.currentTimeMillis()))\n\n                //token的发行者（可自定义）\n                .withIssuer(USERNAME)\n\n                //进行签名，选择加密算法，以一个字符串密钥为参数\n                .sign(Algorithm.HMAC256(KEY));\n\n        //token生成完毕，可以发送给客户端了，前端可以使用\n        //localStorage.setItem(\"your_token\", token)进行存储，在\n        //下次请求时携带发送给服务器端进行验证\n        System.out.println(token);\n        return token;\n    }\n\n\n    public static boolean verify(String token) {\n\n        /*从请求头中获取token（具体要看你的token放在了请求的哪里，\n           这里以放在请求头举例）\n        */\n        //String token = request.getHeader(\"token\");\n\n        /*判断token是否存在，若不存在，验证失败，\n            并进行验证失败的逻辑操作（例如跳转到登录界面，\n            或拒绝访问等等）*/\n        if (token == null) return false;\n\n        /*获取jwt的验证器对象，传入的算法参数以及密钥字符串（KEY）必须\n        和加密时的相同*/\n        JWTVerifier require = JWT.require(Algorithm.HMAC256(KEY)).build();\n\n        DecodedJWT decode;\n        try {\n\n            /*开始进行验证，该函数会验证此token是否遭到修改，\n                以及是否过期，验证成功会生成一个解码对象\n                ，如果token遭到修改或已过期就会\n                抛出异常，我们用try-catch抓一下*/\n            decode = require.verify(token);\n\n        } catch (Exception e) {\n\n            //抛出异常，验证失败\n            return false;\n        }\n\n        //若验证成功，就可获取其携带的信息进行其他操作\n\n        //可以一次性获取所有的自定义参数，返回Map集合\n        Map<String, Claim> claims = decode.getClaims();\n        if (claims == null) return false;\n        claims.forEach((k, v) -> System.out.println(k + \" \" + v.asString()));\n\n        //也可以根据自定义参数的键值来获取\n        if (decode.getClaim(\"userId\") == null) return false;\n        System.out.println(decode.getClaim(\"userId\").toString());\n\n        //获取发送者，没有设置则为空\n        System.out.println(decode.getIssuer());\n\n        //获取过期时间\n        System.out.println(decode.getExpiresAt());\n\n        //获取主题，没有设置则为空\n        System.out.println(decode.getSubject());\n        return true;\n    }\n}\n```\n\n### UserController\n\n```java\n@RestController\n@RequestMapping(\"/user\")\npublic class UserController {\n    @Autowired\n    private RedisTemplate redisTemplate;\n\n    @Value(\"${redis.timeout}\")\n    private long redisTimeout ;\n\n    @PostMapping(\"/login\")\n    public String login() {\n        //1.TODO:账号密码校验成功...\n        // 2.生成token存入redis\n        String userId = \"666\";\n        String token = JwtUtil.getToken(userId);\n        redisTemplate.opsForValue().set(token,userId,redisTimeout, TimeUnit.SECONDS);\n        // 3.返回token\n        return token;\n    }\n}\n\n```\n\n### GlobalFilterConfig\n\n```java\npackage com.zww0891.gatewayservice.config;\n\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.cloud.gateway.filter.GatewayFilterChain;\nimport org.springframework.cloud.gateway.filter.GlobalFilter;\nimport org.springframework.core.Ordered;\nimport org.springframework.core.io.buffer.DataBuffer;\nimport org.springframework.data.redis.core.RedisTemplate;\nimport org.springframework.http.HttpStatus;\nimport org.springframework.http.server.reactive.ServerHttpRequest;\nimport org.springframework.http.server.reactive.ServerHttpResponse;\nimport org.springframework.stereotype.Component;\nimport org.springframework.web.server.ServerWebExchange;\nimport reactor.core.publisher.Mono;\n\nimport java.nio.charset.StandardCharsets;\nimport java.util.HashSet;\nimport java.util.Set;\n\n@Component\npublic class GlobalFilterConfig implements GlobalFilter, Ordered {\n    @Autowired\n    private RedisTemplate<String, Object> redisTemplate;\n\n    // 白名单路径集合，可根据实际需求添加更多路径\n    private static final Set<String> WHITE_LIST_PATHS = new HashSet<String>() {{\n        add(\"/user/login\");\n        add(\"/user/register\");\n        add(\"/api/public/health\");\n        add(\"/swagger-ui.html\");\n        add(\"/swagger-resources\");\n        add(\"/v3/api-docs\");\n        // 可以继续添加其他需要放行的路径\n    }};\n\n    @Override\n    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {\n        // 1. 接口白名单放行\n        ServerHttpRequest request = exchange.getRequest();\n        String path = request.getURI().getPath();\n\n        // 检查当前路径是否在白名单中\n        if (WHITE_LIST_PATHS.contains(path)) {\n            return chain.filter(exchange);\n        }\n\n        // 2. 从请求头获取Token\n        String token = request.getHeaders().getFirst(\"Access-Token\");\n\n        // 3. Token不存在的情况\n        if (token == null || token.trim().isEmpty()) {\n            return buildErrorResponse(exchange, HttpStatus.UNAUTHORIZED, \"Token不能为空\");\n        }\n\n        // 4. 验证Token是否在Redis中存在\n        System.out.println(\"🔍 Gateway验证Token: \" + token);\n        boolean hasKey = redisTemplate.hasKey(token);\n        System.out.println(\"🔍 Redis中是否存在该Token: \" + hasKey);\n        \n        if (!hasKey) {\n            System.out.println(\"❌ Token验证失败，Token不存在或已过期\");\n            return buildErrorResponse(exchange, HttpStatus.UNAUTHORIZED, \"无效的Token或Token已过期\");\n        }\n        \n        System.out.println(\"✅ Token验证通过，继续请求\");\n\n        // 5. Token验证通过，继续执行后续过滤器链\n        return chain.filter(exchange);\n    }\n\n    /**\n     * 构建错误响应\n     */\n    private Mono<Void> buildErrorResponse(ServerWebExchange exchange, HttpStatus status, String message) {\n        ServerHttpResponse response = exchange.getResponse();\n        response.setStatusCode(status);\n        response.getHeaders().add(\"Content-Type\", \"application/json;charset=UTF-8\");\n\n        String json = \"{\\\"code\\\":\" + status.value() + \",\\\"message\\\":\\\"\" + message + \"\\\"}\";\n        DataBuffer buffer = response.bufferFactory().wrap(json.getBytes(StandardCharsets.UTF_8));\n\n        return response.writeWith(Mono.just(buffer));\n    }\n\n    @Override\n    public int getOrder() {\n        return 0;\n    }\n}\n\n```\n\n### RedisConfig\n\n>user和gateway 的服务 在启动类要记得扫描\n>\n>```java\n>@SpringBootApplication(scanBasePackages = {\"com.zww0891.gatewayservice\", \"com.zww0891.commonmodule\"})\n>```\n>\n>\n\n```java\npackage com.zww0891.commonmodule.config;\n\nimport com.fasterxml.jackson.annotation.JsonAutoDetect;\nimport com.fasterxml.jackson.annotation.PropertyAccessor;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;\nimport org.springframework.context.annotation.Bean;\nimport org.springframework.context.annotation.Configuration;\nimport org.springframework.data.redis.connection.RedisConnectionFactory;\nimport org.springframework.data.redis.core.RedisTemplate;\nimport org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;\nimport org.springframework.data.redis.serializer.StringRedisSerializer;\n\n@Configuration\npublic class RedisConfig {\n\n    @Bean\n    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {\n        RedisTemplate<String, Object> template = new RedisTemplate<>();\n\n        template.setConnectionFactory(redisConnectionFactory);\n\n        //配置序列化方式 - 使用Spring Boot 3.0推荐的方式\n        // 创建自定义的ObjectMapper\n        ObjectMapper objectMapper = new ObjectMapper();\n        // 指定要序列化的域，field,get和set,以及修饰符范围，ANY是都有包括private和public\n        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);\n        // 指定序列化输入的类型，类必须是非final修饰的，final修饰的类，比如String,Integer等会抛出异常\n        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);\n        \n        // 使用自定义ObjectMapper创建序列化器，避免使用已弃用的setObjectMapper方法\n        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);\n\n        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();\n        \n        // key采用String的序列化方式\n        template.setKeySerializer(stringRedisSerializer);\n        // hash key采用String的序列化方式\n        template.setHashKeySerializer(stringRedisSerializer);\n        // value采用Jackson的序列化方式\n        template.setValueSerializer(jackson2JsonRedisSerializer);\n        // hash value也采用Jackson的序列化方式\n        template.setHashValueSerializer(jackson2JsonRedisSerializer);\n        \n        template.afterPropertiesSet();\n        return template;\n    }\n\n}\n\n```\n\n\n\n\n\n# 7）Sentinel熔断降级\n\n## 7.1）控制台安装\n\n版本对应1.8.6\n\n![image-20251011163151475](https://cdn.zww0891.fun/image-20251011163151475.png)\n\n[Releases · alibaba/Sentinel](https://github.com/alibaba/Sentinel/releases)\n\n**启动命令**\n\n```\njava -jar jar包名\n```\n\n**前端入口**\n\n[Sentinel Dashboard](http://localhost:8858/#/login)\n\n密码和账号都是sentinel\n\n>只有有请求才会有服务显示\n\n## 7.2）依赖\n\n```xml\n<!-- sentinel -->\n        <dependency>\n            <groupId>com.alibaba.cloud</groupId>\n            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>\n        </dependency>\n\n```\n\n网关服务需额外加的依赖，控制路由级别的熔断降级 \n\n```xml\n		<!---->\n        <dependency>\n            <groupId>com.alibaba.cloud</groupId>\n            <artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>\n        </dependency>\n\n```\n\n\n\n## 7.3）yml配置文件\n\n从属cloud下的组件，配置再cloud下\n\n![image-20251011165437681](https://cdn.zww0891.fun/image-20251011165437681.png)\n\n```yml\nspring:\n  redis:\n    host: localhost\n    port: 6379\n  cloud:\n    sentinel:\n      transport:\n        dashboard: localhost:8858 #看板的前端地址\n        port: 8719  #后台地址\n```\n\n\n\n## 7.4）网关/非网关服务配置流控规则\n\n**网关留空流控规则**\n\n![image-20251012160227835](https://cdn.zww0891.fun/image-20251012160227835.png)\n\napi类型可以按route id一个大类来分，也可以新建api分组对某个接口限流\n\nburst size就是上下浮动数\n\n匀速排队就是这个请求排队超时后直接中断\n\n**非网关流控规则**\n\n![image-20251012160926427](https://cdn.zww0891.fun/image-20251012160926427.png)\n\nwarm up就是前几个请求在规定的时间完成，慢慢的增加，前几个控制完速度后后续就不控制速度了\n\n好比100个请求，阈值为10，预热时长为3，那么前10个限制在3秒内才能发完，后90个无所谓\n\n## 7.5）熔断\n\n![image-20251012161630336](https://cdn.zww0891.fun/image-20251012161630336.png)\n\n慢调用比例，为0.5就是10个里有50%个慢调用超过设置的最大RT，则熔断\n\n请求数和统计时长就是规定时间内必须要达到指定的请求数量才生效\n\n\n\n```java\n    /**\n     * 慢调用\n     */\n    @GetMapping(\"/order/timeout\")\n    public void orderTimeout() {\n        try {\n            Thread.sleep(10000);\n        } catch (InterruptedException e) {\n            throw new RuntimeException(e);\n        }\n    }\n// 用于存储异常信息的列表\n    private List<Exception> exceptionList = new ArrayList<>();\n    // 异常计数器\n    private int exceptionCount = 0;\n    // 最大记录异常数量\n    private static final int MAX_EXCEPTION_COUNT = 5;\n   /**\n     * 异常比例 - 只记录前5个发生的异常\n     */\n    @GetMapping(\"/order/exception\")\n    public void exceptionProportion() {\n        try {\n            // 这里会产生算术异常\n            int i = 10 / 0;\n        } catch (Exception e) {\n            // 只记录前5个异常\n            if (exceptionCount < MAX_EXCEPTION_COUNT) {\n                exceptionList.add(e);\n                exceptionCount++;\n                System.out.println(\"已记录第\" + exceptionCount + \"个异常: \" + e.getMessage());\n            } else {\n                System.out.println(\"已达到最大异常记录数量(\" + MAX_EXCEPTION_COUNT + \")，不再记录新异常\");\n            }\n        }\n    }\n```\n\n## 7.6）热点参数\n\n![image-20251012165132100](https://cdn.zww0891.fun/image-20251012165132100.png)\n\n![image-20251012165115073](https://cdn.zww0891.fun/image-20251012165115073.png)\n\n- 资源名用@SentinelResource注解标明\n\n- 参数索引0为第一个参数\n\n\n\n意思就是传这个参数的请求多了就降级走别的方法（参数要一致，且要多一个BLockException）\n\n![image-20251012165511534](https://cdn.zww0891.fun/image-20251012165511534.png)\n\n还可以对参数值设置条件\n\n# 8）授权\n\n说白了就是只允许达到某个条件的请求进行请求\n\n## 8.1）网关服务统一加上请求头\n\n![image-20251012170754359](https://cdn.zww0891.fun/image-20251012170754359.png)\n\n```yml\ndefault-filters:\n        - AddRequestHeader=origin,gateway # 添加名为origin的请求头，值为gateway\n```\n\n## 8.2）提取请求头的值与授权的值比对\n\n在需要限制请求的服务里加入\n\n```java\npackage com.ushio.userservice.coinfig;\n\nimport com.alibaba.cloud.commons.lang.StringUtils;\nimport com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.RequestOriginParser;\nimport jakarta.servlet.http.HttpServletRequest;\nimport org.springframework.stereotype.Component;\n\n/**\n * Sentinel 请求来源解析器\n * 用于解析HTTP请求的来源，为Sentinel流量控制提供请求来源标识\n * 主要用于实现基于来源的流量控制和熔断降级\n */\n@Component\npublic class HeaderOriginParser implements RequestOriginParser {\n    \n    /**\n     * 解析请求来源\n     * 从HTTP请求头中获取\"origin\"字段作为请求来源标识\n     * \n     * @param httpServletRequest HTTP请求对象\n     * @return 请求来源标识，如果origin为空则返回\"blank\"\n     */\n    @Override\n    public String parseOrigin(HttpServletRequest httpServletRequest) {\n        // 从请求头中获取origin字段\n        String origin = httpServletRequest.getHeader(\"origin\");\n        \n        // 如果origin为空，返回默认标识\"blank\"\n        if(StringUtils.isEmpty(origin)) {\n            return \"blank\";\n        }\n        \n        // 返回实际的请求来源\n        return origin;\n    }\n}\n\n\n```\n\n返回实际来源，与sentinel控制台的比对，是否在白名单或者黑名单里\n\n![image-20251012171127498](https://cdn.zww0891.fun/image-20251012171127498.png)\n\n## 8.3）测试授权\n\n可以根据网关访问\n\n![image-20251012171152383](https://cdn.zww0891.fun/image-20251012171152383.png)\n\n不可直接访问\n\n![image-20251012171237844](https://cdn.zww0891.fun/image-20251012171237844.png)\n\n不过你也可以伪造，因此这个条件最好设置苛刻一点\n\n![image-20251012171306848](https://cdn.zww0891.fun/image-20251012171306848.png)\n\n# 9）ELK搭建', NULL, NULL, '2025-11-29 22:02:53', NULL);
+INSERT INTO `knowledge_point_content` VALUES (20, 17, '**考点：冯·诺依曼体系结构核心思想**\n\n*   **五大部件：** 运算器、控制器、存储器、输入设备、输出设备。\n*   **一句话：** “存储程序”，即程序和数据都以二进制的形式放在同一个存储器中。\n*   **例子：** 你电脑开机流程：\n    1.  **输入设备**（键盘鼠标）接受指令。\n    2.  **存储器**（内存）从硬盘加载操作系统程序和数据。\n    3.  **控制器**（CPU一部分）从内存逐条读取指令。\n    4.  **运算器**（CPU另一部分）执行计算（如1+1）。\n    5.  **输出设备**（显示器）显示结果。', NULL, NULL, '2025-11-30 12:47:55', NULL);
+INSERT INTO `knowledge_point_content` VALUES (21, 18, '### 考点：指令集体系结构分类（ISA - Instruction Set Architecture）\n![](https://cdn.zww0891.fun/image-20251130150612514-17644863949521.png)\n这题考的是**CPU处理数据时，数据存放在哪里的4种不同方式**。\n\n---\n\n### 核心概念\n\n**问题**：CPU做运算时，操作数（比如A、B这些数）存在哪？\n\n**4种方案**：\n\n### **(a) 堆栈结构（Stack）**\n\n- **数据存哪**：栈顶（TOS = Top of Stack）\n- **怎么用**：\n  - `PUSH A` - 把A压进栈\n  - `PUSH B` - 把B压进栈\n  - `ADD` - 自动取栈顶两个数相加\n  - `POP C` - 结果弹出给C\n- **大白话**：像叠盘子，只能操作最上面的\n\n### **(b) 累加器结构（Accumulator）**\n\n- **数据存哪**：累加器（黑色方块，专门存中间结果）\n- **怎么用**：\n  - `LOAD A` - 把A装进累加器\n  - `ADD B` - 累加器的值加上B\n  - `STORE C` - 累加器结果存到C\n- **大白话**：有个专用的草稿纸，所有计算都在这张纸上做\n\n### **(c) 通用寄存器-内存型（RM = Register-Memory）**\n\n- **数据存哪**：寄存器R1 + 内存\n- **怎么用**：\n  - `LOAD R1,A` - 把A装进R1\n  - `ADD R1,B` - R1加上内存里的B\n  - `STORE R1,C` - R1结果存到C\n- **大白话**：有多个小抽屉（寄存器），可以直接从大仓库（内存）拿东西算\n\n### **(d) 通用寄存器-寄存器型（RR = Register-Register）**\n\n- **数据存哪**：全在寄存器R1、R2、R3\n- **怎么用**：\n  - `LOAD R1,A` - A→R1\n  - `LOAD R2,B` - B→R2\n  - `ADD R3, R1, R2` - R1+R2→R3\n  - `STORE C` - R3→C\n- **大白话**：所有计算只在小抽屉之间搬，最快但抽屉数量有限\n\n---\n\n### 关键区别\n\n| 类型   | 操作数位置               | 指令数 | 速度 |\n| ------ | ------------------------ | ------ | ---- |\n| 堆栈   | 隐式（栈顶）             | 最少   | 慢   |\n| 累加器 | 1个固定位置              | 少     | 较慢 |\n| RM     | 一个在寄存器，一个在内存 | 中等   | 中等 |\n| RR     | 全在寄存器               | 多     | 最快 |\n\n**现代CPU多用RR结构**（比如x86的EAX、EBX等寄存器）。\n\n', NULL, NULL, '2025-11-30 14:59:17', '2025-11-30 15:55:58');
+INSERT INTO `knowledge_point_content` VALUES (22, 19, '![image-20251130150457756](https://cdn.zww0891.fun/image-20251130150457756.png)\n\n### 通用寄存器型指令集的3种结构\n\n**RR结构（Register-Register，寄存器-寄存器）**\n\n- 全称：Register-Register\n- 大白话：数据只能在寄存器之间操作，比如 `ADD R1, R2, R3`（把R2和R3加起来放到R1）\n- 特点：最快，但指令数量多（因为要先把数据从内存搬到寄存器）\n\n**RM结构（Register-Memory，寄存器-内存）**\n\n- 全称：Register-Memory  \n- 大白话：一个操作数在寄存器，另一个可以直接从内存拿，比如 `ADD R1, [内存地址]`\n- 特点：折中方案，指令少一些但速度也还行\n\n**MM结构（Memory-Memory，内存-内存）**\n\n- 全称：Memory-Memory\n- 大白话：操作数直接从内存到内存，不用经过寄存器\n- 特点：指令最少，但最慢（内存访问慢）\n\n### 指令中的操作数类型\n\n**常数**：直接写在指令里的数字，比如 `ADD R1, 5`（把5加到R1上）\n\n**寄存器操作数**：数据在CPU内部的小格子（寄存器）里，读取超快\n\n**存储器操作数**：数据在内存（RAM）里，需要通过地址去取\n\n### CISC和RISC的设计理念\n\n**CISC（Complex Instruction Set Computer，复杂指令集计算机）**\n\n- 全称：Complex Instruction Set Computer\n- 大白话：**指令功能超强，一条指令能干很多事**\n- 设计思路：让硬件干更多活，程序员写代码更轻松\n- 举例：一条指令能完成\"从内存读数据→计算→写回内存\"全流程\n- 问题：**指令太复杂，硬件执行慢，CPI（每条指令的时钟周期）大**\n\n**RISC（Reduced Instruction Set Computer，精简指令集计算机）**\n\n- 全称：Reduced Instruction Set Computer\n- 大白话：**指令功能简单，但执行超快**\n- 设计思路：指令越简单，硬件执行越快\n- 特点：指令数量少、功能简单、大部分一个时钟周期完成\n- 举例：要完成上面的事需要3条指令：`LOAD`→`ADD`→`STORE`\n\n### CISC指令集的优化方法（面向目标程序）\n\n**核心思想**：分析程序运行情况，找出**高频指令**和**耗时指令**，然后针对性优化\n\n**两种优化策略**：\n\n1. **使用频度高的指令→用硬件加速**\n   - 发现某条指令天天用，就把它做成专门的硬件电路\n   - 好处：执行超快\n\n2. **使用频度高的指令串→合并成一条新指令**\n   - 发现某几条指令总是一起出现（比如\"数组访问\"总是要算地址→读数据），就把它们合并成一条超级指令\n   - 好处：减少指令数量，程序更短，执行更快\n\n**效果**：\n\n- 程序执行时间变短\n- 程序代码长度变短（因为一条指令能干多件事）', NULL, NULL, '2025-11-30 15:29:46', '2025-11-30 15:55:49');
+INSERT INTO `knowledge_point_content` VALUES (23, 20, '![image-20251130154856577](https://cdn.zww0891.fun/image-20251130154856577.png)\n### 寄存器寻址\n\n- 大白话：**数据直接在CPU内部的小盒子（寄存器）里**\n- 实例：`Add R4, R3` \n- 含义：把R3寄存器的值加到R4寄存器上\n- 特点：最快，因为数据就在CPU内部\n\n### 立即值寻址（Immediate Addressing）\n\n- 大白话：**数据直接写在指令里，是个固定数字**\n- 实例：`Add R4, #3`\n- 含义：把数字3直接加到R4寄存器上\n- 特点：数据是\"写死\"的，不能变\n\n### 偏移寻址（Displacement Addressing）\n\n- 大白话：**基地址+偏移量=真实地址**，像门牌号+楼层号\n- 实例：`Add R4, 100(R1)`\n- 含义：从内存地址（R1寄存器的值+100）取数据，加到R4上\n- 应用：访问数组、结构体成员\n\n### 寄存器间接寻址（Register Indirect Addressing）\n\n- 大白话：**寄存器里存的不是数据，而是数据的地址**，像地址本\n- 实例：`Add R4, (R1)`\n- 含义：R1寄存器存的是内存地址，从那个地址取数据加到R4上\n- 特点：多了一次\"查地址本\"的步骤\n\n### 索引寻址（Indexed Addressing）\n\n- 大白话：**基址+两个偏移量**，像\"几号楼+几单元+几层\"\n- 实例：`Add R3, (R1 + R2)`\n- 含义：从内存地址（R1+R2）取数据，加到R3上\n- 应用：二维数组访问，R1是行基址，R2是列偏移\n\n\n\n>### 索引寻址的二维数组访问详解\n>\n>**生活中的类比**：\n>\n>- 想象一个**小区停车场**，有很多排车位\n>- 每排有很多个车位\n>- 你要找到具体的车位，需要：**第几排 + 这排的第几个位置**\n>\n>**技术原理**：\n>假设有个二维数组 `int arr[3][4]`（3行4列的整数数组）\n>\n>```\n>内存布局：\n>行0: [10][20][30][40]  ← 内存地址1000开始\n>行1: [50][60][70][80]  ← 内存地址1016开始  \n>行2: [90][91][92][93]  ← 内存地址1032开始\n>```\n>\n>**访问 arr[1][2]（第1行第2列的元素70）**：\n>\n>1. **R1存行基址**：\n>   - 数组起始地址：1000\n>   - 第1行的起始地址 = 1000 + 1×(4×4) = 1016\n>   - R1 = 1016\n>\n>2. **R2存列偏移**：\n>   - 第2列的偏移 = 2×4 = 8字节\n>   - R2 = 8\n>\n>3. **最终地址**：\n>   - 地址 = R1 + R2 = 1016 + 8 = 1024\n>   - 从地址1024取出数据70\n>\n>**为什么这样设计**：\n>\n>- **R1（行基址）**：帮你快速跳到正确的\"排\"\n>- **R2（列偏移）**：帮你在这排里找到正确的\"位置\"\n>- **一条指令搞定**：不用先算行地址，再算列地址\n>\n>**实际应用场景**：\n>\n>```c\n>// C代码：访问二维数组\n>int matrix[10][20];\n>int value = matrix[i][j];\n>\n>// 对应的汇编可能是：\n>// R1 = 数组基址 + i*20*4  (行基址)\n>// R2 = j*4                (列偏移)  \n>// Add R3, (R1 + R2)       (取数据)\n>```\n>\n>**总结**：索引寻址就是用两个寄存器配合，一个定位\"大概位置\"，另一个定位\"精确偏移\"，特别适合处理表格类数据。\n>\n>\n\n### 直接绝对寻址（Direct Absolute Addressing）\n\n- 大白话：**直接给出内存的具体门牌号**\n- 实例：`Add R1, (1001)`\n- 含义：从内存地址1001取数据，加到R1上\n- 特点：地址是写死的，通常用于访问全局变量\n\n### 存储器间接寻址（Memory Indirect Addressing）\n\n- 大白话：**地址的地址**，像\"地址本的地址\"，要查两次\n- 实例：`Add R1, @(R3)`\n- 含义：R3指向的内存位置存的是另一个地址，从那个地址取数据\n- 应用：指针的指针，函数指针表\n\n### 自增寻址（Post-increment Addressing）\n\n- 大白话：**用完地址后自动+1，像自动翻页**\n- 实例：`Add R1, (R2)+`\n- 含义：\n  - 从R2指向的地址取数据加到R1\n  - 然后R2自动加上数据长度d（比如4字节）\n- 应用：遍历数组，每次处理下一个元素\n\n### 自减寻址（Pre-decrement Addressing）\n\n- 大白话：**用地址前先-1，像先退一格再使用**\n- 实例：`Add R1, -(R2)`\n- 含义：\n  - R2先减去数据长度d\n  - 然后从新地址取数据加到R1\n- 应用：堆栈操作，压栈时使用\n\n### 缩放寻址（Scaled Addressing）\n\n- 大白话：**索引值要乘个倍数**，像\"每层有d个房间\"\n- 实例：`Add R1, 100(R2)[R3]`\n- 含义：从地址（R1 + 100 + R2 + R3×d）取数据\n- 应用：访问不同大小的数据类型数组\n- 解释：d是数据类型大小，int是4，char是1\n\n**重点总结**：\n\n- 寄存器寻址最快\n- 立即值寻址数据固定\n- 间接寻址要多查一次内存，较慢\n- 自增/自减寻址适合循环操作\n- 缩放寻址处理不同大小的数据类型\n\n', NULL, NULL, '2025-11-30 15:48:27', '2025-11-30 15:55:40');
+INSERT INTO `knowledge_point_content` VALUES (24, 21, '### 指令集结构的4个基本要求\n\n**完整性**\n\n- 大白话：**指令要够全，什么活都能干**\n- 解释：加减乘除、内存操作、跳转判断，该有的都得有，不能缺功能\n\n**规整性** \n\n- 大白话：**指令格式要统一，不能乱七八糟**\n- 解释：同类指令的写法要一致，程序员容易记忆和使用\n\n**高效率**\n\n- 大白话：**常用的指令要快，执行效率要高**\n- 解释：经常用的指令优先优化，让程序跑得快\n\n**兼容性**\n\n- 大白话：**新CPU要能运行老程序**\n- 解释：升级硬件时，以前的软件还能用，不用重新开发\n\n### 控制流指令（改变程序执行顺序的指令）\n\n**条件分支**：\n\n- 大白话：**\"如果...就...\"的判断跳转**\n- 例子：if (a > b) 跳到某个地方\n\n**跳转**：\n\n- 大白话：**无条件直接跳到指定位置**\n- 例子：goto语句，直接跳转\n\n**过程调用**：\n\n- 大白话：**调用函数，执行完再回来**\n- 例子：调用一个计算函数\n\n**过程返回**：\n\n- 大白话：**函数执行完，回到调用的地方继续**\n- 例子：函数的return语句\n\n### 基本汇编指令\n\n**LOAD指令**：\n\n- 大白话：**从内存搬数据到寄存器**，像\"从仓库拿货到柜台\"\n- 作用：把存储器里的数据加载到寄存器，方便CPU处理\n\n**STORE指令**：\n\n- 大白话：**从寄存器写数据到内存**，像\"把柜台的货存到仓库\"  \n- 作用：把寄存器的数据保存到存储器里，进行持久存储\n\n**MOV指令（Move传送指令）**：\n\n- 全称：Move\n- 大白话：**数据搬家，从一个地方移到另一个地方**\n- 功能：可以在寄存器之间、寄存器与内存之间、立即数与寄存器/内存之间传送数据\n\n**PUSH指令（入栈指令）**：\n\n- 全称：Push onto the stack\n- 大白话：**把数据压到堆栈顶部**，像\"往盒子里放东西\"\n- 工作原理：\n  - 堆栈指针（SP，Stack Pointer）会自动调整\n  - 16位数据：SP减2\n  - 32位数据：SP减4\n  - 这样确保新数据放在正确位置，不会覆盖旧数据\n\n**堆栈的概念**：\n\n- 大白话：**后进先出的数据结构**，像一摞盘子，最后放的最先拿出来\n- SP（Stack Pointer）：**堆栈指针**，永远指向堆栈顶部，告诉CPU下一个数据放哪里', NULL, NULL, '2025-11-30 15:54:56', '2025-11-30 15:55:34');
+INSERT INTO `knowledge_point_content` VALUES (25, 22, '\n\n![image-20251130155658249](https://cdn.zww0891.fun/image-20251130155658249.png)\n\n**大白话**：**把复杂工作拆成多个简单步骤，每个步骤专人负责，大家同时干活**\n\n**生活类比**：\n\n- 像汽车装配线：A工人装轮子，B工人装发动机，C工人装座椅\n- 不用等一辆车完全装完再装下一辆，而是**同时装多辆车的不同部分**\n- 这样效率比一个人装完整辆车高很多\n\n**计算机中**：\n\n- 把一条指令的执行过程分解成多个子过程\n- 每个子过程由专门的功能部件完成\n- 多条指令可以**同时在不同阶段执行**\n\n### 5级流水线的各个阶段\n\n**IF（Instruction Fetch，取指令）**：\n\n- 全称：Instruction Fetch\n- 大白话：**从内存里拿指令**，像从菜谱上看下一道菜怎么做\n\n**ID（Instruction Decode，译码）**：\n\n- 全称：Instruction Decode  \n- 大白话：**理解指令的意思**，像看懂菜谱说的是炒菜还是煮菜\n\n**EXE（Execute，执行）**：\n\n- 全称：Execute\n- 大白话：**真正干活**，进行计算、比较等操作，像真正开始炒菜\n\n**MEM（Memory Access，存储器访问）**：\n\n- 全称：Memory Access\n- 大白话：**读写内存**，需要的话从内存取数据或存数据\n\n**WB（Write Back，写回）**：\n\n- 全称：Write Back\n- 大白话：**把结果保存起来**，把计算结果写回寄存器\n\n\n\n>### 5级流水线各阶段举例\n>\n>**例子：执行指令 `ADD R1, R2, R3`（R1 = R2 + R3）**\n>\n>**IF阶段**：\n>\n>- 从内存地址1000取出指令 `ADD R1, R2, R3`\n>\n>**ID阶段**：\n>\n>- 解析指令：这是加法运算\n>- 确定操作数：需要读R2和R3寄存器，结果写入R1\n>\n>**EXE阶段**：\n>\n>- 从R2取值：5\n>- 从R3取值：3  \n>- 计算：5 + 3 = 8\n>\n>**MEM阶段**：\n>\n>- 这条ADD指令不需要访问内存（直接跳过）\n>- 如果是LOAD指令，这里会读内存\n>\n>**WB阶段**：\n>\n>- 把计算结果8写入R1寄存器\n>\n>**时间线展示**：\n>\n>```\n>时钟1: ADD指令在IF阶段\n>时钟2: ADD指令在ID阶段，下一条指令在IF阶段  \n>时钟3: ADD指令在EXE阶段，下一条在ID，第3条在IF\n>时钟4: ADD指令在MEM阶段...\n>时钟5: ADD指令在WB阶段完成\n>```\n>\n>**核心**：一条指令需要5个时钟周期完成，但每个时钟周期都能开始一条新指令！\n\n### 流水线的特点\n\n**并行处理**：\n\n- **同一时刻可以处理多条指令**\n- 第1条指令在执行时，第2条在译码，第3条在取指令\n\n>### 并行处理举例\n>\n>**3条指令**：\n>\n>1. `ADD R1, R2, R3`\n>2. `SUB R4, R5, R6` \n>3. `MUL R7, R8, R9`\n>\n>**时钟周期3的状态**：\n>\n>| 指令    | 当前阶段    | 在做什么             |\n>| ------- | ----------- | -------------------- |\n>| ADD指令 | **EXE阶段** | 正在计算 R2+R3       |\n>| SUB指令 | **ID阶段**  | 正在解析减法指令     |\n>| MUL指令 | **IF阶段**  | 正在从内存取乘法指令 |\n>\n>**关键点**：\n>\n>- **同一时刻**，CPU的3个不同部件在干3件不同的事\n>- 像3个工人在流水线上：工人A在炒菜，工人B在洗菜，工人C在买菜\n>- **效率提升**：本来要9个时钟周期完成3条指令，现在7个时钟周期就完成了\n>\n>**简单理解**：CPU不再\"一心一意\"处理一条指令，而是\"一心三用\"同时推进多条指令！\n\n**各段时间相等**：\n\n- **每个阶段用时差不多**，否则会有瓶颈\n- 就像流水线上每个工位的工作时间要平衡\n\n**连续不断**：\n\n- **需要源源不断的任务输入**\n- 如果没有新指令，流水线就空了，效率下降\n\n**流水线寄存器**：\n\n- **每个阶段后面都有缓存器**\n- 临时存储这一级的结果，传给下一级\n\n**适合重复任务**：\n\n- **大量相似指令处理效率最高**\n- 就像生产线适合批量生产同类产品\n\n**需要通畅和排空**：\n\n- **通畅**：流水线刚开始时，要几个时钟周期才能满载\n- **排空**：流水线结束时，要等最后几条指令完成\n\n**流水线的瓶颈**：\n\n- 最慢的那个阶段决定整体速度\n- 如果某个阶段特别慢，其他阶段要等它', NULL, NULL, '2025-11-30 16:06:22', '2025-11-30 16:31:27');
+INSERT INTO `knowledge_point_content` VALUES (26, 23, '**单功能流水线 vs 多功能流水线**：\n\n- **单功能例子**：专门做浮点加法的流水线，只能处理 `3.14 + 2.5` 这种运算\n- **多功能例子**：可以做加法、乘法、除法的流水线，既能算 `3+5`，又能算 `3×5`\n\n**静态流水线 vs 动态流水线**：\n\n- **静态例子**：汽车装配线，永远是装轮子→装发动机→装座椅，顺序不能变\n- **动态例子**：智能厨房，根据菜品不同可以调整：炒菜（洗→切→炒），煮面（烧水→下面→调味）\n\n**部件级、处理器级、处理机间流水线**：\n\n- **部件级例子**：CPU内部的5级流水线（IF→ID→EXE→MEM→WB）\n- **处理器级例子**：4核CPU，第1核处理指令1，第2核处理指令2\n- **处理机间例子**：谷歌搜索，服务器A爬网页，服务器B建索引，服务器C排序\n\n**线性流水线 vs 非线性流水线**：\n\n- **线性例子**：快餐店：点餐→制作→打包→取餐，一条直线\n- **非线性例子**：洗衣服：洗→烘干→折叠，但如果没干净要回到\"洗\"这步\n\n**按序流水线 vs 乱序流水线**：\n\n- **按序例子**：银行排队，必须按号码顺序办业务\n- **乱序例子**：餐厅出菜，哪道菜先做好先上，不按点菜顺序', NULL, NULL, '2025-11-30 17:01:11', NULL);
+INSERT INTO `knowledge_point_content` VALUES (27, 24, '### 时空图\n\n1.画xy轴，y段x为Δt\n\n2.展开连加/乘号表示多轮，x轴写入输出，y轴填充段的单元时间占位方块\n\n3.最后一个段右边的边画箭头，表示这一轮的计算输出\n\n4.同轮内部串行，轮外并行，轮与轮之间隔得Δt为瓶颈段大小，也就是最大的耗时时间，按此规则完成其他几轮操作\n\n5.执行第二个类型的操作（加/乘）如果是静态流水线，则在最后一轮任务完成后才能执行，才能有新的段占位方块\n\n6.如果数据间没有依赖关系，则并行，有依赖则要在该数据输出后才能进行新的一轮计算\n\n7.最后可以根据图表进行计算吞吐率，效率，加速比\n\n>\n>\n>**大白版本**\n>\n>### 绘图步骤\n>\n>**步骤1：画坐标轴**\n>\n>- 横轴(x)：时间Δt\n>- 纵轴(y)：流水线各段（从下到上：取指→译码→执行）\n>\n>**步骤2：填充方块**\n>\n>- 在对应时间和段的位置画方块\n>- 方块内标注任务编号\n>\n>**步骤3：标记输出**\n>\n>- 在最后一个段的右边画箭头\n>- 箭头表示该任务完成输出\n>\n>**步骤4：确定任务间隔**\n>\n>- 同轮内部：串行执行（一个任务的各段按顺序）\n>- 轮外并行：多个任务同时在不同段\n>- 间隔时间：由瓶颈段（最慢的段）决定  （==**不同轮的同段的最左边线相隔的距离**==）\n>\n>**步骤5：处理静态流水线**\n>\n>- 完成第一类操作后才能开始第二类操作\n>- 必须等流水线排空\n>\n>**步骤6：处理数据依赖**\n>\n>- 无依赖：可以并行启动\n>- 有依赖：必须等待前置任务输出后才能开始\n>\n>**步骤7：性能计算**\n>\n>- 根据图表计算：吞吐量、效率、加速比\n>\n>### 关键点\n>\n>- **瓶颈段 = 最大的Δt** → 决定任务启动间隔\n>- **数据依赖 = 必须等待** → 影响任务启动时间\n>- **静态流水线 = 必须排空** → 不同操作不能混合\n\n### 吞吐率，加速比，效率\n\nTP=总任务/总时间\n\n加速比=总方块数（各类型的段数*任务数相加）/总时间\n\n效率=总方块数（各类型的段数\\*任务数相加）/总时间*总段数\n\n\n\n### 例题\n\n**1.静态**\n\n![image-20251201164809188](https://cdn.zww0891.fun/image-20251201164809188.png)\n\n**2.动态**\n\n![image-20251201164737438](https://cdn.zww0891.fun/image-20251201164737438.png)', NULL, NULL, '2025-11-30 17:13:50', '2025-12-01 16:57:49');
+INSERT INTO `knowledge_point_content` VALUES (28, 25, '\n\n### 什么是相关？\n\n**大白话**：两条指令之间有\"扯不清的关系\"，后面的指令依赖前面指令的结果\n\n**生活例子**：\n\n- 你要先烧水，再泡茶 → 泡茶依赖烧水的结果\n- 这两个动作就是\"相关\"的\n\n### 三种相关类型\n\n#### 数据相关（真数据相关）：写后读（RAW）\n\n**RAW全称**：**Read After Write（写后读）**\n\n**大白话**：后面的指令要读前面指令写的数据\n\n**代码段1例子**：\n\n```assembly\nL.D  F0, 0(R1)      # 第1条：把内存数据加载到F0（写F0）\nADD.D F4, F0, F2    # 第2条：用F0来计算（读F0）\n```\n\n**相关分析**：\n\n- 第1条指令**写F0**\n- 第2条指令**读F0**\n- 必须等第1条写完F0，第2条才能读F0\n- 否则读到的是旧数据，结果错误！\n\n**生活例子**：\n\n- 厨师A炒好菜放盘子里（写盘子）\n- 服务员B端盘子上菜（读盘子）\n- B必须等A炒好才能端，否则端空盘子\n\n---\n\n#### 名相关：WAR（读后写）和WAW（写后写）\n\n**名相关大白话**：两条指令用了同一个\"名字\"（寄存器），但其实没真正的数据依赖，只是名字冲突\n\n##### WAR（读后写）\n\n**WAR全称**：**Write After Read（读后写）**\n\n**大白话**：后面的指令要写，前面的指令要读，用的是同一个寄存器\n\n**代码段2例子**：\n\n```assembly\nDIV.D F2, F6, F4     # 第1条：读F6（用F6来计算）\nADD.D F6, F0, F12    # 第2条：写F6（把结果存到F6）\n```\n\n**相关分析**：\n\n- 第1条**读F6**\n- 第2条**写F6**\n- 如果第2条先执行，F6被改了，第1条读到的就是错的\n\n**生活例子**：\n\n- 学生A抄黑板上的题目（读黑板）\n- 老师B要擦黑板写新题（写黑板）\n- B必须等A抄完才能擦，否则A抄错\n\n##### WAW（写后写）\n\n**WAW全称**：**Write After Write（写后写）**\n\n**大白话**：两条指令都要写同一个寄存器\n\n**代码段2例子**：\n\n```assembly\nDIV.D F2, F6, F4     # 第1条：写F2\nADD.D S₁, F0, F12    # 第2条：也写F2（如果S₁就是F2）\n```\n\n**相关分析**：\n\n- 两条指令都写F2\n- 如果顺序乱了，最终F2的值就错了\n- 必须保证最后写的是第2条的结果\n\n**生活例子**：\n\n- 两个人都要往同一个文件里写内容\n- 后写的会覆盖先写的\n- 顺序错了，最终内容就错了\n\n---\n\n#### 控制相关\n\n**大白话**：**分支指令（if判断、跳转）导致的相关**\n\n**解释**：\n\n- 分支指令会根据条件决定跳不跳\n- 后面的指令能不能执行，取决于分支结果\n- 在分支执行完之前，不知道该不该执行后面的指令\n\n**代码段2和3的控制相关**：\n\n```assembly\nDIV.D F2, F6, F4      # 除法指令\nADD.D S₁, F0, F12     # 如果S₁是条件码，影响分支\nSUB.D F8, S₁, F14     # 根据S₁的值决定是否执行\n```\n\n**相关分析**：\n\n- S₁（条件码）决定后面指令执不执行\n- 必须等ADD.D算完S₁，才知道SUB.D要不要做\n\n**生活例子**：\n\n- 看天气决定出不出门（分支判断）\n- 如果出门，就要穿衣服、带伞（后续指令）\n- 不看天气就不知道该不该穿衣服\n\n---\n\n### 三种相关对比表\n\n| 相关类型          | 全称              | 前指令   | 后指令   | 问题           | 例子      |\n| ----------------- | ----------------- | -------- | -------- | -------------- | --------- |\n| **数据相关(RAW)** | Read After Write  | 写X      | 读X      | 读到旧值       | 写F0→读F0 |\n| **名相关(WAR)**   | Write After Read  | 读X      | 写X      | 读到新值       | 读F6→写F6 |\n| **名相关(WAW)**   | Write After Write | 写X      | 写X      | 最终值错       | 写F2→写F2 |\n| **控制相关**      | Control Hazard    | 分支指令 | 普通指令 | 不知道执不执行 | 判断→执行 |\n\n---\n\n### 关键理解\n\n**数据相关（RAW）**：真的需要数据，必须等\n**名相关（WAR/WAW）**：只是名字冲突，可以通过重命名解决\n**控制相关**：不知道走哪条路，需要分支预测\n\n**解决方法预告**：\n\n- RAW：插入气泡、数据前推\n- WAR/WAW：寄存器重命名\n- 控制相关：分支预测、延迟槽', NULL, NULL, '2025-12-01 17:55:10', NULL);
+
+-- ----------------------------
+-- Table structure for knowledge_point_tag
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_point_tag`;
+CREATE TABLE `knowledge_point_tag`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `point_id` bigint(20) NOT NULL COMMENT '知识点ID',
+  `tag_id` bigint(20) NOT NULL COMMENT '标签ID',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_point_tag`(`point_id`, `tag_id`) USING BTREE,
+  INDEX `idx_tag_id`(`tag_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点标签关联表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_point_tag
+-- ----------------------------
+INSERT INTO `knowledge_point_tag` VALUES (1, 1, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (2, 1, 3, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (3, 2, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (4, 2, 5, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (5, 3, 2, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (6, 3, 3, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (7, 4, 5, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (8, 4, 7, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (9, 5, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (10, 5, 2, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (11, 6, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (12, 6, 7, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (13, 7, 5, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (14, 7, 8, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (15, 7, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (16, 7, 3, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (17, 8, 1, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_point_tag` VALUES (18, 8, 8, '2025-11-29 11:29:16');
+
+-- ----------------------------
+-- Table structure for knowledge_question_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_question_relation`;
+CREATE TABLE `knowledge_question_relation`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `point_id` bigint(20) NOT NULL COMMENT '知识点ID',
+  `question_id` bigint(20) NOT NULL COMMENT '题目ID',
+  `relevance` tinyint(1) NULL DEFAULT 2 COMMENT '相关度（1-弱相关 2-相关 3-强相关）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_point_question`(`point_id`, `question_id`) USING BTREE,
+  INDEX `idx_point_id`(`point_id`) USING BTREE,
+  INDEX `idx_question_id`(`question_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点与题目关联表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_question_relation
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for knowledge_subject
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_subject`;
+CREATE TABLE `knowledge_subject`  (
+  `subject_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '科目ID',
+  `subject_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '科目名称',
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '科目描述',
+  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '科目图标URL',
+  `sort_order` int(11) NULL DEFAULT 0 COMMENT '排序（数字越小越靠前）',
+  `status` tinyint(1) NULL DEFAULT 1 COMMENT '状态（0-停用 1-启用）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建者',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`subject_id`) USING BTREE,
+  INDEX `idx_status_sort`(`status`, `sort_order`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点科目表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_subject
+-- ----------------------------
+INSERT INTO `knowledge_subject` VALUES (1, '计算机组成原理', '介绍计算机系统的组成、工作原理及性能评价', NULL, 1, 1, 'admin', '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_subject` VALUES (2, '数据结构', '研究数据的逻辑结构、存储结构及算法', NULL, 2, 1, 'admin', '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_subject` VALUES (3, '操作系统', '管理计算机硬件与软件资源的系统软件', NULL, 3, 1, 'admin', '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_subject` VALUES (4, '计算机网络', '介绍计算机网络的体系结构、协议及应用', NULL, 4, 1, 'admin', '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_subject` VALUES (5, '数据库原理', '数据库系统的概念、设计、管理与应用', NULL, 5, 1, 'admin', '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_subject` VALUES (6, '软件工程', '软件开发方法、项目管理与质量保证', NULL, 6, 1, 'admin', '2025-11-29 11:29:16', NULL, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_subject` VALUES (7, 'lll', '', NULL, 0, 1, 'test666', '2025-11-29 15:27:25', NULL, '2025-11-29 15:27:25');
+INSERT INTO `knowledge_subject` VALUES (8, '计算机系统结构', '', NULL, 0, 1, 'test666', '2025-11-29 17:35:01', NULL, '2025-11-29 17:35:01');
+INSERT INTO `knowledge_subject` VALUES (9, 'markdown', NULL, NULL, 0, 1, 'test666', '2025-11-29 21:45:40', NULL, '2025-11-29 21:45:40');
+INSERT INTO `knowledge_subject` VALUES (11, '微服务', NULL, NULL, 0, 1, 'test666', '2025-11-29 22:02:47', NULL, '2025-11-29 22:02:47');
+
+-- ----------------------------
+-- Table structure for knowledge_tag
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_tag`;
+CREATE TABLE `knowledge_tag`  (
+  `tag_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '标签ID',
+  `tag_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标签名称',
+  `tag_color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '#409EFF' COMMENT '标签颜色',
+  `use_count` int(11) NULL DEFAULT 0 COMMENT '使用次数',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`tag_id`) USING BTREE,
+  UNIQUE INDEX `uk_tag_name`(`tag_name`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点标签表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_tag
+-- ----------------------------
+INSERT INTO `knowledge_tag` VALUES (1, '重点', '#f56c6c', 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_tag` VALUES (2, '难点', '#e6a23c', 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_tag` VALUES (3, '高频考点', '#ff6600', 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_tag` VALUES (4, '易错点', '#909399', 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_tag` VALUES (5, '基础', '#67c23a', 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_tag` VALUES (6, '进阶', '#409eff', 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_tag` VALUES (7, '面试常考', '#ff0066', 0, '2025-11-29 11:29:16');
+INSERT INTO `knowledge_tag` VALUES (8, '实战应用', '#00ccff', 0, '2025-11-29 11:29:16');
+
+-- ----------------------------
+-- Table structure for knowledge_version
+-- ----------------------------
+DROP TABLE IF EXISTS `knowledge_version`;
+CREATE TABLE `knowledge_version`  (
+  `version_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '版本ID',
+  `point_id` bigint(20) NOT NULL COMMENT '知识点ID',
+  `version` int(11) NOT NULL COMMENT '版本号',
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '内容',
+  `edit_type` tinyint(1) NULL DEFAULT 2 COMMENT '编辑类型（1-创建 2-修改 3-删除）',
+  `edit_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '编辑者',
+  `edit_remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '编辑说明',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`version_id`) USING BTREE,
+  INDEX `idx_point_version`(`point_id`, `version`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '知识点版本历史表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of knowledge_version
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for qrtz_blob_triggers
@@ -2162,6 +3521,29 @@ CREATE TABLE `qrtz_triggers`  (
 -- ----------------------------
 -- Records of qrtz_triggers
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for question_knowledge_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `question_knowledge_relation`;
+CREATE TABLE `question_knowledge_relation`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `question_id` bigint(20) NOT NULL COMMENT '题目ID',
+  `knowledge_point_id` bigint(20) NOT NULL COMMENT '知识点ID',
+  `relation_type` tinyint(4) NULL DEFAULT 1 COMMENT '关联类型：1-主要考点 2-次要考点',
+  `reason` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关联原因',
+  `create_time` datetime NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_question_knowledge`(`question_id`, `knowledge_point_id`) USING BTREE,
+  INDEX `idx_question_id`(`question_id`) USING BTREE,
+  INDEX `idx_knowledge_id`(`knowledge_point_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '题目知识点关联表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of question_knowledge_relation
+-- ----------------------------
+INSERT INTO `question_knowledge_relation` VALUES (6, 160, 15, 1, NULL, '2025-11-29 22:07:36', 'admin');
 
 -- ----------------------------
 -- Table structure for sys_config
@@ -2412,8 +3794,11 @@ CREATE TABLE `sys_logininfor`  (
   `login_time` datetime NULL DEFAULT NULL COMMENT '访问时间',
   PRIMARY KEY (`info_id`) USING BTREE,
   INDEX `idx_sys_logininfor_s`(`status`) USING BTREE,
-  INDEX `idx_sys_logininfor_lt`(`login_time`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 566 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
+  INDEX `idx_sys_logininfor_lt`(`login_time`) USING BTREE,
+  INDEX `idx_login_time`(`login_time`) USING BTREE COMMENT '登录时间索引',
+  INDEX `idx_user_name`(`user_name`) USING BTREE COMMENT '用户名索引',
+  INDEX `idx_status_time`(`status`, `login_time`) USING BTREE COMMENT '状态和登录时间组合索引'
+) ENGINE = InnoDB AUTO_INCREMENT = 711 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统访问记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_logininfor
@@ -2884,6 +4269,151 @@ INSERT INTO `sys_logininfor` VALUES (562, 'zww', '127.0.0.1', '内网IP', 'Chrom
 INSERT INTO `sys_logininfor` VALUES (563, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-22 18:36:19');
 INSERT INTO `sys_logininfor` VALUES (564, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-22 18:55:30');
 INSERT INTO `sys_logininfor` VALUES (565, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-22 19:04:22');
+INSERT INTO `sys_logininfor` VALUES (566, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 10:35:16');
+INSERT INTO `sys_logininfor` VALUES (567, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 10:35:22');
+INSERT INTO `sys_logininfor` VALUES (568, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '1', '验证码错误', '2025-11-23 10:35:48');
+INSERT INTO `sys_logininfor` VALUES (569, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 10:35:50');
+INSERT INTO `sys_logininfor` VALUES (570, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 10:36:42');
+INSERT INTO `sys_logininfor` VALUES (571, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 14:41:55');
+INSERT INTO `sys_logininfor` VALUES (572, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 14:42:01');
+INSERT INTO `sys_logininfor` VALUES (573, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 15:28:06');
+INSERT INTO `sys_logininfor` VALUES (574, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 20:13:27');
+INSERT INTO `sys_logininfor` VALUES (575, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 20:14:34');
+INSERT INTO `sys_logininfor` VALUES (576, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 20:15:43');
+INSERT INTO `sys_logininfor` VALUES (577, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 20:21:24');
+INSERT INTO `sys_logininfor` VALUES (578, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 20:22:26');
+INSERT INTO `sys_logininfor` VALUES (579, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 20:38:40');
+INSERT INTO `sys_logininfor` VALUES (580, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 20:43:53');
+INSERT INTO `sys_logininfor` VALUES (581, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 20:44:17');
+INSERT INTO `sys_logininfor` VALUES (582, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 20:49:37');
+INSERT INTO `sys_logininfor` VALUES (583, NULL, '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '1', '用户不存在/密码错误', '2025-11-23 20:55:03');
+INSERT INTO `sys_logininfor` VALUES (584, NULL, '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '1', '用户不存在/密码错误', '2025-11-23 20:55:14');
+INSERT INTO `sys_logininfor` VALUES (585, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 20:58:17');
+INSERT INTO `sys_logininfor` VALUES (586, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 21:05:17');
+INSERT INTO `sys_logininfor` VALUES (587, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 21:06:37');
+INSERT INTO `sys_logininfor` VALUES (588, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 21:08:50');
+INSERT INTO `sys_logininfor` VALUES (589, 'test', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '1', '用户不存在/密码错误', '2025-11-23 21:17:37');
+INSERT INTO `sys_logininfor` VALUES (590, 'test', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '1', '用户不存在/密码错误', '2025-11-23 21:17:41');
+INSERT INTO `sys_logininfor` VALUES (591, 'test2', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 21:20:51');
+INSERT INTO `sys_logininfor` VALUES (592, 'test2', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 21:24:09');
+INSERT INTO `sys_logininfor` VALUES (593, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 21:24:16');
+INSERT INTO `sys_logininfor` VALUES (594, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 21:24:22');
+INSERT INTO `sys_logininfor` VALUES (595, 'test2', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 21:25:00');
+INSERT INTO `sys_logininfor` VALUES (596, 'test2', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 21:25:04');
+INSERT INTO `sys_logininfor` VALUES (597, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 21:25:08');
+INSERT INTO `sys_logininfor` VALUES (598, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 21:25:11');
+INSERT INTO `sys_logininfor` VALUES (599, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 21:26:11');
+INSERT INTO `sys_logininfor` VALUES (600, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 21:26:15');
+INSERT INTO `sys_logininfor` VALUES (601, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 22:05:52');
+INSERT INTO `sys_logininfor` VALUES (602, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 22:05:56');
+INSERT INTO `sys_logininfor` VALUES (603, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-23 22:10:01');
+INSERT INTO `sys_logininfor` VALUES (604, 'test2', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-23 22:10:06');
+INSERT INTO `sys_logininfor` VALUES (605, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 09:33:02');
+INSERT INTO `sys_logininfor` VALUES (606, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 09:38:11');
+INSERT INTO `sys_logininfor` VALUES (607, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 14:36:47');
+INSERT INTO `sys_logininfor` VALUES (608, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 14:49:36');
+INSERT INTO `sys_logininfor` VALUES (609, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 14:54:37');
+INSERT INTO `sys_logininfor` VALUES (610, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 15:13:52');
+INSERT INTO `sys_logininfor` VALUES (611, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 15:13:57');
+INSERT INTO `sys_logininfor` VALUES (612, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 15:21:35');
+INSERT INTO `sys_logininfor` VALUES (613, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 15:22:23');
+INSERT INTO `sys_logininfor` VALUES (614, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 15:28:55');
+INSERT INTO `sys_logininfor` VALUES (615, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 15:42:25');
+INSERT INTO `sys_logininfor` VALUES (616, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 15:42:53');
+INSERT INTO `sys_logininfor` VALUES (617, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 15:47:03');
+INSERT INTO `sys_logininfor` VALUES (618, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 15:49:28');
+INSERT INTO `sys_logininfor` VALUES (619, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 15:52:54');
+INSERT INTO `sys_logininfor` VALUES (620, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 15:53:01');
+INSERT INTO `sys_logininfor` VALUES (621, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 15:53:08');
+INSERT INTO `sys_logininfor` VALUES (622, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 15:53:47');
+INSERT INTO `sys_logininfor` VALUES (623, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 15:58:17');
+INSERT INTO `sys_logininfor` VALUES (624, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 15:58:20');
+INSERT INTO `sys_logininfor` VALUES (625, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 16:02:42');
+INSERT INTO `sys_logininfor` VALUES (626, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 16:08:36');
+INSERT INTO `sys_logininfor` VALUES (627, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 17:07:04');
+INSERT INTO `sys_logininfor` VALUES (628, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 17:09:08');
+INSERT INTO `sys_logininfor` VALUES (629, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 17:16:00');
+INSERT INTO `sys_logininfor` VALUES (630, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 17:22:22');
+INSERT INTO `sys_logininfor` VALUES (631, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 17:22:26');
+INSERT INTO `sys_logininfor` VALUES (632, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 18:08:20');
+INSERT INTO `sys_logininfor` VALUES (633, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 18:56:49');
+INSERT INTO `sys_logininfor` VALUES (634, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 18:56:52');
+INSERT INTO `sys_logininfor` VALUES (635, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 19:38:05');
+INSERT INTO `sys_logininfor` VALUES (636, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 19:38:09');
+INSERT INTO `sys_logininfor` VALUES (637, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 19:49:33');
+INSERT INTO `sys_logininfor` VALUES (638, 'zwww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 19:49:51');
+INSERT INTO `sys_logininfor` VALUES (639, 'zwww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 19:56:15');
+INSERT INTO `sys_logininfor` VALUES (640, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 19:56:19');
+INSERT INTO `sys_logininfor` VALUES (641, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 20:06:46');
+INSERT INTO `sys_logininfor` VALUES (642, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 20:06:49');
+INSERT INTO `sys_logininfor` VALUES (643, 'zwww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 20:06:54');
+INSERT INTO `sys_logininfor` VALUES (644, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 20:09:54');
+INSERT INTO `sys_logininfor` VALUES (645, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 20:13:43');
+INSERT INTO `sys_logininfor` VALUES (646, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 20:30:15');
+INSERT INTO `sys_logininfor` VALUES (647, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 20:49:43');
+INSERT INTO `sys_logininfor` VALUES (648, 'wx_pRx5GO7o', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 20:51:15');
+INSERT INTO `sys_logininfor` VALUES (649, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 20:51:21');
+INSERT INTO `sys_logininfor` VALUES (650, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 20:51:25');
+INSERT INTO `sys_logininfor` VALUES (651, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 20:54:03');
+INSERT INTO `sys_logininfor` VALUES (652, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 20:54:06');
+INSERT INTO `sys_logininfor` VALUES (653, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 20:54:23');
+INSERT INTO `sys_logininfor` VALUES (654, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 21:50:42');
+INSERT INTO `sys_logininfor` VALUES (655, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 21:50:48');
+INSERT INTO `sys_logininfor` VALUES (656, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 21:51:53');
+INSERT INTO `sys_logininfor` VALUES (657, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 21:52:00');
+INSERT INTO `sys_logininfor` VALUES (658, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 21:52:47');
+INSERT INTO `sys_logininfor` VALUES (659, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '1', '用户不存在/密码错误', '2025-11-24 21:52:54');
+INSERT INTO `sys_logininfor` VALUES (660, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 21:53:00');
+INSERT INTO `sys_logininfor` VALUES (661, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 21:54:23');
+INSERT INTO `sys_logininfor` VALUES (662, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 21:54:26');
+INSERT INTO `sys_logininfor` VALUES (663, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 21:55:32');
+INSERT INTO `sys_logininfor` VALUES (664, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 21:55:38');
+INSERT INTO `sys_logininfor` VALUES (665, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 21:59:00');
+INSERT INTO `sys_logininfor` VALUES (666, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 21:59:02');
+INSERT INTO `sys_logininfor` VALUES (667, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 22:04:46');
+INSERT INTO `sys_logininfor` VALUES (668, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 22:04:49');
+INSERT INTO `sys_logininfor` VALUES (669, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-24 22:04:52');
+INSERT INTO `sys_logininfor` VALUES (670, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 22:04:56');
+INSERT INTO `sys_logininfor` VALUES (671, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-24 22:04:56');
+INSERT INTO `sys_logininfor` VALUES (672, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-25 12:12:04');
+INSERT INTO `sys_logininfor` VALUES (673, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-25 12:14:58');
+INSERT INTO `sys_logininfor` VALUES (674, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-25 18:10:25');
+INSERT INTO `sys_logininfor` VALUES (675, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 14:54:10');
+INSERT INTO `sys_logininfor` VALUES (676, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-28 16:22:22');
+INSERT INTO `sys_logininfor` VALUES (677, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:22:26');
+INSERT INTO `sys_logininfor` VALUES (678, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-28 16:22:53');
+INSERT INTO `sys_logininfor` VALUES (679, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:22:55');
+INSERT INTO `sys_logininfor` VALUES (680, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-28 16:23:28');
+INSERT INTO `sys_logininfor` VALUES (681, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:23:32');
+INSERT INTO `sys_logininfor` VALUES (682, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-28 16:35:33');
+INSERT INTO `sys_logininfor` VALUES (683, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:35:35');
+INSERT INTO `sys_logininfor` VALUES (684, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-28 16:38:59');
+INSERT INTO `sys_logininfor` VALUES (685, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:39:06');
+INSERT INTO `sys_logininfor` VALUES (686, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-28 16:39:53');
+INSERT INTO `sys_logininfor` VALUES (687, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:39:55');
+INSERT INTO `sys_logininfor` VALUES (688, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-28 16:40:13');
+INSERT INTO `sys_logininfor` VALUES (689, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:40:16');
+INSERT INTO `sys_logininfor` VALUES (690, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-28 16:40:41');
+INSERT INTO `sys_logininfor` VALUES (691, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:40:44');
+INSERT INTO `sys_logininfor` VALUES (692, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:40:44');
+INSERT INTO `sys_logininfor` VALUES (693, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:50:28');
+INSERT INTO `sys_logininfor` VALUES (694, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-28 16:50:31');
+INSERT INTO `sys_logininfor` VALUES (695, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-28 16:50:34');
+INSERT INTO `sys_logininfor` VALUES (696, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-29 10:07:39');
+INSERT INTO `sys_logininfor` VALUES (697, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-29 10:53:59');
+INSERT INTO `sys_logininfor` VALUES (698, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-29 21:21:22');
+INSERT INTO `sys_logininfor` VALUES (699, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-29 21:23:23');
+INSERT INTO `sys_logininfor` VALUES (700, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-11-29 21:23:40');
+INSERT INTO `sys_logininfor` VALUES (701, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-29 21:23:42');
+INSERT INTO `sys_logininfor` VALUES (702, 'zww', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-29 21:23:59');
+INSERT INTO `sys_logininfor` VALUES (703, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-30 12:45:52');
+INSERT INTO `sys_logininfor` VALUES (704, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-11-30 14:50:58');
+INSERT INTO `sys_logininfor` VALUES (705, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-12-01 14:16:41');
+INSERT INTO `sys_logininfor` VALUES (706, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-12-01 14:16:41');
+INSERT INTO `sys_logininfor` VALUES (707, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-12-01 14:16:41');
+INSERT INTO `sys_logininfor` VALUES (708, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-12-01 14:16:41');
+INSERT INTO `sys_logininfor` VALUES (709, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-12-01 14:16:41');
+INSERT INTO `sys_logininfor` VALUES (710, 'test666', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-12-01 14:16:53');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -2911,7 +4441,7 @@ CREATE TABLE `sys_menu`  (
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2113 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2246 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单权限表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -3045,6 +4575,138 @@ INSERT INTO `sys_menu` VALUES (2105, '科目管理导出', 2100, 5, '#', '', NUL
 INSERT INTO `sys_menu` VALUES (2110, '批改试卷', 2018, 3, 'review', 'quiz/paperReview/index', '', '', 1, 0, 'C', '0', '0', 'quiz:paperReview:list', 'form', 'admin', '2025-11-21 18:45:42', '', NULL, '老师批改入口');
 INSERT INTO `sys_menu` VALUES (2111, '批改查询', 2110, 1, '#', '', '', '', 1, 0, 'F', '0', '0', 'quiz:paperReview:query', '#', 'admin', '2025-11-21 18:45:42', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (2112, '提交评分', 2110, 2, '#', '', '', '', 1, 0, 'F', '0', '0', 'quiz:paperReview:score', '#', 'admin', '2025-11-21 18:45:42', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2114, '数据大屏', 0, 1, 'dashboard', 'dashboard/index', NULL, '', 1, 0, 'C', '0', '0', 'dashboard:index:view', 'dashboard', 'admin', '2025-11-22 21:18:43', '', NULL, '数据大屏 - 系统数据统计与分析');
+INSERT INTO `sys_menu` VALUES (2115, '概览统计查询', 2114, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'dashboard:overview:query', '#', 'admin', '2025-11-22 21:18:43', '', NULL, '查询概览统计数据');
+INSERT INTO `sys_menu` VALUES (2116, '用户活跃度查询', 2114, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'dashboard:user-activity:query', '#', 'admin', '2025-11-22 21:18:43', '', NULL, '查询用户活跃度数据');
+INSERT INTO `sys_menu` VALUES (2117, '考试统计查询', 2114, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'dashboard:exam-statistics:query', '#', 'admin', '2025-11-22 21:18:43', '', NULL, '查询考试统计数据');
+INSERT INTO `sys_menu` VALUES (2118, '题目统计查询', 2114, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'dashboard:question-statistics:query', '#', 'admin', '2025-11-22 21:18:43', '', NULL, '查询题目统计数据');
+INSERT INTO `sys_menu` VALUES (2119, '试卷统计查询', 2114, 5, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'dashboard:paper-statistics:query', '#', 'admin', '2025-11-22 21:18:43', '', NULL, '查询试卷统计数据');
+INSERT INTO `sys_menu` VALUES (2120, '时间分布查询', 2114, 6, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'dashboard:time-distribution:query', '#', 'admin', '2025-11-22 21:18:43', '', NULL, '查询时间分布数据');
+INSERT INTO `sys_menu` VALUES (2121, '公告管理', 0, 4, 'notice', 'quiz/notice/index', NULL, '', 1, 0, 'C', '0', '0', 'quiz:notice:list', 'message', 'admin', '2025-11-23 14:01:03', '', NULL, '公告管理菜单');
+INSERT INTO `sys_menu` VALUES (2122, '公告查询', 2121, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:notice:query', '#', 'admin', '2025-11-23 14:01:03', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2123, '公告新增', 2121, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:notice:add', '#', 'admin', '2025-11-23 14:01:03', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2124, '公告修改', 2121, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:notice:edit', '#', 'admin', '2025-11-23 14:01:03', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2125, '公告删除', 2121, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:notice:remove', '#', 'admin', '2025-11-23 14:01:03', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2126, '公告导出', 2121, 5, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:notice:export', '#', 'admin', '2025-11-23 14:01:03', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2127, '公告发布', 2121, 6, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:notice:publish', '#', 'admin', '2025-11-23 14:01:03', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2128, '公告下架', 2121, 7, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:notice:unpublish', '#', 'admin', '2025-11-23 14:01:03', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2129, '反馈管理', 0, 5, 'feedback', 'quiz/feedback/index', NULL, '', 1, 0, 'C', '0', '0', 'quiz:feedback:list', 'message', 'admin', '2025-11-23 14:02:30', '', NULL, '反馈管理菜单');
+INSERT INTO `sys_menu` VALUES (2130, '反馈查询', 2129, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:feedback:query', '#', 'admin', '2025-11-23 14:02:30', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2131, '反馈新增', 2129, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:feedback:add', '#', 'admin', '2025-11-23 14:02:30', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2132, '反馈修改', 2129, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:feedback:edit', '#', 'admin', '2025-11-23 14:02:30', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2133, '反馈删除', 2129, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:feedback:remove', '#', 'admin', '2025-11-23 14:02:30', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2134, '反馈导出', 2129, 5, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:feedback:export', '#', 'admin', '2025-11-23 14:02:30', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2135, '处理反馈', 2129, 6, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'quiz:feedback:handle', '#', 'admin', '2025-11-23 14:02:30', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2136, '论坛管理', 0, 5, 'forum', NULL, NULL, '', 1, 0, 'M', '0', '0', '', 'message', 'admin', '2025-11-24 21:46:49', '', NULL, '论坛内容管理');
+INSERT INTO `sys_menu` VALUES (2137, '帖子管理', 2136, 1, 'post', 'quiz/forum/post/index', NULL, '', 1, 0, 'C', '0', '0', 'quiz:forum:list', 'post', 'admin', '2025-11-24 21:46:49', '', NULL, '论坛帖子管理');
+INSERT INTO `sys_menu` VALUES (2138, '帖子查询', 2137, 1, '#', '', NULL, '', 1, 0, 'F', '0', '0', 'quiz:forum:query', '#', 'admin', '2025-11-24 21:46:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2139, '帖子编辑', 2137, 2, '#', '', NULL, '', 1, 0, 'F', '0', '0', 'quiz:forum:edit', '#', 'admin', '2025-11-24 21:46:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2140, '帖子删除', 2137, 3, '#', '', NULL, '', 1, 0, 'F', '0', '0', 'quiz:forum:remove', '#', 'admin', '2025-11-24 21:46:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2141, '帖子导出', 2137, 4, '#', '', NULL, '', 1, 0, 'F', '0', '0', 'quiz:forum:export', '#', 'admin', '2025-11-24 21:46:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2142, '评论管理', 2136, 2, 'comment', 'quiz/forum/comment/index', NULL, '', 1, 0, 'C', '0', '0', 'quiz:forum:list', 'comment', 'admin', '2025-11-24 21:46:49', '', NULL, '论坛评论管理');
+INSERT INTO `sys_menu` VALUES (2143, '评论查询', 2142, 1, '#', '', NULL, '', 1, 0, 'F', '0', '0', 'quiz:forum:query', '#', 'admin', '2025-11-24 21:46:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2144, '评论删除', 2142, 2, '#', '', NULL, '', 1, 0, 'F', '0', '0', 'quiz:forum:remove', '#', 'admin', '2025-11-24 21:46:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2145, '评论导出', 2142, 3, '#', '', NULL, '', 1, 0, 'F', '0', '0', 'quiz:forum:export', '#', 'admin', '2025-11-24 21:46:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2146, '知识点库', 0, 6, 'knowledge', NULL, NULL, '', 1, 0, 'M', '0', '0', NULL, 'education', 'admin', '2025-11-28 12:18:20', NULL, NULL, '知识点库管理菜单');
+INSERT INTO `sys_menu` VALUES (2147, '科目管理', 2146, 1, 'subject', 'knowledge/subject/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:subject:list', 'tree-table', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2148, '科目查询', 2147, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:query', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2149, '科目新增', 2147, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:add', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2150, '科目修改', 2147, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:edit', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2151, '科目删除', 2147, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:remove', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2152, '章节管理', 2146, 2, 'chapter', 'knowledge/chapter/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:chapter:list', 'tree', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2153, '章节查询', 2152, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:chapter:query', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2154, '章节新增', 2152, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:chapter:add', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2155, '章节修改', 2152, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:chapter:edit', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2156, '章节删除', 2152, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:chapter:remove', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2157, '知识点管理', 2146, 3, 'point', 'knowledge/point/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:point:list', 'documentation', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2158, '知识点查询', 2157, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:query', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2159, '知识点详细', 2157, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:detail', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2160, '知识点新增', 2157, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:add', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2161, '知识点修改', 2157, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:edit', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2162, '知识点删除', 2157, 5, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:remove', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2163, '知识点审核', 2157, 6, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:audit', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2164, '标签管理', 2146, 4, 'tag', 'knowledge/tag/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:tag:list', 'tag', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2165, '标签查询', 2164, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:query', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2166, '标签新增', 2164, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:add', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2167, '标签修改', 2164, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:edit', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2168, '标签删除', 2164, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:remove', '#', 'admin', '2025-11-28 12:18:20', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2169, '知识点库', 0, 6, 'knowledge', NULL, NULL, '', 1, 0, 'M', '0', '0', NULL, 'education', 'admin', '2025-11-28 16:49:49', NULL, NULL, '知识点库管理菜单');
+INSERT INTO `sys_menu` VALUES (2170, '科目管理', 2169, 1, 'subject', 'knowledge/subject/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:subject:list', 'tree-table', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2171, '科目查询', 2170, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:query', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2172, '科目新增', 2170, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:add', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2173, '科目修改', 2170, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:edit', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2174, '科目删除', 2170, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:remove', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2175, '章节管理', 2169, 2, 'chapter', 'knowledge/chapter/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:chapter:list', 'tree', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2176, '章节查询', 2175, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:chapter:query', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2177, '章节新增', 2175, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:chapter:add', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2178, '章节修改', 2175, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:chapter:edit', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2179, '章节删除', 2175, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:chapter:remove', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2180, '知识点管理', 2169, 3, 'point', 'knowledge/point/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:point:list', 'documentation', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2181, '知识点查询', 2180, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:query', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2182, '知识点详细', 2180, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:detail', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2183, '知识点新增', 2180, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:add', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2184, '知识点修改', 2180, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:edit', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2185, '知识点删除', 2180, 5, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:remove', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2186, '知识点审核', 2180, 6, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:audit', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2187, '标签管理', 2169, 4, 'tag', 'knowledge/tag/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:tag:list', 'tag', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2188, '标签查询', 2187, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:query', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2189, '标签新增', 2187, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:add', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2190, '标签修改', 2187, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:edit', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2191, '标签删除', 2187, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:remove', '#', 'admin', '2025-11-28 16:49:49', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2192, '知识点库', 0, 6, 'knowledge', NULL, NULL, '', 1, 0, 'M', '0', '0', NULL, 'education', 'admin', '2025-11-29 11:20:32', NULL, NULL, '知识点库管理菜单');
+INSERT INTO `sys_menu` VALUES (2193, '科目管理', 2192, 1, 'subject', 'knowledge/subject/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:subject:list', 'tree-table', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2194, '科目查询', 2193, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:query', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2195, '科目新增', 2193, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:add', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2196, '科目修改', 2193, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:edit', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2197, '科目删除', 2193, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:remove', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2198, '知识点管理', 2192, 2, 'point', 'knowledge/point/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:point:list', 'documentation', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2199, '知识点查询', 2198, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:query', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2200, '知识点详细', 2198, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:detail', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2201, '知识点新增', 2198, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:add', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2202, '知识点修改', 2198, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:edit', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2203, '知识点删除', 2198, 5, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:remove', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2204, '知识点审核', 2198, 6, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:audit', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2205, '标签管理', 2192, 3, 'tag', 'knowledge/tag/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:tag:list', 'tag', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2206, '标签查询', 2205, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:query', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2207, '标签新增', 2205, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:add', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2208, '标签修改', 2205, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:edit', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2209, '标签删除', 2205, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:remove', '#', 'admin', '2025-11-29 11:20:32', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2210, '知识点库', 0, 6, 'knowledge', NULL, NULL, '', 1, 0, 'M', '0', '0', NULL, 'education', 'admin', '2025-11-29 11:21:18', NULL, NULL, '知识点库管理菜单');
+INSERT INTO `sys_menu` VALUES (2211, '科目管理', 2210, 1, 'subject', 'knowledge/subject/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:subject:list', 'tree-table', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2212, '科目查询', 2211, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:query', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2213, '科目新增', 2211, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:add', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2214, '科目修改', 2211, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:edit', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2215, '科目删除', 2211, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:remove', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2216, '知识点管理', 2210, 2, 'point', 'knowledge/point/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:point:list', 'documentation', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2217, '知识点查询', 2216, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:query', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2218, '知识点详细', 2216, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:detail', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2219, '知识点新增', 2216, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:add', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2220, '知识点修改', 2216, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:edit', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2221, '知识点删除', 2216, 5, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:remove', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2222, '知识点审核', 2216, 6, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:audit', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2223, '标签管理', 2210, 3, 'tag', 'knowledge/tag/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:tag:list', 'tag', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2224, '标签查询', 2223, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:query', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2225, '标签新增', 2223, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:add', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2226, '标签修改', 2223, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:edit', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2227, '标签删除', 2223, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:remove', '#', 'admin', '2025-11-29 11:21:18', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2228, '知识点库', 0, 6, 'knowledge', NULL, NULL, '', 1, 0, 'M', '0', '0', NULL, 'education', 'admin', '2025-11-29 11:29:16', NULL, NULL, '知识点库管理菜单');
+INSERT INTO `sys_menu` VALUES (2229, '科目管理', 2228, 1, 'subject', 'knowledge/subject/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:subject:list', 'tree-table', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2230, '科目查询', 2229, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:query', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2231, '科目新增', 2229, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:add', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2232, '科目修改', 2229, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:edit', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2233, '科目删除', 2229, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:subject:remove', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2234, '知识点管理', 2228, 2, 'point', 'knowledge/point/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:point:list', 'documentation', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2235, '知识点查询', 2234, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:query', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2236, '知识点详细', 2234, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:detail', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2237, '知识点新增', 2234, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:add', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2238, '知识点修改', 2234, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:edit', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2239, '知识点删除', 2234, 5, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:remove', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2240, '知识点审核', 2234, 6, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:point:audit', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2241, '标签管理', 2228, 3, 'tag', 'knowledge/tag/index', NULL, '', 1, 0, 'C', '0', '0', 'knowledge:tag:list', 'tag', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2242, '标签查询', 2241, 1, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:query', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2243, '标签新增', 2241, 2, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:add', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2244, '标签修改', 2241, 3, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:edit', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
+INSERT INTO `sys_menu` VALUES (2245, '标签删除', 2241, 4, '', NULL, NULL, '', 1, 0, 'F', '0', '0', 'knowledge:tag:remove', '#', 'admin', '2025-11-29 11:29:16', '', NULL, '');
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -3054,21 +4716,30 @@ CREATE TABLE `sys_notice`  (
   `notice_id` int(4) NOT NULL AUTO_INCREMENT COMMENT '公告ID',
   `notice_title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '公告标题',
   `notice_type` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '公告类型（1通知 2公告）',
+  `announcement_type` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '1' COMMENT '公告类型（1后台公告 2前台公告）',
+  `is_top` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '是否置顶（0否 1是）',
+  `order_num` int(4) NULL DEFAULT 0 COMMENT '显示顺序',
   `notice_content` longblob NULL COMMENT '公告内容',
+  `notice_img` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '公告图片',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '0' COMMENT '公告状态（0正常 1关闭）',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '创建者',
   `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`notice_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通知公告表' ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`notice_id`) USING BTREE,
+  INDEX `idx_announcement_status`(`announcement_type`, `status`, `is_top`, `order_num`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '通知公告表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_notice
 -- ----------------------------
-INSERT INTO `sys_notice` VALUES (1, '温馨提醒：2018-07-01 若依新版本发布啦', '2', 0xE696B0E78988E69CACE58685E5AEB9, '0', 'admin', '2024-10-06 10:58:21', '', NULL, '管理员');
-INSERT INTO `sys_notice` VALUES (2, '维护通知：2018-07-01 若依系统凌晨维护', '1', 0xE7BBB4E68AA4E58685E5AEB9, '0', 'admin', '2024-10-06 10:58:21', '', NULL, '管理员');
+INSERT INTO `sys_notice` VALUES (1, '温馨提醒：2018-07-01 若依新版本发布啦', '2', '1', '0', 0, 0xE696B0E78988E69CACE58685E5AEB9, NULL, '0', 'admin', '2024-10-06 10:58:21', '', NULL, '管理员');
+INSERT INTO `sys_notice` VALUES (2, '维护通知：2018-07-01 若依系统凌晨维护', '1', '1', '0', 0, 0xE7BBB4E68AA4E58685E5AEB9, NULL, '0', 'admin', '2024-10-06 10:58:21', '', NULL, '管理员');
+INSERT INTO `sys_notice` VALUES (3, '系统升级公告', '1', '1', '1', 1, 0x3C703EE7B3BBE7BB9FE5B086E4BA8EE4BB8AE6999A32323A30302D32333A3030E8BF9BE8A18CE58D87E7BAA7E7BBB4E68AA4EFBC8CE69C9FE997B4E58FAFE883BDE697A0E6B395E8AEBFE997AEEFBC8CE8AFB7E68F90E5898DE5819AE5A5BDE79BB8E585B3E58786E5A487E380823C2F703E3C703EE58D87E7BAA7E58685E5AEB9EFBC9A3C62722F3E312E20E4BC98E58C96E695B0E68DAEE5A4A7E5B18FE5B195E7A4BAE69588E69E9C3C62722F3E322E20E4BFAEE5A48DE5B7B2E79FA5E997AEE9A2983C62722F3E332E20E68F90E58D87E7B3BBE7BB9FE680A7E883BD3C2F703E, NULL, '0', 'admin', '2025-11-23 12:02:32', '', NULL, '后台管理员公告');
+INSERT INTO `sys_notice` VALUES (4, '新功能上线通知', '1', '1', '0', 2, 0x3C703EE585ACE5918AE7AEA1E79086E6A8A1E59D97E5B7B2E4B88AE7BABFEFBC8CE694AFE68C81E5908EE58FB0E5928CE5898DE58FB0E585ACE5918AE79A84E7BB9FE4B880E7AEA1E79086E380823C2F703E, NULL, '0', 'admin', '2025-11-23 12:02:32', '', NULL, '功能更新通知');
+INSERT INTO `sys_notice` VALUES (5, '欢迎使用在线刷题系统', '1', '2', '1', 1, 0x3C703EE6ACA2E8BF8EE4BDBFE794A8E68891E4BBACE79A84E59CA8E7BABFE588B7E9A298E7B3BBE7BB9FEFBC813C2F703E3C703EE69CACE7B3BBE7BB9FE68F90E4BE9BEFBC9A3C62722F3EE29C8520E6B5B7E9878FE9A298E5BA93EFBC8CE8A686E79B96E5A49AE4B8AAE79FA5E8AF86E782B93C62722F3EE29C8520E699BAE883BDE7BB84E58DB7EFBC8CE4B8AAE680A7E58C96E5ADA6E4B9A03C62722F3EE29C8520E99499E9A298E69CACE58A9FE883BDEFBC8CE99288E5AFB9E680A7E5A48DE4B9A03C62722F3EE29C8520E5ADA6E4B9A0E695B0E68DAEE7BB9FE8AEA1EFBC8CE68E8CE68FA1E5ADA6E4B9A0E8BF9BE5BAA63C2F703E3C703EE7A59DE682A8E5ADA6E4B9A0E68489E5BFABEFBC8CE88083E8AF95E9A1BAE588A9EFBC813C2F703E, NULL, '0', 'admin', '2025-11-23 12:02:32', '', NULL, '前台欢迎公告');
+INSERT INTO `sys_notice` VALUES (6, '每日一练活动通知', '2', '2', '0', 2, 0x3C703EF09F93A220E6AF8FE697A5E4B880E7BB83E6B4BBE58AA8E6ADA3E5BC8FE590AFE58AA8EFBC813C2F703E3C703EE6B4BBE58AA8E697B6E997B4EFBC9AE58DB3E697A5E8B5B73C62722F3EE6B4BBE58AA8E58685E5AEB9EFBC9AE6AF8FE5A4A9E5AE8CE688903130E98193E7BB83E4B9A0E9A298E58DB3E58FAFE88EB7E5BE97E7A7AFE58886E5A596E58AB13C2F703E3C703EE5BFABE69DA5E58F82E58AA0E590A7EFBC813C2F703E, NULL, '0', 'admin', '2025-11-23 12:02:32', '', NULL, '前台活动公告');
 
 -- ----------------------------
 -- Table structure for sys_oper_log
@@ -3095,8 +4766,9 @@ CREATE TABLE `sys_oper_log`  (
   PRIMARY KEY (`oper_id`) USING BTREE,
   INDEX `idx_sys_oper_log_bt`(`business_type`) USING BTREE,
   INDEX `idx_sys_oper_log_s`(`status`) USING BTREE,
-  INDEX `idx_sys_oper_log_ot`(`oper_time`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 630 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
+  INDEX `idx_sys_oper_log_ot`(`oper_time`) USING BTREE,
+  INDEX `idx_oper_name`(`oper_name`) USING BTREE COMMENT '操作人员索引'
+) ENGINE = InnoDB AUTO_INCREMENT = 684 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '操作日志记录' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_oper_log
@@ -3631,6 +5303,60 @@ INSERT INTO `sys_oper_log` VALUES (626, '试卷', 2, 'com.ruoyi.web.controller.q
 INSERT INTO `sys_oper_log` VALUES (627, '试卷', 2, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"paperId\":92,\"paperName\":\"测试开始和结束时间\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"DFD 的核心就是用箭头表示数据流向，因此说“不反映数据流向”是错误的；A/B/C 都是 DFD 的正确特性。\",\"correct\":\"D\",\"id\":95,\"itemOrder\":0,\"items\":[{\"content\":\"数据流图将各种信息流抽象成数据流的形式\",\"prefix\":\"A\"},{\"content\":\"数据流图不反映控制关系、调用关系\",\"prefix\":\"B\"},{\"content\":\"数据流图不反映处理逻辑的先后顺序\",\"prefix\":\"C\"},{\"content\":\"数据流图不反映数据的流向\",\"prefix\":\"D\"}],\"questionTitle\":\"下列描述错误的是( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"需求阶段要形成需求规格说明书（SRS）；A/B/C 都是分析过程中的工具或中间产物。\",\"correct\":\"D\",\"id\":93,\"itemOrder\":1,\"items\":[{\"content\":\"数据流程图案\",\"prefix\":\"A\"},{\"content\":\"数据字典\",\"prefix\":\"B\"},{\"content\":\"判定表\",\"prefix\":\"C\"},{\"content\":\"需求规格说明书\",\"prefix\":\"D\"}],\"questionTitle\":\"需求分析的最终产品是( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"模块的定义就是完成一个相对独立的特定子功能；A 与事实相反，B/C 虽正确但更像方法论描述，此题更贴近定义。\",\"correct\":\"D\",\"id\":96,\"itemOrder\":2,\"items\":[{\"content\":\"具有独立模块的软件不易开发出来\",\"prefix\":\"A\"},{\"content\":\"独立的模块比较容易测试和维护\",\"prefix\":\"B\"},{\"content\":\"模块的独立程度可以通过内聚和耦合标定\",\"prefix\":\"C\"},{\"content\":\"独立的模块可以完成一个相对独立的特定子功能\",\"prefix\":\"D\"}],\"questionTitle\":\"下列关于模块的描述，正确的是( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"OMT（Object Modeling Technique）是 Rumbaugh 提出的面向对象分析与设计方法，其余选项是其它 OO 方法作者。\",\"correct\":\"B\",\"id\":84,\"itemOrder\":3,\"items\":[{\"content\":\"Booch\",\"prefix\":\"A\"},{\"content\":\"Rumbaugh\",\"prefix\":\"B\"},{\"content\":\"Coad\",\"prefix\":\"C\"},{\"content\":\"Jacobson\",\"prefix\":\"D\"}],\"questionTitle\":\"OMT 方法是由下面哪位科学家提出的( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"E-R 三要素：实体(Entity)、联系(Relationship)、属性(Attribute)。\",\"correct\":\"C\",\"id\":91,\"itemOrder\":4,\"items\":[{\"content\":\"数据、对象、实体\",\"prefix\":\"A\"},{\"content\":\"控制、联系、对象\",\"prefix\":\"B\"},{\"content\":\"实体、联系、属性\",\"prefix\":\"C\"},{\"content\":\"实体、属性、操作\",\"prefix\":\"D\"}],\"questionTitle\":\"在E-R模型中，包含以下基本成分( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1}]}],\"paperType\":1,\"questionCount\":5,\"score\":5,\"subjectId\":1,\"suggestTime\":2}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-22 16:14:56', 12);
 INSERT INTO `sys_oper_log` VALUES (628, '试卷', 2, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"endTime\":\"2025-11-22 16:19:09\",\"paperId\":92,\"paperName\":\"测试开始和结束时间\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"DFD 的核心就是用箭头表示数据流向，因此说“不反映数据流向”是错误的；A/B/C 都是 DFD 的正确特性。\",\"correct\":\"D\",\"id\":95,\"itemOrder\":0,\"items\":[{\"content\":\"数据流图将各种信息流抽象成数据流的形式\",\"prefix\":\"A\"},{\"content\":\"数据流图不反映控制关系、调用关系\",\"prefix\":\"B\"},{\"content\":\"数据流图不反映处理逻辑的先后顺序\",\"prefix\":\"C\"},{\"content\":\"数据流图不反映数据的流向\",\"prefix\":\"D\"}],\"questionTitle\":\"下列描述错误的是( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"需求阶段要形成需求规格说明书（SRS）；A/B/C 都是分析过程中的工具或中间产物。\",\"correct\":\"D\",\"id\":93,\"itemOrder\":1,\"items\":[{\"content\":\"数据流程图案\",\"prefix\":\"A\"},{\"content\":\"数据字典\",\"prefix\":\"B\"},{\"content\":\"判定表\",\"prefix\":\"C\"},{\"content\":\"需求规格说明书\",\"prefix\":\"D\"}],\"questionTitle\":\"需求分析的最终产品是( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"模块的定义就是完成一个相对独立的特定子功能；A 与事实相反，B/C 虽正确但更像方法论描述，此题更贴近定义。\",\"correct\":\"D\",\"id\":96,\"itemOrder\":2,\"items\":[{\"content\":\"具有独立模块的软件不易开发出来\",\"prefix\":\"A\"},{\"content\":\"独立的模块比较容易测试和维护\",\"prefix\":\"B\"},{\"content\":\"模块的独立程度可以通过内聚和耦合标定\",\"prefix\":\"C\"},{\"content\":\"独立的模块可以完成一个相对独立的特定子功能\",\"prefix\":\"D\"}],\"questionTitle\":\"下列关于模块的描述，正确的是( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"OMT（Object Modeling Technique）是 Rumbaugh 提出的面向对象分析与设计方法，其余选项是其它 OO 方法作者。\",\"correct\":\"B\",\"id\":84,\"itemOrder\":3,\"items\":[{\"content\":\"Booch\",\"prefix\":\"A\"},{\"content\":\"Rumbaugh\",\"prefix\":\"B\"},{\"content\":\"Coad\",\"prefix\":\"C\"},{\"content\":\"Jacobson\",\"prefix\":\"D\"}],\"questionTitle\":\"OMT 方法是由下面哪位科学家提出的( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"E-R 三要素：实体(Entity)、联系(Relationship)、属性(Attribute)。\",\"correct\":\"C\",\"id\":91,\"itemOrder\":4,\"items\":[{\"content\":\"数据、对象、实体\",\"prefix\":\"A\"},{\"content\":\"控制、联系、对象\",\"prefix\":\"B\"},{\"content\":\"实体、联系、属性\",\"prefix\":\"C\"},{\"content\":\"实体、属性、操作\",\"prefix\":\"D\"}],\"questionTitle\":\"在E-R模型中，包含以下基本成分( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1}]}],\"paperType\":1,\"questionCount\":5,\"score\":5,\"startTime\":\"2025-11-22 16:17:57\",\"subjectId\":1,\"suggestTime\":2}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-22 16:16:15', 173);
 INSERT INTO `sys_oper_log` VALUES (629, '试卷', 2, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"endTime\":\"2025-11-22 16:35:48\",\"paperId\":92,\"paperName\":\"测试开始和结束时间\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"DFD 的核心就是用箭头表示数据流向，因此说“不反映数据流向”是错误的；A/B/C 都是 DFD 的正确特性。\",\"correct\":\"D\",\"id\":95,\"itemOrder\":0,\"items\":[{\"content\":\"数据流图将各种信息流抽象成数据流的形式\",\"prefix\":\"A\"},{\"content\":\"数据流图不反映控制关系、调用关系\",\"prefix\":\"B\"},{\"content\":\"数据流图不反映处理逻辑的先后顺序\",\"prefix\":\"C\"},{\"content\":\"数据流图不反映数据的流向\",\"prefix\":\"D\"}],\"questionTitle\":\"下列描述错误的是( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"需求阶段要形成需求规格说明书（SRS）；A/B/C 都是分析过程中的工具或中间产物。\",\"correct\":\"D\",\"id\":93,\"itemOrder\":1,\"items\":[{\"content\":\"数据流程图案\",\"prefix\":\"A\"},{\"content\":\"数据字典\",\"prefix\":\"B\"},{\"content\":\"判定表\",\"prefix\":\"C\"},{\"content\":\"需求规格说明书\",\"prefix\":\"D\"}],\"questionTitle\":\"需求分析的最终产品是( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"模块的定义就是完成一个相对独立的特定子功能；A 与事实相反，B/C 虽正确但更像方法论描述，此题更贴近定义。\",\"correct\":\"D\",\"id\":96,\"itemOrder\":2,\"items\":[{\"content\":\"具有独立模块的软件不易开发出来\",\"prefix\":\"A\"},{\"content\":\"独立的模块比较容易测试和维护\",\"prefix\":\"B\"},{\"content\":\"模块的独立程度可以通过内聚和耦合标定\",\"prefix\":\"C\"},{\"content\":\"独立的模块可以完成一个相对独立的特定子功能\",\"prefix\":\"D\"}],\"questionTitle\":\"下列关于模块的描述，正确的是( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"OMT（Object Modeling Technique）是 Rumbaugh 提出的面向对象分析与设计方法，其余选项是其它 OO 方法作者。\",\"correct\":\"B\",\"id\":84,\"itemOrder\":3,\"items\":[{\"content\":\"Booch\",\"prefix\":\"A\"},{\"content\":\"Rumbaugh\",\"prefix\":\"B\"},{\"content\":\"Coad\",\"prefix\":\"C\"},{\"content\":\"Jacobson\",\"prefix\":\"D\"}],\"questionTitle\":\"OMT 方法是由下面哪位科学家提出的( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"E-R 三要素：实体(Entity)、联系(Relationship)、属性(Attribute)。\",\"correct\":\"C\",\"id\":91,\"itemOrder\":4,\"items\":[{\"content\":\"数据、对象、实体\",\"prefix\":\"A\"},{\"content\":\"控制、联系、对象\",\"prefix\":\"B\"},{\"content\":\"实体、联系、属性\",\"prefix\":\"C\"},{\"content\":\"实体、属性、操作\",\"prefix\":\"D\"}],\"questionTitle\":\"在E-R模型中，包含以下基本成分( )。\",\"questionType\":1,\"score\":1,\"subjectId\":1}]}],\"paperType\":1,\"questionCount\":5,\"score\":5,\"startTime\":\"2025-11-22 16:33:44\",\"subjectId\":1,\"suggestTime\":2}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-22 16:31:53', 21);
+INSERT INTO `sys_oper_log` VALUES (630, '菜单管理', 3, 'com.ruoyi.web.controller.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '研发部门', '/system/menu/2136', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"存在子菜单,不允许删除\",\"code\":601}', 0, NULL, '2025-11-23 14:15:17', 9);
+INSERT INTO `sys_oper_log` VALUES (631, '菜单管理', 3, 'com.ruoyi.web.controller.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '研发部门', '/system/menu/2136', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"存在子菜单,不允许删除\",\"code\":601}', 0, NULL, '2025-11-23 14:15:25', 3);
+INSERT INTO `sys_oper_log` VALUES (632, '菜单管理', 3, 'com.ruoyi.web.controller.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '研发部门', '/system/menu/2137', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-23 14:15:28', 18);
+INSERT INTO `sys_oper_log` VALUES (633, '菜单管理', 3, 'com.ruoyi.web.controller.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '研发部门', '/system/menu/2138', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-23 14:15:30', 5);
+INSERT INTO `sys_oper_log` VALUES (634, '菜单管理', 3, 'com.ruoyi.web.controller.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '研发部门', '/system/menu/2139', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-23 14:15:32', 13);
+INSERT INTO `sys_oper_log` VALUES (635, '菜单管理', 3, 'com.ruoyi.web.controller.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '研发部门', '/system/menu/2140', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-23 14:15:33', 11);
+INSERT INTO `sys_oper_log` VALUES (636, '菜单管理', 3, 'com.ruoyi.web.controller.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '研发部门', '/system/menu/2141', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-23 14:15:35', 7);
+INSERT INTO `sys_oper_log` VALUES (637, '菜单管理', 3, 'com.ruoyi.web.controller.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '研发部门', '/system/menu/2142', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-23 14:15:36', 7);
+INSERT INTO `sys_oper_log` VALUES (638, '菜单管理', 3, 'com.ruoyi.web.controller.system.SysMenuController.remove()', 'DELETE', 1, 'admin', '研发部门', '/system/menu/2136', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-23 14:15:39', 12);
+INSERT INTO `sys_oper_log` VALUES (639, '公告管理', 2, 'com.ruoyi.web.controller.quiz.admin.DamingNoticeController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/notice', '127.0.0.1', '内网IP', '{\"createTime\":\"2025-11-23 14:02:03\",\"createUser\":\"admin\",\"delFlag\":\"0\",\"isTop\":1,\"noticeContent\":\"亲爱的用户们，我们很高兴地宣布，数据大屏功能正式上线！您可以在个人中心查看详细的学习数据统计，包括考试成绩趋势、错题分析、学习时间分布等，快来体验吧！\",\"noticeId\":2,\"noticeTitle\":\"新功能上线公告\",\"noticeType\":2,\"params\":{},\"publishTime\":\"2025-11-23 14:02:03\",\"remark\":\"新功能发布\",\"sortOrder\":90,\"status\":0,\"updateTime\":\"2025-11-23 14:26:27\",\"updateUser\":\"admin\",\"viewCount\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-23 14:42:36', 20);
+INSERT INTO `sys_oper_log` VALUES (640, '处理反馈', 2, 'com.ruoyi.web.controller.quiz.admin.DamingFeedbackController.handle()', 'PUT', 1, 'admin', '研发部门', '/quiz/feedback/handle', '127.0.0.1', '内网IP', '{\"contactInfo\":\"1626016153@qq.com\",\"createTime\":\"2025-11-23 14:35:05\",\"createUser\":\"zww\",\"delFlag\":\"0\",\"feedbackContent\":\"1111111111111111111111\",\"feedbackId\":6,\"feedbackTitle\":\"1111111111111111111111\",\"feedbackType\":1,\"params\":{},\"priority\":1,\"replyContent\":\"已处理\",\"status\":2,\"updateTime\":\"2025-11-23 14:35:05\",\"userId\":\"zww\",\"userName\":\"zww\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-23 14:46:28', 7);
+INSERT INTO `sys_oper_log` VALUES (641, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"无\",\"correct\":\"111\",\"correctArray\":[],\"items\":[],\"questionTitle\":\"测试填空题\",\"questionType\":5,\"score\":1,\"subjectId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 09:38:28', 23);
+INSERT INTO `sys_oper_log` VALUES (642, '题目表', 3, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.remove()', 'DELETE', 1, 'admin', '研发部门', '/quiz/question/137', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"删除成功\",\"code\":200}', 0, NULL, '2025-11-24 09:39:50', 31);
+INSERT INTO `sys_oper_log` VALUES (643, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"无\",\"correct\":\"测试填空题\",\"correctArray\":[],\"items\":[],\"questionTitle\":\"测试填空题\",\"questionType\":5,\"score\":1,\"subjectId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 09:39:59', 14);
+INSERT INTO `sys_oper_log` VALUES (644, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"无\",\"correct\":\"测试填空题2\",\"correctArray\":[],\"items\":[],\"questionTitle\":\"测试填空题2\",\"questionType\":5,\"score\":1,\"subjectId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 09:40:30', 11);
+INSERT INTO `sys_oper_log` VALUES (645, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"无\",\"correct\":\"增加填空题2\",\"correctArray\":[],\"items\":[],\"questionTitle\":\"增加填空题2\",\"questionType\":5,\"score\":1,\"subjectId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 09:41:15', 13);
+INSERT INTO `sys_oper_log` VALUES (646, '试卷', 2, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"paperId\":91,\"paperName\":\"期中考试复习\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"补码让加减统一用加法器完成，硬件最简。\",\"correct\":\"D\",\"id\":112,\"itemOrder\":0,\"items\":[{\"content\":\"与手工运算方式保持一致\",\"prefix\":\"A\"},{\"content\":\"提高运算速度\",\"prefix\":\"B\"},{\"content\":\"提高运算精度\",\"prefix\":\"C\"},{\"content\":\"简化计算机的设计\",\"prefix\":\"D\"}],\"questionTitle\":\"机器系统中采用补码运算的目的是为了(         )。\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"n 位补码范围 [−2^(n−1), 2^(n−1)−1]，8 位最小 −128，最大 127。\",\"correct\":\"D\",\"id\":111,\"itemOrder\":1,\"items\":[{\"content\":\"-127～+127\",\"prefix\":\"A\"},{\"content\":\"-2^-127～+2^-127\",\"prefix\":\"B\"},{\"content\":\"2^-128～2^+127\",\"prefix\":\"C\"},{\"content\":\"-128～+127\",\"prefix\":\"D\"}],\"questionTitle\":\"定点 8 位字长，2 的补码表示 8 位二进制整数，可表示的数范围为（        ）。\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"先对阶对齐指数，再做尾数运算，最后规格化。\",\"correct\":\"B\",\"id\":117,\"itemOrder\":2,\"items\":[{\"content\":\"直接相加减\",\"prefix\":\"A\"},{\"content\":\"对阶操作\",\"prefix\":\"B\"},{\"content\":\"尾数相加减\",\"prefix\":\"C\"},{\"content\":\"规格化处理\",\"prefix\":\"D\"}],\"questionTitle\":\"在浮点数加减法运算中，首先需要进行的操作是？\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"补码：正数补码同原码，负数取反加 1；0.1010 -> 0101 -> 0110，得到 1.0110。\",\"correct\":\"B\",\"id\":110,\"itemOrder\":3,\"items\":[{\"content\":\"原码\",\"prefix\":\"A\"},{\"content\":\"补码\",\"prefix\":\"B\"},{\"content\":\"反码\",\"prefix\":\"C\"},{\"content\":\"移码\",\"prefix\":\"D\"}],\"questionTitle\":\"若某数 x 的真值 -0.1010，在计算机中该数表示为 1.0110，则该数所用的编码方法是（         ）\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"无\",\"correct\":\"B\",\"id\":72,\"itemOrder\":4,\"items\":[{\"content\":\"计算变量的值\",\"prefix\":\"A\"},{\"content\":\"获取变量所占的字节数\",\"prefix\":\"B\"},{\"content\":\"计算数组的长度\",\"prefix\":\"C\"},{\"content\":\"返回数据类型的最大值\",\"prefix\":\"D\"}],\"questionTitle\":\"C语言中的sizeof运算符用于：\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"Booth 规则：10 时加负被乘数，算术右移；01 加正被乘数后右移。\",\"correct\":\"D\",\"id\":120,\"itemOrder\":5,\"items\":[{\"content\":\"原部分积加[X]补后再左移一位\",\"prefix\":\"A\"},{\"content\":\"原部分积加[-X]补后再左移一位\",\"prefix\":\"B\"},{\"content\":\"原部分积加[X]补后再右移一位\",\"prefix\":\"C\"},{\"content\":\"原部分积加[-X]补后再右移一位\",\"prefix', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 09:42:03', 33);
+INSERT INTO `sys_oper_log` VALUES (647, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p>6666</p><p><br></p><p><img src=\\\"/dev-apiquiz/paper/answer/2025/11/24/e8279544864f48299cf4afedd815ed6d.jpg\\\"></p>\",\"correct\":\"B\",\"correctArray\":[],\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"1+1等于几\",\"questionType\":1,\"score\":1,\"subjectId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 20:16:14', 24);
+INSERT INTO `sys_oper_log` VALUES (648, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p>无<img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/bf00f01f7f5e4c7da84078278ae49642.jpg\\\"></p>\",\"correct\":\"B\",\"correctArray\":[],\"items\":[{\"content\":\"34\",\"prefix\":\"A\"},{\"content\":\"534\",\"prefix\":\"B\"},{\"content\":\"5\",\"prefix\":\"C\"},{\"content\":\"35\",\"prefix\":\"D\"}],\"questionTitle\":\"345\",\"questionType\":1,\"score\":1,\"subjectId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 20:29:41', 19);
+INSERT INTO `sys_oper_log` VALUES (649, '试卷', 2, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"paperId\":91,\"paperName\":\"期中考试复习\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"补码让加减统一用加法器完成，硬件最简。\",\"correct\":\"D\",\"id\":112,\"itemOrder\":0,\"items\":[{\"content\":\"与手工运算方式保持一致\",\"prefix\":\"A\"},{\"content\":\"提高运算速度\",\"prefix\":\"B\"},{\"content\":\"提高运算精度\",\"prefix\":\"C\"},{\"content\":\"简化计算机的设计\",\"prefix\":\"D\"}],\"questionTitle\":\"机器系统中采用补码运算的目的是为了(         )。\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"n 位补码范围 [−2^(n−1), 2^(n−1)−1]，8 位最小 −128，最大 127。\",\"correct\":\"D\",\"id\":111,\"itemOrder\":1,\"items\":[{\"content\":\"-127～+127\",\"prefix\":\"A\"},{\"content\":\"-2^-127～+2^-127\",\"prefix\":\"B\"},{\"content\":\"2^-128～2^+127\",\"prefix\":\"C\"},{\"content\":\"-128～+127\",\"prefix\":\"D\"}],\"questionTitle\":\"定点 8 位字长，2 的补码表示 8 位二进制整数，可表示的数范围为（        ）。\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"先对阶对齐指数，再做尾数运算，最后规格化。\",\"correct\":\"B\",\"id\":117,\"itemOrder\":2,\"items\":[{\"content\":\"直接相加减\",\"prefix\":\"A\"},{\"content\":\"对阶操作\",\"prefix\":\"B\"},{\"content\":\"尾数相加减\",\"prefix\":\"C\"},{\"content\":\"规格化处理\",\"prefix\":\"D\"}],\"questionTitle\":\"在浮点数加减法运算中，首先需要进行的操作是？\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"补码：正数补码同原码，负数取反加 1；0.1010 -> 0101 -> 0110，得到 1.0110。\",\"correct\":\"B\",\"id\":110,\"itemOrder\":3,\"items\":[{\"content\":\"原码\",\"prefix\":\"A\"},{\"content\":\"补码\",\"prefix\":\"B\"},{\"content\":\"反码\",\"prefix\":\"C\"},{\"content\":\"移码\",\"prefix\":\"D\"}],\"questionTitle\":\"若某数 x 的真值 -0.1010，在计算机中该数表示为 1.0110，则该数所用的编码方法是（         ）\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"无\",\"correct\":\"B\",\"id\":72,\"itemOrder\":4,\"items\":[{\"content\":\"计算变量的值\",\"prefix\":\"A\"},{\"content\":\"获取变量所占的字节数\",\"prefix\":\"B\"},{\"content\":\"计算数组的长度\",\"prefix\":\"C\"},{\"content\":\"返回数据类型的最大值\",\"prefix\":\"D\"}],\"questionTitle\":\"C语言中的sizeof运算符用于：\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"Booth 规则：10 时加负被乘数，算术右移；01 加正被乘数后右移。\",\"correct\":\"D\",\"id\":120,\"itemOrder\":5,\"items\":[{\"content\":\"原部分积加[X]补后再左移一位\",\"prefix\":\"A\"},{\"content\":\"原部分积加[-X]补后再左移一位\",\"prefix\":\"B\"},{\"content\":\"原部分积加[X]补后再右移一位\",\"prefix\":\"C\"},{\"content\":\"原部分积加[-X]补后再右移一位\",\"prefix', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 20:30:07', 58);
+INSERT INTO `sys_oper_log` VALUES (650, '题目表', 2, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p>无<img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/bf00f01f7f5e4c7da84078278ae49642.jpg\\\"></p><p><br></p><p><br></p>\",\"correct\":\"B\",\"correctArray\":[],\"id\":142,\"items\":[{\"content\":\"34\",\"prefix\":\"A\"},{\"content\":\"534\",\"prefix\":\"B\"},{\"content\":\"5\",\"prefix\":\"C\"},{\"content\":\"35\",\"prefix\":\"D\"}],\"questionTitle\":\"345\",\"questionType\":1,\"score\":1,\"subjectId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 20:37:41', 27);
+INSERT INTO `sys_oper_log` VALUES (651, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/730a7d39f808440cb4ef3b92e2ebdc5e.jpg\\\"></p><p><br></p><p>6666</p>\",\"correct\":\"B\",\"correctArray\":[],\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"一加一等于几\",\"questionType\":1,\"score\":1,\"subjectId\":2}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 20:42:34', 14);
+INSERT INTO `sys_oper_log` VALUES (652, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p>6666</p>\",\"correct\":\"\",\"correctArray\":[\"C\",\"B\"],\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 20:43:28', 13);
+INSERT INTO `sys_oper_log` VALUES (653, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"correctArray\":[],\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 20:43:47', 12);
+INSERT INTO `sys_oper_log` VALUES (654, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p>无</p>\",\"correct\":\"A\",\"correctArray\":[],\"items\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"选对的\",\"questionType\":4,\"score\":1,\"subjectId\":2}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 20:43:55', 11);
+INSERT INTO `sys_oper_log` VALUES (655, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p>666</p>\",\"correct\":\"666\",\"correctArray\":[],\"items\":[],\"questionTitle\":\"填666\",\"questionType\":5,\"score\":1,\"subjectId\":2}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 20:44:05', 6);
+INSERT INTO `sys_oper_log` VALUES (656, '试卷', 1, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"endTime\":\"2025-12-06 00:00:00\",\"paperName\":\"测试试卷\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/730a7d39f808440cb4ef3b92e2ebdc5e.jpg\\\"></p><p><br></p><p>6666</p>\",\"correct\":\"B\",\"id\":143,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"一加一等于几\",\"questionType\":1,\"score\":1,\"subjectId\":2}]},{\"name\":\"多选题\",\"questionDtos\":[{\"analysis\":\"<p>6666</p>\",\"correctArray\":[\"C\",\"B\"],\"id\":144,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2}]},{\"name\":\"判断题\",\"questionDtos\":[{\"analysis\":\"<p>无</p>\",\"correct\":\"A\",\"id\":146,\"items\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"选对的\",\"questionType\":4,\"score\":1,\"subjectId\":2}]},{\"name\":\"填空题\",\"questionDtos\":[{\"analysis\":\"<p>666</p>\",\"correct\":\"666\",\"id\":147,\"items\":[],\"questionTitle\":\"填666\",\"questionType\":5,\"score\":1,\"subjectId\":2}]},{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"id\":145,\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2}]}],\"paperType\":1,\"questionCount\":0,\"score\":0,\"startTime\":\"2025-11-24 20:45:51\",\"subjectId\":2,\"suggestTime\":1}', '{\"msg\":\"操作成功\",\"code\":200,\"data\":{\"enableAntiCheat\":false,\"endTime\":\"2025-12-06 00:00:00\",\"paperId\":93,\"paperName\":\"测试试卷\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/730a7d39f808440cb4ef3b92e2ebdc5e.jpg\\\"></p><p><br></p><p>6666</p>\",\"correct\":\"B\",\"id\":143,\"itemOrder\":0,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"一加一等于几\",\"questionType\":1,\"score\":1,\"subjectId\":2}]},{\"name\":\"多选题\",\"questionDtos\":[{\"analysis\":\"<p>6666</p>\",\"correctArray\":[\"C\",\"B\"],\"id\":144,\"itemOrder\":1,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2}]},{\"name\":\"判断题\",\"questionDtos\":[{\"analysis\":\"<p>无</p>\",\"correct\":\"A\",\"id\":146,\"itemOrder\":2,\"items\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"选对的\",\"questionType\":4,\"score\":1,\"subjectId\":2}]},{\"name\":\"填空题\",\"questionDtos\":[{\"analysis\":\"<p>666</p>\",\"correct\":\"666\",\"id\":147,\"itemOrder\":3,\"items\":[],\"questionTitle\":\"填666\",\"questionType\":5,\"score\":1,\"subjectId\":2}]},{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"id\":145,\"itemOrder\":4,\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2}]}],\"paperType\":1,\"questionCount\":5,\"score\":5,\"startTime\":\"2025-11-24 20:45:51\",\"subjectId\":2,\"suggestTime\":1}}', 0, NULL, '2025-11-24 20:48:06', 41);
+INSERT INTO `sys_oper_log` VALUES (657, '试卷', 0, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.autoCompose()', 'POST', 1, 'admin', '研发部门', '/quiz/paper/auto-compose', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"paperName\":\"测试自动组卷\",\"paperType\":1,\"rules\":[{\"questionCount\":3,\"questionType\":1,\"sectionName\":\"\"},{\"questionCount\":2,\"questionType\":2,\"sectionName\":\"\"},{\"questionCount\":2,\"questionType\":3,\"sectionName\":\"\"},{\"questionCount\":2,\"questionType\":4,\"sectionName\":\"\"},{\"questionCount\":1,\"questionType\":5,\"sectionName\":\"\"}],\"subjectId\":2,\"suggestTime\":1}', '{\"msg\":\"操作成功\",\"code\":200,\"data\":{\"enableAntiCheat\":false,\"paperName\":\"测试自动组卷\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"无\",\"correct\":\"C\",\"id\":71,\"itemOrder\":0,\"items\":[{\"content\":\"1st_variable\",\"prefix\":\"A\"},{\"content\":\"first-variable\",\"prefix\":\"B\"},{\"content\":\"first_variable\",\"prefix\":\"C\"},{\"content\":\"first variable\",\"prefix\":\"D\"}],\"questionTitle\":\"C语言中，以下哪个选项是合法的变量名？\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"无\",\"correct\":\"C\",\"id\":66,\"itemOrder\":1,\"items\":[{\"content\":\"1001\",\"prefix\":\"A\"},{\"content\":\"1100\",\"prefix\":\"B\"},{\"content\":\"1000\",\"prefix\":\"C\"},{\"content\":\"1011\",\"prefix\":\"D\"}],\"questionTitle\":\"十进制数8转换为二进制数为\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"程序与数据同存，按指令序列取指执行，即存储程序控制。\",\"correct\":\"B\",\"id\":119,\"itemOrder\":2,\"items\":[{\"content\":\"数据流驱动\",\"prefix\":\"A\"},{\"content\":\"存储程序控制\",\"prefix\":\"B\"},{\"content\":\"并行处理\",\"prefix\":\"C\"},{\"content\":\"多指令流多数据流\",\"prefix\":\"D\"}],\"questionTitle\":\"冯·诺依曼计算机体系的核心思想是（  ）。\",\"questionType\":1,\"score\":1,\"subjectId\":2}]},{\"name\":\"多选题\",\"questionDtos\":[{\"analysis\":\"<p>6666</p>\",\"correctArray\":[\"C\",\"B\"],\"id\":144,\"itemOrder\":3,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2},{\"analysis\":\"无\",\"correctArray\":[\"B\",\"C\"],\"id\":136,\"itemOrder\":4,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"测试多选题\",\"questionType\":2,\"score\":1,\"subjectId\":2}]},{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"id\":145,\"itemOrder\":5,\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2},{\"analysis\":\"\",\"correct\":\"1.存储程序，程序和数据都存在内存里；2.顺序执行为主；3.计算机由五大部件组成，运算器，控制器，存储器，输入输出；4.指令和数据都采用二进制表示；5.指令由操作码和地址码组成\",\"id\":132,\"itemOrder\":6', 0, NULL, '2025-11-24 20:49:15', 25);
+INSERT INTO `sys_oper_log` VALUES (658, '试卷', 1, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"endTime\":\"2025-12-06 00:00:00\",\"paperName\":\"测试自动组卷\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"无\",\"correct\":\"C\",\"id\":71,\"itemOrder\":0,\"items\":[{\"content\":\"1st_variable\",\"prefix\":\"A\"},{\"content\":\"first-variable\",\"prefix\":\"B\"},{\"content\":\"first_variable\",\"prefix\":\"C\"},{\"content\":\"first variable\",\"prefix\":\"D\"}],\"questionTitle\":\"C语言中，以下哪个选项是合法的变量名？\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"无\",\"correct\":\"C\",\"id\":66,\"itemOrder\":1,\"items\":[{\"content\":\"1001\",\"prefix\":\"A\"},{\"content\":\"1100\",\"prefix\":\"B\"},{\"content\":\"1000\",\"prefix\":\"C\"},{\"content\":\"1011\",\"prefix\":\"D\"}],\"questionTitle\":\"十进制数8转换为二进制数为\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"程序与数据同存，按指令序列取指执行，即存储程序控制。\",\"correct\":\"B\",\"id\":119,\"itemOrder\":2,\"items\":[{\"content\":\"数据流驱动\",\"prefix\":\"A\"},{\"content\":\"存储程序控制\",\"prefix\":\"B\"},{\"content\":\"并行处理\",\"prefix\":\"C\"},{\"content\":\"多指令流多数据流\",\"prefix\":\"D\"}],\"questionTitle\":\"冯·诺依曼计算机体系的核心思想是（  ）。\",\"questionType\":1,\"score\":1,\"subjectId\":2}]},{\"name\":\"多选题\",\"questionDtos\":[{\"analysis\":\"<p>6666</p>\",\"correctArray\":[\"C\",\"B\"],\"id\":144,\"itemOrder\":3,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2},{\"analysis\":\"无\",\"correctArray\":[\"B\",\"C\"],\"id\":136,\"itemOrder\":4,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"测试多选题\",\"questionType\":2,\"score\":1,\"subjectId\":2}]},{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"id\":145,\"itemOrder\":5,\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2},{\"analysis\":\"\",\"correct\":\"1.存储程序，程序和数据都存在内存里；2.顺序执行为主；3.计算机由五大部件组成，运算器，控制器，存储器，输入输出；4.指令和数据都采用二进制表示；5.指令由操作码和地址码组成\",\"id\":132,\"itemOrder\":6', '{\"msg\":\"操作成功\",\"code\":200,\"data\":{\"enableAntiCheat\":false,\"endTime\":\"2025-12-06 00:00:00\",\"paperId\":94,\"paperName\":\"测试自动组卷\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"无\",\"correct\":\"C\",\"id\":71,\"itemOrder\":0,\"items\":[{\"content\":\"1st_variable\",\"prefix\":\"A\"},{\"content\":\"first-variable\",\"prefix\":\"B\"},{\"content\":\"first_variable\",\"prefix\":\"C\"},{\"content\":\"first variable\",\"prefix\":\"D\"}],\"questionTitle\":\"C语言中，以下哪个选项是合法的变量名？\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"无\",\"correct\":\"C\",\"id\":66,\"itemOrder\":1,\"items\":[{\"content\":\"1001\",\"prefix\":\"A\"},{\"content\":\"1100\",\"prefix\":\"B\"},{\"content\":\"1000\",\"prefix\":\"C\"},{\"content\":\"1011\",\"prefix\":\"D\"}],\"questionTitle\":\"十进制数8转换为二进制数为\",\"questionType\":1,\"score\":1,\"subjectId\":2},{\"analysis\":\"程序与数据同存，按指令序列取指执行，即存储程序控制。\",\"correct\":\"B\",\"id\":119,\"itemOrder\":2,\"items\":[{\"content\":\"数据流驱动\",\"prefix\":\"A\"},{\"content\":\"存储程序控制\",\"prefix\":\"B\"},{\"content\":\"并行处理\",\"prefix\":\"C\"},{\"content\":\"多指令流多数据流\",\"prefix\":\"D\"}],\"questionTitle\":\"冯·诺依曼计算机体系的核心思想是（  ）。\",\"questionType\":1,\"score\":1,\"subjectId\":2}]},{\"name\":\"多选题\",\"questionDtos\":[{\"analysis\":\"<p>6666</p>\",\"correctArray\":[\"C\",\"B\"],\"id\":144,\"itemOrder\":3,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2},{\"analysis\":\"无\",\"correctArray\":[\"B\",\"C\"],\"id\":136,\"itemOrder\":4,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"测试多选题\",\"questionType\":2,\"score\":1,\"subjectId\":2}]},{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"id\":145,\"itemOrder\":5,\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2},{\"analysis\":\"\",\"correct\":\"1.存储程序，程序和数据都存在内存里；2.顺序执行为主；3.计算机由五大部件组成，运算器，控制器，存储器，输入输出；4.指令和数据都采', 0, NULL, '2025-11-24 20:49:22', 23);
+INSERT INTO `sys_oper_log` VALUES (659, '公告管理', 2, 'com.ruoyi.web.controller.quiz.admin.DamingNoticeController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/notice', '127.0.0.1', '内网IP', '{\"createTime\":\"2025-11-23 14:02:03\",\"createUser\":\"admin\",\"delFlag\":\"0\",\"isTop\":1,\"noticeContent\":\"尊敬的用户，系统将于本周六（2025年11月23日）凌晨2:00-4:00进行系统维护升级，期间将暂停服务，请各位用户合理安排考试时间。给您带来的不便敬请谅解！\",\"noticeId\":1,\"noticeTitle\":\"系统维护通知666\",\"noticeType\":1,\"params\":{},\"publishTime\":\"2025-11-23 14:02:03\",\"remark\":\"系统维护公告\",\"sortOrder\":100,\"status\":1,\"updateTime\":\"2025-11-24 15:11:37\",\"updateUser\":\"admin\",\"viewCount\":4}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 21:36:41', 22);
+INSERT INTO `sys_oper_log` VALUES (660, '处理反馈', 2, 'com.ruoyi.web.controller.quiz.admin.DamingFeedbackController.handle()', 'PUT', 1, 'admin', '研发部门', '/quiz/feedback/handle', '127.0.0.1', '内网IP', '{\"contactInfo\":\"1626016153@qq.com\",\"createTime\":\"2025-11-24 21:37:05\",\"createUser\":\"test666\",\"delFlag\":\"0\",\"feedbackContent\":\"有问题有问题有问题有问题\",\"feedbackId\":7,\"feedbackTitle\":\"有问题有问题\",\"feedbackType\":1,\"params\":{},\"priority\":1,\"replyContent\":\"已解决已解决已解决已解决\",\"status\":2,\"updateTime\":\"2025-11-24 21:37:05\",\"userId\":\"test666\",\"userName\":\"testzww\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 21:37:43', 19);
+INSERT INTO `sys_oper_log` VALUES (661, '试卷', 2, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":true,\"endTime\":\"2025-12-06 00:00:00\",\"paperId\":93,\"paperName\":\"测试试卷\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/730a7d39f808440cb4ef3b92e2ebdc5e.jpg\\\"></p><p><br></p><p>6666</p>\",\"correct\":\"B\",\"id\":143,\"itemOrder\":0,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"一加一等于几\",\"questionType\":1,\"score\":1,\"subjectId\":2}]},{\"name\":\"多选题\",\"questionDtos\":[{\"analysis\":\"<p>6666</p>\",\"correctArray\":[\"C\",\"B\"],\"id\":144,\"itemOrder\":1,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2}]},{\"name\":\"判断题\",\"questionDtos\":[{\"analysis\":\"<p>无</p>\",\"correct\":\"A\",\"id\":146,\"itemOrder\":2,\"items\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"选对的\",\"questionType\":4,\"score\":1,\"subjectId\":2}]},{\"name\":\"填空题\",\"questionDtos\":[{\"analysis\":\"<p>666</p>\",\"correct\":\"666\",\"id\":147,\"itemOrder\":3,\"items\":[],\"questionTitle\":\"填666\",\"questionType\":5,\"score\":1,\"subjectId\":2}]},{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"id\":145,\"itemOrder\":4,\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2}]}],\"paperType\":1,\"questionCount\":5,\"score\":5,\"startTime\":\"2025-11-24 20:45:51\",\"subjectId\":2,\"suggestTime\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-24 21:38:23', 24);
+INSERT INTO `sys_oper_log` VALUES (662, '刷题用户', 2, 'com.ruoyi.web.controller.quiz.admin.DamingUserController.updateInfo()', 'PUT', 1, 'admin', '研发部门', '/quiz/user', '127.0.0.1', '内网IP', '{\"avatar\":\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/eb971a79209b4157952748788f557206.jpg\",\"createTime\":\"2025-11-24 18:40:36\",\"delFlag\":\"0\",\"nickName\":\"Jafferen\",\"params\":{},\"updateTime\":\"2025-11-25 12:17:41\",\"userId\":1,\"userName\":\"123\"}', '{\"msg\":\"操作成功\",\"imgUrl\":\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/eb971a79209b4157952748788f557206.jpg\",\"code\":200}', 0, NULL, '2025-11-25 12:17:41', 16);
+INSERT INTO `sys_oper_log` VALUES (663, '刷题用户', 2, 'com.ruoyi.web.controller.quiz.admin.DamingUserController.updateInfo()', 'PUT', 1, 'admin', '研发部门', '/quiz/user', '127.0.0.1', '内网IP', '{\"avatar\":\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/8bdc8be71c3342be9275b0836b1f4055.jpg\",\"delFlag\":\"0\",\"nickName\":\"zww2\",\"params\":{},\"updateTime\":\"2025-11-25 12:17:55\",\"userId\":5,\"userName\":\"test\"}', '{\"msg\":\"操作成功\",\"imgUrl\":\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/8bdc8be71c3342be9275b0836b1f4055.jpg\",\"code\":200}', 0, NULL, '2025-11-25 12:17:55', 12);
+INSERT INTO `sys_oper_log` VALUES (664, '刷题用户', 2, 'com.ruoyi.web.controller.quiz.admin.DamingUserController.updateInfo()', 'PUT', 1, 'admin', '研发部门', '/quiz/user', '127.0.0.1', '内网IP', '{\"avatar\":\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/6c3f5474645346dc87774cdbe78c8699.jpg\",\"delFlag\":\"0\",\"nickName\":\"test2\",\"params\":{},\"updateTime\":\"2025-11-25 12:18:00\",\"userId\":6,\"userName\":\"test2\"}', '{\"msg\":\"操作成功\",\"imgUrl\":\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/6c3f5474645346dc87774cdbe78c8699.jpg\",\"code\":200}', 0, NULL, '2025-11-25 12:18:00', 9);
+INSERT INTO `sys_oper_log` VALUES (665, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"无\",\"correct\":\"A\",\"correctArray\":[],\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/c2a8f21c843f4b6c9cef5dfe0dfb477e.jpg\\\"></p><p><br></p><p>6666</p>\",\"questionType\":1,\"score\":1,\"subjectId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-25 14:08:12', 17);
+INSERT INTO `sys_oper_log` VALUES (666, '试卷', 2, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":true,\"endTime\":\"2025-12-06 00:00:00\",\"paperId\":93,\"paperName\":\"测试试卷\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/730a7d39f808440cb4ef3b92e2ebdc5e.jpg\\\"></p><p><br></p><p>6666</p>\",\"correct\":\"B\",\"id\":143,\"itemOrder\":0,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"一加一等于几\",\"questionType\":1,\"score\":1,\"subjectId\":2}]},{\"name\":\"多选题\",\"questionDtos\":[{\"analysis\":\"<p>6666</p>\",\"correctArray\":[\"C\",\"B\"],\"id\":144,\"itemOrder\":1,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2}]},{\"name\":\"判断题\",\"questionDtos\":[{\"analysis\":\"<p>无</p>\",\"correct\":\"A\",\"id\":146,\"itemOrder\":2,\"items\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"选对的\",\"questionType\":4,\"score\":1,\"subjectId\":2}]},{\"name\":\"填空题\",\"questionDtos\":[{\"analysis\":\"<p>666</p>\",\"correct\":\"666\",\"id\":147,\"itemOrder\":3,\"items\":[],\"questionTitle\":\"填666\",\"questionType\":5,\"score\":1,\"subjectId\":2}]},{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"id\":145,\"itemOrder\":4,\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2}]},{\"name\":\"999\",\"questionDtos\":[{\"analysis\":\"无\",\"correct\":\"A\",\"id\":148,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/c2a8f21c843f4b6c9cef5dfe0dfb477e.jpg\\\"></p><p><br></p><p>6666</p>\",\"questionType\":1,\"score\":1,\"subjectId\":1}]}],\"paperType\":1,\"questionCount\":5,\"score\"', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-25 14:09:34', 25);
+INSERT INTO `sys_oper_log` VALUES (667, '试卷', 2, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"endTime\":\"2025-12-06 00:00:00\",\"paperId\":93,\"paperName\":\"测试试卷\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/730a7d39f808440cb4ef3b92e2ebdc5e.jpg\\\"></p><p><br></p><p>6666</p>\",\"correct\":\"B\",\"id\":143,\"itemOrder\":0,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"一加一等于几\",\"questionType\":1,\"score\":1,\"subjectId\":2}]},{\"name\":\"多选题\",\"questionDtos\":[{\"analysis\":\"<p>6666</p>\",\"correctArray\":[\"C\",\"B\"],\"id\":144,\"itemOrder\":1,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2}]},{\"name\":\"判断题\",\"questionDtos\":[{\"analysis\":\"<p>无</p>\",\"correct\":\"A\",\"id\":146,\"itemOrder\":2,\"items\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"选对的\",\"questionType\":4,\"score\":1,\"subjectId\":2}]},{\"name\":\"填空题\",\"questionDtos\":[{\"analysis\":\"<p>666</p>\",\"correct\":\"666\",\"id\":147,\"itemOrder\":3,\"items\":[],\"questionTitle\":\"填666\",\"questionType\":5,\"score\":1,\"subjectId\":2}]},{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"id\":145,\"itemOrder\":4,\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2}]},{\"name\":\"999\",\"questionDtos\":[{\"analysis\":\"无\",\"correct\":\"A\",\"id\":148,\"itemOrder\":5,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/c2a8f21c843f4b6c9cef5dfe0dfb477e.jpg\\\"></p><p><br></p><p>6666</p>\",\"questionType\":1,\"score\":1,\"subjectId\":1}]}],\"paperType\":1,\"questionC', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-25 14:12:27', 12);
+INSERT INTO `sys_oper_log` VALUES (668, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p>A ：右侧的 + 被省略，包含两个意思，可以生成二者，也可以生成二者之一</p><p>B ：加号外一圈的符号叫做<strong style=\\\"background-color: rgb(255, 255, 255);\\\">异或关系符号，</strong><span style=\\\"background-color: rgb(255, 255, 255);\\\">二者之中只能存在其一，不能同时存在，这里说他是和，因此错误</span></p><p><span style=\\\"background-color: rgb(255, 255, 255);\\\">C：正确，*号表示和，二者必须同时存在</span></p><p><span style=\\\"background-color: rgb(255, 255, 255);\\\">D：此处的+号可以省略，两层意思，一层为A或B可以同时输入变成C，也可以二者其中之一输入变成C</span></p>\",\"correct\":\"C\",\"correctArray\":[],\"items\":[{\"content\":\"<p><span style=\\\"background-color: rgb(255, 255, 255); color: rgb(85, 85, 85);\\\">数据A变换成B和C</span></p><p><br></p><p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/e5327749a2584b259743e2fcbe899e0a.png\\\"></p>\",\"prefix\":\"A\"},{\"content\":\"<p>数据A变换成B和C</p><p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/e706e27d6f014595987550aedadc2230.png\\\"></p>\",\"prefix\":\"B\"},{\"content\":\"<p>数据A和B同时输入变成C</p><p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/3c340e8f35204113b462d44736b24068.png\\\"></p>\",\"prefix\":\"C\"},{\"content\":\"<p>数据A或数据B（不能同时）输入，变换成C</p><p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/c3be7db3650e41a3aad622dda2c29628.png\\\"></p>\",\"prefix\":\"D\"}],\"questionTitle\":\"<p><span style=\\\"background-color: rgb(255, 255, 255); color: rgb(32, 32, 32);\\\">对于下列各图，有关描述中正确的是（ ）。</span></p>\",\"questionType\":1,\"score\":1,\"subjectId\":1}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-25 14:40:43', 7);
+INSERT INTO `sys_oper_log` VALUES (669, '试卷', 2, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"endTime\":\"2025-12-06 00:00:00\",\"paperId\":93,\"paperName\":\"测试试卷\",\"paperQuestionTypeDto\":[{\"name\":\"单选题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/730a7d39f808440cb4ef3b92e2ebdc5e.jpg\\\"></p><p><br></p><p>6666</p>\",\"correct\":\"B\",\"id\":143,\"itemOrder\":0,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"一加一等于几\",\"questionType\":1,\"score\":1,\"subjectId\":2}]},{\"name\":\"多选题\",\"questionDtos\":[{\"analysis\":\"<p>6666</p>\",\"correctArray\":[\"C\",\"B\"],\"id\":144,\"itemOrder\":1,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"选B和C\",\"questionType\":2,\"score\":1,\"subjectId\":2}]},{\"name\":\"判断题\",\"questionDtos\":[{\"analysis\":\"<p>无</p>\",\"correct\":\"A\",\"id\":146,\"itemOrder\":2,\"items\":[{\"content\":\"正确\",\"prefix\":\"A\"},{\"content\":\"错误\",\"prefix\":\"B\"}],\"questionTitle\":\"选对的\",\"questionType\":4,\"score\":1,\"subjectId\":2}]},{\"name\":\"填空题\",\"questionDtos\":[{\"analysis\":\"<p>666</p>\",\"correct\":\"666\",\"id\":147,\"itemOrder\":3,\"items\":[],\"questionTitle\":\"填666\",\"questionType\":5,\"score\":1,\"subjectId\":2}]},{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/24/0ab473366e94454fa6c55e5f55db8e93.jpg\\\"></p>\",\"correct\":\"666\",\"id\":145,\"itemOrder\":4,\"items\":[],\"questionTitle\":\"输入666\",\"questionType\":3,\"score\":1,\"subjectId\":2}]},{\"name\":\"999\",\"questionDtos\":[{\"analysis\":\"无\",\"correct\":\"A\",\"id\":148,\"itemOrder\":5,\"items\":[{\"content\":\"1\",\"prefix\":\"A\"},{\"content\":\"2\",\"prefix\":\"B\"},{\"content\":\"3\",\"prefix\":\"C\"},{\"content\":\"4\",\"prefix\":\"D\"}],\"questionTitle\":\"<p><img src=\\\"https://daming-paper.oss-cn-guangzhou.aliyuncs.com/quiz/paper/answer/2025/11/25/c2a8f21c843f4b6c9cef5dfe0dfb477e.jpg\\\"></p><p><br></p><p>6666</p>\",\"questionType\":1,\"score\":1,\"subjectId\":1},{\"analysis\":\"<p>A ：右侧的 + 被省', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-25 14:45:47', 14);
+INSERT INTO `sys_oper_log` VALUES (670, '题目表', 6, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.importData()', 'POST', 1, 'admin', '研发部门', '/quiz/question/importData', '127.0.0.1', '内网IP', '', '{\"msg\":\"恭喜您，数据已全部导入成功！共 5 条数据，操作人：admin<br/>1、题目：示例：这是一道单选题题干？ 导入成功<br/>2、题目：示例：这是一道多选题题干？（多选） 导入成功<br/>3、题目：示例：这是一道主观题题干，请简述xxx的特点？ 导入成功<br/>4、题目：示例：这是一道判断题题干，xxx说法是否正确？ 导入成功<br/>5、题目：示例：这是一道填空题题干，请填写____的值 导入成功\",\"code\":200}', 0, NULL, '2025-11-25 18:13:24', 167);
+INSERT INTO `sys_oper_log` VALUES (671, '题目表', 3, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.remove()', 'DELETE', 1, 'admin', '研发部门', '/quiz/question/150,151,152,153,154', '127.0.0.1', '内网IP', '{}', '{\"msg\":\"删除成功\",\"code\":200}', 0, NULL, '2025-11-25 18:15:02', 42);
+INSERT INTO `sys_oper_log` VALUES (672, '题目表', 6, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.importData()', 'POST', 1, 'admin', '研发部门', '/quiz/question/importData', '127.0.0.1', '内网IP', '', '{\"msg\":\"恭喜您，数据已全部导入成功！共 5 条数据，操作人：admin<br/>1、题目：示例：这是一道单选题题干？ 导入成功<br/>2、题目：示例：这是一道多选题题干？（多选） 导入成功<br/>3、题目：示例：这是一道主观题题干，请简述xxx的特点？ 导入成功<br/>4、题目：示例：这是一道判断题题干，xxx说法是否正确？ 导入成功<br/>5、题目：示例：这是一道填空题题干，请填写____的值 导入成功\",\"code\":200}', 0, NULL, '2025-11-25 18:16:21', 41);
+INSERT INTO `sys_oper_log` VALUES (673, '科目管理', 1, 'com.ruoyi.web.controller.quiz.admin.DamingSubjectController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/subject', '127.0.0.1', '内网IP', '{\"createTime\":\"2025-11-29 16:43:44\",\"delFlag\":0,\"params\":{},\"subjectId\":3,\"subjectName\":\"计算机系统结构\",\"updateTime\":\"2025-11-29 16:43:44\"}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-29 16:43:44', 30);
+INSERT INTO `sys_oper_log` VALUES (674, '题目表', 1, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul><p><br></p><p><br></p>\",\"correct\":\"操作码 + 操作数\",\"correctArray\":[],\"items\":[],\"questionTitle\":\"<p><strong style=\\\"background-color: rgb(255, 255, 255); color: var(--strong-color);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-29 16:44:42', 18);
+INSERT INTO `sys_oper_log` VALUES (675, '试卷', 1, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"endTime\":\"\",\"paperName\":\"知识点跳转\",\"paperQuestionTypeDto\":[{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul><p><br></p><p><br></p>\",\"correct\":\"操作码 + 操作数\",\"id\":160,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"background-color: rgb(255, 255, 255); color: var(--strong-color);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}]}],\"paperType\":1,\"questionCount\":0,\"score\":0,\"startTime\":\"\",\"subjectId\":3,\"suggestTime\":1}', NULL, 1, 'ModelMapper mapping errors:\r\n\r\n1) Converter org.modelmapper.internal.converter.DateConverter@693b9c failed to convert java.lang.String to java.util.Date.\r\nCaused by: org.modelmapper.MappingException: ModelMapper mapping errors:\r\n\r\n1) String must be in DATE format [yyyy-MM-dd] to create a java.util.Date\r\n\r\n1 error\r\n	at org.modelmapper.internal.Errors.toMappingException(Errors.java:258)\r\n	at org.modelmapper.internal.converter.DateConverter.dateFor(DateConverter.java:136)\r\n	at org.modelmapper.internal.converter.DateConverter.convert(DateConverter.java:70)\r\n	at org.modelmapper.internal.converter.DateConverter.convert(DateConverter.java:53)\r\n	at org.modelmapper.internal.MappingEngineImpl.convert(MappingEngineImpl.java:303)\r\n	at org.modelmapper.internal.MappingEngineImpl.map(MappingEngineImpl.java:110)\r\n	at org.modelmapper.internal.MappingEngineImpl.setDestinationValue(MappingEngineImpl.java:242)\r\n	at org.modelmapper.internal.MappingEngineImpl.propertyMap(MappingEngineImpl.java:188)\r\n	at org.modelmapper.internal.MappingEngineImpl.typeMap(MappingEngineImpl.java:152)\r\n	at org.modelmapper.internal.MappingEngineImpl.map(MappingEngineImpl.java:115)\r\n	at org.modelmapper.internal.MappingEngineImpl.map(MappingEngineImpl.java:72)\r\n	at org.modelmapper.ModelMapper.mapInternal(ModelMapper.java:573)\r\n	at org.modelmapper.ModelMapper.map(ModelMapper.java:406)\r\n	at com.dm.quiz.service.impl.DamingPaperServiceImpl.insertDamingPaper(DamingPaperServiceImpl.java:104)\r\n	at com.dm.quiz.service.impl.DamingPaperServiceImpl$$FastClassBySpringCGLIB$$b5a5cf6f.invoke(<generated>)\r\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\r\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\r\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\r\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\r\n	at org.springfr', '2025-11-29 16:56:10', 139);
+INSERT INTO `sys_oper_log` VALUES (676, '试卷', 1, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"endTime\":\"\",\"paperName\":\"知识点跳转\",\"paperQuestionTypeDto\":[{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul><p><br></p><p><br></p>\",\"correct\":\"操作码 + 操作数\",\"id\":160,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"background-color: rgb(255, 255, 255); color: var(--strong-color);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}]}],\"paperType\":1,\"questionCount\":0,\"score\":0,\"startTime\":\"\",\"subjectId\":3,\"suggestTime\":1}', NULL, 1, 'ModelMapper mapping errors:\r\n\r\n1) Converter org.modelmapper.internal.converter.DateConverter@693b9c failed to convert java.lang.String to java.util.Date.\r\nCaused by: org.modelmapper.MappingException: ModelMapper mapping errors:\r\n\r\n1) String must be in DATE format [yyyy-MM-dd] to create a java.util.Date\r\n\r\n1 error\r\n	at org.modelmapper.internal.Errors.toMappingException(Errors.java:258)\r\n	at org.modelmapper.internal.converter.DateConverter.dateFor(DateConverter.java:136)\r\n	at org.modelmapper.internal.converter.DateConverter.convert(DateConverter.java:70)\r\n	at org.modelmapper.internal.converter.DateConverter.convert(DateConverter.java:53)\r\n	at org.modelmapper.internal.MappingEngineImpl.convert(MappingEngineImpl.java:303)\r\n	at org.modelmapper.internal.MappingEngineImpl.map(MappingEngineImpl.java:110)\r\n	at org.modelmapper.internal.MappingEngineImpl.setDestinationValue(MappingEngineImpl.java:242)\r\n	at org.modelmapper.internal.MappingEngineImpl.propertyMap(MappingEngineImpl.java:188)\r\n	at org.modelmapper.internal.MappingEngineImpl.typeMap(MappingEngineImpl.java:152)\r\n	at org.modelmapper.internal.MappingEngineImpl.map(MappingEngineImpl.java:106)\r\n	at org.modelmapper.internal.MappingEngineImpl.map(MappingEngineImpl.java:72)\r\n	at org.modelmapper.ModelMapper.mapInternal(ModelMapper.java:573)\r\n	at org.modelmapper.ModelMapper.map(ModelMapper.java:406)\r\n	at com.dm.quiz.service.impl.DamingPaperServiceImpl.insertDamingPaper(DamingPaperServiceImpl.java:104)\r\n	at com.dm.quiz.service.impl.DamingPaperServiceImpl$$FastClassBySpringCGLIB$$b5a5cf6f.invoke(<generated>)\r\n	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218)\r\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:792)\r\n	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)\r\n	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:762)\r\n	at org.springfr', '2025-11-29 16:57:13', 16);
+INSERT INTO `sys_oper_log` VALUES (677, '试卷', 1, 'com.ruoyi.web.controller.quiz.admin.DamingPaperController.add()', 'POST', 1, 'admin', '研发部门', '/quiz/paper', '127.0.0.1', '内网IP', '{\"enableAntiCheat\":false,\"paperName\":\"知识点跳转\",\"paperQuestionTypeDto\":[{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul><p><br></p><p><br></p>\",\"correct\":\"操作码 + 操作数\",\"id\":160,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"background-color: rgb(255, 255, 255); color: var(--strong-color);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}]}],\"paperType\":1,\"questionCount\":0,\"score\":0,\"subjectId\":3,\"suggestTime\":1}', '{\"msg\":\"操作成功\",\"code\":200,\"data\":{\"enableAntiCheat\":false,\"paperId\":95,\"paperName\":\"知识点跳转\",\"paperQuestionTypeDto\":[{\"name\":\"主观题\",\"questionDtos\":[{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul><p><br></p><p><br></p>\",\"correct\":\"操作码 + 操作数\",\"id\":160,\"itemOrder\":0,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"background-color: rgb(255, 255, 255); color: var(--strong-color);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}]}],\"paperType\":1,\"questionCount\":1,\"score\":1,\"subjectId\":3,\"suggestTime\":1}}', 0, NULL, '2025-11-29 17:06:56', 78);
+INSERT INTO `sys_oper_log` VALUES (678, '题目表', 2, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><p><br></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul><p><br></p>\",\"correct\":\"操作码 + 操作数\",\"correctArray\":[],\"id\":160,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"color: var(--strong-color); background-color: rgb(255, 255, 255);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-29 18:13:31', 38);
+INSERT INTO `sys_oper_log` VALUES (679, '题目表', 2, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><p><br></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul><p><br></p>\",\"correct\":\"操作码 + 操作数\",\"correctArray\":[],\"id\":160,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"color: var(--strong-color); background-color: rgb(255, 255, 255);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-29 21:16:38', 25);
+INSERT INTO `sys_oper_log` VALUES (680, '题目表', 2, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><p><br></p><p><br></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul>\",\"correct\":\"操作码 + 操作数\",\"correctArray\":[],\"id\":160,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"background-color: rgb(255, 255, 255); color: var(--strong-color);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-29 21:18:57', 13);
+INSERT INTO `sys_oper_log` VALUES (681, '题目表', 2, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><p><br></p><p><br></p><p><br></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul>\",\"correct\":\"操作码 + 操作数\",\"correctArray\":[],\"id\":160,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"color: var(--strong-color); background-color: rgb(255, 255, 255);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-29 21:19:52', 32);
+INSERT INTO `sys_oper_log` VALUES (682, '题目表', 2, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><p><br></p><p><br></p><p><br></p><p><br></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul>\",\"correct\":\"操作码 + 操作数\",\"correctArray\":[],\"id\":160,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"background-color: rgb(255, 255, 255); color: var(--strong-color);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-29 22:04:45', 33);
+INSERT INTO `sys_oper_log` VALUES (683, '题目表', 2, 'com.ruoyi.web.controller.quiz.admin.DamingQuestionController.edit()', 'PUT', 1, 'admin', '研发部门', '/quiz/question', '127.0.0.1', '内网IP', '{\"analysis\":\"<p><strong style=\\\"color: var(--strong-color);\\\">考点：指令格式</strong></p><p><br></p><p><br></p><p><br></p><p><br></p><ul><li><strong style=\\\"color: var(--strong-color);\\\">两部分：</strong> 操作码 + 操作数</li><li><strong style=\\\"color: var(--strong-color);\\\">一句话：</strong> 操作码说明“干什么”，操作数说明“对谁干”。</li><li><strong style=\\\"color: var(--strong-color);\\\">例子：</strong> 指令 <code style=\\\"color: var(--drake-highlight);\\\">ADD R1, R2, R3</code><strong style=\\\"color: var(--strong-color);\\\">操作码：</strong> <code style=\\\"color: var(--drake-highlight);\\\">ADD</code>（执行加法操作）<strong style=\\\"color: var(--strong-color);\\\">操作数：</strong> <code style=\\\"color: var(--drake-highlight);\\\">R1, R2, R3</code>（把寄存器R2和R3的值相加，结果存到R1）</li></ul>\",\"correct\":\"操作码 + 操作数\",\"correctArray\":[],\"id\":160,\"items\":[],\"questionTitle\":\"<p><strong style=\\\"background-color: rgb(255, 255, 255); color: var(--strong-color);\\\">指令由哪两部分组成？</strong></p>\",\"questionType\":3,\"score\":1,\"subjectId\":3}', '{\"msg\":\"操作成功\",\"code\":200}', 0, NULL, '2025-11-29 22:07:36', 7);
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -3717,6 +5443,16 @@ CREATE TABLE `sys_role_menu`  (
 -- ----------------------------
 -- Records of sys_role_menu
 -- ----------------------------
+INSERT INTO `sys_role_menu` VALUES (1, 2136);
+INSERT INTO `sys_role_menu` VALUES (1, 2137);
+INSERT INTO `sys_role_menu` VALUES (1, 2138);
+INSERT INTO `sys_role_menu` VALUES (1, 2139);
+INSERT INTO `sys_role_menu` VALUES (1, 2140);
+INSERT INTO `sys_role_menu` VALUES (1, 2141);
+INSERT INTO `sys_role_menu` VALUES (1, 2142);
+INSERT INTO `sys_role_menu` VALUES (1, 2143);
+INSERT INTO `sys_role_menu` VALUES (1, 2144);
+INSERT INTO `sys_role_menu` VALUES (1, 2145);
 INSERT INTO `sys_role_menu` VALUES (2, 1);
 INSERT INTO `sys_role_menu` VALUES (2, 2);
 INSERT INTO `sys_role_menu` VALUES (2, 3);
@@ -3728,7 +5464,6 @@ INSERT INTO `sys_role_menu` VALUES (2, 103);
 INSERT INTO `sys_role_menu` VALUES (2, 104);
 INSERT INTO `sys_role_menu` VALUES (2, 105);
 INSERT INTO `sys_role_menu` VALUES (2, 106);
-INSERT INTO `sys_role_menu` VALUES (2, 107);
 INSERT INTO `sys_role_menu` VALUES (2, 108);
 INSERT INTO `sys_role_menu` VALUES (2, 109);
 INSERT INTO `sys_role_menu` VALUES (2, 110);
@@ -3776,10 +5511,6 @@ INSERT INTO `sys_role_menu` VALUES (2, 1031);
 INSERT INTO `sys_role_menu` VALUES (2, 1032);
 INSERT INTO `sys_role_menu` VALUES (2, 1033);
 INSERT INTO `sys_role_menu` VALUES (2, 1034);
-INSERT INTO `sys_role_menu` VALUES (2, 1035);
-INSERT INTO `sys_role_menu` VALUES (2, 1036);
-INSERT INTO `sys_role_menu` VALUES (2, 1037);
-INSERT INTO `sys_role_menu` VALUES (2, 1038);
 INSERT INTO `sys_role_menu` VALUES (2, 1039);
 INSERT INTO `sys_role_menu` VALUES (2, 1040);
 INSERT INTO `sys_role_menu` VALUES (2, 1041);
@@ -3847,15 +5578,17 @@ CREATE TABLE `sys_user`  (
   `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '更新者',
   `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`user_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`user_id`) USING BTREE,
+  INDEX `idx_create_time`(`create_time`) USING BTREE COMMENT '创建时间索引',
+  INDEX `idx_delflag_create`(`del_flag`, `create_time`) USING BTREE COMMENT '删除标志和创建时间组合索引'
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (1, 103, 'admin', '若依', '00', 'ry@163.com', '15888888888', '1', '/profile/avatar/2024/10/18/barn_20241018221548A001.jpg', '$2a$10$MfStY83YAx61iz6DidjlQu52eHww54o6wfUDvhrBAKV7UZPge28Qq', '0', '0', '127.0.0.1', '2025-11-22 16:00:50', 'admin', '2024-10-06 10:58:18', '', '2025-11-22 16:00:50', '管理员');
+INSERT INTO `sys_user` VALUES (1, 103, 'admin', '若依', '00', 'ry@163.com', '15888888888', '1', '/profile/avatar/2024/10/18/barn_20241018221548A001.jpg', '$2a$10$cotMa/HHvmFBuF7HdBfZMexD7DjeVRcOwM.RHBel68/VrI9rs9PRK', '0', '0', '127.0.0.1', '2025-11-29 10:53:59', 'admin', '2024-10-06 10:58:18', '', '2025-11-29 10:53:59', '管理员');
 INSERT INTO `sys_user` VALUES (2, 105, 'ry', '若依', '00', 'ry@qq.com', '15666666666', '1', '', '$2a$10$1ZKzt6I5aZH1OsvhPetJfeVtLgotlLsMfKy3v7E0UWJpmb.TGmJIK', '0', '0', '127.0.0.1', '2024-10-06 10:58:19', 'admin', '2024-10-06 10:58:19', '', NULL, '测试员');
-INSERT INTO `sys_user` VALUES (3, 100, 'zww', 'zww', '00', '1626016153@qq.com', '15266666666', '2', '', '$2a$10$1ZKzt6I5aZH1OsvhPetJfeVtLgotlLsMfKy3v7E0UWJpmb.TGmJIK', '0', '0', '127.0.0.1', '2025-11-12 21:35:52', 'admin', '2024-10-25 21:48:10', 'admin', '2025-11-12 21:35:52', '可以增加学生账号，编写试卷，编写题目');
+INSERT INTO `sys_user` VALUES (3, 100, 'zww', 'zww', '00', '1626016153@qq.com', '15266666666', '2', '', '$2a$10$1ZKzt6I5aZH1OsvhPetJfeVtLgotlLsMfKy3v7E0UWJpmb.TGmJIK', '0', '0', '127.0.0.1', '2025-11-24 21:52:00', 'admin', '2024-10-25 21:48:10', 'admin', '2025-11-24 21:52:00', '可以增加学生账号，编写试卷，编写题目');
 
 -- ----------------------------
 -- Table structure for sys_user_post
@@ -3890,5 +5623,237 @@ INSERT INTO `sys_user_role` VALUES (1, 1);
 INSERT INTO `sys_user_role` VALUES (2, 2);
 INSERT INTO `sys_user_role` VALUES (3, 3);
 INSERT INTO `sys_user_role` VALUES (4, 3);
+
+-- ----------------------------
+-- Table structure for wx_scan_log
+-- ----------------------------
+DROP TABLE IF EXISTS `wx_scan_log`;
+CREATE TABLE `wx_scan_log`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `scene_str` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '场景值字符串（业务唯一标识）',
+  `scene_id` int(11) NOT NULL COMMENT '场景值数字（微信二维码场景值）',
+  `qrcode_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '二维码ticket（用于获取二维码图片）',
+  `qrcode_image_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '二维码图片URL',
+  `session_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'WebSocket会话ID',
+  `ip_address` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '客户端IP地址',
+  `user_agent` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '客户端User-Agent',
+  `scan_status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '扫码状态: 0-待扫码 1-已扫码 2-已授权 3-登录成功 4-已过期 5-已取消',
+  `wx_open_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信OpenID',
+  `wx_union_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信UnionID',
+  `wx_nickname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '微信昵称',
+  `daming_user_id` int(11) NULL DEFAULT NULL COMMENT '关联的前台用户ID（登录成功后填充）',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '二维码生成时间',
+  `scan_time` datetime NULL DEFAULT NULL COMMENT '用户扫码时间',
+  `auth_time` datetime NULL DEFAULT NULL COMMENT '用户授权时间',
+  `login_time` datetime NULL DEFAULT NULL COMMENT '登录成功时间',
+  `expire_time` datetime NOT NULL COMMENT '二维码过期时间（默认5分钟）',
+  `redirect_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '登录成功后重定向URL（用于登录后返回原页面）',
+  `error_msg` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '错误信息（登录失败时记录）',
+  `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `uk_scene_str`(`scene_str`) USING BTREE COMMENT '场景值字符串唯一索引',
+  UNIQUE INDEX `uk_scene_id`(`scene_id`) USING BTREE COMMENT '场景值数字唯一索引',
+  INDEX `idx_session_id`(`session_id`) USING BTREE COMMENT 'WebSocket会话索引',
+  INDEX `idx_wx_open_id`(`wx_open_id`) USING BTREE COMMENT '微信OpenID索引',
+  INDEX `idx_scan_status`(`scan_status`) USING BTREE COMMENT '状态索引',
+  INDEX `idx_create_time`(`create_time`) USING BTREE COMMENT '创建时间索引（用于清理过期数据）',
+  INDEX `idx_expire_time`(`expire_time`) USING BTREE COMMENT '过期时间索引'
+) ENGINE = InnoDB AUTO_INCREMENT = 187 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信扫码登录状态追踪表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of wx_scan_log
+-- ----------------------------
+INSERT INTO `wx_scan_log` VALUES (1, '1763888257754_7d8fe75d', 1194889938, 'http://weixin.qq.com/q/02Ur5CsEpjfwJ1evdy1F16', NULL, 'edb5fe99-f8a6-429f-1dac-b199338338a8', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 16:57:38', NULL, NULL, NULL, '2025-11-23 17:02:38', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (2, '1763888335449_a217a763', 178435611, 'http://weixin.qq.com/q/02LKgJtdpjfwJ1fJdyxF1e', NULL, '10cc61a2-2cf2-0d61-ea2e-846c23d2c7f6', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 16:58:55', NULL, NULL, NULL, '2025-11-23 17:03:55', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (3, '1763888404421_1feb68bd', 1799740826, 'http://weixin.qq.com/q/02JgoHsCpjfwJ1cOeyNF13', NULL, '6c9cc4ea-e30e-a24b-0cee-0f491cf39713', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:00:04', NULL, NULL, NULL, '2025-11-23 17:05:04', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (4, '1763888423991_db05f50d', 7259541, 'http://weixin.qq.com/q/02Y5g9tApjfwJ1d6ey1F1e', NULL, '5cde51ef-d52a-e7d8-641c-65fa7a39301d', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:00:24', NULL, NULL, NULL, '2025-11-23 17:05:24', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (5, '1763888456308_d27d047d', 1309586330, 'http://weixin.qq.com/q/02Sd6ztrpjfwJ1dCey1F1E', NULL, 'cea6a814-547d-8f1c-1d19-8e8367230ebf', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:00:56', NULL, NULL, NULL, '2025-11-23 17:05:56', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (6, '1763888465930_6f92ac95', 2017551719, 'http://weixin.qq.com/q/02fKxttcpjfwJ1dMeyNF1s', NULL, '4645171d-09fa-68c8-593e-d632b4ada2bb', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:01:06', NULL, NULL, NULL, '2025-11-23 17:06:06', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (7, '1763888545347_e6a518ea', 1946843600, 'http://weixin.qq.com/q/021zCAtrpjfwJ1e_eyhF1f', NULL, '286d38a2-e2fa-0a2a-0d76-5cf0ed90b00c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:02:25', NULL, NULL, NULL, '2025-11-23 17:07:25', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (8, '1763888626338_52c3c5e2', 1820523739, 'http://weixin.qq.com/q/028MI7srpjfwJ1cgfyNF1j', NULL, '362f632e-4a15-6017-28b9-3f6ea6bba8cd', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:03:46', NULL, NULL, NULL, '2025-11-23 17:08:46', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (9, '1763888781964_5abae86d', 254657929, 'http://weixin.qq.com/q/027TPksopjfwJ1eIfyxF1R', NULL, '64a72806-98aa-3963-6864-839a17f02908', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:06:22', NULL, NULL, NULL, '2025-11-23 17:11:22', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (10, '1763889232848_4fcc99ab', 724434407, 'http://weixin.qq.com/q/02VVG-sOpjfwJ1dLhyNF11', NULL, 'e6e9fc1a-c074-2c24-2638-722178d16829', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:13:53', NULL, NULL, NULL, '2025-11-23 17:18:53', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (11, '1763889297635_340185a3', 352050388, 'http://weixin.qq.com/q/02mJfntzpjfwJ1eLhyxF1P', NULL, '59117d8c-7aaa-5480-03cc-84a49a6bd7c5', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:14:58', NULL, NULL, NULL, '2025-11-23 17:19:58', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (12, '1763889375573_2653535a', 940640475, 'http://weixin.qq.com/q/020D5KtipjfwJ1fZhyxF1g', NULL, '00b5b69c-7ba1-2c5b-67b2-b0c7838fea0a', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:16:16', NULL, NULL, NULL, '2025-11-23 17:21:16', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (13, '1763889433029_20b68e83', 116167484, 'http://weixin.qq.com/q/02pp2UsCpjfwJ1cTiyNF1Y', NULL, 'b3453584-aee9-589e-49a3-3e05d4f96203', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:17:13', NULL, NULL, NULL, '2025-11-23 17:22:13', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (14, '1763889590905_4932fead', 1151532349, 'http://weixin.qq.com/q/02_ru8tdpjfwJ1fliyxF1x', NULL, '8e57153b-545f-666e-dbcb-34acca56b889', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:19:51', NULL, NULL, NULL, '2025-11-23 17:24:51', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (15, '1763889758432_473f8c07', 1704929070, 'http://weixin.qq.com/q/02pYvHtvpjfwJ1dYjyhF1p', NULL, '6a11a1f7-727a-4233-bd28-3bf033dd524a', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:22:38', NULL, NULL, NULL, '2025-11-23 17:27:38', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (16, '1763889840924_ad99c249', 2101747307, 'http://weixin.qq.com/q/02nZpWtHpjfwJ1ffjyNF1V', NULL, '20ea23be-c3f1-89ef-ffd0-09b89cdb85ae', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:24:01', NULL, NULL, NULL, '2025-11-23 17:29:01', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (17, '1763889929145_7ba7df0f', 143852372, 'http://weixin.qq.com/q/021ycctspjfwJ1cDkyhF1v', NULL, '2317fcd2-d524-6e14-5297-6e546027aa28', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:25:29', NULL, NULL, NULL, '2025-11-23 17:30:29', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (18, '1763890198076_2e79c80e', 1688161668, 'http://weixin.qq.com/q/02hcfztopjfwJ1cQly1F1u', NULL, 'e836ca8a-27a5-79f2-3e36-820ee752c3ce', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 17:29:58', NULL, NULL, NULL, '2025-11-23 17:34:58', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (19, '1763896826863_06084b2e', 1395219674, 'http://weixin.qq.com/q/02W4kUsrpjfwJ1cpLyhF1F', NULL, '5d5ffa5e-8189-c44d-076c-fade0a48270d', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 19:20:27', NULL, NULL, NULL, '2025-11-23 19:25:27', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (20, '1763897025701_b661211f', 773593936, 'http://weixin.qq.com/q/02p_hZsepjfwJ1fvLyhF1O', NULL, 'd578aa95-82df-0b3c-b340-2acfb424380c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-23 19:23:46', '2025-11-23 19:23:49', NULL, '2025-11-23 19:24:08', '2025-11-23 19:28:46', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (21, '1763897152514_b64ee088', 1083350282, 'http://weixin.qq.com/q/02lePltjpjfwJ1duMy1F1Q', NULL, '88e90ed9-d0da-d0dd-18c1-abcd1e679131', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 19:25:53', NULL, NULL, NULL, '2025-11-23 19:30:53', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (22, '1763897162607_fce8ed1e', 1776085086, 'http://weixin.qq.com/q/02R4KosBpjfwJ1dEMyxF1L', NULL, '88e90ed9-d0da-d0dd-18c1-abcd1e679131', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 19:26:03', NULL, NULL, NULL, '2025-11-23 19:31:03', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (23, '1763897164047_0f727b57', 2100912176, 'http://weixin.qq.com/q/029pcWsHpjfwJ1dGMyhF1W', NULL, '88e90ed9-d0da-d0dd-18c1-abcd1e679131', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 19:26:04', NULL, NULL, NULL, '2025-11-23 19:31:04', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (24, '1763897165073_bf3e9a23', 1567654607, 'http://weixin.qq.com/q/02YazGt8pjfwJ1dHMyhF1W', NULL, '88e90ed9-d0da-d0dd-18c1-abcd1e679131', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 19:26:05', NULL, NULL, NULL, '2025-11-23 19:31:05', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (25, '1763897165831_e5cab79a', 40244045, 'http://weixin.qq.com/q/02WaQftnpjfwJ1dIMy1F14', NULL, '88e90ed9-d0da-d0dd-18c1-abcd1e679131', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 19:26:06', NULL, NULL, NULL, '2025-11-23 19:31:06', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (26, '1763897166487_bc8754e6', 2094446301, 'http://weixin.qq.com/q/028hJ0sZpjfwJ1dIMyhF1m', NULL, '88e90ed9-d0da-d0dd-18c1-abcd1e679131', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 19:26:06', NULL, NULL, NULL, '2025-11-23 19:31:06', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (27, '1763897167079_6218d3ba', 646021223, 'http://weixin.qq.com/q/02CgOYsVpjfwJ1dJMyxF1_', NULL, '88e90ed9-d0da-d0dd-18c1-abcd1e679131', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-23 19:26:07', '2025-11-23 19:26:13', NULL, '2025-11-23 19:26:18', '2025-11-23 19:31:07', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (28, '1763897460931_93614ce5', 868269010, 'http://weixin.qq.com/q/028JpqtCpjfwJ1ejNyhF1w', NULL, '507d6ac2-339d-10ae-11b6-721277ffc9f1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 19:31:01', NULL, NULL, NULL, '2025-11-23 19:36:01', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (29, '1763898222794_c4970da8', 2091713308, 'http://weixin.qq.com/q/02_OtxtapjfwJ1ecQyNF1Z', NULL, '626e388e-a637-58b4-0604-c294c993fe26', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 19:43:43', NULL, NULL, NULL, '2025-11-23 19:48:43', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (30, '1763898231561_07f75513', 290903101, 'http://weixin.qq.com/q/028Tu0t0pjfwJ1elQyNF18', NULL, '9becf5a3-145a-6af4-ea45-cb13215b0f92', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 19:43:52', NULL, NULL, NULL, '2025-11-23 19:48:52', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (31, '1763898233132_82f6ae0e', 1827359332, 'http://weixin.qq.com/q/02r90ztjpjfwJ1enQyxF1b', NULL, '9becf5a3-145a-6af4-ea45-cb13215b0f92', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 19:43:53', '2025-11-23 19:44:08', NULL, '2025-11-23 19:44:12', '2025-11-23 19:48:53', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (32, '1763898518534_f754acc7', 1448382257, 'http://weixin.qq.com/q/02Ik-ssLpjfwJ1eQRyNF1p', NULL, '5f45f2de-fd9b-17a5-97c4-5d5228ac3a2a', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 19:48:39', NULL, NULL, NULL, '2025-11-23 19:53:39', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (33, '1763898720640_11e19016', 1736912420, 'http://weixin.qq.com/q/02u73utQpjfwJ1d-SyhF1b', NULL, 'ae55d7f2-6ec8-a715-60b9-126410d006f7', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 19:52:01', NULL, NULL, NULL, '2025-11-23 19:57:01', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (34, '1763899044019_0eea8859', 339076749, 'http://weixin.qq.com/q/02SRIRtepjfwJ1f2TyhF1G', NULL, 'ddd4204b-3a61-6e3a-4b7b-6a37a54037e6', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 19:57:24', '2025-11-23 19:57:29', '2025-11-23 19:57:32', '2025-11-23 19:57:32', '2025-11-23 20:02:24', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (35, '1763899485932_6b29f645', 204679840, 'http://weixin.qq.com/q/02E-c7sNpjfwJ1dYVyNF18', NULL, '2b6cbe5e-8827-83ec-f702-209081f4091d', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:04:46', '2025-11-23 20:04:58', '2025-11-23 20:05:01', '2025-11-23 20:05:01', '2025-11-23 20:09:46', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (36, '1763899604420_b8a65ea7', 1388156621, 'http://weixin.qq.com/q/02Dj-xt6pjfwJ1fOVy1F13', NULL, '63572040-a87d-1074-8ae8-72328704262a', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 20:06:44', NULL, NULL, NULL, '2025-11-23 20:11:44', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (37, '1763899954581_dda2c03e', 892820065, 'http://weixin.qq.com/q/02oitHsPpjfwJ1dgXy1F1J', NULL, '1205843e-97b7-0e9c-67e4-223274899ff5', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:12:35', '2025-11-23 20:12:41', '2025-11-23 20:13:16', '2025-11-23 20:13:16', '2025-11-23 20:17:35', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (38, '1763900010130_843ee251', 378718657, 'http://weixin.qq.com/q/02WbmptSpjfwJ1e8Xy1F1l', NULL, '4d0dbe8a-afcb-7141-6868-d606c5cd010f', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:13:30', '2025-11-23 20:13:34', '2025-11-23 20:13:39', '2025-11-23 20:13:39', '2025-11-23 20:18:30', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (39, '1763900077516_1e6555c5', 1048269965, 'http://weixin.qq.com/q/02ocL2t7pjfwJ1fbXy1F17', NULL, '37fe6b4a-6783-dd96-54e3-e43ba7b8b622', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-23 20:14:38', '2025-11-23 20:14:39', NULL, NULL, '2025-11-23 20:19:38', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (40, '1763900119405_4694aeb0', 568060118, 'http://weixin.qq.com/q/028uAKtDpjfwJ1fRXyNF1j', NULL, '15d46a58-594b-e0cc-fd0b-b0ae8c6f44af', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 20:15:19', NULL, NULL, NULL, '2025-11-23 20:20:19', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (41, '1763900126507_c30b983d', 221882272, 'http://weixin.qq.com/q/02EpfPtbpjfwJ1fYXyNF1w', NULL, 'dd4c42f9-417b-cf42-99e2-eb19cfb54e98', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:15:27', '2025-11-23 20:15:29', '2025-11-23 20:15:32', '2025-11-23 20:15:32', '2025-11-23 20:20:27', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (42, '1763900146421_3f05ea20', 2038599025, 'http://weixin.qq.com/q/02RTsftDpjfwJ1cgYy1F1l', NULL, 'e80b9054-9a41-697d-905d-7505f9fab44f', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-23 20:15:46', '2025-11-23 20:15:52', NULL, NULL, '2025-11-23 20:20:46', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (43, '1763900165625_3388f668', 882791693, 'http://weixin.qq.com/q/024lh1trpjfwJ1czYyxF1d', NULL, 'e5c45416-8825-375a-968f-269e3f898cc7', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-23 20:16:06', '2025-11-23 20:16:09', NULL, NULL, '2025-11-23 20:21:06', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (44, '1763900206903_a51098bf', 982374920, 'http://weixin.qq.com/q/02_rQwsPpjfwJ1ddYy1F1S', NULL, '10a2f495-f842-7c56-fc9a-7e9c4f98b0b5', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 20:16:47', NULL, NULL, NULL, '2025-11-23 20:21:47', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (45, '1763900229945_082b7abd', 106771332, 'http://weixin.qq.com/q/02SK2qt7pjfwJ1dAYyxF1P', NULL, 'a4591b50-05a5-88bf-4306-85c74b48fadc', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 20:17:10', NULL, NULL, NULL, '2025-11-23 20:22:10', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (46, '1763900363691_0bff063b', 2096448635, 'http://weixin.qq.com/q/02JMtytypjfwJ1fFYyxF1E', NULL, '8ea6c73e-9d62-fddb-f245-b55715c9ceb0', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:19:24', '2025-11-23 20:19:37', '2025-11-23 20:19:42', '2025-11-23 20:19:42', '2025-11-23 20:24:24', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (47, '1763900487616_736341ec', 1104913556, 'http://weixin.qq.com/q/02LTkIt0pjfwJ1dBZy1F12', NULL, '6218c95e-6461-2318-a98f-382dcd31d24d', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:21:28', '2025-11-23 20:21:33', '2025-11-23 20:21:38', '2025-11-23 20:21:38', '2025-11-23 20:26:28', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (48, '1763900549179_a3f9cfb8', 1406319280, 'http://weixin.qq.com/q/02P4wjsnpjfwJ1ezZy1F1i', NULL, '5c1017c4-16c7-090a-773d-9b131e9a9a72', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:22:29', '2025-11-23 20:22:39', '2025-11-23 20:22:43', '2025-11-23 20:22:43', '2025-11-23 20:27:29', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (49, '1763901524209_f5600db5', 97038363, 'http://weixin.qq.com/q/02t4sssYpjfwJ11O1zhF13', NULL, '23bcad71-ceaa-bc21-dcc5-c1b8a0a07bf5', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:38:44', '2025-11-23 20:39:00', '2025-11-23 20:39:04', '2025-11-23 20:39:04', '2025-11-23 20:43:44', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (50, '1763901836567_87b76501', 190121406, 'http://weixin.qq.com/q/02BHo4sMpjfwJ12G2zNF1X', NULL, '3d4baf2a-0cfa-c160-52d4-17946cb0cfc5', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:43:57', '2025-11-23 20:44:03', '2025-11-23 20:46:42', '2025-11-23 20:46:42', '2025-11-23 20:48:57', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (51, '1763901860450_2a878299', 1903718548, 'http://weixin.qq.com/q/02sRclsvpjfwJ1322zNF1_', NULL, '41914224-f1b2-b690-3221-4346bdca8c59', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 20:44:20', NULL, NULL, NULL, '2025-11-23 20:49:20', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (52, '1763902014246_79c907d5', 867818360, 'http://weixin.qq.com/q/02Te5TsRpjfwJ11s3zhF1Q', NULL, '385d827a-f3e5-76d7-577e-02bee5d5c520', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 20:46:54', '2025-11-23 20:46:57', '2025-11-23 20:47:01', '2025-11-23 20:47:01', '2025-11-23 20:51:54', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (53, '1763902181413_2afe0f64', 511210574, 'http://weixin.qq.com/q/02SpDDtspjfwJ1034zhF1P', NULL, '037477bb-2582-40b2-fd49-fe23ac7f2493', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 20:49:41', NULL, NULL, NULL, '2025-11-23 20:54:41', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (54, '1763902259632_53896898', 1937618073, 'http://weixin.qq.com/q/02Six5sfpjfwJ11h4zxF1u', NULL, '0a7e9490-6b1a-3cf0-4ef4-2908544a5d6e', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 20:51:00', NULL, NULL, NULL, '2025-11-23 20:56:00', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (55, '1763902267402_90ab6d87', 254983530, 'http://weixin.qq.com/q/02EjPJtQpjfwJ11p4zhF1c', NULL, '7a0a060d-d1e6-ce4b-8e09-c65689a52534', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 20:51:07', NULL, NULL, NULL, '2025-11-23 20:56:07', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (56, '1763902666984_e18a2976', 1823745950, 'http://weixin.qq.com/q/02aKUWsvpjfwJ13F5zNF1c', NULL, '88459016-5d29-dc4f-9e42-93453cd3749f', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 20:57:47', NULL, NULL, NULL, '2025-11-23 21:02:47', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (57, '1763903119147_c6f05725', 66279077, 'http://weixin.qq.com/q/02vo2otPpjfwJ12J7zNF1D', NULL, '74efb1b9-3303-89aa-13e6-2948adc98e82', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:05:19', NULL, NULL, NULL, '2025-11-23 21:10:19', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (58, '1763903332192_08cbdb67', 1417226285, 'http://weixin.qq.com/q/02NWyttXpjfwJ1228zhF16', NULL, '560703ab-96d4-b9bc-5212-261aeccc21e0', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:08:52', NULL, NULL, NULL, '2025-11-23 21:13:52', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (59, '1763903405432_babec58b', 2025241360, 'http://weixin.qq.com/q/02Zn_GsIpjfwJ13b8zNF1Q', NULL, 'dcaac67d-69ab-b222-953e-bda67ce37923', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:10:05', NULL, NULL, NULL, '2025-11-23 21:15:05', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (60, '1763903429327_d5a79e77', 2065434547, 'http://weixin.qq.com/q/02kwbgsnpjfwJ13z8zxF1e', NULL, '2c8a541c-1cc9-4654-b9bc-25414dbd9a03', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:10:29', NULL, NULL, NULL, '2025-11-23 21:15:29', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (61, '1763903449261_38c9dd24', 1659352215, 'http://weixin.qq.com/q/02JrErs-pjfwJ13T8zxF1U', NULL, '4f6d809c-3f46-f4c6-4757-c223749379fc', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:10:49', NULL, NULL, NULL, '2025-11-23 21:15:49', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (62, '1763903571327_309b1bf3', 1334257771, 'http://weixin.qq.com/q/02a7DDsxpjfwJ11N9zxF1Y', NULL, 'cd2b2a2e-57db-dd5c-b14b-5b161ecfc8f4', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:12:51', NULL, NULL, NULL, '2025-11-23 21:17:51', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (63, '1763903693468_70d48c29', 1343424244, 'http://weixin.qq.com/q/02CDm6sepjfwJ13H9zNF1v', NULL, '93fae22b-f5e2-5785-db24-763cc2ab62f1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:14:53', NULL, NULL, NULL, '2025-11-23 21:19:53', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (64, '1763903706982_dfc502d4', 1921275493, 'http://weixin.qq.com/q/02LQXmtLpjfwJ13V9zNF1Q', NULL, '1d34ffec-03e9-7a61-dd39-f24d95487f9e', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:15:07', NULL, NULL, NULL, '2025-11-23 21:20:07', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (65, '1763903744382_3030d0ec', 1488244380, 'http://weixin.qq.com/q/02JVM2sUpjfwJ10uazhF16', NULL, 'd0fe3974-615b-7f43-07d5-275243ddb568', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:15:44', NULL, NULL, NULL, '2025-11-23 21:20:44', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (66, '1763903751986_389fd5dc', 615462348, 'http://weixin.qq.com/q/02yzGzshpjfwJ10CazNF1H', NULL, 'a77582d8-b02f-cb4f-2447-242ddb059053', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:15:52', NULL, NULL, NULL, '2025-11-23 21:20:52', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (67, '1763903834755_91a625ad', 1113885927, 'http://weixin.qq.com/q/02mQIQtFpjfwJ11Uaz1F1L', NULL, '1237e094-6c92-d34b-036b-7d370a5a715c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:17:15', NULL, NULL, NULL, '2025-11-23 21:22:15', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (68, '1763904253021_71b5cf67', 2057576588, 'http://weixin.qq.com/q/02JKewsJpjfwJ10rczhF1M', NULL, 'f15f04b0-6bc7-91ed-7b41-2cef1a7e4926', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:24:13', NULL, NULL, NULL, '2025-11-23 21:29:13', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (69, '1763904264609_f2eb1a99', 1767899545, 'http://weixin.qq.com/q/02-iUztRpjfwJ10CczxF1O', NULL, '203d1e9a-27b9-ae2d-e9f6-dd3fa1a27eac', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:24:25', NULL, NULL, NULL, '2025-11-23 21:29:25', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (70, '1763904306869_bd9a1d3f', 435436779, 'http://weixin.qq.com/q/02yZpDtkpjfwJ11gczxF1z', NULL, '7ff889c9-234a-65c1-22c2-5ac804d8dde0', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:25:07', NULL, NULL, NULL, '2025-11-23 21:30:07', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (71, '1763904314702_199bc65e', 1431553379, 'http://weixin.qq.com/q/02sViWtwpjfwJ11oczxF1f', NULL, '7e6c46e3-e862-53be-782d-2c92c452fc70', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:25:15', NULL, NULL, NULL, '2025-11-23 21:30:15', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (72, '1763904320003_b7d028d3', 1735939939, 'http://weixin.qq.com/q/02oNdPsfpjfwJ11ucz1F17', NULL, '6a02fac8-9307-a00e-6ecc-41b14757f771', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:25:20', NULL, NULL, NULL, '2025-11-23 21:30:20', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (73, '1763904376212_bf2c0b9e', 1870405879, 'http://weixin.qq.com/q/02-9WxsDpjfwJ12mcz1F1O', NULL, 'a6df5864-c5b5-d78a-9e74-1e78e94a0263', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 21:26:16', NULL, NULL, NULL, '2025-11-23 21:31:16', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (74, '1763905950738_cdfb6d7b', 1949286414, 'http://weixin.qq.com/q/02xxlosRpjfwJ12YizhF1F', NULL, '3c236a77-dd2d-5c0a-dda0-257a56429c4c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 21:52:31', NULL, NULL, NULL, '2025-11-23 21:57:31', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (75, '1763906013138_591dfbd2', 1841385156, 'http://weixin.qq.com/q/023R-wtRpjfwJ13XizxF1x', NULL, '3c236a77-dd2d-5c0a-dda0-257a56429c4c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-23 21:53:33', NULL, NULL, NULL, '2025-11-23 21:58:33', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (76, '1763906014019_f4301801', 1423107539, 'http://weixin.qq.com/q/02vOl2sQpjfwJ13Yiz1F1Y', NULL, '3c236a77-dd2d-5c0a-dda0-257a56429c4c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-23 21:53:34', '2025-11-23 21:53:40', '2025-11-23 21:53:46', '2025-11-23 21:53:46', '2025-11-23 21:58:34', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (77, '1763906754335_21a2342f', 124733421, 'http://weixin.qq.com/q/029E2gs4pjfwJ13wlz1F1n', NULL, '510409d8-c41c-d51a-a3f7-b37d4271314c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 22:05:54', NULL, NULL, NULL, '2025-11-23 22:10:54', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (78, '1763907002121_f62eed3c', 1624045285, 'http://weixin.qq.com/q/02sbRqsRpjfwJ13omzxF1P', NULL, 'd8bdffa5-e062-31a5-a45f-9230df50bdfe', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-23 22:10:02', NULL, NULL, NULL, '2025-11-23 22:15:02', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (79, '1763947929462_4478baec', 468300952, 'http://weixin.qq.com/q/02MM4FtDpjfwJ1aTSzxF1C', NULL, 'a1e879cb-53ad-f8fa-e88a-b831d0c411c5', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 09:32:09', NULL, NULL, NULL, '2025-11-24 09:37:09', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (80, '1763947979589_1a9d51b3', 1559376347, 'http://weixin.qq.com/q/02YgsHsHpjfwJ1bFSzxF1s', NULL, 'a1e879cb-53ad-f8fa-e88a-b831d0c411c5', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 09:33:00', NULL, NULL, NULL, '2025-11-24 09:38:00', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (81, '1763948590622_95d77b48', 597333222, 'http://weixin.qq.com/q/02putytYpjfwJ19cVz1F1q', NULL, '39497725-7580-90b4-f378-22e5b5b7d020', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 09:43:11', NULL, NULL, NULL, '2025-11-24 09:48:11', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (82, '1763949489613_40c5ea55', 2135600275, 'http://weixin.qq.com/q/02F11LsUpjfwJ1bfYzhF1c', NULL, 'b842d992-9e9e-96b7-2b93-19bf0e75e1af', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 09:58:10', NULL, NULL, NULL, '2025-11-24 10:03:10', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (83, '1763950111299_61afaa39', 1108349607, 'http://weixin.qq.com/q/02rlkHsupjfwJ18Z_zNF1i', NULL, '1e90449d-b31c-18c0-4825-b1c178562640', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 10:08:31', NULL, NULL, NULL, '2025-11-24 10:13:31', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (84, '1763950117554_22031f5f', 1442828444, 'http://weixin.qq.com/q/02ffJ6thpjfwJ193_zNF1N', NULL, '61c3d23a-6166-fd3a-fc0f-815c7ad239cd', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 10:08:38', NULL, NULL, NULL, '2025-11-24 10:13:38', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (85, '1763950161426_d9d88abd', 1319577012, 'http://weixin.qq.com/q/02JVjitJpjfwJ19L_zxF1W', NULL, '61c3d23a-6166-fd3a-fc0f-815c7ad239cd', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 10:09:21', NULL, NULL, NULL, '2025-11-24 10:14:21', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (86, '1763950252529_d55b2d10', 1286074415, 'http://weixin.qq.com/q/02cfrttVpjfwJ1ba_zxF1s', NULL, '9961096c-b4e5-6fb5-bd62-dfdbf24de656', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 10:10:53', NULL, NULL, NULL, '2025-11-24 10:15:53', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (87, '1763950985428_bce62683', 1764971456, 'http://weixin.qq.com/q/02mXm2sKpjfwJ1eD2zNF1W', NULL, '18e8facc-9524-e958-fd38-1e3139032abc', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 10:23:05', NULL, NULL, NULL, '2025-11-24 10:28:05', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (88, '1763951059773_c329b866', 1335814150, 'http://weixin.qq.com/q/02dD9LsjpjfwJ1fO2zNF1w', NULL, 'bd8ecaa4-9302-54e4-9fb6-ad6485b76f2f', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 10:24:20', NULL, NULL, NULL, '2025-11-24 10:29:20', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (89, '1763951113514_5984177f', 2000292614, 'http://weixin.qq.com/q/02hhnqs0pjfwJ1cD3zxF1J', NULL, 'bd8ecaa4-9302-54e4-9fb6-ad6485b76f2f', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 10:25:14', NULL, NULL, NULL, '2025-11-24 10:30:14', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (90, '1763951163421_7f337e0a', 692921607, 'http://weixin.qq.com/q/026tLVsrpjfwJ1dp3zxF1O', NULL, 'bd8ecaa4-9302-54e4-9fb6-ad6485b76f2f', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 10:26:03', NULL, NULL, NULL, '2025-11-24 10:31:03', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (91, '1763951172053_8aaeb403', 1396485972, 'http://weixin.qq.com/q/02ch74tkpjfwJ1dy3zxF19', NULL, 'bd8ecaa4-9302-54e4-9fb6-ad6485b76f2f', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 10:26:12', NULL, NULL, NULL, '2025-11-24 10:31:12', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (92, '1763951260086_30f109dc', 2120971189, 'http://weixin.qq.com/q/02VliWsnpjfwJ1eW3zhF10', NULL, '895bf944-e502-e5e3-a5d7-fc168fe2d2a2', 'unknown', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 10:27:40', NULL, NULL, NULL, '2025-11-24 10:32:40', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (93, '1763956718827_28ac85e1', 269806178, 'http://weixin.qq.com/q/02UVHmsKpjfwJ1cdpzNF1Q', NULL, '0d1f09ca-e167-cda8-9778-23d555c5f09c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 11:58:39', NULL, NULL, NULL, '2025-11-24 12:03:39', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (94, '1763957000332_878f5b40', 1154625620, 'http://weixin.qq.com/q/02Soi4txpjfwJ1cCqzxF1G', NULL, 'ff92ffc0-5948-5db1-50b2-3075ce9c6323', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 12:03:20', NULL, NULL, NULL, '2025-11-24 12:08:20', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (95, '1763957246267_46dd46ec', 1232958736, 'http://weixin.qq.com/q/020pZ7tWpjfwJ1csrzNF1I', NULL, '34f7df20-108f-27c5-eab8-5c52fdbfbe8e', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 12:07:26', NULL, NULL, NULL, '2025-11-24 12:12:26', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (96, '1763957275678_b62e4351', 599391056, 'http://weixin.qq.com/q/029ZiMtdpjfwJ1cVrzxF1O', NULL, 'b69f84c1-6b81-4fc3-8a58-50486b760cf7', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 12:07:56', NULL, NULL, NULL, '2025-11-24 12:12:56', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (97, '1763957382907_bcb6faa7', 1151634930, 'http://weixin.qq.com/q/02up-LtmpjfwJ1eBrz1F1v', NULL, 'e36d69ff-809d-8283-ce4f-47a9026f1675', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 12:09:43', NULL, NULL, NULL, '2025-11-24 12:14:43', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (98, '1763957383253_b6b5e4b1', 56458213, 'http://weixin.qq.com/q/02CPiWsgpjfwJ1eBrzNF1e', NULL, 'c6929325-fc18-412b-88a4-c8abf8de208f', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 12:09:43', NULL, NULL, NULL, '2025-11-24 12:14:43', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (99, '1763957386863_20550f75', 353159199, 'http://weixin.qq.com/q/02trTssSpjfwJ1eFrzhF1q', NULL, 'c6929325-fc18-412b-88a4-c8abf8de208f', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 12:09:47', NULL, NULL, NULL, '2025-11-24 12:14:47', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (100, '1763957419877_42b9f4c2', 1154023808, 'http://weixin.qq.com/q/02eCv5sOpjfwJ1farzxF1c', NULL, 'c6929325-fc18-412b-88a4-c8abf8de208f', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 12:10:20', NULL, NULL, NULL, '2025-11-24 12:15:20', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (101, '1763957724504_7058664e', 1200145323, 'http://weixin.qq.com/q/02_kn-t2pjfwJ1fWszNF1i', NULL, 'f55bee9e-a41c-cddf-5ede-6a9a6ab35d0b', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 12:15:25', NULL, NULL, NULL, '2025-11-24 12:20:25', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (102, '1763964357485_8da09e15', 1354913900, 'http://weixin.qq.com/q/02fgwetIpjfwJ1fzSzxF1D', NULL, 'f7fd55dc-b222-b965-56d0-5c4974f2b049', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 14:05:57', NULL, NULL, NULL, '2025-11-24 14:10:57', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (103, '1763964376636_bf638ca0', 202732293, 'http://weixin.qq.com/q/02ZjCYsPpjfwJ1fSSzNF1J', NULL, 'dd8ca273-3c2d-1ece-6ea4-e5758cd9ef80', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 14:06:17', NULL, NULL, NULL, '2025-11-24 14:11:17', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (104, '1763965232578_ba823b7a', 1478909222, 'http://weixin.qq.com/q/02HjnetUpjfwJ1deWzxF1B', NULL, 'f0b8483e-1e03-756e-0a24-9cad9f2a744a', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-24 14:20:33', '2025-11-24 14:20:38', NULL, NULL, '2025-11-24 14:25:33', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (105, '1763965314453_5d143ac0', 98498707, 'http://weixin.qq.com/q/02KuFgsqpjfwJ1ewWz1F1w', NULL, 'ffbb80a0-f056-9718-9ad2-fbbb80399ce2', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-24 14:21:54', '2025-11-24 14:22:02', NULL, NULL, '2025-11-24 14:26:54', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (106, '1763965676010_93b1394f', 34226566, 'http://weixin.qq.com/q/02l6UytRpjfwJ1caYzNF1m', NULL, '97ff9c9b-d669-76b4-4c93-71a3c543177e', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 1, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-24 14:27:56', '2025-11-24 14:28:09', NULL, NULL, '2025-11-24 14:32:56', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (107, '1763965711518_547f995a', 1712788624, 'http://weixin.qq.com/q/02XIOusKpjfwJ1cJYzhF1v', NULL, '97ff9c9b-d669-76b4-4c93-71a3c543177e', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-24 14:28:32', '2025-11-24 14:28:42', NULL, NULL, '2025-11-24 14:33:32', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (108, '1763965809904_bb60a7bc', 287362211, 'http://weixin.qq.com/q/02LiSFtJpjfwJ1egYzNF1F', NULL, '6ccabdc5-e54d-7743-8f9c-55e382490b1d', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-24 14:30:10', '2025-11-24 14:30:28', '2025-11-24 14:30:35', '2025-11-24 14:30:35', '2025-11-24 14:35:10', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (109, '1763966190426_d3108f35', 238235954, 'http://weixin.qq.com/q/02r0xrtRpjfwJ1cc-zxF1w', NULL, '44b17c1e-2f8c-03cf-adda-2977c3143eba', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 14:36:30', NULL, NULL, NULL, '2025-11-24 14:41:30', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (110, '1763966191387_58b49be7', 400058110, 'http://weixin.qq.com/q/027lpwsOpjfwJ1cd-zhF1q', NULL, '44b17c1e-2f8c-03cf-adda-2977c3143eba', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-24 14:36:31', '2025-11-24 14:36:37', '2025-11-24 14:36:42', '2025-11-24 14:36:42', '2025-11-24 14:41:31', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (111, '1763966207633_02a39435', 1576338160, 'http://weixin.qq.com/q/029sOKtRpjfwJ1ct-zxF1Q', NULL, '38a14eb1-1338-fa28-1935-82ecb92c3064', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-24 14:36:48', '2025-11-24 14:36:52', NULL, NULL, '2025-11-24 14:41:48', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (112, '1763966340648_4af5b7a4', 26023082, 'http://weixin.qq.com/q/022CRHsspjfwJ1ey-zNF1Q', NULL, '01333727-570d-97c0-c837-442065349d30', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, NULL, '2025-11-24 14:39:01', '2025-11-24 14:39:07', NULL, NULL, '2025-11-24 14:44:01', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (113, '1763966472398_552a246a', 500103081, 'http://weixin.qq.com/q/02XxpRtApjfwJ1cC_zxF1d', NULL, '1e66c939-16cf-b214-98fd-3ab64928ef93', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 14:41:12', NULL, NULL, NULL, '2025-11-24 14:46:12', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (114, '1763966744399_551dfb28', 758612732, 'http://weixin.qq.com/q/02FemWtMpjfwJ10S0AxF1c', NULL, 'f608b4c8-9306-9e65-511a-841a11a3dcfe', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 14:45:44', NULL, NULL, NULL, '2025-11-24 14:50:44', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (115, '1763966967782_bafcd400', 1912108653, 'http://weixin.qq.com/q/02c7hDt_pjfwJ10l1AhF10', NULL, '2e043a2c-3836-45bf-0146-93c596007421', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-24 14:49:28', '2025-11-24 14:49:32', '2025-11-24 14:49:32', '2025-11-24 14:49:32', '2025-11-24 14:54:28', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (116, '1763966977337_e7af540a', 569107114, 'http://weixin.qq.com/q/028LPnsSpjfwJ10v1ANF1Z', NULL, '97a5225a-6ead-203b-ce5a-779fbf82cd2e', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 14:49:37', NULL, NULL, NULL, '2025-11-24 14:54:37', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (117, '1763967094188_99080809', 1776714747, 'http://weixin.qq.com/q/02Fv0UtDpjfwJ12k1ANF16', NULL, '0ab3eb3f-3010-79c7-118f-6c41b33d7643', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, NULL, NULL, NULL, 4, '2025-11-24 14:51:34', NULL, '2025-11-24 14:54:23', '2025-11-24 14:54:23', '2025-11-24 14:56:34', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (118, '1763967263094_decb44b4', 537318675, 'http://weixin.qq.com/q/02b5ritGpjfwJ10Z2A1F1z', NULL, '10a297c8-2996-1066-5853-ce84809d7fa6', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-24 14:54:23', '2025-11-24 14:54:29', '2025-11-24 14:54:29', '2025-11-24 14:54:29', '2025-11-24 14:59:23', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (119, '1763967278428_adcf5b06', 536781044, 'http://weixin.qq.com/q/02DTs9szpjfwJ11c2A1F17', NULL, '96ff6f2e-67bf-4ec5-0542-a4c8ccf10cee', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-24 14:54:38', '2025-11-24 14:54:50', '2025-11-24 14:54:50', '2025-11-24 14:54:50', '2025-11-24 14:59:38', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (120, '1763968434473_5677d92a', 1774504990, 'http://weixin.qq.com/q/02Ip4DtTpjfwJ13g6AhF15', NULL, 'd6739817-0a14-4e87-d514-fe2e327e7791', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 15:13:54', NULL, NULL, NULL, '2025-11-24 15:18:54', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (121, '1763968896159_3ddf8915', 1515195520, 'http://weixin.qq.com/q/02-l33sJpjfwJ12u8AhF1h', NULL, 'b1e6f597-b3ab-8b60-ef3c-eb4726c18946', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 15:21:36', NULL, NULL, NULL, '2025-11-24 15:26:36', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (122, '1763970146988_4259a779', 901720565, 'http://weixin.qq.com/q/028CiotjpjfwJ121dAxF1w', NULL, '2d4e6a12-acd3-d3e8-e99e-b614a1f922d1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 15:42:27', NULL, NULL, NULL, '2025-11-24 15:47:27', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (123, '1763970423821_08da1fd5', 1922922059, 'http://weixin.qq.com/q/022exDtVpjfwJ12leANF1T', NULL, '0efb95d3-5991-83c0-3a06-d259b6f2e141', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 15:47:04', NULL, NULL, NULL, '2025-11-24 15:52:04', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (124, '1763970426862_efd5cd43', 1139973903, 'http://weixin.qq.com/q/02oIs9tFpjfwJ12peAhF1r', NULL, 'f0291900-5a7b-afa9-2479-8d9475bc0316', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 15:47:07', NULL, NULL, NULL, '2025-11-24 15:52:07', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (125, '1763970443288_32bc49ea', 266189378, 'http://weixin.qq.com/q/02KQ4XsdpjfwJ12FeA1F1l', NULL, 'f0291900-5a7b-afa9-2479-8d9475bc0316', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 15:47:23', NULL, NULL, NULL, '2025-11-24 15:52:23', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (126, '1763970503518_4ec98490', 1411114568, 'http://weixin.qq.com/q/029aZItppjfwJ13BeA1F1w', NULL, '09ca7615-1bc4-23e4-cfdc-5d842e0e4d28', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 15:48:24', NULL, NULL, NULL, '2025-11-24 15:53:24', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (127, '1763970776121_16324f1d', 645809924, 'http://weixin.qq.com/q/02epjesspjfwJ13SfA1F1K', NULL, 'c325e6a4-10cb-2701-4bd0-97f940c95e4a', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 15:52:56', NULL, NULL, NULL, '2025-11-24 15:57:56', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (128, '1763970789150_a0f2b2cc', 313391591, 'http://weixin.qq.com/q/02EKpHtCpjfwJ103gAxF1D', NULL, 'dcd7b019-6a06-100b-31a6-656bcc462d5c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 15:53:09', NULL, NULL, NULL, '2025-11-24 15:58:09', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (129, '1763971098525_ebc96bc0', 440138853, 'http://weixin.qq.com/q/02XoF0tfpjfwJ10UhAxF1F', NULL, '520afcbc-42dd-fff7-fcf0-cce0f255623f', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 15:58:19', NULL, NULL, NULL, '2025-11-24 16:03:19', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (130, '1763971363464_ce37c6e0', 1744055242, 'http://weixin.qq.com/q/020D0fsPpjfwJ111iA1F1-', NULL, '2e0e5964-b20b-ce2e-e5e0-6d919c90dfb4', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 16:02:43', NULL, NULL, NULL, '2025-11-24 16:07:43', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (131, '1763971414602_377bfa97', 1297794080, 'http://weixin.qq.com/q/027UIPsOpjfwJ11QiA1F1Y', NULL, '417565e8-734c-37aa-bcd6-ae01be57a6b4', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 16:03:35', NULL, NULL, NULL, '2025-11-24 16:08:35', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (132, '1763971536637_bf06dd10', 2098046999, 'http://weixin.qq.com/q/02zzrgsnpjfwJ13KiANF1h', NULL, '1093e685-c678-5f80-fbcf-8dd5decf8c52', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 16:05:37', NULL, NULL, NULL, '2025-11-24 16:10:37', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (133, '1763975224972_58930860', 1954498248, 'http://weixin.qq.com/q/02fP99supjfwJ11nxAxF1x', NULL, '0c99671b-9842-6a44-1700-1467d6a1a7da', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 17:07:05', NULL, NULL, NULL, '2025-11-24 17:12:05', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (134, '1763975762285_98452269', 101623782, 'http://weixin.qq.com/q/02-RXitBpjfwJ11MzA1F1Z', NULL, 'a9a12646-a902-ca43-9956-84bd298d2596', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 17:16:02', NULL, NULL, NULL, '2025-11-24 17:21:02', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (135, '1763976068255_ba089d50', 1982768537, 'http://weixin.qq.com/q/02WtHysnpjfwJ12yAAxF1J', NULL, '506f0c35-a897-7f2c-d065-235d7831fad4', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-24 17:21:08', '2025-11-24 17:21:12', '2025-11-24 17:21:12', '2025-11-24 17:21:12', '2025-11-24 17:26:08', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (136, '1763976143363_df9893db', 273388602, 'http://weixin.qq.com/q/02dj_wsmpjfwJ13JAA1F1b', NULL, '3dce8766-d195-1fb9-46c0-4a2e41737380', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 17:22:23', NULL, NULL, NULL, '2025-11-24 17:27:23', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (137, '1763978898766_77a3cd72', 2090516360, 'http://weixin.qq.com/q/02wn58sMpjfwJ12MLA1F1d', NULL, 'afdf6ce0-bdd3-b5c5-71dd-5e7bfed32769', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 18:08:19', NULL, NULL, NULL, '2025-11-24 18:13:19', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (138, '1763981363725_39914b7f', 1762573485, 'http://weixin.qq.com/q/02MbdasKpjfwJ11hVA1F1j', NULL, '6343997e-3655-0b82-e8fe-9261e42eef4b', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-24 18:49:24', '2025-11-24 18:49:28', '2025-11-24 18:49:28', '2025-11-24 18:49:28', '2025-11-24 18:54:24', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (139, '1763981809783_dde2ffb8', 1802546730, 'http://weixin.qq.com/q/02TfPGttpjfwJ10fXAhF1u', NULL, 'e74adc60-e83d-477c-438e-d1712cdc2b62', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 18:56:50', NULL, NULL, NULL, '2025-11-24 19:01:50', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (140, '1763984287177_1ee0b503', 64988451, 'http://weixin.qq.com/q/02k_IssupjfwJ16Z4A1F15', NULL, '08228162-fcca-a14e-0d3c-afd35025ef72', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 19:38:07', NULL, NULL, NULL, '2025-11-24 19:43:07', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (141, '1763984974110_abc203be', 1783120481, 'http://weixin.qq.com/q/021sL6tRpjfwJ15I7A1F1Y', NULL, '733474b9-c3cd-2232-b4f6-aa664dfa7122', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 19:49:34', NULL, NULL, NULL, '2025-11-24 19:54:34', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (142, '1763985376809_f562f917', 87075777, 'http://weixin.qq.com/q/02iD84sepjfwJ17-8ANF1A', NULL, '4e445d47-a842-b70c-795f-94a91a4a134a', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 19:56:17', NULL, NULL, NULL, '2025-11-24 20:01:17', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (143, '1763986004266_9521665a', 995806271, 'http://weixin.qq.com/q/02VL_esipjfwJ15ObAhF1y', NULL, '0d5799b0-8bdd-f917-7e42-4d201a40e5b4', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:06:44', NULL, NULL, NULL, '2025-11-24 20:11:44', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (144, '1763986010604_53ec3e20', 1464986396, 'http://weixin.qq.com/q/02KeMVtCpjfwJ15UbANF15', NULL, '3d612786-b390-3dfa-4234-77a2fc305cd1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:06:51', NULL, NULL, NULL, '2025-11-24 20:11:51', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (145, '1763986195604_364a6a09', 2107854931, 'http://weixin.qq.com/q/02v6Kis6pjfwJ14NcA1F1B', NULL, 'a380f6b2-6209-73f3-17af-b12edab51456', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:09:56', NULL, NULL, NULL, '2025-11-24 20:14:56', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (146, '1763986220978_eb17bc77', 1533365254, 'http://weixin.qq.com/q/02rpPktopjfwJ15bcANF1u', NULL, '2b03fe86-a928-4aff-b45d-6aad2b64aa13', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:10:21', NULL, NULL, NULL, '2025-11-24 20:15:21', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (147, '1763986231233_05601c80', 2099072144, 'http://weixin.qq.com/q/02HIo9sEpjfwJ15lcAhF19', NULL, '487dc348-b45a-9375-c520-e34105bcd8b6', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:10:31', NULL, NULL, NULL, '2025-11-24 20:15:31', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (148, '1763986238657_534dce43', 1389572513, 'http://weixin.qq.com/q/02TyomsSpjfwJ15scANF1E', NULL, '28636a28-e689-78df-46ed-139be349d6f3', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:10:39', NULL, NULL, NULL, '2025-11-24 20:15:39', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (149, '1763986248291_74715f52', 291530765, 'http://weixin.qq.com/q/020b_rtepjfwJ15CcA1F1L', NULL, '298187ae-42a0-afc8-14bc-9b66a8a09922', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:10:48', NULL, NULL, NULL, '2025-11-24 20:15:48', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (150, '1763986275317_1e5f4010', 766548708, 'http://weixin.qq.com/q/02U6TdsbpjfwJ161cAhF1q', NULL, '8a07cf31-0c3b-091b-c15e-1855e36fe50c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:11:15', NULL, NULL, NULL, '2025-11-24 20:16:15', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (151, '1763986289918_0ad256be', 719696919, 'http://weixin.qq.com/q/029313t1pjfwJ16gcA1F1z', NULL, '651debec-af74-c443-a74d-661c543a0989', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:11:30', NULL, NULL, NULL, '2025-11-24 20:16:30', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (152, '1763986301107_fe2f15af', 898927330, 'http://weixin.qq.com/q/02YRlZsspjfwJ16rcAxF1M', NULL, 'dc2e34c0-e1e8-3a75-3fc3-c602af7018ff', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:11:41', NULL, NULL, NULL, '2025-11-24 20:16:41', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (153, '1763987386272_593d5c74', 20569787, 'http://weixin.qq.com/q/02MtmmtPpjfwJ17ogAxF1y', NULL, '936ae310-0457-064b-b3b8-fbfe9ff4316a', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:29:46', NULL, NULL, NULL, '2025-11-24 20:34:46', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (154, '1763987387122_39025452', 762220028, 'http://weixin.qq.com/q/02c4-csmpjfwJ17pgAhF1U', NULL, '5d22ebd3-cf86-f30c-b197-4e720d488e58', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:29:47', NULL, NULL, NULL, '2025-11-24 20:34:47', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (155, '1763988585199_d6774891', 232809328, 'http://weixin.qq.com/q/02WT67tWpjfwJ167lAxF1z', NULL, '390328dd-2d53-2ccc-81b5-6f1ba1ecaaeb', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 0, NULL, NULL, NULL, NULL, '2025-11-24 20:49:45', NULL, NULL, NULL, '2025-11-24 20:54:45', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (156, '1763988638318_ff779f14', 205422526, 'http://weixin.qq.com/q/026JaYt4pjfwJ16YlA1F15', NULL, '390328dd-2d53-2ccc-81b5-6f1ba1ecaaeb', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 3, 'o2VPg7QV_xAB43zorqU_pRx5GO7o', NULL, NULL, 4, '2025-11-24 20:50:38', '2025-11-24 20:50:47', '2025-11-24 20:50:47', '2025-11-24 20:50:47', '2025-11-24 20:55:38', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (157, '1763988676069_e5625435', 52453166, 'http://weixin.qq.com/q/02Ps1vtFpjfwJ17ylAhF16', NULL, '7f58596f-65ff-3cc8-59eb-699988b74dba', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:51:16', NULL, NULL, NULL, '2025-11-24 20:56:16', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (158, '1763988686514_3af0ea8a', 1194527161, 'http://weixin.qq.com/q/022TJNtapjfwJ17IlAhF1o', NULL, '56ce7da5-7a3a-377d-f0df-c6bd781d8390', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:51:27', NULL, NULL, NULL, '2025-11-24 20:56:27', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (159, '1763988719351_07124ce9', 896786958, 'http://weixin.qq.com/q/0226gSs2pjfwJ14dmANF1Y', NULL, '68671536-d474-77a3-50d6-b5e9f1ba667a', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:51:59', NULL, NULL, NULL, '2025-11-24 20:56:59', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (160, '1763988805436_4b27c374', 1159941759, 'http://weixin.qq.com/q/02Ysomt2pjfwJ15zmANF1m', NULL, 'd999a0cb-1f6c-b75a-f015-d0bcc49cb5ed', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:53:25', NULL, NULL, NULL, '2025-11-24 20:58:25', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (161, '1763988837819_a938e9a7', 688943202, 'http://weixin.qq.com/q/02cIQPtgpjfwJ163mANF1-', NULL, '74c7bf76-7211-63ef-0140-33c2d80c1ea8', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:53:58', NULL, NULL, NULL, '2025-11-24 20:58:58', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (162, '1763988847483_19a550a6', 1469831509, 'http://weixin.qq.com/q/02Lqeps_pjfwJ16dmAxF1n', NULL, '2785d5c4-b42d-d3c0-0826-5b6b2be7385d', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 20:54:07', NULL, NULL, NULL, '2025-11-24 20:59:07', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (163, '1763992244331_4834fc9a', 725147314, 'http://weixin.qq.com/q/02weQYtppjfwJ17izANF10', NULL, '8d6b0bb0-fc96-7b23-d740-6cc47a21b148', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 21:50:44', NULL, NULL, NULL, '2025-11-24 21:55:44', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (164, '1763992464683_a13dec72', 574579151, 'http://weixin.qq.com/q/020jxitNpjfwJ16KAAhF1Y', NULL, '22482191-885c-af31-081b-5ae5f001ad52', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 21:54:25', NULL, NULL, NULL, '2025-11-24 21:59:25', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (165, '1763992533623_947d26fc', 1554951901, 'http://weixin.qq.com/q/02kx7-s1pjfwJ17PAA1F1Q', NULL, 'a1e3f95a-69aa-2ba1-3f95-eab448faec38', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 21:55:34', NULL, NULL, NULL, '2025-11-24 22:00:34', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (166, '1763992742064_aaa8ea3d', 1619859690, 'http://weixin.qq.com/q/02glMusMpjfwJ174BAxF1t', NULL, 'c656a2d6-822f-fd2d-b8bb-0f29451dafde', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 21:59:02', NULL, NULL, NULL, '2025-11-24 22:04:02', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (167, '1763993087930_9cc90df0', 928118442, 'http://weixin.qq.com/q/02nNYwt1pjfwJ14tDAxF15', NULL, '3284a307-f7bb-4621-6649-9c8857b869f0', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 22:04:48', NULL, NULL, NULL, '2025-11-24 22:09:48', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (168, '1763993093136_12826e93', 49061732, 'http://weixin.qq.com/q/02i1bCtMpjfwJ14zDAxF1j', NULL, '5d0b79d9-13eb-1d9c-03d6-0ae21bea6f3c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-24 22:04:53', NULL, NULL, NULL, '2025-11-24 22:09:53', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (169, '1764044096136_0602de64', 2143034875, 'http://weixin.qq.com/q/02qyk1t-pjfwJ11sKBNF1-', NULL, 'cb83a955-ea94-cad7-75ee-ec49ee6c1f2c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-25 12:14:56', NULL, NULL, NULL, '2025-11-25 12:19:56', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (170, '1764312849371_b0caace9', 1768806218, 'http://weixin.qq.com/q/02d9RbtSpjfwJ14W8FxF1G', NULL, 'cd8fc958-f921-48b9-8c6e-86382a9e26a2', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-28 14:54:09', NULL, NULL, NULL, '2025-11-28 14:59:09', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (171, '1764318144576_f1acae3f', 626696772, 'http://weixin.qq.com/q/02o3R1tIpjfwJ17FsF1F16', NULL, 'cddb379a-b0ad-d64f-4434-98da691963dd', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:22:25', NULL, NULL, NULL, '2025-11-28 16:27:25', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (172, '1764318174469_3a0e11e3', 2043834616, 'http://weixin.qq.com/q/02Jv00tGpjfwJ147tF1F1g', NULL, '1349c5da-6ec8-9b8f-42ab-d0333353a9a3', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:22:54', NULL, NULL, NULL, '2025-11-28 16:27:54', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (173, '1764318208914_fb2fa824', 1864408151, 'http://weixin.qq.com/q/02DFPvsepjfwJ14GtFhF1q', NULL, '7856ade5-793d-df18-7bb4-000302f7a976', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:23:29', NULL, NULL, NULL, '2025-11-28 16:28:29', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (174, '1764318935658_cd97c625', 747268800, 'http://weixin.qq.com/q/02UXDrtqpjfwJ140wFNF1a', NULL, '6718ec6e-6572-b0c5-2265-4cd6cbf25ac7', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:35:36', NULL, NULL, NULL, '2025-11-28 16:40:36', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (175, '1764319140633_99cd351a', 1541163541, 'http://weixin.qq.com/q/02a_VHsvpjfwJ17dwFxF1o', NULL, 'd2d101c5-dc1f-636a-6530-985126274f25', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:39:01', NULL, NULL, NULL, '2025-11-28 16:44:01', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (176, '1764319194306_095a3bc4', 1628080516, 'http://weixin.qq.com/q/02-Pb0tspjfwJ143xFhF1r', NULL, '690d7924-c3c4-3c34-c145-05b10d09da57', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:39:54', NULL, NULL, NULL, '2025-11-28 16:44:54', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (177, '1764319214571_71bd2adb', 1766309105, 'http://weixin.qq.com/q/029tslsapjfwJ14nxFxF1p', NULL, '08961888-9ba7-e3d6-9200-a5dce21b252c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:40:15', NULL, NULL, NULL, '2025-11-28 16:45:15', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (178, '1764319242068_ee14efb7', 1028880232, 'http://weixin.qq.com/q/02J1bMsspjfwJ14PxFhF1o', NULL, '700258a7-290a-727b-e93c-3b47b68794f1', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:40:42', NULL, NULL, NULL, '2025-11-28 16:45:42', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (179, '1764319824230_ec0ab287', 948875476, 'http://weixin.qq.com/q/02OgqVtCpjfwJ15VzFNF1X', NULL, '88f8e80b-a5e2-68be-fa6c-15b69fe99e4c', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:50:24', NULL, NULL, NULL, '2025-11-28 16:55:24', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (180, '1764319831923_b8823951', 1007320308, 'http://weixin.qq.com/q/02-mtZsipjfwJ161zFxF1g', NULL, '66c05fe2-6d49-4842-077a-9be1d2efffba', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 5, NULL, NULL, NULL, NULL, '2025-11-28 16:50:32', NULL, NULL, NULL, '2025-11-28 16:55:32', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (181, '1764382058921_e39bacbf', 456034548, 'http://weixin.qq.com/q/02Bi-VstpjfwJ16jmGNF1-', NULL, '3c2186cc-d374-bfff-d798-0c001024d509', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-29 10:07:39', NULL, NULL, NULL, '2025-11-29 10:12:39', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (182, '1764422481573_68cc5e05', 61198171, 'http://weixin.qq.com/q/02sao3sWpjfwJ1dVQG1F1j', NULL, '559571c0-c6b9-bb07-ab60-993976363dad', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 5, NULL, NULL, NULL, NULL, '2025-11-29 21:21:22', NULL, NULL, NULL, '2025-11-29 21:26:22', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (183, '1764422604086_332a366b', 160272477, 'http://weixin.qq.com/q/02fNfFtQpjfwJ1fQQGNF1s', NULL, '30def445-973f-1bec-05a4-69fedf50ca99', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 5, NULL, NULL, NULL, NULL, '2025-11-29 21:23:24', NULL, NULL, NULL, '2025-11-29 21:28:24', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (184, '1764422621562_e473e137', 1639337092, 'http://weixin.qq.com/q/02xDUztSpjfwJ1c5RGNF1R', NULL, 'eec4e9fb-61bb-bcfc-d33d-686ef8615435', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-29 21:23:42', NULL, NULL, NULL, '2025-11-29 21:28:42', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (185, '1764485458781_6348d7e4', 490761736, 'http://weixin.qq.com/q/02TyGat5pjfwJ1dVGHxF1V', NULL, 'bfc2bfec-551e-0c1f-c1a7-1ec4e2067717', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-11-30 14:50:59', NULL, NULL, NULL, '2025-11-30 14:55:59', NULL, NULL, NULL);
+INSERT INTO `wx_scan_log` VALUES (186, '1764569816076_32c17baf', 287704486, 'http://weixin.qq.com/q/02BINjt7pjfwJ13ZPJhF1l', NULL, '716c9456-e46e-eec9-1d53-19056c582dd6', '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0', 5, NULL, NULL, NULL, NULL, '2025-12-01 14:16:56', NULL, NULL, NULL, '2025-12-01 14:21:56', NULL, NULL, NULL);
+
+-- ----------------------------
+-- View structure for v_knowledge_point
+-- ----------------------------
+DROP VIEW IF EXISTS `v_knowledge_point`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `v_knowledge_point` AS select `b`.`point_id` AS `point_id`,`b`.`subject_id` AS `subject_id`,`b`.`title` AS `title`,`b`.`summary` AS `summary`,`b`.`difficulty` AS `difficulty`,`b`.`author_id` AS `author_id`,`b`.`author_name` AS `author_name`,`b`.`view_count` AS `view_count`,`b`.`like_count` AS `like_count`,`b`.`collect_count` AS `collect_count`,`b`.`comment_count` AS `comment_count`,`b`.`is_recommend` AS `is_recommend`,`b`.`is_top` AS `is_top`,`b`.`status` AS `status`,`b`.`audit_status` AS `audit_status`,`b`.`create_by` AS `create_by`,`b`.`create_time` AS `create_time`,`b`.`update_by` AS `update_by`,`b`.`update_time` AS `update_time`,`b`.`publish_time` AS `publish_time`,`c`.`content` AS `content`,`c`.`content_html` AS `content_html`,`c`.`audit_remark` AS `audit_remark`,`s`.`subject_name` AS `subject_name` from ((`knowledge_point_base` `b` left join `knowledge_point_content` `c` on((`b`.`point_id` = `c`.`point_id`))) left join `knowledge_subject` `s` on((`b`.`subject_id` = `s`.`subject_id`)));
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -48,8 +48,6 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
     private DamingQuestionMapper damingQuestionMapper;
     @Autowired
     private IDamingQuestionService damingQuestionService;
-    @Autowired
-    private DamingQuestionAnswerMapper damingQuestionAnswerMapper;
 
     /**
      * 查询试卷
@@ -224,19 +222,9 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
     @Override
     @Transactional
     public int deleteDamingPaperByPaperIds(Long[] paperIds) {
-        // 如果该试卷下有其他作答记录，提示说已经绑定无法删除
-        for (Long paperId : paperIds) {
-            List<DamingPaperAnswer> damingPaperAnswers = damingPaperAnswerMapper.selectDamingPaperAnswerByPaperId(paperId);
-            List<DamingQuestionAnswer> damingQuestionAnswers = damingQuestionAnswerMapper.selectDamingQuestionAnswerByPaperId(paperId);
-            if (damingPaperAnswers.size()>0||damingQuestionAnswers.size()>0){
-                return 2;
-            }
-        }
         return damingPaperMapper.deleteDamingPaperByPaperIds(paperIds);
     }
 
-    @Autowired
-    private DamingPaperAnswerMapper damingPaperAnswerMapper;
     /**
      * 删除试卷信息
      *
@@ -245,10 +233,6 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
      */
     @Override
     public int deleteDamingPaperByPaperId(Long paperId) {
-        List<DamingPaperAnswer> damingPaperAnswer = damingPaperAnswerMapper.selectDamingPaperAnswerByPaperId(paperId);
-        if (damingPaperAnswer.size()>0){
-            return 2;
-        }
         return damingPaperMapper.deleteDamingPaperByPaperId(paperId);
     }
 
