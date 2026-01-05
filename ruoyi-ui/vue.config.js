@@ -63,7 +63,8 @@ module.exports = {
     resolve: {
       alias: {
         '@': resolve('src')
-      }
+      },
+      mainFields: ['main']
     },
     plugins: [
       // http://doc.ruoyi.vip/ruoyi-vue/other/faq.html#使用gzip解压缩静态文件
@@ -80,6 +81,10 @@ module.exports = {
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
+
+    // 配置 marked 使用 CommonJS 版本
+    config.resolve.alias
+      .set('marked', path.resolve(__dirname, 'node_modules/marked/lib/marked.cjs'))
 
     // set svg-sprite-loader
     config.module

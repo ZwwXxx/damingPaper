@@ -160,23 +160,86 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                     DamingQuestionAnswer damingQuestionAnswer = new DamingQuestionAnswer();
                     damingQuestionAnswer.setItemOrder(paperQuestionVM.getItemOrder());
                     boolean isSubjective = Objects.equals(matchQuestion.getQuestionType(), QuestionTypeEnum.Subjective.getCode());
-                    // 如果是多选题，遍历用户答案数组与数据库里的correct转数组进行比对
-                    String userAnswer = questionAnswerDto.getContent();
-                    boolean isCorrect = matchQuestion.getCorrect().equals(userAnswer);
-                    if (matchQuestion.getQuestionType() == QuestionTypeEnum.Multiple.getCode()) {
-                        userAnswer = String.join(",", questionAnswerDto.getContentArray());
-                        String[] matchCorrect = matchQuestion.getCorrect().split(",");
-                        String[] questionAnswerDtoContentArray = questionAnswerDto.getContentArray();
-                        // 检查长度
-                        if (matchCorrect.length != questionAnswerDtoContentArray.length) {
-                            isCorrect = false;
-                        } else {
-                            // 数组转为set集合，去重加无视顺序
-                            Set<String> set1 = new HashSet<>(Arrays.asList(matchCorrect));
-                            Set<String> set2 = new HashSet<>(Arrays.asList(questionAnswerDtoContentArray));
-                            isCorrect = set1.equals(set2);
+                    boolean isFillBlank = Objects.equals(matchQuestion.getQuestionType(), QuestionTypeEnum.FillBlank.getCode());
+                    // 获取填空题答案顺序要求（从content_info中读取）
+                    Boolean requireOrder = false;
+                    if (isFillBlank) {
+                        try {
+                            DamingContentInfo contentInfo = damingContentInfoMapper.selectDamingContentInfoById(matchQuestion.getQuestionInfoId());
+                            if (contentInfo != null && contentInfo.getContent() != null) {
+                                com.alibaba.fastjson2.JSONObject jsonObject = com.alibaba.fastjson2.JSONObject.parseObject(contentInfo.getContent());
+                                requireOrder = jsonObject.getBoolean("requireOrder");
+                                if (requireOrder == null) {
+                                    requireOrder = false; // 默认为false，不要求按顺序
+                                }
+                            }
+                        } catch (Exception e) {
+                            // 解析失败时使用默认值
+                            requireOrder = false;
                         }
                     }
+                    // 如果是多选题或填空题，使用contentArray；否则使用content
+                    String userAnswer = questionAnswerDto.getContent();
+                    boolean isCorrect = false;
+                    
+                    if (matchQuestion.getQuestionType() == QuestionTypeEnum.Multiple.getCode()) {
+                        // 多选题：使用contentArray
+                        if (questionAnswerDto.getContentArray() != null && questionAnswerDto.getContentArray().length > 0) {
+                            userAnswer = String.join(",", questionAnswerDto.getContentArray());
+                            String[] matchCorrect = matchQuestion.getCorrect().split(",");
+                            String[] questionAnswerDtoContentArray = questionAnswerDto.getContentArray();
+                            // 检查长度
+                            if (matchCorrect.length != questionAnswerDtoContentArray.length) {
+                                isCorrect = false;
+                            } else {
+                                // 数组转为set集合，去重加无视顺序
+                                Set<String> set1 = new HashSet<>(Arrays.asList(matchCorrect));
+                                Set<String> set2 = new HashSet<>(Arrays.asList(questionAnswerDtoContentArray));
+                                isCorrect = set1.equals(set2);
+                            }
+                        } else {
+                            isCorrect = false;
+                        }
+                    } else if (isFillBlank) {
+                        // 填空题：使用contentArray，支持多个答案且可以不按顺序
+                        if (questionAnswerDto.getContentArray() != null && questionAnswerDto.getContentArray().length > 0) {
+                            // 过滤空答案
+                            String[] userAnswers = Arrays.stream(questionAnswerDto.getContentArray())
+                                    .map(String::trim)
+                                    .filter(s -> !s.isEmpty())
+                                    .toArray(String[]::new);
+                            if (userAnswers.length > 0) {
+                                userAnswer = String.join(",", userAnswers);
+                                // 获取标准答案
+                                String[] matchCorrect = Arrays.stream(matchQuestion.getCorrect().split(","))
+                                        .map(String::trim)
+                                        .filter(s -> !s.isEmpty())
+                                        .toArray(String[]::new);
+                                // 检查长度
+                                if (matchCorrect.length != userAnswers.length) {
+                                    isCorrect = false;
+                                } else {
+                                    if (requireOrder) {
+                                        // 要求按顺序：逐个比较
+                                        isCorrect = Arrays.equals(matchCorrect, userAnswers);
+                                    } else {
+                                        // 不要求按顺序：使用Set集合比较，忽略顺序
+                                        Set<String> set1 = new HashSet<>(Arrays.asList(matchCorrect));
+                                        Set<String> set2 = new HashSet<>(Arrays.asList(userAnswers));
+                                        isCorrect = set1.equals(set2);
+                                    }
+                                }
+                            } else {
+                                isCorrect = false;
+                            }
+                        } else {
+                            isCorrect = false;
+                        }
+                    } else {
+                        // 单选题、判断题：使用content
+                        isCorrect = matchQuestion.getCorrect().equals(userAnswer);
+                    }
+                    
                     if (userAnswer == null || "".equals(userAnswer.trim())) {
                         userAnswer = "未填";
                     }
@@ -260,12 +323,22 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
         // 将数据库的答题记录列表转为dto
         List<QuestionAnswerDto> questionAnswerDtos = damingQuestionAnswers.stream().map(x -> {
             QuestionAnswerDto questionAnswerDto = new QuestionAnswerDto();
-            if (x.getQuestionType() == 2) {
+            if (x.getQuestionType() == QuestionTypeEnum.Multiple.getCode()) {
                 // 多选题
                 String[] split = x.getUserAnswer().split(",");
                 Arrays.sort(split);
                 questionAnswerDto.setContentArray(split);
+            } else if (x.getQuestionType() == QuestionTypeEnum.FillBlank.getCode()) {
+                // 填空题：将逗号分隔的字符串转换为数组
+                String userAnswer = x.getUserAnswer();
+                if (userAnswer != null && !userAnswer.isEmpty() && !"未填".equals(userAnswer)) {
+                    String[] split = userAnswer.split(",");
+                    questionAnswerDto.setContentArray(split);
+                } else {
+                    questionAnswerDto.setContentArray(new String[0]);
+                }
             } else {
+                // 单选题、判断题、主观题：使用content
                 String userAnswer = x.getUserAnswer();
                 // ⭐ 主观题答案已经是完整CDN地址，无需签名处理
                 // 注释掉签名逻辑，现在答案直接存储完整CDN地址

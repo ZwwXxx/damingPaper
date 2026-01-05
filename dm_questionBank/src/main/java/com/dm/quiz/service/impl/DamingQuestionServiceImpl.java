@@ -79,6 +79,16 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         } else {
             questionDto.setCorrect(questionInfoContentVM.getCorrect());
         }
+        // 设置填空题答案顺序要求（默认false，不要求按顺序）
+        questionDto.setRequireOrder(questionInfoContentVM.getRequireOrder() != null ? questionInfoContentVM.getRequireOrder() : false);
+        // 设置解析内容格式（默认html，富文本格式）
+        questionDto.setAnalysisFormat(questionInfoContentVM.getAnalysisFormat() != null ? questionInfoContentVM.getAnalysisFormat() : "html");
+        // 设置题干内容格式（默认html，富文本格式）
+        questionDto.setQuestionTitleFormat(questionInfoContentVM.getQuestionTitleFormat() != null ? questionInfoContentVM.getQuestionTitleFormat() : "html");
+        // 设置选项内容格式（默认html，富文本格式）
+        questionDto.setOptionFormat(questionInfoContentVM.getOptionFormat() != null ? questionInfoContentVM.getOptionFormat() : "html");
+        // 设置标准答案内容格式（默认html，富文本格式，仅主观题）
+        questionDto.setCorrectFormat(questionInfoContentVM.getCorrectFormat() != null ? questionInfoContentVM.getCorrectFormat() : "html");
         return questionDto;
     }
 
@@ -154,6 +164,20 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
                 : questionDto.getCorrect()
         );
         questionInfoContentVM.setQuestionOptionList(questionOptionVMList);
+        // 保存填空题答案顺序要求（仅填空题有效）
+        if (questionDto.getQuestionType() == QuestionTypeEnum.FillBlank.getCode()) {
+            questionInfoContentVM.setRequireOrder(questionDto.getRequireOrder() != null ? questionDto.getRequireOrder() : false);
+        }
+        // 保存解析内容格式（默认html）
+        questionInfoContentVM.setAnalysisFormat(questionDto.getAnalysisFormat() != null ? questionDto.getAnalysisFormat() : "html");
+        // 保存题干内容格式（默认html）
+        questionInfoContentVM.setQuestionTitleFormat(questionDto.getQuestionTitleFormat() != null ? questionDto.getQuestionTitleFormat() : "html");
+        // 保存选项内容格式（默认html）
+        questionInfoContentVM.setOptionFormat(questionDto.getOptionFormat() != null ? questionDto.getOptionFormat() : "html");
+        // 保存标准答案内容格式（默认html，仅主观题）
+        if (questionDto.getQuestionType() == QuestionTypeEnum.Subjective.getCode()) {
+            questionInfoContentVM.setCorrectFormat(questionDto.getCorrectFormat() != null ? questionDto.getCorrectFormat() : "html");
+        }
         return JSON.toJSONString(questionInfoContentVM);
     }
 

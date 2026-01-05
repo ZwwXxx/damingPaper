@@ -24,6 +24,16 @@ public class QuestionDto {
     private Integer questionType;
     // 题目序号表示第几题
     private Integer itemOrder;
+    // 填空题答案是否要求按顺序（true=要求按顺序，false=不要求按顺序）
+    private Boolean requireOrder;
+    // 解析内容格式（html=富文本，markdown=Markdown格式，默认html）
+    private String analysisFormat;
+    // 题干内容格式（html=富文本，markdown=Markdown格式，默认html）
+    private String questionTitleFormat;
+    // 选项内容格式（html=富文本，markdown=Markdown格式，默认html）
+    private String optionFormat;
+    // 标准答案内容格式（html=富文本，markdown=Markdown格式，默认html，仅主观题）
+    private String correctFormat;
 
     public Integer getItemOrder() {
         return itemOrder;
@@ -103,5 +113,45 @@ public class QuestionDto {
 
     public void setQuestionType(Integer questionType) {
         this.questionType = questionType;
+    }
+
+    public Boolean getRequireOrder() {
+        return requireOrder;
+    }
+
+    public void setRequireOrder(Boolean requireOrder) {
+        this.requireOrder = requireOrder;
+    }
+
+    public String getAnalysisFormat() {
+        return analysisFormat;
+    }
+
+    public void setAnalysisFormat(String analysisFormat) {
+        this.analysisFormat = analysisFormat;
+    }
+
+    public String getQuestionTitleFormat() {
+        return questionTitleFormat;
+    }
+
+    public void setQuestionTitleFormat(String questionTitleFormat) {
+        this.questionTitleFormat = questionTitleFormat;
+    }
+
+    public String getOptionFormat() {
+        return optionFormat;
+    }
+
+    public void setOptionFormat(String optionFormat) {
+        this.optionFormat = optionFormat;
+    }
+
+    public String getCorrectFormat() {
+        return correctFormat;
+    }
+
+    public void setCorrectFormat(String correctFormat) {
+        this.correctFormat = correctFormat;
     }
 }
