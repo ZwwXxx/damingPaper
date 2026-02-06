@@ -183,34 +183,44 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                     boolean isCorrect = false;
                     
                     if (matchQuestion.getQuestionType() == QuestionTypeEnum.Multiple.getCode()) {
-                        // 多选题：使用contentArray
+                        // 多选题：使用contentArray（忽略前后空格，忽略大小写，顺序无关）
                         if (questionAnswerDto.getContentArray() != null && questionAnswerDto.getContentArray().length > 0) {
-                            userAnswer = String.join(",", questionAnswerDto.getContentArray());
-                            String[] matchCorrect = matchQuestion.getCorrect().split(",");
-                            String[] questionAnswerDtoContentArray = questionAnswerDto.getContentArray();
-                            // 检查长度
-                            if (matchCorrect.length != questionAnswerDtoContentArray.length) {
+                            String[] userArray = Arrays.stream(questionAnswerDto.getContentArray())
+                                    .filter(Objects::nonNull)
+                                    .map(String::trim)
+                                    .filter(s -> !s.isEmpty())
+                                    .toArray(String[]::new);
+                            String[] correctArray = Arrays.stream(matchQuestion.getCorrect().split(","))
+                                    .map(String::trim)
+                                    .filter(s -> !s.isEmpty())
+                                    .toArray(String[]::new);
+                            userAnswer = String.join(",", userArray);
+                            if (correctArray.length != userArray.length) {
                                 isCorrect = false;
                             } else {
-                                // 数组转为set集合，去重加无视顺序
-                                Set<String> set1 = new HashSet<>(Arrays.asList(matchCorrect));
-                                Set<String> set2 = new HashSet<>(Arrays.asList(questionAnswerDtoContentArray));
+                                Set<String> set1 = Arrays.stream(correctArray)
+                                        .map(String::toLowerCase)
+                                        .collect(Collectors.toSet());
+                                Set<String> set2 = Arrays.stream(userArray)
+                                        .map(String::toLowerCase)
+                                        .collect(Collectors.toSet());
                                 isCorrect = set1.equals(set2);
                             }
                         } else {
                             isCorrect = false;
                         }
                     } else if (isFillBlank) {
-                        // 填空题：使用contentArray，支持多个答案且可以不按顺序
+                        // 填空题：使用contentArray，支持多个答案且可以不按顺序，不区分大小写
                         if (questionAnswerDto.getContentArray() != null && questionAnswerDto.getContentArray().length > 0) {
-                            // 过滤空答案
+                            // 过滤空答案，并转换为小写进行比较
                             String[] userAnswers = Arrays.stream(questionAnswerDto.getContentArray())
                                     .map(String::trim)
                                     .filter(s -> !s.isEmpty())
                                     .toArray(String[]::new);
                             if (userAnswers.length > 0) {
+                                // 保存时也去除空格，确保数据库存储的是干净的答案
                                 userAnswer = String.join(",", userAnswers);
-                                // 获取标准答案
+                                // 获取标准答案，转换为小写
                                 String[] matchCorrect = Arrays.stream(matchQuestion.getCorrect().split(","))
                                         .map(String::trim)
                                         .filter(s -> !s.isEmpty())
@@ -220,12 +230,22 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                                     isCorrect = false;
                                 } else {
                                     if (requireOrder) {
-                                        // 要求按顺序：逐个比较
-                                        isCorrect = Arrays.equals(matchCorrect, userAnswers);
+                                        // 要求按顺序：逐个比较（不区分大小写）
+                                        isCorrect = true;
+                                        for (int i = 0; i < matchCorrect.length; i++) {
+                                            if (!matchCorrect[i].equalsIgnoreCase(userAnswers[i])) {
+                                                isCorrect = false;
+                                                break;
+                                            }
+                                        }
                                     } else {
-                                        // 不要求按顺序：使用Set集合比较，忽略顺序
-                                        Set<String> set1 = new HashSet<>(Arrays.asList(matchCorrect));
-                                        Set<String> set2 = new HashSet<>(Arrays.asList(userAnswers));
+                                        // 不要求按顺序：使用Set集合比较，忽略顺序（不区分大小写）
+                                        Set<String> set1 = Arrays.stream(matchCorrect)
+                                                .map(String::toLowerCase)
+                                                .collect(Collectors.toSet());
+                                        Set<String> set2 = Arrays.stream(userAnswers)
+                                                .map(String::toLowerCase)
+                                                .collect(Collectors.toSet());
                                         isCorrect = set1.equals(set2);
                                     }
                                 }
@@ -240,7 +260,11 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                         isCorrect = matchQuestion.getCorrect().equals(userAnswer);
                     }
                     
-                    if (userAnswer == null || "".equals(userAnswer.trim())) {
+                    // 最终保存前，确保去除前后空格
+                    if (userAnswer != null) {
+                        userAnswer = userAnswer.trim();
+                    }
+                    if (userAnswer == null || "".equals(userAnswer)) {
                         userAnswer = "未填";
                     }
                     damingQuestionAnswer.setUserAnswer(userAnswer);
@@ -387,6 +411,7 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
             throw new RuntimeException("试卷不包含主观题");
         }
         int subjectiveScore = 0;
+        int subjectiveCorrectCount = 0; // 主观题得满分的数量
         for (ReviewQuestionScoreDto item : request.getQuestionScores()) {
             DamingQuestionAnswer target = subjectiveMap.get(item.getAnswerId());
             if (target == null) {
@@ -401,11 +426,18 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
             target.setReviewComment(item.getComment());
             target.setIsCorrect(null);
             subjectiveScore += score;
+            // 如果主观题得满分，则计入答对数量
+            if (target.getQuestionScore() != null && score >= target.getQuestionScore()) {
+                subjectiveCorrectCount++;
+            }
             damingQuestionAnswerMapper.updateDamingQuestionAnswer(target);
         }
         paperAnswer.setSubjectiveScore(subjectiveScore);
         int objectiveScore = paperAnswer.getObjectiveScore() == null ? 0 : paperAnswer.getObjectiveScore();
         paperAnswer.setFinalScore(objectiveScore + subjectiveScore);
+        // 重新计算答对数量：客观题答对数量 + 主观题得满分数量
+        int objectiveCorrectCount = paperAnswer.getCorrectCount() != null ? paperAnswer.getCorrectCount() : 0;
+        paperAnswer.setCorrectCount(objectiveCorrectCount + subjectiveCorrectCount);
         paperAnswer.setReviewStatus(REVIEW_STATUS_DONE);
         paperAnswer.setReviewUser(SecurityUtils.getUsername());
         paperAnswer.setReviewTime(new Date());

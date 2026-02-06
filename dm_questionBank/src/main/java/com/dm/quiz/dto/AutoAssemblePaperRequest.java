@@ -6,12 +6,38 @@ import java.util.List;
  * 自动组卷请求参数
  */
 public class AutoAssemblePaperRequest {
+    /**
+     * 试卷名称
+     */
     private String paperName;
+    /**
+     * 科目
+     */
     private Integer subjectId;
+    /**
+     * 试卷类型
+     */
     private Integer paperType;
+    /**
+     * 建议考试时长
+     */
     private Integer suggestTime;
+    /**
+     * 是否开启防作弊
+     */
     private Boolean enableAntiCheat;
+    /**
+     * 规则列表（按题型+数量自动组卷时使用）
+     */
     private List<AutoAssembleRuleDto> rules;
+    /**
+     * 按日期自动组卷 - 开始日期（yyyy-MM-dd）
+     */
+    private String beginTime;
+    /**
+     * 按日期自动组卷 - 结束日期（yyyy-MM-dd）
+     */
+    private String endTime;
 
     public String getPaperName() {
         return paperName;
@@ -59,5 +85,21 @@ public class AutoAssemblePaperRequest {
 
     public void setRules(List<AutoAssembleRuleDto> rules) {
         this.rules = rules;
+    }
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

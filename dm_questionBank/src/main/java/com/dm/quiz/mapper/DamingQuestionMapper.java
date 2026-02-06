@@ -74,4 +74,16 @@ public interface DamingQuestionMapper
     List<DamingQuestion> selectRandomQuestions(@Param("subjectId") Integer subjectId,
                                                @Param("questionType") Integer questionType,
                                                @Param("limit") Integer limit);
+
+    /**
+     * 按科目 + 创建日期范围查询题目列表（用于按日期自动组卷）
+     *
+     * @param subjectId 科目ID
+     * @param beginTime 开始日期（yyyy-MM-dd）
+     * @param endTime   结束日期（yyyy-MM-dd）
+     * @return 题目列表
+     */
+    List<DamingQuestion> selectQuestionsBySubjectAndCreateTime(@Param("subjectId") Integer subjectId,
+                                                               @Param("beginTime") String beginTime,
+                                                               @Param("endTime") String endTime);
 }

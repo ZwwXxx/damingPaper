@@ -10,6 +10,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.dm.quiz.domain.DamingContentInfo;
 import com.dm.quiz.domain.DamingQuestionAnswer;
+import com.dm.quiz.domain.DamingSubject;
 import com.dm.quiz.mapper.DamingQuestionAnswerMapper;
 import com.dm.quiz.viewmodel.QuestionInfoContentVM;
 import com.dm.quiz.viewmodel.QuestionOptionVM;
@@ -17,6 +18,7 @@ import com.dm.quiz.viewmodel.QuestionExportVO;
 import com.dm.quiz.dto.QuestionDto;
 import com.dm.quiz.enums.QuestionTypeEnum;
 import com.dm.quiz.mapper.DamingContentInfoMapper;
+import com.dm.quiz.mapper.DamingSubjectMapper;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
@@ -40,6 +42,8 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
     private DamingQuestionMapper damingQuestionMapper;
     @Autowired
     private DamingContentInfoMapper damingContentInfoMapper;
+    @Autowired
+    private DamingSubjectMapper damingSubjectMapper;
 
     /**
      * 查询题目表
@@ -366,8 +370,15 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
             }
         }
 
+        // 校验科目是否存在，避免导入不存在的科目ID
+        DamingSubject subject = damingSubjectMapper.selectDamingSubjectBySubjectId(exportVO.getSubjectId());
+        if (subject == null || subject.getDelFlag() != null && subject.getDelFlag() != 0) {
+            throw new ServiceException("科目ID【" + exportVO.getSubjectId() + "】不存在或已被禁用，请先在科目管理中维护该科目");
+        }
+
         QuestionDto questionDto = new QuestionDto();
-        questionDto.setSubjectId(exportVO.getSubjectId());
+        // 使用数据库中的真实科目ID，防止错误ID写入题目表
+        questionDto.setSubjectId(subject.getSubjectId());
         questionDto.setQuestionType(exportVO.getQuestionType());
         questionDto.setQuestionTitle(exportVO.getQuestionTitle());
         questionDto.setAnalysis(StringUtils.isBlank(exportVO.getAnalysis()) ? "" : exportVO.getAnalysis());

@@ -71,4 +71,9 @@ public interface IDamingPaperService
      * 根据规则自动组卷（仅返回建议内容，不落库）
      */
     PaperDto autoAssemblePaper(AutoAssemblePaperRequest request);
+
+    /**
+     * 按日期范围自动组卷（将时间范围内的所有题目，按题型自动分组，仅返回建议内容，不落库）
+     */
+    PaperDto autoAssemblePaperByDate(AutoAssemblePaperRequest request);
 }

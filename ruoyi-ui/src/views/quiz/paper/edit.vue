@@ -64,9 +64,13 @@
         </el-col>
         <!--分割线-->
         <el-col :span="24" class="mb-2">
-          <el-alert title="可按照题型快速自动组卷，仍可在生成后调整题型及题目列表" type="info" :closable="false"/>
+          <el-alert title="可按照题型规则或按日期范围快速自动组卷，仍可在生成后调整题型及题目列表" type="info" :closable="false"/>
           <el-button type="primary" icon="el-icon-magic-stick" size="mini" class="mt-2" @click="openAutoComposeDialog">
-            自动组卷
+            规则自动组卷
+          </el-button>
+          <el-button type="success" icon="el-icon-date" size="mini" class="mt-2" style="margin-left: 8px"
+                     @click="openAutoComposeByDateDialog">
+            按日期自动组卷（例如：今天录入的所有题）
           </el-button>
         </el-col>
         <el-col :span="24">
@@ -188,7 +192,24 @@
           </template>
         </el-table-column>
         <el-table-column prop="questionTitle" label="题干" show-overflow-tooltip/>
+        <el-table-column prop="createTime" label="创建时间" width="160">
+          <template v-slot="scope">
+            {{ scope.row.createTime }}
+          </template>
+        </el-table-column>
       </el-table>
+      <div style="margin-top: 16px; text-align: right;">
+        <el-pagination
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :current-page="questionList.queryParams.pageNum"
+          :page-size="questionList.queryParams.pageSize"
+          :page-sizes="[5,10,20,50]"
+          :total="questionList.total"
+          @size-change="handleQuestionPageSizeChange"
+          @current-change="handleQuestionPageChange"
+        />
+      </div>
       <div slot="footer">
         <el-button @click="close">取消</el-button>
         <el-button type="primary" @click="addQuestionConfirm">确定</el-button>
@@ -222,11 +243,45 @@
         <el-button type="primary" :loading="autoCompose.loading" @click="handleAutoComposeConfirm">生成题目</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="按日期自动组卷" :visible.sync="autoComposeByDate.visible" width="500px"
+               @close="closeAutoComposeByDateDialog">
+      <el-form label-width="90px" size="small">
+        <el-form-item label="科目">
+          <el-select v-model="autoComposeByDate.form.subjectId" placeholder="请选择科目" :style="{width: '100%'}">
+            <el-option v-for="(item,index) in subjectIdOptions" :key="index" :label="item.label"
+                       :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="日期范围">
+          <el-date-picker
+            v-model="autoComposeByDate.form.dateRange"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd"
+            :style="{width: '100%'}">
+          </el-date-picker>
+        </el-form-item>
+        <el-alert
+          title="系统会按题型（单选、多选等）自动分组，把该日期范围内的所有题目加入试卷，可在生成后继续微调。"
+          type="info"
+          :closable="false"
+        />
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="closeAutoComposeByDateDialog">取 消</el-button>
+        <el-button type="primary" :loading="autoComposeByDate.loading" @click="handleAutoComposeByDateConfirm">
+          生成题目
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import {getQuestion, listQuestion} from "@/api/quiz/question";
-import {addPaper, getPaper, updatePaper, autoComposePaper} from "@/api/quiz/paper";
+import {addPaper, getPaper, updatePaper, autoComposePaper, autoComposePaperByDate} from "@/api/quiz/paper";
 import {optionSubject} from "@/api/quiz/subject";
 
 export default {
@@ -368,6 +423,14 @@ export default {
             questionCount: 5
           }]
         }
+      },
+      autoComposeByDate: {
+        visible: false,
+        loading: false,
+        form: {
+          subjectId: undefined,
+          dateRange: []
+        }
       }
     }
   },
@@ -375,6 +438,7 @@ export default {
   watch: {
     'formData.subjectId'(val) {
       this.autoCompose.form.subjectId = val
+      this.autoComposeByDate.form.subjectId = val
     }
   },
   async created() {
@@ -445,13 +509,13 @@ export default {
       this.questionList.loading = true;
       try {
         const params = {
-          ...this.questionList.queryParams,
-          questionTitle: undefined
+          ...this.questionList.queryParams
         };
         const response = await listQuestion(params);
         const filteredRows = this.filterExistingQuestions(response.rows || []);
         this.questionList.tableData = filteredRows;
-        this.questionList.total = filteredRows.length;
+        // 使用后端分页总数，保证分页组件正常工作
+        this.questionList.total = Number(response.total) || filteredRows.length;
         this.$nextTick(() => {
           this.$refs.questionTable && this.$refs.questionTable.clearSelection();
         });
@@ -460,7 +524,17 @@ export default {
       }
     },
     queryQuestionList() {
+      this.questionList.queryParams.pageNum = 1;
       this.getQuestList()
+    },
+    handleQuestionPageSizeChange(size) {
+      this.questionList.queryParams.pageSize = size;
+      this.questionList.queryParams.pageNum = 1;
+      this.getQuestList();
+    },
+    handleQuestionPageChange(page) {
+      this.questionList.queryParams.pageNum = page;
+      this.getQuestList();
     },
     getSubjectLabel(id) {
       return this.subjectMap[id] || '未知科目'; // 默认值
@@ -577,6 +651,20 @@ export default {
       this.autoCompose.visible = false
       this.autoCompose.loading = false
     },
+    openAutoComposeByDateDialog() {
+      if (!this.autoComposeByDate.form.subjectId && this.formData.subjectId) {
+        this.autoComposeByDate.form.subjectId = this.formData.subjectId
+      }
+      if (!this.autoComposeByDate.form.dateRange || !this.autoComposeByDate.form.dateRange.length) {
+        const today = this.formatToday()
+        this.autoComposeByDate.form.dateRange = [today, today]
+      }
+      this.autoComposeByDate.visible = true
+    },
+    closeAutoComposeByDateDialog() {
+      this.autoComposeByDate.visible = false
+      this.autoComposeByDate.loading = false
+    },
     addAutoRule() {
       const defaultType = this.questionTypeOptions.length ? this.questionTypeOptions[0].value : 1
       this.autoCompose.form.rules.push({
@@ -631,6 +719,47 @@ export default {
         }
       } finally {
         this.autoCompose.loading = false
+      }
+    },
+    formatToday() {
+      const d = new Date()
+      const pad = (n) => (n < 10 ? '0' + n : '' + n)
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+    },
+    async handleAutoComposeByDateConfirm() {
+      if (!this.autoComposeByDate.form.subjectId) {
+        return this.$message.error('请选择科目')
+      }
+      if (!this.autoComposeByDate.form.dateRange || this.autoComposeByDate.form.dateRange.length !== 2) {
+        return this.$message.error('请选择日期范围')
+      }
+      const [beginTime, endTime] = this.autoComposeByDate.form.dateRange
+      const payload = {
+        subjectId: this.autoComposeByDate.form.subjectId,
+        paperName: this.formData.paperName,
+        paperType: this.formData.paperType,
+        suggestTime: this.formData.suggestTime,
+        enableAntiCheat: this.formData.enableAntiCheat,
+        beginTime,
+        endTime
+      }
+      this.autoComposeByDate.loading = true
+      try {
+        const res = await autoComposePaperByDate(payload)
+        if (res.code === 200 && res.data) {
+          this.formData.paperQuestionTypeDto = res.data.paperQuestionTypeDto || []
+          this.formData.score = res.data.score
+          this.formData.questionCount = res.data.questionCount
+          if (res.data.subjectId) {
+            this.formData.subjectId = res.data.subjectId
+          }
+          this.$message.success('已按日期范围自动组卷')
+          this.autoComposeByDate.visible = false
+        } else {
+          this.$message.error(res.msg || '按日期自动组卷失败')
+        }
+      } finally {
+        this.autoComposeByDate.loading = false
       }
     }
   }

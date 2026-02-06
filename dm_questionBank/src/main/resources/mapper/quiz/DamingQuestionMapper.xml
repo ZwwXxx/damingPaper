@@ -66,6 +66,24 @@
         LIMIT #{limit}
     </select>
 
+    <!-- 按科目 + 创建日期范围查询题目列表（用于按日期自动组卷） -->
+    <select id="selectQuestionsBySubjectAndCreateTime" resultMap="DamingQuestionResult">
+        <include refid="selectDamingQuestionVo"/>
+        <where>
+            and del_flag != 2
+            <if test="subjectId != null">
+                AND subject_id = #{subjectId}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{beginTime},'%Y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{endTime},'%Y%m%d')
+            </if>
+        </where>
+        ORDER BY create_time ASC
+    </select>
+
     <insert id="insertDamingQuestion" parameterType="DamingQuestion" useGeneratedKeys="true" keyProperty="id">
         insert into daming_question
         <trim prefix="(" suffix=")" suffixOverrides=",">

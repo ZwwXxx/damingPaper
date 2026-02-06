@@ -349,6 +349,62 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         return preview;
     }
 
+    /**
+     * 按日期范围自动组卷：
+     * 将指定科目、指定日期范围内“所有题目”，按题型（单选、多选、判断等）自动分组，生成试卷预览。
+     * 不直接落库，前端拿到结果后可继续调整题型/题目，再点击提交生成正式试卷。
+     */
+    @Override
+    public PaperDto autoAssemblePaperByDate(AutoAssemblePaperRequest request) {
+        if (request == null || request.getSubjectId() == null) {
+            throw new ServiceException("请先选择科目");
+        }
+        if (StringUtils.isEmpty(request.getBeginTime()) || StringUtils.isEmpty(request.getEndTime())) {
+            throw new ServiceException("请选择题目创建日期范围");
+        }
+        List<DamingQuestion> candidates = damingQuestionMapper.selectQuestionsBySubjectAndCreateTime(
+                request.getSubjectId(),
+                request.getBeginTime(),
+                request.getEndTime()
+        );
+        if (CollectionUtils.isEmpty(candidates)) {
+            throw new ServiceException("选定日期范围内没有题目");
+        }
+        AtomicInteger orderCounter = new AtomicInteger(0);
+        List<PaperQuestionTypeDto> paperQuestionTypeDtos = new ArrayList<>();
+        // 按题型顺序（单选、多选、主观、判断、填空）分组
+        for (QuestionTypeEnum typeEnum : QuestionTypeEnum.values()) {
+            List<DamingQuestion> typeQuestions = candidates.stream()
+                    .filter(q -> q.getQuestionType() != null && q.getQuestionType().equals(typeEnum.getCode()))
+                    .collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(typeQuestions)) {
+                continue;
+            }
+            List<QuestionDto> questionDtos = new ArrayList<>();
+            for (DamingQuestion question : typeQuestions) {
+                questionDtos.add(toQuestionDto(question, orderCounter));
+            }
+            PaperQuestionTypeDto typeDto = new PaperQuestionTypeDto();
+            typeDto.setName(typeEnum.getName());
+            typeDto.setQuestionDtos(questionDtos);
+            paperQuestionTypeDtos.add(typeDto);
+        }
+        if (CollectionUtils.isEmpty(paperQuestionTypeDtos)) {
+            throw new ServiceException("选定日期范围内没有可用题目");
+        }
+        PaperDto preview = new PaperDto();
+        preview.setPaperQuestionTypeDto(paperQuestionTypeDtos);
+        preview.setSubjectId(request.getSubjectId());
+        preview.setPaperName(request.getPaperName());
+        preview.setPaperType(request.getPaperType());
+        preview.setSuggestTime(request.getSuggestTime());
+        preview.setEnableAntiCheat(Boolean.TRUE.equals(request.getEnableAntiCheat()));
+        ComputeCountAndScoreResult stats = getComputeCountAndScoreResult(preview);
+        preview.setScore(stats.totalScore);
+        preview.setQuestionCount(stats.totalCount);
+        return preview;
+    }
+
     private QuestionDto toQuestionDto(DamingQuestion question, AtomicInteger orderCounter) {
         QuestionDto questionDto = damingQuestionService.getQuestionDto(question);
         questionDto.setItemOrder(orderCounter.getAndIncrement());

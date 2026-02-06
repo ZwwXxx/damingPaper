@@ -100,6 +100,16 @@ public class DamingPaperController extends BaseController
     }
 
     /**
+     * 按日期范围自动组卷预览（将时间范围内的所有题型题目自动入卷）
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:paper:add')")
+    @Log(title = "试卷", businessType = BusinessType.OTHER)
+    @PostMapping("/auto-compose-by-date")
+    public AjaxResult autoComposeByDate(@RequestBody AutoAssemblePaperRequest request) {
+        return success(damingPaperService.autoAssemblePaperByDate(request));
+    }
+
+    /**
      * 修改试卷
      */
     @PreAuthorize("@ss.hasPermi('quiz:paper:edit')")

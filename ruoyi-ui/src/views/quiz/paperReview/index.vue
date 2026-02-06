@@ -60,11 +60,15 @@
     />
 
     <el-dialog :title="dialogTitle"
-               :visible.sync="reviewVisible" width="80%" :close-on-click-modal="false">
+               :visible.sync="reviewVisible"
+               width="80%"
+               class="paper-review-dialog"
+               :close-on-click-modal="false"
+               append-to-body>
       <div v-if="detailLoading" style="text-align: center;padding: 40px 0;">
         <el-spinner/>
       </div>
-      <div v-else-if="currentPaper">
+      <div v-else-if="currentPaper" class="review-body">
         <div class="paper-meta">
           <p><strong>考生账号：</strong>{{ paperAnswerInfo.createUser }}</p>
           <p><strong>考试状态：</strong>
@@ -73,38 +77,61 @@
             </el-tag>
           </p>
         </div>
-        <el-table v-if="subjectiveList.length" :data="subjectiveList" border>
-          <el-table-column label="题目" min-width="280">
-            <template slot-scope="scope">
-              <div class="question-title">{{ scope.row.title }}</div>
-              <div class="student-answer">
-                <strong>学生答案：</strong>
-                <template v-if="scope.row.studentAnswer">
-                  <span class="answer-preview">{{ formatAnswerPreview(scope.row.studentAnswer) }}</span>
-                  <el-button type="text" size="mini" @click="openAnswerPreview(scope.row)">查看详情</el-button>
+        <div class="review-layout">
+          <div class="review-aside" v-if="subjectiveList.length">
+            <div class="aside-title">题目目录</div>
+            <div class="aside-tags">
+              <el-tag
+                v-for="item in subjectiveList"
+                :key="item.questionId"
+                type="info"
+                class="aside-tag"
+                :class="{'tag-active': activeQuestionId === item.questionId}"
+                @click="scrollToQuestion(item.questionId)">
+                {{ item.displayOrder }}
+              </el-tag>
+            </div>
+          </div>
+          <div class="review-main">
+            <el-table
+              v-if="subjectiveList.length"
+              :data="subjectiveList"
+              border
+              :row-class-name="questionRowClass"
+              ref="subjectiveTable">
+              <el-table-column label="题目" min-width="280">
+                <template slot-scope="scope">
+                  <div class="question-title">{{ scope.row.title }}</div>
+                  <div class="student-answer">
+                    <strong>学生答案：</strong>
+                    <template v-if="scope.row.studentAnswer">
+                      <span class="answer-preview">{{ formatAnswerPreview(scope.row.studentAnswer) }}</span>
+                      <el-button type="text" size="mini" @click="openAnswerPreview(scope.row)">查看详情</el-button>
+                    </template>
+                    <span v-else>未作答</span>
+                  </div>
                 </template>
-                <span v-else>未作答</span>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="满分" prop="maxScore" width="80"/>
-          <el-table-column label="得分" width="150" class-name="score-column">
-            <template slot-scope="scope">
-              <el-input-number v-model="scope.row.score" :min="0" :max="scope.row.maxScore"/>
-            </template>
-          </el-table-column>
-          <el-table-column label="评语">
-            <template slot-scope="scope">
-              <el-input type="textarea" v-model="scope.row.comment" :rows="2" placeholder="可选"/>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-empty v-else description="该试卷无主观题"/>
-        <el-form label-width="80px" style="margin-top: 20px;">
-          <el-form-item label="批注">
-            <el-input type="textarea" v-model="reviewRemark" :rows="2" placeholder="可填写整体批注"/>
-          </el-form-item>
-        </el-form>
+              </el-table-column>
+              <el-table-column label="满分" prop="maxScore" width="80"/>
+              <el-table-column label="得分" width="150" class-name="score-column">
+                <template slot-scope="scope">
+                  <el-input-number v-model="scope.row.score" :min="0" :max="scope.row.maxScore"/>
+                </template>
+              </el-table-column>
+              <el-table-column label="评语">
+                <template slot-scope="scope">
+                  <el-input type="textarea" v-model="scope.row.comment" :rows="2" placeholder="可选"/>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-empty v-else description="该试卷无主观题"/>
+            <el-form label-width="80px" style="margin-top: 20px;">
+              <el-form-item label="批注">
+                <el-input type="textarea" v-model="reviewRemark" :rows="2" placeholder="可填写整体批注"/>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="reviewVisible=false">取 消</el-button>
@@ -115,7 +142,8 @@
     <el-dialog title="学生答案详情"
                :visible.sync="answerPreviewVisible"
                width="60%"
-               :close-on-click-modal="false">
+               :close-on-click-modal="false"
+               append-to-body>
       <div
         class="answer-preview-body"
         v-if="answerPreviewContent"
@@ -164,6 +192,8 @@ export default {
       subjectiveList: [],
       reviewRemark: '',
       submitLoading: false,
+      activeQuestionId: null,
+      reviewScrollHandler: null,
       answerPreviewVisible: false,
       answerPreviewContent: '',
       answerPreviewTitle: '',
@@ -216,6 +246,7 @@ export default {
       this.currentPaper = null
       this.subjectiveList = []
       this.reviewRemark = ''
+      this.activeQuestionId = null
       getPaperReview(row.paperAnswerId).then(res => {
         this.currentPaper = res.data
         const answerDto = (res.data && res.data.paperAnswerDto) ? res.data.paperAnswerDto : {}
@@ -242,6 +273,7 @@ export default {
             }
             list.push({
               questionId: question.id,
+              displayOrder: question.itemOrder != null ? question.itemOrder + 1 : list.length + 1,
               answerId: answer.answerId,
               title: question.questionTitle,
               maxScore: question.score || 0,
@@ -253,6 +285,63 @@ export default {
         })
       })
       this.subjectiveList = list
+      this.activeQuestionId = list.length ? list[0].questionId : null
+      this.$nextTick(() => {
+        this.bindReviewScrollSpy()
+      })
+    },
+    questionRowClass({ row }) {
+      return row && row.questionId ? `question-row-${row.questionId}` : ''
+    },
+    scrollToQuestion(questionId) {
+      if (!questionId) return
+      this.activeQuestionId = questionId
+      this.$nextTick(() => {
+        const wrapper = this.$refs.subjectiveTable && this.$refs.subjectiveTable.bodyWrapper
+        const target = wrapper ? wrapper.querySelector(`.question-row-${questionId}`) : null
+        if (target && typeof target.scrollIntoView === 'function') {
+          const top = target.offsetTop - 12
+          wrapper.scrollTo({ top, behavior: 'smooth' })
+        }
+      })
+    },
+    bindReviewScrollSpy() {
+      const wrapper = this.$refs.subjectiveTable && this.$refs.subjectiveTable.bodyWrapper
+      if (!wrapper) return
+      this.removeReviewScrollSpy()
+      const handler = () => {
+        const rows = Array.from(wrapper.querySelectorAll('tbody tr'))
+        if (!rows.length) return
+        const scrollTop = wrapper.scrollTop
+        const offset = 20
+        let currentId = rows[0].className || ''
+        for (const row of rows) {
+          if (row.offsetTop - offset <= scrollTop) {
+            currentId = row.className || ''
+          } else {
+            break
+          }
+        }
+        if (currentId) {
+          const match = currentId.match(/question-row-(\d+)/)
+          if (match && match[1]) {
+            const qid = Number(match[1])
+            if (Number.isFinite(qid)) {
+              this.activeQuestionId = qid
+            }
+          }
+        }
+      }
+      this.reviewScrollHandler = handler
+      wrapper.addEventListener('scroll', handler, { passive: true })
+      handler()
+    },
+    removeReviewScrollSpy() {
+      const wrapper = this.$refs.subjectiveTable && this.$refs.subjectiveTable.bodyWrapper
+      if (wrapper && this.reviewScrollHandler) {
+        wrapper.removeEventListener('scroll', this.reviewScrollHandler)
+      }
+      this.reviewScrollHandler = null
     },
     submitReview() {
       if (!this.subjectiveList.length) {
@@ -405,16 +494,75 @@ export default {
     closeImagePreview() {
       this.imagePreview.visible = false
     }
+  },
+  beforeDestroy() {
+    this.removeReviewScrollSpy()
   }
 }
 </script>
 
 <style scoped>
+.paper-review-dialog ::v-deep .el-dialog__body {
+  display: flex;
+  flex-direction: column;
+  max-height: 75vh;
+  overflow: hidden;
+}
+.review-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+}
 .paper-meta {
   margin-bottom: 16px;
 }
 .paper-meta p {
   margin: 4px 0;
+}
+.review-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+.review-aside {
+  width: 220px;
+  flex-shrink: 0;
+  border: 1px solid #ebeef5;
+  border-radius: 8px;
+  padding: 12px;
+  background: #f8f9fb;
+  position: sticky;
+  top: 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+  z-index: 2;
+}
+.aside-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #303133;
+}
+.aside-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.aside-tag {
+  cursor: pointer;
+}
+.aside-tag.tag-active {
+  box-shadow: 0 0 0 2px #409EFF inset;
+}
+.review-main {
+  flex: 1;
+  max-height: 75vh;
+  overflow-y: auto;
+  padding-right: 8px;
 }
 .student-answer {
   margin-top: 8px;

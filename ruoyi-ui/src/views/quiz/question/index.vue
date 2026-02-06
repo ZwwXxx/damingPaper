@@ -165,7 +165,23 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="题目题干内容" align="center" prop="questionTitle"/>
+      <el-table-column label="题目题干内容" align="left" min-width="260">
+        <template slot-scope="scope">
+          <div class="question-title-cell">
+            <span class="question-title-text">
+              {{ getQuestionTitlePreview(scope.row.questionTitle) }}
+            </span>
+            <el-button
+              v-if="shouldShowQuestionPreview(scope.row.questionTitle)"
+              type="text"
+              size="mini"
+              @click="openQuestionPreview(scope.row)"
+            >
+              查看详情
+            </el-button>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="题目分数" align="center" prop="score"/>
       <el-table-column label="科目" align="center" prop="subjectId">
         <template slot-scope="scope">
@@ -291,6 +307,18 @@
         <el-link type="primary" :underline="false" @click="importTemplate">下载模板</el-link>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="题干预览"
+      :visible.sync="previewDialog.visible"
+      width="60%"
+      append-to-body>
+      <div v-if="previewDialog.content" class="question-preview-body" v-html="previewDialog.content"></div>
+      <el-empty v-else description="暂无题干内容"/>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="previewDialog.visible=false">关 闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -378,6 +406,11 @@ export default {
         isUploading: false,
         headers: { Authorization: "Bearer " + getToken() },
         url: process.env.VUE_APP_BASE_API + "/quiz/question/importData"
+      },
+      previewDialog: {
+        visible: false,
+        title: '',
+        content: ''
       }
     };
   },
@@ -448,6 +481,26 @@ export default {
     },
     addQuestionType() {
 
+    },
+    stripHtml(text) {
+      if (!text) return '';
+      return String(text).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    },
+    getQuestionTitlePreview(title) {
+      const plain = this.stripHtml(title);
+      if (plain.length <= 40) {
+        return plain || '-';
+      }
+      return plain.slice(0, 40) + '...';
+    },
+    shouldShowQuestionPreview(title) {
+      const plain = this.stripHtml(title);
+      return plain.length > 40;
+    },
+    openQuestionPreview(row) {
+      this.previewDialog.title = `题目ID：${row.id}`;
+      this.previewDialog.content = row.questionTitle || '';
+      this.previewDialog.visible = true;
     },
     /** 查询题目管理列表 */
     getList() {
@@ -605,6 +658,26 @@ export default {
 </script>
 
 <style scoped>
+.question-title-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+.question-title-text {
+  max-width: 360px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.question-preview-body {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+}
+
 .type-chip {
   display: inline-flex;
   align-items: center;

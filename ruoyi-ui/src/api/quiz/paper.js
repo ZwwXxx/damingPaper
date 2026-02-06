@@ -35,6 +35,15 @@ export function autoComposePaper(data) {
   })
 }
 
+// 按日期范围自动组卷（将时间范围内的所有题目按题型自动分组）
+export function autoComposePaperByDate(data) {
+  return request({
+    url: '/quiz/paper/auto-compose-by-date',
+    method: 'post',
+    data
+  })
+}
+
 // 修改试卷
 export function updatePaper(data) {
   return request({
