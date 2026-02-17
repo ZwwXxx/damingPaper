@@ -2,6 +2,9 @@
 FROM maven:3.8.6-eclipse-temurin-8-alpine AS builder
 WORKDIR /build
 
+# 使用国内 Maven 镜像，避免连 Maven Central 出现 handshake_failure / connection reset
+COPY .m2-docker-settings.xml /root/.m2/settings.xml
+
 # 先复制所有 pom，便于依赖层缓存
 COPY pom.xml .
 COPY ruoyi-admin/pom.xml ruoyi-admin/

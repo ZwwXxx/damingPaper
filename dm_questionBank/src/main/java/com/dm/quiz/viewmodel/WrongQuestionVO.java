@@ -2,6 +2,7 @@ package com.dm.quiz.viewmodel;
 
 import java.io.Serializable;
 import java.util.List;
+import com.ruoyi.system.domain.KnowledgePoint;
 
 /**
  * 学生错题记录视图
@@ -24,6 +25,10 @@ public class WrongQuestionVO implements Serializable {
     private Integer finalScore;
     private String createTime;
     private Integer wrongCount;
+    /**
+     * 题目关联的知识点（用于错题本跳转复习）
+     */
+    private List<KnowledgePoint> knowledgePoints;
     /**
      * 最后一次错误记录的 ID，用于跳转解析
      */
@@ -155,6 +160,14 @@ public class WrongQuestionVO implements Serializable {
 
     public void setWrongCount(Integer wrongCount) {
         this.wrongCount = wrongCount;
+    }
+
+    public List<KnowledgePoint> getKnowledgePoints() {
+        return knowledgePoints;
+    }
+
+    public void setKnowledgePoints(List<KnowledgePoint> knowledgePoints) {
+        this.knowledgePoints = knowledgePoints;
     }
 
     public Long getLatestAnswerId() {

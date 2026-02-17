@@ -1,0 +1,90 @@
+# 大明刷题 / 考试系统 - Docker 一键运行（唯一配置位于 daming-admin/docker/）
+# 使用：克隆 daming-admin、daming-front 到同一目录后执行  mv daming-admin/docker . 再  cd docker && docker-compose up -d
+# 首次启动前请确保存在 daming-admin/sql/ry-vue.sql（会挂载进 MySQL 做初始化）
+# 新版 Compose 不再需要 version，已移除避免警告
+
+services:
+  mysql:
+    image: mysql:8.0
+    pull_policy: if_not_present   # 本地已有则用本地，没有才拉取
+    container_name: paper-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_DATABASE: "ry-vue"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "123456"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ../daming-admin/sql/ry-vue.sql:/docker-entrypoint-initdb.d/01-ry-vue.sql:ro
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    pull_policy: if_not_present   # 本地已有则用本地，没有才拉取
+    container_name: paper-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  backend:
+    build:
+      context: ../daming-admin
+      dockerfile: Dockerfile
+    image: paper-backend:latest
+    pull_policy: never   # 只用本地构建，不向仓库拉取
+    container_name: paper-backend
+    restart: unless-stopped
+    depends_on:
+      mysql: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: ry-vue
+      MYSQL_USER: root
+      MYSQL_PASSWORD: "123456"
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+    ports:
+      - "8080:8080"
+
+  ruoyi-ui:
+    build:
+      context: ..
+      dockerfile: docker/ruoyi-ui/Dockerfile
+    image: paper-ruoyi-ui:latest
+    pull_policy: never   # 只用本地构建，不向仓库拉取
+    container_name: paper-ruoyi-ui
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8081:80"
+
+  daming-front:
+    build:
+      context: ..
+      dockerfile: docker/daming-front/Dockerfile
+    image: paper-daming-front:latest
+    pull_policy: never   # 只用本地构建，不向仓库拉取
+    container_name: paper-daming-front
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8082:80"
+
+volumes:
+  mysql_data:

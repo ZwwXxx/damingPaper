@@ -12,11 +12,13 @@ import com.dm.quiz.domain.DamingQuestion;
 import com.dm.quiz.dto.QuestionDto;
 import com.dm.quiz.mapper.DamingPaperMapper;
 import com.dm.quiz.mapper.DamingQuestionMapper;
+import com.dm.quiz.service.IQuestionKnowledgeService;
 import com.dm.quiz.viewmodel.WrongQuestionVO;
 import com.dm.quiz.service.IDamingQuestionService;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.domain.KnowledgePoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dm.quiz.mapper.DamingQuestionAnswerMapper;
@@ -32,6 +34,7 @@ import com.dm.quiz.service.IDamingQuestionAnswerService;
 @Service
 public class DamingQuestionAnswerServiceImpl implements IDamingQuestionAnswerService
 {
+    private static final int REVIEW_STATUS_DONE = 2;
     @Autowired
     private DamingQuestionAnswerMapper damingQuestionAnswerMapper;
     @Autowired
@@ -40,6 +43,8 @@ public class DamingQuestionAnswerServiceImpl implements IDamingQuestionAnswerSer
     private DamingPaperMapper damingPaperMapper;
     @Autowired
     private IDamingQuestionService damingQuestionService;
+    @Autowired
+    private IQuestionKnowledgeService questionKnowledgeService;
 
     /**
      * 查询题目回答情况表
@@ -125,6 +130,11 @@ public class DamingQuestionAnswerServiceImpl implements IDamingQuestionAnswerSer
         }
         // 仅筛选错误题
         filter.setIsCorrect(false);
+        // 仅返回已判定的错题：过滤掉待批改（review_status=1）的题目
+        // 主观题在交卷时会被标记为待批改，此时不应进入错题本
+        if (filter.getReviewStatus() == null) {
+            filter.setReviewStatus(REVIEW_STATUS_DONE);
+        }
         // 小权限保护：非管理员默认限制为当前用户
         if (!SecurityUtils.isAdmin(SecurityUtils.getUserId())) {
             filter.setCreateUser(SecurityUtils.getUsername());
@@ -141,7 +151,7 @@ public class DamingQuestionAnswerServiceImpl implements IDamingQuestionAnswerSer
                 .collect(Collectors.toList());
         Map<Long, DamingPaper> paperMap = buildPaperMap(latestAnswers);
         Map<Long, QuestionDto> questionDtoMap = buildQuestionDtoMap(latestAnswers);
-        return latestAnswers.stream()
+        List<WrongQuestionVO> voList = latestAnswers.stream()
                 .map(answer -> buildWrongQuestionVO(answer,
                         paperMap.get(answer.getPaperId()),
                         questionDtoMap.get(answer.getQuestionId()),
@@ -149,6 +159,19 @@ public class DamingQuestionAnswerServiceImpl implements IDamingQuestionAnswerSer
                 .filter(Objects::nonNull)
                 .filter(vo -> StringUtils.isBlank(paperNameKeyword) || (vo.getPaperName() != null && vo.getPaperName().contains(paperNameKeyword)))
                 .collect(Collectors.toList());
+
+        // 补充每道错题关联的知识点，供前台错题本直接跳转复习
+        List<Long> questionIds = voList.stream()
+                .map(WrongQuestionVO::getQuestionId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        if (!questionIds.isEmpty()) {
+            Map<Long, List<KnowledgePoint>> kpMap = questionKnowledgeService.getKnowledgePointsByQuestionIds(questionIds);
+            voList.forEach(vo -> vo.setKnowledgePoints(kpMap.getOrDefault(vo.getQuestionId(), Collections.emptyList())));
+        }
+
+        return voList;
     }
 
     /**
