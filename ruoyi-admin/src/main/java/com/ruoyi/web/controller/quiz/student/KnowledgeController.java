@@ -129,8 +129,9 @@ public class KnowledgeController extends BaseController
     public TableDataInfo listPoints(KnowledgePoint knowledgePoint)
     {
         startPage();
-        // 只查询已发布的知识点
+        // 只查询已发布且已审核通过的知识点
         knowledgePoint.setStatus(1);
+        knowledgePoint.setAuditStatus(1);
         // 使用BaseDTO查询，完全不包含content等大字段
         List<KnowledgePointBaseDTO> list = knowledgePointService.selectKnowledgePointList(knowledgePoint);
         fillUserStatusBaseDTO(list);

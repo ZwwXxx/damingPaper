@@ -242,7 +242,11 @@ public class KnowledgePointServiceImpl implements IKnowledgePointService
     @Override
     public int auditKnowledgePoint(KnowledgePoint knowledgePoint)
     {
-        return knowledgePointMapper.updateKnowledgePoint(knowledgePoint);
+        int result = knowledgePointMapper.updateKnowledgePoint(knowledgePoint);
+        if (result > 0 && knowledgePoint.getAuditRemark() != null) {
+            knowledgePointMapper.updateKnowledgePointContent(knowledgePoint);
+        }
+        return result;
     }
 
     /**

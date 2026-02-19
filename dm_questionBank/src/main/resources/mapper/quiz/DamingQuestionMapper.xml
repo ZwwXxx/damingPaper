@@ -29,10 +29,10 @@
             <if test="subjectId != null ">and subject_id = #{subjectId}</if>
             <if test="createTime != null ">and create_time = #{createTime}</if>
             <if test="updateTime != null ">and update_time = #{updateTime}</if>
-            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            <if test="_parameter != null and params != null and params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
             </if>
-            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            <if test="_parameter != null and params != null and params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
                 AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
             </if>
             and del_flag!=2

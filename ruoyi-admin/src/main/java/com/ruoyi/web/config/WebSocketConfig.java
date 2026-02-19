@@ -3,10 +3,10 @@ package com.ruoyi.web.config;
 import com.ruoyi.web.handler.WxLoginWebSocketHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -55,10 +55,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
     /**
      * 配置WebSocket容器
      * 设置消息大小限制等参数
-     * 仅在Servlet Web应用环境下加载,避免测试环境初始化失败
+     * 排除 test profile，避免 MOCK 环境下无 ServerContainer 导致单元测试启动报错
      */
     @Bean
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @Profile("!test")
     public ServletServerContainerFactoryBean createWebSocketContainer() {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
         // 设置文本消息缓冲区大小

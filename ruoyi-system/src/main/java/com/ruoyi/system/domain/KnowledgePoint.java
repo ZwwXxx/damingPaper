@@ -104,6 +104,9 @@ public class KnowledgePoint extends BaseEntity
     /** 排序字段 */
     private String orderBy;
 
+    /** 批量操作时使用的ID列表（非数据库字段） */
+    private Long[] pointIds;
+
     public void setPointId(Long pointId) 
     {
         this.pointId = pointId;
@@ -382,6 +385,16 @@ public class KnowledgePoint extends BaseEntity
     public void setOrderBy(String orderBy)
     {
         this.orderBy = orderBy;
+    }
+
+    public Long[] getPointIds()
+    {
+        return pointIds;
+    }
+
+    public void setPointIds(Long[] pointIds)
+    {
+        this.pointIds = pointIds;
     }
 
     @Override

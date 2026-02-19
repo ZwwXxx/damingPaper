@@ -21,6 +21,19 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
+        <!-- JUnit 5（单元测试 Assertions、@Test、@ExtendWith 等） -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Security（测试类中 BCryptPasswordEncoder 等需要） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
         <!-- spring-boot-devtools -->
         <!-- <dependency> -->
         <!--     <groupId>org.springframework.boot</groupId> -->
@@ -93,6 +106,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
