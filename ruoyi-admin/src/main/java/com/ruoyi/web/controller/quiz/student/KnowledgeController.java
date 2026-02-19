@@ -129,10 +129,12 @@ public class KnowledgeController extends BaseController
     public TableDataInfo listPoints(KnowledgePoint knowledgePoint)
     {
         startPage();
-        // 只查询已发布且已审核通过的知识点
-        knowledgePoint.setStatus(1);
-        knowledgePoint.setAuditStatus(1);
-        // 使用BaseDTO查询，完全不包含content等大字段
+        // 知识点广场（未传 authorId）：只显示已发布且已审核通过的
+        if (knowledgePoint.getAuthorId() == null) {
+            knowledgePoint.setStatus(1);
+            knowledgePoint.setAuditStatus(1);
+        }
+        // 我的文章（传了 authorId）：按前端筛选条件查，可包含待审核等
         List<KnowledgePointBaseDTO> list = knowledgePointService.selectKnowledgePointList(knowledgePoint);
         fillUserStatusBaseDTO(list);
         return getDataTable(list);
