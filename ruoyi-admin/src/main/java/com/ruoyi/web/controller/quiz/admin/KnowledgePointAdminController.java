@@ -159,8 +159,44 @@ public class KnowledgePointAdminController extends BaseController {
     @GetMapping("/subjects")
     public AjaxResult listSubjects() {
         KnowledgeSubject query = new KnowledgeSubject();
-        query.setStatus(1);
         List<KnowledgeSubject> list = knowledgeSubjectService.selectKnowledgeSubjectList(query);
         return success(list);
+    }
+
+    /** 后台新增科目 */
+    @PreAuthorize("@ss.hasPermi('knowledge:subject:add')")
+    @Log(title = "科目管理", businessType = BusinessType.INSERT)
+    @PostMapping("/subject")
+    public AjaxResult addSubject(@RequestBody KnowledgeSubject subject) {
+        if (subject.getSubjectName() == null || subject.getSubjectName().trim().isEmpty()) {
+            return error("科目名称不能为空");
+        }
+        KnowledgeSubject q = new KnowledgeSubject();
+        q.setSubjectName(subject.getSubjectName().trim());
+        List<KnowledgeSubject> exist = knowledgeSubjectService.selectKnowledgeSubjectList(q);
+        if (exist != null && !exist.isEmpty()) {
+            return error("科目名称已存在");
+        }
+        subject.setCreateBy(SecurityUtils.getUsername());
+        subject.setStatus(subject.getStatus() != null ? subject.getStatus() : 1);
+        return toAjax(knowledgeSubjectService.insertKnowledgeSubject(subject));
+    }
+
+    /** 后台修改科目 */
+    @PreAuthorize("@ss.hasPermi('knowledge:subject:edit')")
+    @Log(title = "科目管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/subject")
+    public AjaxResult editSubject(@RequestBody KnowledgeSubject subject) {
+        subject.setUpdateBy(SecurityUtils.getUsername());
+        subject.setUpdateTime(new Date());
+        return toAjax(knowledgeSubjectService.updateKnowledgeSubject(subject));
+    }
+
+    /** 后台删除科目 */
+    @PreAuthorize("@ss.hasPermi('knowledge:subject:remove')")
+    @Log(title = "科目管理", businessType = BusinessType.DELETE)
+    @DeleteMapping("/subject/{subjectIds}")
+    public AjaxResult removeSubject(@PathVariable Long[] subjectIds) {
+        return toAjax(knowledgeSubjectService.deleteKnowledgeSubjectBySubjectIds(subjectIds));
     }
 }

@@ -61,10 +61,37 @@ export function batchAuditKnowledge(data) {
   })
 }
 
-// 获取知识点科目列表（下拉选择）
+// 获取知识点科目列表（下拉选择 / 科目管理）
 export function listKnowledgeSubjects() {
   return request({
     url: '/quiz/knowledge/subjects',
     method: 'get'
   })
 }
+
+// 后台新增科目
+export function addSubject(data) {
+  return request({
+    url: '/quiz/knowledge/subject',
+    method: 'post',
+    data
+  })
+}
+
+// 后台修改科目
+export function updateSubject(data) {
+  return request({
+    url: '/quiz/knowledge/subject',
+    method: 'put',
+    data
+  })
+}
+
+// 后台删除科目
+export function delSubject(subjectIds) {
+  return request({
+    url: '/quiz/knowledge/subject/' + subjectIds,
+    method: 'delete'
+  })
+}
+
