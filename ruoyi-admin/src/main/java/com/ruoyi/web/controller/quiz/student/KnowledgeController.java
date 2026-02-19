@@ -164,7 +164,8 @@ public class KnowledgeController extends BaseController
         if (content == null) {
             return error("知识点内容不存在");
         }
-        
+        // 进入详情即增加浏览量
+        knowledgePointService.increaseViewCount(pointId);
         return success(content);
     }
 
