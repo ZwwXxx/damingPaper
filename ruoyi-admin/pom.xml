@@ -21,10 +21,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
-        <!-- JUnit 5（单元测试 Assertions、@Test、@ExtendWith 等） -->
+        <!-- JUnit 5（测试类 UnitTestForThesis 等需要，显式声明保证 testCompile 可用） -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -107,13 +108,6 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>

@@ -7,7 +7,6 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.LoginUser;
 import com.ruoyi.common.core.domain.model.DamingUser;
 import com.ruoyi.common.core.domain.model.LoginBody;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.web.service.StudentLoginService;
 import com.ruoyi.framework.web.service.TokenService;
 import lombok.extern.slf4j.Slf4j;

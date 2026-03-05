@@ -41,4 +41,12 @@ public class CacheConstants
      * 登录账户密码错误次数 redis key
      */
     public static final String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
+
+    // ========== 前台身份模块（与后台 login_tokens 隔离，便于独立练手/重构） ==========
+    /** 前台 token：front:token:{token} -> 前台会话对象 */
+    public static final String FRONT_TOKEN_KEY = "front:token:";
+    /** 前台短信验证码：front:sms:login:{phone} */
+    public static final String FRONT_SMS_LOGIN_KEY = "front:sms:login:";
+    /** 前台短信防刷限流：front:sms:limit:{phone} */
+    public static final String FRONT_SMS_LIMIT_KEY = "front:sms:limit:";
 }

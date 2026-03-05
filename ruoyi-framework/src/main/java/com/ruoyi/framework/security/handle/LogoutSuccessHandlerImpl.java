@@ -45,8 +45,11 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler
             String userName = loginUser.getUsername();
             // 删除用户缓存记录
             tokenService.delLoginUser(loginUser.getToken());
+            // 从请求头获取平台类型，如果没有则默认为后台 "0"
+            String platform = request.getHeader("Platform-Type");
+            String logType = "1".equals(platform) ? "1" : "0";
             // 记录用户退出日志
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(userName, Constants.LOGOUT, MessageUtils.message("user.logout.success")));
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(userName, Constants.LOGOUT, MessageUtils.message("user.logout.success"),logType));
         }
         ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.success(MessageUtils.message("user.logout.success"))));
     }

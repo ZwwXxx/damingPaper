@@ -52,6 +52,18 @@ public class SysLogininfor extends BaseEntity
     @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
 
+    /** 登录平台类型 */
+    @Excel(name = "登录类型（0后台用户 1前台用户）")
+    private String logType;
+
+    public String getLogType() {
+        return logType;
+    }
+
+    public void setLogType(String logType) {
+        this.logType = logType;
+    }
+
     public Long getInfoId()
     {
         return infoId;

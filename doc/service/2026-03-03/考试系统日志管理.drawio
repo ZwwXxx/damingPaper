@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0" version="29.4.0">
+  <diagram name="第 1 页" id="s-fUMfoIBlNWJvZOIirO">
+    <mxGraphModel dx="1657" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="shtRpA1I_j3Mbt01idVY-3" edge="1" parent="1" source="shtRpA1I_j3Mbt01idVY-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="shtRpA1I_j3Mbt01idVY-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="shtRpA1I_j3Mbt01idVY-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="点击登录" vertex="1">
+          <mxGeometry height="80" width="120" x="160" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="shtRpA1I_j3Mbt01idVY-5" edge="1" parent="1" source="shtRpA1I_j3Mbt01idVY-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="shtRpA1I_j3Mbt01idVY-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="shtRpA1I_j3Mbt01idVY-2" parent="1" style="whiteSpace=wrap;html=1;" value="登录接口获取用户登录相关信息" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="shtRpA1I_j3Mbt01idVY-7" edge="1" parent="1" source="shtRpA1I_j3Mbt01idVY-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="shtRpA1I_j3Mbt01idVY-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="shtRpA1I_j3Mbt01idVY-4" parent="1" style="whiteSpace=wrap;html=1;" value="插表" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="shtRpA1I_j3Mbt01idVY-9" edge="1" parent="1" source="shtRpA1I_j3Mbt01idVY-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="shtRpA1I_j3Mbt01idVY-8" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="shtRpA1I_j3Mbt01idVY-6" parent="1" style="whiteSpace=wrap;html=1;" value="后台读表显示&lt;br&gt;（区分前台还是后台）" vertex="1">
+          <mxGeometry height="60" width="120" x="160" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="shtRpA1I_j3Mbt01idVY-8" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="结束" vertex="1">
+          <mxGeometry height="80" width="80" x="180" y="650" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
