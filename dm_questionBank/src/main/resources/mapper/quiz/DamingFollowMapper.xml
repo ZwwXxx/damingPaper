@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingFollowMapper">
+
+    <insert id="insertFollow">
+        INSERT INTO daming_follows (follower_id, following_id, create_time)
+        VALUES (#{followerId}, #{followingId}, NOW())
+        ON DUPLICATE KEY UPDATE create_time = VALUES(create_time)
+    </insert>
+
+    <delete id="deleteFollow">
+        DELETE FROM daming_follows
+        WHERE follower_id = #{followerId}
+          AND following_id = #{followingId}
+    </delete>
+
+    <select id="countFollow" resultType="int">
+        SELECT COUNT(*)
+        FROM daming_follows
+        WHERE follower_id = #{followerId}
+          AND following_id = #{followingId}
+    </select>
+
+    <select id="selectFollowers" resultType="long">
+        SELECT follower_id
+        FROM daming_follows
+        WHERE following_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectFollowing" resultType="long">
+        SELECT following_id
+        FROM daming_follows
+        WHERE follower_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

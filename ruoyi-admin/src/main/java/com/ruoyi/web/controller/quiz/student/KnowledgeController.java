@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.quiz.student;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -137,6 +139,7 @@ public class KnowledgeController extends BaseController
         // 我的文章（传了 authorId）：按前端筛选条件查，可包含待审核等
         List<KnowledgePointBaseDTO> list = knowledgePointService.selectKnowledgePointList(knowledgePoint);
         fillUserStatusBaseDTO(list);
+        fillAuthorAvatarBaseDTO(list);
         return getDataTable(list);
     }
 
@@ -150,6 +153,7 @@ public class KnowledgeController extends BaseController
     {
         List<KnowledgePointBaseDTO> list = knowledgePointService.selectRecommendKnowledgePoints(limit);
         fillUserStatusBaseDTO(list);
+        fillAuthorAvatarBaseDTO(list);
         return success(list);
     }
 
@@ -282,7 +286,7 @@ public class KnowledgeController extends BaseController
             list = knowledgeInteractionService.getCollectedPointsLite(userId);
             logger.info("用户 {} 查询所有收藏，返回 {} 条精简数据", userId, list.size());
         }
-        
+        fillAuthorAvatarBaseDTO(list);
         return success(list);
     }
 
@@ -441,6 +445,28 @@ public class KnowledgeController extends BaseController
                 point.setIsLiked(false);
                 point.setIsCollected(false);
             }
+        }
+    }
+
+    private void fillAuthorAvatarBaseDTO(List<KnowledgePointBaseDTO> list)
+    {
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+        Map<Long, String> avatarCache = new HashMap<>();
+        for (KnowledgePointBaseDTO point : list) {
+            Long authorId = point.getAuthorId();
+            if (authorId == null) {
+                continue;
+            }
+            if (avatarCache.containsKey(authorId)) {
+                point.setAuthorAvatar(avatarCache.get(authorId));
+                continue;
+            }
+            DamingUser user = userService.selectDamingUserByUserId(authorId);
+            String avatar = user != null ? user.getAvatar() : null;
+            avatarCache.put(authorId, avatar);
+            point.setAuthorAvatar(avatar);
         }
     }
 

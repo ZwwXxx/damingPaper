@@ -1,7 +1,12 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import cn.hutool.Hutool;
+import cn.hutool.core.util.BooleanUtil;
+import com.ruoyi.common.core.redis.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.ruoyi.system.domain.KnowledgeCollect;
@@ -16,15 +21,16 @@ import com.ruoyi.system.mapper.KnowledgeFolderMapper;
 import com.ruoyi.system.service.IKnowledgeInteractionService;
 import com.ruoyi.system.service.IKnowledgeFolderService;
 
+import javax.annotation.Resource;
+
 /**
  * 知识点互动Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2025-11-28
  */
 @Service
-public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionService 
-{
+public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionService {
     @Autowired
     private KnowledgeLikeMapper knowledgeLikeMapper;
 
@@ -33,48 +39,68 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
 
     @Autowired
     private KnowledgePointMapper knowledgePointMapper;
-    
+
     @Autowired
     private KnowledgeFolderMapper knowledgeFolderMapper;
-    
+
     @Autowired
     private IKnowledgeFolderService knowledgeFolderService;
-
+    // 优雅点 1：使用 @Resource 明确指定 Bean 的名称，绕过复杂的类型匹配
+// 优雅点 2：不需要经过 RedisCache，直接拿到原生 Template
+    @Resource(name = "redisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
     /**
      * 切换点赞状态
      */
     @Override
     @Transactional
-    public boolean toggleLike(Long userId, Long pointId)
-    {
-        KnowledgeLike like = knowledgeLikeMapper.selectByUserAndPoint(userId, pointId);
-        
-        if (like != null)
-        {
-            // 已点赞，则取消点赞
-            knowledgeLikeMapper.deleteByUserAndPoint(userId, pointId);
+    public boolean toggleLike(Long userId, Long pointId) {
+        String likeKey = "knowledge:likes:" + pointId;
+        String userIdStr = userId.toString();
+
+        // 优雅点 3：直接调用高性能的 isMember (O(1) 复杂度)
+        Boolean hasLiked = redisTemplate.opsForSet().isMember(likeKey, userIdStr);
+
+        if (Boolean.TRUE.equals(hasLiked)) {
+            redisTemplate.opsForSet().remove(likeKey, userIdStr);
             knowledgePointMapper.decreaseLikeCount(pointId);
             return false;
-        }
-        else
-        {
-            // 未点赞，则添加点赞
-            KnowledgeLike newLike = new KnowledgeLike();
-            newLike.setUserId(userId);
-            newLike.setPointId(pointId);
-            knowledgeLikeMapper.insertKnowledgeLike(newLike);
+        } else {
+            redisTemplate.opsForSet().add(likeKey, userIdStr);
             knowledgePointMapper.increaseLikeCount(pointId);
             return true;
         }
+//        3.操作数据库文章点赞总数
+//        KnowledgeLike like = knowledgeLikeMapper.selectByUserAndPoint(userId, pointId);
+//
+//        if (like != null)
+//        {
+//            // 已点赞，则取消点赞
+//            knowledgeLikeMapper.deleteByUserAndPoint(userId, pointId);
+//            knowledgePointMapper.decreaseLikeCount(pointId);
+//            return false;
+//        }
+//        else
+//        {
+//            // 未点赞，则添加点赞
+//            KnowledgeLike newLike = new KnowledgeLike();
+//            newLike.setUserId(userId);
+//            newLike.setPointId(pointId);
+//            knowledgeLikeMapper.insertKnowledgeLike(newLike);
+//            knowledgePointMapper.increaseLikeCount(pointId);
+//            return true;
+//        }
     }
 
     /**
      * 检查是否已点赞
      */
     @Override
-    public boolean isLiked(Long userId, Long pointId)
-    {
-        return knowledgeLikeMapper.selectByUserAndPoint(userId, pointId) != null;
+    public boolean isLiked(Long userId, Long pointId) {
+        String likeKey = "knowledge:likes:" + pointId;
+        String userIdStr = userId.toString();
+        return BooleanUtil.isTrue( redisTemplate.opsForSet().isMember(likeKey, userIdStr));
+//        return knowledgeLikeMapper.selectByUserAndPoint(userId, pointId) != null;
     }
 
     /**
@@ -82,8 +108,7 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
      */
     @Override
     @Transactional
-    public boolean toggleCollect(Long userId, Long pointId)
-    {
+    public boolean toggleCollect(Long userId, Long pointId) {
         // 获取或创建默认收藏夹
         KnowledgeFolder defaultFolder = knowledgeFolderService.getOrCreateDefaultFolder(userId);
         return toggleCollectToFolder(userId, pointId, defaultFolder.getFolderId());
@@ -93,8 +118,7 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
      * 检查是否已收藏
      */
     @Override
-    public boolean isCollected(Long userId, Long pointId)
-    {
+    public boolean isCollected(Long userId, Long pointId) {
         return knowledgeCollectMapper.selectByUserAndPoint(userId, pointId) != null;
     }
 
@@ -102,8 +126,7 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
      * 查询用户收藏的知识点
      */
     @Override
-    public List<KnowledgePoint> getCollectedPoints(Long userId)
-    {
+    public List<KnowledgePoint> getCollectedPoints(Long userId) {
         return knowledgeCollectMapper.selectCollectedPoints(userId);
     }
 
@@ -111,8 +134,7 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
      * 查询用户在指定收藏夹中的知识点列表
      */
     @Override
-    public List<KnowledgePoint> getCollectedPointsByFolder(Long userId, Long folderId)
-    {
+    public List<KnowledgePoint> getCollectedPointsByFolder(Long userId, Long folderId) {
         return knowledgeCollectMapper.selectCollectedPointsByFolder(userId, folderId);
     }
 
@@ -120,8 +142,7 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
      * 查询用户收藏的知识点列表（精简版）
      */
     @Override
-    public List<KnowledgePointBaseDTO> getCollectedPointsLite(Long userId)
-    {
+    public List<KnowledgePointBaseDTO> getCollectedPointsLite(Long userId) {
         List<KnowledgePointBaseDTO> list = knowledgeCollectMapper.selectCollectedPointsLite(userId);
         fillUserStatusForDTO(list, userId);
         return list;
@@ -131,8 +152,7 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
      * 查询用户在指定收藏夹中的知识点列表（精简版）
      */
     @Override
-    public List<KnowledgePointBaseDTO> getCollectedPointsByFolderLite(Long userId, Long folderId)
-    {
+    public List<KnowledgePointBaseDTO> getCollectedPointsByFolderLite(Long userId, Long folderId) {
         List<KnowledgePointBaseDTO> list = knowledgeCollectMapper.selectCollectedPointsByFolderLite(userId, folderId);
         fillUserStatusForDTO(list, userId);
         return list;
@@ -141,8 +161,7 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
     /**
      * 为精简DTO填充用户交互状态
      */
-    private void fillUserStatusForDTO(List<KnowledgePointBaseDTO> list, Long userId)
-    {
+    private void fillUserStatusForDTO(List<KnowledgePointBaseDTO> list, Long userId) {
         try {
             for (KnowledgePointBaseDTO dto : list) {
                 dto.setIsLiked(isLiked(userId, dto.getPointId()));
@@ -162,12 +181,10 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
      */
     @Override
     @Transactional
-    public boolean toggleCollectToFolder(Long userId, Long pointId, Long folderId)
-    {
+    public boolean toggleCollectToFolder(Long userId, Long pointId, Long folderId) {
         KnowledgeCollect existingCollect = knowledgeCollectMapper.selectByUserAndPoint(userId, pointId);
-        
-        if (existingCollect != null)
-        {
+
+        if (existingCollect != null) {
             // 已收藏，则取消收藏
             // 更新收藏夹数量（减少）
             knowledgeFolderMapper.updateFolderCollectCount(existingCollect.getFolderId(), -1);
@@ -176,9 +193,7 @@ public class KnowledgeInteractionServiceImpl implements IKnowledgeInteractionSer
             // 更新知识点收藏数
             knowledgePointMapper.decreaseCollectCount(pointId);
             return false;
-        }
-        else
-        {
+        } else {
             // 未收藏，则添加收藏到指定收藏夹
             KnowledgeCollect newCollect = new KnowledgeCollect();
             newCollect.setUserId(userId);

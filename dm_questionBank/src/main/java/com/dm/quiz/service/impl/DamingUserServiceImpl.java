@@ -3,6 +3,7 @@ package com.dm.quiz.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.model.DamingUser;
+import com.ruoyi.common.utils.oss.OssSignUrlHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dm.quiz.mapper.DamingUserMapper;
@@ -20,6 +21,9 @@ public class DamingUserServiceImpl implements IDamingUserService
     @Autowired
     private DamingUserMapper damingUserMapper;
     
+    @Autowired
+    private OssSignUrlHelper ossSignUrlHelper;
+    
 
     /**
      * 查询刷题用户
@@ -30,7 +34,9 @@ public class DamingUserServiceImpl implements IDamingUserService
     @Override
     public DamingUser selectDamingUserByUserId(Long userId)
     {
-        return damingUserMapper.selectDamingUserByUserId(userId);
+        DamingUser user = damingUserMapper.selectDamingUserByUserId(userId);
+        processAvatar(user);
+        return user;
     }
 
     /**
@@ -42,7 +48,13 @@ public class DamingUserServiceImpl implements IDamingUserService
     @Override
     public List<DamingUser> selectDamingUserList(DamingUser damingUser)
     {
-        return damingUserMapper.selectDamingUserList(damingUser);
+        List<DamingUser> list = damingUserMapper.selectDamingUserList(damingUser);
+        if (list != null && !list.isEmpty()) {
+            for (DamingUser user : list) {
+                processAvatar(user);
+            }
+        }
+        return list;
     }
 
     /**
@@ -91,6 +103,17 @@ public class DamingUserServiceImpl implements IDamingUserService
     public int deleteDamingUserByUserId(Long userId)
     {
         return damingUserMapper.deleteDamingUserByUserId(userId);
+    }
+    
+    private void processAvatar(DamingUser user)
+    {
+        if (user == null) {
+            return;
+        }
+        String avatar = user.getAvatar();
+        if (avatar != null && !avatar.trim().isEmpty()) {
+            user.setAvatar(ossSignUrlHelper.convertToSignedUrl(avatar));
+        }
     }
     
 }

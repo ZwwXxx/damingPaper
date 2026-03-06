@@ -42,6 +42,9 @@ public class StudentUserController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     
+    @Autowired
+    private com.dm.quiz.service.IDamingFollowService followService;
+    
     /**
      * 前台学生登录
      */
@@ -197,5 +200,32 @@ public class StudentUserController {
             log.warn("⚠️ 更新用户信息失败 - 影响行数为0");
             return AjaxResult.error("更新失败");
         }
+    }
+    @PostMapping("/follow/{followingId}")
+    public AjaxResult toggleFollow(HttpServletRequest request, @PathVariable Long followingId, @RequestParam(defaultValue = "true") boolean follow) {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        if (loginUser == null || loginUser.getDamingUser() == null) {
+            return AjaxResult.error(401, "登录已过期，请重新登录");
+        }
+        Long followerId = loginUser.getDamingUser().getUserId();
+        boolean result = followService.setFollow(followerId, followingId, follow);
+        return result ? AjaxResult.success(follow ? "关注成功" : "取消关注") : AjaxResult.error(follow ? "关注失败" : "取消关注失败");
+    }
+    
+    @GetMapping("/follow/status/{followingId}")
+    public AjaxResult isFollowing(HttpServletRequest request, @PathVariable Long followingId) {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        if (loginUser == null || loginUser.getDamingUser() == null) {
+            return AjaxResult.error(401, "登录已过期，请重新登录");
+        }
+        Long followerId = loginUser.getDamingUser().getUserId();
+        boolean isFollowed = followService.isFollowing(followerId, followingId);
+        return AjaxResult.success().put("isFollowed", isFollowed);
+    }
+    
+    @GetMapping("/followers/{userId}/count")
+    public AjaxResult countFollowers(@PathVariable Long userId) {
+        int count = followService.getFollowers(userId).size();
+        return AjaxResult.success().put("count", count);
     }
 }

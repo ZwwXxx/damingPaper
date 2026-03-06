@@ -39,6 +39,8 @@ public class KnowledgePointBaseDTO
     @Excel(name = "作者姓名")
     private String authorName;
 
+    private String authorAvatar;
+
     /** 浏览次数 */
     @Excel(name = "浏览次数")
     private Integer viewCount;
@@ -157,6 +159,15 @@ public class KnowledgePointBaseDTO
     public String getAuthorName() 
     {
         return authorName;
+    }
+    public void setAuthorAvatar(String authorAvatar) 
+    {
+        this.authorAvatar = authorAvatar;
+    }
+
+    public String getAuthorAvatar() 
+    {
+        return authorAvatar;
     }
     public void setViewCount(Integer viewCount) 
     {
