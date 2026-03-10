@@ -33,6 +33,7 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import { getToken } from "@/utils/auth";
 import ImageViewer from "@/components/ImageViewer";
+import { compressImageIfNeeded } from "@/utils/upload";
 
 export default {
   name: "Editor",

@@ -385,7 +385,7 @@ export const selectComponents = [
     'auto-upload': true,
     showTip: false,
     buttonText: '点击上传',
-    fileSize: 2,
+    fileSize: 5,
     sizeUnit: 'MB',
     'list-type': 'text',
     multiple: false,
