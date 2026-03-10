@@ -62,6 +62,14 @@
             </el-switch>
           </el-form-item>
         </el-col>
+        <el-col :span="12">
+          <el-form-item label="题号规则">
+            <el-radio-group v-model="formData.numberMode">
+              <el-radio :label="1">按题型分组</el-radio>
+              <el-radio :label="2">按加入顺序</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
         <!--分割线-->
         <el-col :span="24" class="mb-2">
           <el-alert title="可按照题型规则或按日期范围快速自动组卷，仍可在生成后调整题型及题目列表" type="info" :closable="false"/>
@@ -74,39 +82,60 @@
           </el-button>
         </el-col>
         <el-col :span="24">
-          <el-form-item :label="'题型'+(qtypeIndex+1)+':'"
-                        v-for="(questionType,qtypeIndex) in formData.paperQuestionTypeDto"
-                        :key="qtypeIndex"
+          <el-form-item
+            :label="formData.numberMode === 1 ? ('题型'+(qtypeIndex+1)+':') : '题目列表'"
+            v-for="(questionType,qtypeIndex) in formData.paperQuestionTypeDto"
+            :key="qtypeIndex"
           >
-            <el-autocomplete
-              v-model="questionType.name"
-              :fetch-suggestions="queryQuestionTypeSearch"
-              placeholder="输入或选择题型名称"
-              style="width: 80%;margin-right: 10px;"
-              clearable
-            ></el-autocomplete>
-            <el-button type="text" @click="handleAddQuestion(questionType)">添加题目</el-button>
-            <el-button type="text" @click="formData.paperQuestionTypeDto.splice(qtypeIndex,1)">删除题型</el-button>
+            <!-- 按题型分组时才显示题型名称编辑与删除类型按钮 -->
+            <template v-if="formData.numberMode === 1">
+              <el-autocomplete
+                v-model="questionType.name"
+                :fetch-suggestions="queryQuestionTypeSearch"
+                placeholder="输入或选择题型名称"
+                style="width: 80%;margin-right: 10px;"
+                clearable
+              ></el-autocomplete>
+              <el-button type="text" @click="handleAddQuestion(questionType)">添加题目</el-button>
+              <el-button type="text" @click="formData.paperQuestionTypeDto.splice(qtypeIndex,1)">删除题型</el-button>
+            </template>
+            <!-- 按加入顺序时：在列表上方只保留“添加题目”按钮，不再编辑题型名称 -->
+            <template v-else>
+              <el-button type="text" @click="handleAddQuestion(questionType)">添加题目</el-button>
+            </template>
             <el-card style="margin-top: 10px;" v-if="questionType.questionDtos.length>0">
-              <!--遍历所有题目-->
-              <el-form-item :label="'题目'+(questionIndex+1)+'：'"
-                            v-for="(q,questionIndex) in questionType.questionDtos"
-                            :key="questionIndex"
+              <draggable
+                :list="getDisplayQuestions(questionType)"
+                tag="div"
+                class="question-drag-list"
+                :animation="200"
+                handle=".question-drag-handle"
+                @end="handleQuestionDragEnd($event, questionType)"
               >
-                <el-row>
-                  <el-col :span="21">
-                    <div>{{ q.questionTitle }}</div>
-                    <span v-for="(option,index) in q.items" :key="index" style="margin-right: 20px;">
-                      <span>{{ option.prefix }}</span>
-                      <span style="margin: 0 2px"> {{ option.content }}</span>
-                    </span>
-                  </el-col>
-                  <el-col :span="3">
-                    <el-button type="text" @click="questionType.questionDtos.splice(questionIndex,1)">删除题目
-                    </el-button>
-                  </el-col>
-                </el-row>
-              </el-form-item>
+                <div
+                  v-for="(q, questionIndex) in getDisplayQuestions(questionType)"
+                  :key="q.id || questionIndex"
+                  class="question-drag-item"
+                >
+                  <el-form-item :label="'题目'+(questionIndex+1)+'：'" class="question-item-form">
+                    <el-row>
+                      <el-col :span="1" class="drag-handle-col">
+                        <i class="el-icon-rank question-drag-handle" title="拖拽调整题序"/>
+                      </el-col>
+                      <el-col :span="20">
+                        <div>{{ q.questionTitle }}</div>
+                        <span v-for="(option,index) in q.items" :key="index" style="margin-right: 20px;">
+                          <span>{{ option.prefix }}</span>
+                          <span style="margin: 0 2px"> {{ option.content }}</span>
+                        </span>
+                      </el-col>
+                      <el-col :span="3">
+                        <el-button type="text" @click="removeQuestionWithChildren(questionType, q)">删除题目</el-button>
+                      </el-col>
+                    </el-row>
+                  </el-form-item>
+                </div>
+              </draggable>
             </el-card>
           </el-form-item>
         </el-col>
@@ -166,6 +195,27 @@
             <el-form-item label="ID" prop="id">
               <el-input v-model="questionList.queryParams.id" placeholder="请输入ID" clearable
                         :style="{width: '100%'}" @keyup.enter.native="queryQuestionList"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="日期">
+              <el-date-picker
+                v-model="questionList.dateRange"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                value-format="yyyy-MM-dd"
+                :style="{width: '100%'}"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="排序">
+              <el-select v-model="questionList.dateOrder" placeholder="按创建时间排序" clearable :style="{width: '100%'}">
+                <el-option label="最新在前" value="desc" />
+                <el-option label="最旧在前" value="asc" />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col style="margin-bottom: 10px;">
@@ -280,12 +330,13 @@
   </div>
 </template>
 <script>
-import {getQuestion, listQuestion} from "@/api/quiz/question";
+import {getQuestion, getClozeQuestion, listQuestion} from "@/api/quiz/question";
 import {addPaper, getPaper, updatePaper, autoComposePaper, autoComposePaperByDate} from "@/api/quiz/paper";
 import {optionSubject} from "@/api/quiz/subject";
+import draggable from 'vuedraggable';
 
 export default {
-  components: {},
+  components: { draggable },
   props: [],
   data() {
     return {
@@ -295,14 +346,16 @@ export default {
         2: '多选题',
         3: '主观题',
         4: '判断题',
-        5: '填空题'
+        5: '填空题',
+        6: '完形填空题'
       },
       questionTypeSuggestions: [
         { value: '单选题' },
         { value: '多选题' },
         { value: '主观题' },
         { value: '判断题' },
-        { value: '填空题' }
+        { value: '填空题' },
+        { value: '完形填空题（父题+子题）' }
       ],
       // 控制新增题目的弹框显示
       open: false,
@@ -323,6 +376,9 @@ export default {
       }, {
         "label": "填空题",
         "value": 5
+      }, {
+        "label": "完形填空题",
+        "value": 6
       }],
       subjectOptions: [],
       questionList: {
@@ -335,6 +391,8 @@ export default {
           pageNum: 1,
           pageSize: 5
         },
+        dateRange: [],
+        dateOrder: 'desc',
         tableData: [],
         total: 0,
         loading: undefined,
@@ -349,6 +407,8 @@ export default {
         startTime: '',
         endTime: '',
         enableAntiCheat: false,
+        // 题号规则：1=按题型分组编号，2=按加入顺序全局编号（默认2）
+        numberMode: 2,
         score: 0,
         questionCount: 0,
         paperQuestionTypeDto: [
@@ -439,6 +499,12 @@ export default {
     'formData.subjectId'(val) {
       this.autoCompose.form.subjectId = val
       this.autoComposeByDate.form.subjectId = val
+    },
+    'formData.numberMode'(val, oldVal) {
+      // 切换为“按加入顺序”时，将题型扁平为单一题目列表，避免残留空题型块
+      if (val === 2) {
+        this.mergeQuestionTypesAsFlatList()
+      }
     }
   },
   async created() {
@@ -476,6 +542,10 @@ export default {
       this.formData = (await getPaper(paperId)).data
       console.log(this.formData)
       this.autoCompose.form.subjectId = this.formData.subjectId
+      // 如果当前试卷配置为按加入顺序编号，则将题型扁平化为一个题目列表
+      if (this.formData.numberMode === 2) {
+        this.mergeQuestionTypesAsFlatList()
+      }
     },
     getExistingQuestionIds() {
       const ids = new Set();
@@ -494,7 +564,7 @@ export default {
       }
       const existingIds = this.getExistingQuestionIds();
       const keyword = (this.questionList.queryParams.questionTitle || '').trim().toLowerCase();
-      return rows.filter(row => {
+      const filtered = rows.filter(row => {
         if (existingIds.has(row.id)) {
           return false;
         }
@@ -502,8 +572,24 @@ export default {
           const title = (row.questionTitle || '').toLowerCase();
           return title.includes(keyword);
         }
+        // 按日期范围筛选（仅在选择日期时生效，前端过滤）
+        const [begin, end] = this.questionList.dateRange || [];
+        if (begin && end && row.createTime) {
+          const dateStr = String(row.createTime).slice(0, 10);
+          if (dateStr < begin || dateStr > end) {
+            return false;
+          }
+        }
         return true;
       });
+      // 按创建时间排序：最新在前/最旧在前
+      const order = this.questionList.dateOrder || 'desc';
+      filtered.sort((a, b) => {
+        const ta = new Date(a.createTime || 0).getTime();
+        const tb = new Date(b.createTime || 0).getTime();
+        return order === 'asc' ? ta - tb : tb - ta;
+      });
+      return filtered;
     },
     async getQuestList() {
       this.questionList.loading = true;
@@ -542,6 +628,75 @@ export default {
     getQuestionTypeLabel(type) {
       return this.questionTypeMap[type] || '未知题型'; // 默认值
     },
+    // 组卷页面展示用：隐藏完形子题，只展示父题或普通题
+    getDisplayQuestions(questionType) {
+      if (!questionType || !Array.isArray(questionType.questionDtos)) {
+        return [];
+      }
+      return questionType.questionDtos.filter(q => !q || !q.parentId);
+    },
+    // 拖拽题目结束：根据新顺序重写 questionDtos（保持完形子题紧跟父题）
+    handleQuestionDragEnd(evt, questionType) {
+      if (evt.oldIndex === evt.newIndex || !questionType || !Array.isArray(questionType.questionDtos)) {
+        return;
+      }
+      const displayList = this.getDisplayQuestions(questionType);
+      const newOrder = [...displayList];
+      const [removed] = newOrder.splice(evt.oldIndex, 1);
+      newOrder.splice(evt.newIndex, 0, removed);
+      this.applyDisplayOrder(questionType, newOrder);
+    },
+    // 按新的“可展示题目”顺序重排 questionDtos，完形子题仍紧跟其父题
+    applyDisplayOrder(questionType, newDisplayOrder) {
+      if (!questionType || !Array.isArray(newDisplayOrder)) {
+        return;
+      }
+      const newDtos = [];
+      for (const q of newDisplayOrder) {
+        if (!q) continue;
+        newDtos.push(q);
+        const children = (questionType.questionDtos || []).filter(x => x && x.parentId === q.id);
+        newDtos.push(...children);
+      }
+      questionType.questionDtos = newDtos;
+    },
+    // 删除题目时：如果是完形父题，则连同其子题一并删除
+    removeQuestionWithChildren(questionType, question) {
+      if (!questionType || !Array.isArray(questionType.questionDtos)) {
+        return;
+      }
+      const targetId = question && question.id;
+      if (!targetId) {
+        // 无ID的题目，退回到原来的按引用删除
+        const idx = questionType.questionDtos.indexOf(question);
+        if (idx >= 0) {
+          questionType.questionDtos.splice(idx, 1);
+        }
+        return;
+      }
+      questionType.questionDtos = questionType.questionDtos.filter(q => {
+        if (!q) return false;
+        if (q.id === targetId) return false;
+        if (q.parentId === targetId) return false;
+        return true;
+      });
+    },
+    // 将多个题型下的题目扁平为单一“题目列表”（用于按加入顺序展示）
+    mergeQuestionTypesAsFlatList() {
+      const list = this.formData.paperQuestionTypeDto || []
+      const allQuestions = []
+      list.forEach(t => {
+        (t.questionDtos || []).forEach(q => {
+          if (q) {
+            allQuestions.push(q)
+          }
+        })
+      })
+      this.formData.paperQuestionTypeDto = [{
+        name: '题目列表',
+        questionDtos: allQuestions
+      }]
+    },
     // 获取当前页复选框勾选的选项,后续新增直接传，全选就全部，选一个[]里就一个item
     handleSelectionChange(val) {
       this.questionList.selectionList = val
@@ -554,20 +709,36 @@ export default {
     close() {
       this.open = false
     },
-    addQuestionConfirm() {
+    async addQuestionConfirm() {
       const existingIds = this.getExistingQuestionIds()
-      this.questionList.selectionList.forEach(q => {
+      for (const q of this.questionList.selectionList) {
         if (existingIds.has(q.id)) {
-          return
+          continue
         }
-        getQuestion(q.id).then(res => {
-          const data = res.data
-          if (!existingIds.has(data.id)) {
-            this.currQuestionType.questionDtos.push(data)
-            existingIds.add(data.id)
+        const res = await getQuestion(q.id)
+        const data = res.data
+        if (!data || existingIds.has(data.id)) {
+          continue
+        }
+        // 如果是完形填空父题，额外把其子题一并加入当前题型
+        if (data.questionType === 6) {
+          // 先加入父题
+          this.currQuestionType.questionDtos.push(data)
+          existingIds.add(data.id)
+          const clozeRes = await getClozeQuestion(data.id)
+          if (clozeRes.code === 200 && clozeRes.data) {
+            const children = clozeRes.data.children || []
+            children.forEach(child => {
+              if (!child || existingIds.has(child.id)) return
+              this.currQuestionType.questionDtos.push(child)
+              existingIds.add(child.id)
+            })
           }
-        })
-      })
+        } else {
+          this.currQuestionType.questionDtos.push(data)
+          existingIds.add(data.id)
+        }
+      }
       this.close()
     },
     // 点击新增时显示弹窗和加载题目表，也就是题目列表那些
@@ -753,6 +924,10 @@ export default {
           if (res.data.subjectId) {
             this.formData.subjectId = res.data.subjectId
           }
+          // 按日期组卷后端按题型分组返回多块，若当前为“按加入顺序”则合并为一块，避免页面出现多块“题目列表”
+          if (this.formData.numberMode === 2) {
+            this.mergeQuestionTypesAsFlatList()
+          }
           this.$message.success('已按日期范围自动组卷')
           this.autoComposeByDate.visible = false
         } else {
@@ -794,5 +969,32 @@ export default {
 
 .mb-2 {
   margin-bottom: 10px;
+}
+
+.question-drag-list {
+  min-height: 8px;
+}
+
+.question-drag-item {
+  margin-bottom: 4px;
+}
+
+.question-drag-handle {
+  cursor: move;
+  color: #909399;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+.question-drag-handle:hover {
+  color: #409EFF;
+}
+
+.drag-handle-col {
+  line-height: 32px;
+}
+
+.question-item-form {
+  margin-bottom: 8px;
 }
 </style>

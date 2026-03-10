@@ -4,7 +4,7 @@
       <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
         <el-col :span="12">
           <el-form-item label="科目" prop="subjectId">
-            <el-select v-model="formData.subjectId" placeholder="请输入科目" clearable :style="{width: '100%'}">
+            <el-select v-model="formData.subjectId" placeholder="请输入科目" clearable :style="{width: '100%'}" @change="handleSubjectChange">
               <el-option v-for="(item, index) in subjectIdOptions" :key="index" :label="item.label"
                          :value="item.value" :disabled="item.disabled"></el-option>
             </el-select>
@@ -23,7 +23,8 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
+      <!-- 父题题干（完形父题和普通题复用） -->
+      <el-col :span="24">
           <el-form-item label="题干" prop="questionTitle">
             <div style="margin-bottom: 10px;">
               <el-radio-group v-model="formData.questionTitleFormat" size="small" @change="handleQuestionTitleFormatChange">
@@ -48,7 +49,9 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="24" v-if="formData.questionType !== 3 && formData.questionType !== 5">
+
+        <!-- 普通题：选项编辑 -->
+        <el-col :span="24" v-if="formData.questionType !== 3 && formData.questionType !== 5 && formData.questionType !== 6">
           <el-form-item label="选项：" required>
             <div style="margin-bottom: 10px;">
               <el-radio-group v-model="formData.optionFormat" size="small" @change="handleOptionFormatChange">
@@ -84,7 +87,102 @@
             </el-form-item>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
+
+        <!-- 完形填空：子题编辑区域 -->
+        <el-col :span="24" v-if="formData.questionType === 6">
+          <el-form-item label="完形子题列表">
+            <div style="margin-bottom: 10px;">
+              <el-button type="primary" size="mini" icon="el-icon-plus" @click="addClozeChild">添加子题</el-button>
+            </div>
+            <el-card
+              v-for="(child, cIndex) in formData.clozeChildren"
+              :key="cIndex"
+              style="margin-bottom: 16px;"
+            >
+              <div slot="header" class="clearfix">
+                <span>第 {{ cIndex + 1 }} 空子题</span>
+                <el-button style="float: right; padding: 3px 0" type="text" @click="removeClozeChild(cIndex)">
+                  删除
+                </el-button>
+              </div>
+              <el-row :gutter="15">
+                <el-col :span="12">
+                  <el-form-item :label="'题型'" :prop="`clozeChildren.${cIndex}.questionType`">
+                    <el-select v-model="child.questionType" placeholder="请选择题型" style="width: 100%;">
+                      <el-option :value="1" label="单选题" />
+                      <el-option :value="2" label="多选题" />
+                      <el-option :value="4" label="判断题" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item :label="'分数'" :prop="`clozeChildren.${cIndex}.score`">
+                    <el-input-number v-model="child.score" :min="1" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                  <el-form-item :label="'子题题干'" :prop="`clozeChildren.${cIndex}.questionTitle`">
+                    <editor
+                      v-model="child.questionTitle"
+                      :min-height="120"
+                      placeholder="请输入子题题干"
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                  <el-form-item label="选项">
+                    <el-form-item
+                      :label="item.prefix"
+                      :key="index"
+                      v-for="(item, index) in child.items"
+                      label-width="50px"
+                      style="margin: 10px 0 !important;"
+                    >
+                      <div style="display: flex; align-items: flex-start; width: 100%;">
+                        <el-input v-model="item.prefix" style="width:50px; margin-right: 10px;"/>
+                        <div style="flex: 1; margin-right: 10px;">
+                          <editor
+                            v-model="item.content"
+                            :min-height="80"
+                            placeholder="请输入选项内容"
+                            style="width: 100%;"
+                          />
+                        </div>
+                        <el-button type="danger" size="mini" icon="el-icon-delete"
+                                   @click="removeClozeChildOption(cIndex, index)"></el-button>
+                      </div>
+                    </el-form-item>
+                    <el-button type="primary" size="mini" icon="el-icon-plus" @click="addClozeChildOption(cIndex)">
+                      添加选项
+                    </el-button>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="24">
+                  <el-form-item label="标准答案">
+                    <el-radio-group
+                      v-if="child.questionType === 1 || child.questionType === 4"
+                      v-model="child.correct"
+                    >
+                      <el-radio v-for="item in child.items" :key="item.prefix" :label="item.prefix">
+                        {{ item.prefix }}
+                      </el-radio>
+                    </el-radio-group>
+                    <el-checkbox-group
+                      v-if="child.questionType === 2"
+                      v-model="child.correctArray"
+                    >
+                      <el-checkbox v-for="item in child.items" :key="item.prefix" :label="item.prefix">
+                        {{ item.prefix }}
+                      </el-checkbox>
+                    </el-checkbox-group>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="24" v-if="formData.questionType !== 6">
           <el-form-item label="标准答案"  :prop="formData.questionType === 2 ? 'correctArray' : (formData.questionType === 5 ? 'fillBlankAnswers' : 'correct')">
             <el-radio-group v-model="formData.correct" size="medium" @change="changeHandler"
                             v-if="[1,4].includes(formData.questionType)">
@@ -193,6 +291,48 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
+          <el-form-item label="动画解析（选填）">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <el-select
+                  v-model="formData.animationId"
+                  filterable
+                  clearable
+                  placeholder="从动画库选择（按当前科目筛选）"
+                  style="width: 360px"
+                  @visible-change="handleAnimationDropdown"
+                  @change="handleAnimationSelect"
+                >
+                  <el-option
+                    v-for="item in animationOptions"
+                    :key="item.animationId"
+                    :label="`[${item.animationId}] ${item.animationName || '未命名'}`"
+                    :value="item.animationId"
+                  />
+                </el-select>
+                <el-link v-if="formData.animationUrl" :href="formData.animationUrl" target="_blank" :underline="false">预览动画</el-link>
+                <el-button v-if="formData.animationId" size="mini" type="danger" plain @click="clearAnimation">清除关联</el-button>
+              </div>
+              <el-upload
+                :action="animationUpload.url"
+                :headers="animationUpload.headers"
+                :data="animationUpload.extraData"
+                :limit="1"
+                :file-list="animationFileList"
+                :on-success="handleAnimationUploadSuccess"
+                :before-upload="beforeAnimationUpload"
+                :on-remove="handleAnimationRemove"
+                accept=".html,.htm"
+              >
+                <el-button size="mini" type="primary">上传HTML动画</el-button>
+                <div slot="tip" class="el-upload__tip">
+                  选填：仅支持 <b>.html/.htm</b>，上传成功后会写入动画库，并按当前题目科目自动分类
+                </div>
+              </el-upload>
+            </div>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
           <el-form-item label="分数" prop="score">
             <el-input-number v-model="formData.score" placeholder="分数"></el-input-number>
           </el-form-item>
@@ -241,10 +381,12 @@
   </div>
 </template>
 <script>
-import { addQuestion, getQuestion, updateQuestion, bindKnowledgePoints, getQuestionKnowledgePoints, listKnowledgePoints } from "@/api/quiz/question";
+import { addQuestion, addClozeQuestion, getQuestion, getClozeQuestion, updateQuestion, bindKnowledgePoints, getQuestionKnowledgePoints, listKnowledgePoints } from "@/api/quiz/question";
 import { optionSubject } from "@/api/quiz/subject";
+import { listAnimation, getAnimation } from "@/api/quiz/animation";
 import Editor from "@/components/Editor";
 import MarkdownEditor from "@/components/MarkdownEditor";
+import { getToken } from "@/utils/auth";
 
 const defaultChoiceOptions = () => ([
   { prefix: 'A', content: '' },
@@ -283,6 +425,8 @@ export default {
         subjectId: undefined,
         questionType: initialType,
         questionTitle: undefined,
+        animationId: null,
+        animationUrl: '',
         correct: undefined,
         correctArray: [],
         fillBlankAnswers: [{ value: '' }], // 填空题答案数组
@@ -299,8 +443,17 @@ export default {
             ? []
             : initialType === 4
                 ? defaultJudgeOptions()
-                : defaultChoiceOptions()
+                : defaultChoiceOptions(),
+        // 完形填空子题列表（仅在questionType=6时使用）
+        clozeChildren: []
       },
+      animationUpload: {
+        url: process.env.VUE_APP_BASE_API + "/quiz/animation/upload",
+        headers: { Authorization: "Bearer " + getToken() },
+        extraData: { subjectId: undefined }
+      },
+      animationFileList: [],
+      animationOptions: [],
       knowledgePointOptions: [],
       knowledgeLoading: false,
       rules: {
@@ -351,7 +504,13 @@ export default {
       }, {
         "label": "填空题",
         "value": 5
+      }, {
+        "label": "完形填空题",
+        "value": 6
       }],
+      // 完形填空父子关系（单题编辑时使用）
+      parentIdVisible: false,
+      clozeIndexVisible: false,
     }
   },
   computed: {
@@ -365,6 +524,8 @@ export default {
   watch: {},
   async created() {
     await this.loadSubjectOptions();
+    // 初始化动画上传分类（科目）
+    this.animationUpload.extraData.subjectId = this.formData.subjectId;
     const id = this.$route.query.id;
     if (id) {
       this.getData(id);
@@ -384,6 +545,12 @@ export default {
     },
     handleQuestionTypeChange(value) {
       this.applyQuestionTypeDefaults(value);
+    },
+    async handleSubjectChange(value) {
+      // 科目变化时：更新动画上传分类，并清空当前动画关联（避免跨科目串数据）
+      this.animationUpload.extraData.subjectId = value;
+      this.clearAnimation();
+      this.animationOptions = [];
     },
     applyQuestionTypeDefaults(questionType, options = {}) {
       const { preserveAnswer = false } = options;
@@ -464,9 +631,35 @@ export default {
           questionTitleFormat: questionTitleFormat,
           optionFormat: optionFormat,
           correctFormat: correctFormat,
-          analysisFormat: analysisFormat
+          analysisFormat: analysisFormat,
+          // 默认无完形子题，后续如为完形再单独加载
+          clozeChildren: []
         };
+        // 上传动画时带上科目分类
+        this.animationUpload.extraData.subjectId = this.formData.subjectId;
+        // 动画解析回显（可选）
+        if (this.formData.animationId && this.formData.animationUrl) {
+          this.animationFileList = [{ name: this.formData.animationUrl.split('/').pop() || 'animation.html', url: this.formData.animationUrl }];
+        } else {
+          this.animationFileList = [];
+        }
         this.applyQuestionTypeDefaults(this.formData.questionType, { preserveAnswer: true });
+
+        // 如果是完形填空父题，额外加载子题列表
+        if (this.formData.questionType === 6) {
+          const clozeRes = await getClozeQuestion(id);
+          if (clozeRes.code === 200 && clozeRes.data) {
+            const children = (clozeRes.data.children || []).map(child => ({
+              questionType: child.questionType,
+              questionTitle: child.questionTitle,
+              score: child.score,
+              items: child.items || [],
+              correct: child.correct,
+              correctArray: child.correctArray || []
+            }));
+            this.formData.clozeChildren = children;
+          }
+        }
         
         const kpResponse = await getQuestionKnowledgePoints(id);
         if (kpResponse.code === 200 && kpResponse.data) {
@@ -501,10 +694,71 @@ export default {
         );
       });
     },
+    addClozeChild() {
+      if (!Array.isArray(this.formData.clozeChildren)) {
+        this.formData.clozeChildren = [];
+      }
+      this.formData.clozeChildren.push({
+        questionType: 1,
+        questionTitle: '',
+        score: 1,
+        items: defaultChoiceOptions(),
+        correct: '',
+        correctArray: []
+      });
+    },
+    removeClozeChild(index) {
+      if (!Array.isArray(this.formData.clozeChildren)) return;
+      this.formData.clozeChildren.splice(index, 1);
+    },
+    addClozeChildOption(childIndex) {
+      const children = this.formData.clozeChildren || [];
+      const child = children[childIndex];
+      if (!child) return;
+      if (!Array.isArray(child.items)) {
+        this.$set(child, 'items', []);
+      }
+      child.items.push({ prefix: String.fromCharCode(65 + child.items.length), content: '' });
+    },
+    removeClozeChildOption(childIndex, optionIndex) {
+      const children = this.formData.clozeChildren || [];
+      const child = children[childIndex];
+      if (!child || !Array.isArray(child.items)) return;
+      child.items.splice(optionIndex, 1);
+    },
     async submitForm() {
       const valid = await this.$refs['elForm'].validate();
       if (!valid) return;
       const type = this.formData.questionType;
+      // 完形填空：走单独的批量保存接口
+      if (type === 6) {
+        const children = (this.formData.clozeChildren || []).map((child, index) => {
+          return {
+            questionType: child.questionType,
+            questionTitle: child.questionTitle,
+            score: child.score,
+            items: child.items,
+            correct: child.correct,
+            correctArray: child.correctArray,
+            itemOrder: index
+          };
+        });
+        const payload = {
+          parent: {
+            subjectId: this.formData.subjectId,
+            questionType: 6,
+            questionTitle: this.formData.questionTitle,
+            analysis: this.formData.analysis,
+            score: this.formData.score
+          },
+          children: children
+        };
+        const res = await addClozeQuestion(payload);
+        const message = res.code === 200 ? "完形填空保存成功!" : "保存失败,请联系管理员!"
+        const typeName = res.code === 200 ? "success" : "error"
+        this.$message({ message, type: typeName });
+        return;
+      }
       if (type === 2) {
         this.formData.correct = '';
       } else {
@@ -599,6 +853,33 @@ export default {
       }
 
     },
+
+    async handleAnimationDropdown(visible) {
+      if (!visible) return;
+      // 下拉展开时加载：按当前题目科目筛选
+      const subjectId = this.formData.subjectId;
+      const res = await listAnimation({ pageNum: 1, pageSize: 200, subjectId: subjectId });
+      if (res && res.code === 200) {
+        this.animationOptions = res.rows || [];
+      }
+    },
+
+    async handleAnimationSelect(animationId) {
+      if (!animationId) {
+        this.formData.animationUrl = '';
+        this.animationFileList = [];
+        return;
+      }
+      const res = await getAnimation(animationId);
+      if (res && res.code === 200 && res.data) {
+        this.formData.animationUrl = res.data.animationUrl || '';
+        if (this.formData.animationUrl) {
+          this.animationFileList = [{ name: res.data.animationName || 'animation.html', url: this.formData.animationUrl }];
+        } else {
+          this.animationFileList = [];
+        }
+      }
+    },
     resetForm() {
       const keepSubjectId = this.formData.subjectId;
       const keepType = this.presetQuestionType;
@@ -665,6 +946,52 @@ export default {
         // 可以在这里添加HTML到Markdown的转换逻辑（可选）
         // 暂时保留原内容，让用户手动编辑
       }
+    },
+
+    beforeAnimationUpload(file) {
+      const ext = (file.name || '').split('.').pop();
+      const ok = ['html', 'htm'].includes(String(ext || '').toLowerCase());
+      if (!ok) {
+        this.$message.error('只允许上传 .html/.htm 文件');
+        return false;
+      }
+      const maxSize = 5; // MB
+      const sizeOk = file.size / 1024 / 1024 <= maxSize;
+      if (!sizeOk) {
+        this.$message.error('文件大小不能超过5MB');
+        return false;
+      }
+      return true;
+    },
+
+    handleAnimationUploadSuccess(res, file) {
+      if (res && res.code === 200) {
+        const data = res.data || {};
+        this.formData.animationId = data.animationId || null;
+        this.formData.animationUrl = data.url || '';
+        this.animationFileList = [{ name: data.animationName || file.name, url: this.formData.animationUrl }];
+        // 上传成功后把新动画追加到下拉选项，便于立即复用
+        if (this.formData.animationId) {
+          const exists = (this.animationOptions || []).some(x => x.animationId === this.formData.animationId);
+          if (!exists) {
+            this.animationOptions = [{ animationId: this.formData.animationId, animationName: data.animationName, animationUrl: data.url }].concat(this.animationOptions || []);
+          }
+        }
+        this.$message.success('动画上传成功，已关联到题目');
+      } else {
+        this.$message.error((res && res.msg) ? res.msg : '动画上传失败');
+      }
+    },
+
+    handleAnimationRemove() {
+      // 只移除题目与动画的关联，不删除动画库记录
+      this.formData.animationId = null;
+      this.formData.animationUrl = '';
+      this.animationFileList = [];
+    },
+
+    clearAnimation() {
+      this.handleAnimationRemove();
     },
 
   }

@@ -152,6 +152,10 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                     // 过滤对应的用户回答实体
                     DamingQuestion matchQuestion = damingQuestions.stream()
                             .filter(damingQuestion -> damingQuestion.getId().equals(paperQuestionVM.getId())).findFirst().get();
+                    // 完形填空父题本身不作答、不计分，直接跳过
+                    if (Objects.equals(matchQuestion.getQuestionType(), QuestionTypeEnum.Cloze.getCode())) {
+                        return null;
+                    }
                     // 2.遍历题目回答列表DTO，用户的回答比对答案，计算分数和做对情况和记录 题目记录是属于哪张试卷的，属于哪个科目的,最后生成题目记录表
                     // 将计算后的值设置到题目记录类里
                     QuestionAnswerDto questionAnswerDto = paperAnswerDto.getQuestionAnswerDtos().stream()
@@ -290,7 +294,7 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                     damingQuestionAnswer.setCreateUser(SecurityUtils.getUsername());
                     return damingQuestionAnswer;
                 })
-        ).collect(Collectors.toList());
+        ).filter(Objects::nonNull).collect(Collectors.toList());
         // 二，将题目回答表的分数，做对数量设置给试卷记录表
         DamingPaperAnswer damingPaperAnswer = new DamingPaperAnswer();
         damingPaperAnswer.setCreateUser(SecurityUtils.getUsername());

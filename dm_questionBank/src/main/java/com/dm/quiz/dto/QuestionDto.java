@@ -6,6 +6,12 @@ import java.util.List;
 
 public class QuestionDto {
     private Long id;
+    // 父题ID（完形/阅读等复合题）
+    private Long parentId;
+    // 动画解析ID（可选）
+    private Long animationId;
+    // 动画解析URL（可选，便于回显/预览）
+    private String animationUrl;
     // 选项组
     private List<QuestionOptionVM> items;
     // 解析
@@ -22,6 +28,8 @@ public class QuestionDto {
     private Integer subjectId;
     // 题目类型，1单选，2多选，3主观
     private Integer questionType;
+    // 完形第几空索引（从1开始），普通题为空
+    private Integer clozeIndex;
     // 题目序号表示第几题
     private Integer itemOrder;
     // 填空题答案是否要求按顺序（true=要求按顺序，false=不要求按顺序）
@@ -49,6 +57,30 @@ public class QuestionDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Long getAnimationId() {
+        return animationId;
+    }
+
+    public void setAnimationId(Long animationId) {
+        this.animationId = animationId;
+    }
+
+    public String getAnimationUrl() {
+        return animationUrl;
+    }
+
+    public void setAnimationUrl(String animationUrl) {
+        this.animationUrl = animationUrl;
     }
 
     public List<QuestionOptionVM> getItems() {
@@ -113,6 +145,14 @@ public class QuestionDto {
 
     public void setQuestionType(Integer questionType) {
         this.questionType = questionType;
+    }
+
+    public Integer getClozeIndex() {
+        return clozeIndex;
+    }
+
+    public void setClozeIndex(Integer clozeIndex) {
+        this.clozeIndex = clozeIndex;
     }
 
     public Boolean getRequireOrder() {

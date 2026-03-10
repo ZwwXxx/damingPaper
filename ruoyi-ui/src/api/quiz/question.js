@@ -26,6 +26,23 @@ export function addQuestion(data) {
   })
 }
 
+// 批量新增完形填空题（父题 + 子题）
+export function addClozeQuestion(data) {
+  return request({
+    url: '/quiz/question/cloze',
+    method: 'post',
+    data: data
+  })
+}
+
+// 查询完形填空题详情（父题 + 子题）
+export function getClozeQuestion(id) {
+  return request({
+    url: '/quiz/question/cloze/' + id,
+    method: 'get'
+  })
+}
+
 // 修改题目表
 export function updateQuestion(data) {
   return request({

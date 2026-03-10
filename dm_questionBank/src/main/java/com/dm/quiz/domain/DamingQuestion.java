@@ -18,13 +18,22 @@ public class DamingQuestion extends BaseEntity
     /** 题目id */
     private Long id;
 
+    /** 父题ID（完形/阅读等复合题） */
+    private Long parentId;
+
     /** 题目类型 */
     @Excel(name = "题目类型")
     private Integer questionType;
 
+    /** 完形第几空索引（从1开始），普通题为空 */
+    private Integer clozeIndex;
+
     /** 题目内容id */
     @Excel(name = "题目内容id")
     private Long questionInfoId;
+
+    /** 动画解析ID（可选） */
+    private Long animationId;
 
     /** 正确答案 */
     //不是把它拆表出去了吗？因为后续要与答卷的答题进行correct比较，就不再次查询content-info表了
@@ -51,6 +60,15 @@ public class DamingQuestion extends BaseEntity
     {
         return id;
     }
+    public Long getParentId()
+    {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId)
+    {
+        this.parentId = parentId;
+    }
     public void setQuestionType(Integer questionType)
     {
         this.questionType = questionType;
@@ -59,6 +77,15 @@ public class DamingQuestion extends BaseEntity
     public Integer getQuestionType()
     {
         return questionType;
+    }
+    public Integer getClozeIndex()
+    {
+        return clozeIndex;
+    }
+
+    public void setClozeIndex(Integer clozeIndex)
+    {
+        this.clozeIndex = clozeIndex;
     }
     public void setQuestionInfoId(Long questionInfoId)
     {
@@ -69,6 +96,17 @@ public class DamingQuestion extends BaseEntity
     {
         return questionInfoId;
     }
+
+    public Long getAnimationId()
+    {
+        return animationId;
+    }
+
+    public void setAnimationId(Long animationId)
+    {
+        this.animationId = animationId;
+    }
+
     public void setCorrect(String correct)
     {
         this.correct = correct;
@@ -110,8 +148,11 @@ public class DamingQuestion extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
+                .append("parentId", getParentId())
                 .append("questionType", getQuestionType())
+                .append("clozeIndex", getClozeIndex())
                 .append("questionInfoId", getQuestionInfoId())
+                .append("animationId", getAnimationId())
                 .append("correct", getCorrect())
                 .append("score", getScore())
                 .append("delFlag", getDelFlag())

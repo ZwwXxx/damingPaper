@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.DamingAnimationMapper">
+
+    <resultMap id="DamingAnimationResult" type="com.dm.quiz.domain.DamingAnimation">
+        <id property="animationId" column="animation_id"/>
+        <result property="subjectId" column="subject_id"/>
+        <result property="animationName" column="animation_name"/>
+        <result property="animationUrl" column="animation_url"/>
+        <result property="objectName" column="object_name"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectDamingAnimationVo">
+        select animation_id, subject_id, animation_name, animation_url, object_name,
+               del_flag, create_user, create_time, update_user, update_time, remark
+        from daming_animation
+    </sql>
+
+    <select id="selectDamingAnimationByAnimationId" parameterType="java.lang.Long" resultMap="DamingAnimationResult">
+        <include refid="selectDamingAnimationVo"/>
+        where animation_id = #{animationId}
+          and del_flag = '0'
+    </select>
+
+    <select id="selectDamingAnimationList" parameterType="com.dm.quiz.domain.DamingAnimation" resultMap="DamingAnimationResult">
+        <include refid="selectDamingAnimationVo"/>
+        <where>
+            <if test="animationId != null">
+                and animation_id = #{animationId}
+            </if>
+            <if test="subjectId != null">
+                and subject_id = #{subjectId}
+            </if>
+            <if test="animationName != null and animationName != ''">
+                and animation_name like concat('%', #{animationName}, '%')
+            </if>
+            and del_flag = '0'
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="insertDamingAnimation" parameterType="com.dm.quiz.domain.DamingAnimation" useGeneratedKeys="true" keyProperty="animationId">
+        insert into daming_animation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="subjectId != null">subject_id,</if>
+            <if test="animationName != null and animationName != ''">animation_name,</if>
+            <if test="animationUrl != null and animationUrl != ''">animation_url,</if>
+            <if test="objectName != null and objectName != ''">object_name,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createUser != null and createUser != ''">create_user,</if>
+            <if test="updateUser != null and updateUser != ''">update_user,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="subjectId != null">#{subjectId},</if>
+            <if test="animationName != null and animationName != ''">#{animationName},</if>
+            <if test="animationUrl != null and animationUrl != ''">#{animationUrl},</if>
+            <if test="objectName != null and objectName != ''">#{objectName},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createUser != null and createUser != ''">#{createUser},</if>
+            <if test="updateUser != null and updateUser != ''">#{updateUser},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteDamingAnimationByAnimationIds" parameterType="java.lang.Long">
+        update daming_animation
+        set del_flag = '1'
+        where animation_id in
+        <foreach collection="array" item="animationId" open="(" separator="," close=")">
+            #{animationId}
+        </foreach>
+    </delete>
+
+</mapper>
+

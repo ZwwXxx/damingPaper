@@ -18,6 +18,18 @@ public class PaperDto {
     private Integer questionCount;
     private String startTime;
     private String endTime;
+    /**
+     * 题号规则：1=按题型分组编号，2=按加入顺序全局编号
+     */
+    private Integer numberMode;
+
+    public Integer getNumberMode() {
+        return numberMode;
+    }
+
+    public void setNumberMode(Integer numberMode) {
+        this.numberMode = numberMode;
+    }
 
     public Integer getPaperType() {
         return paperType;

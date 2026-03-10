@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson2.JSONObject;
 import com.dm.quiz.domain.DamingContentInfo;
 import com.dm.quiz.viewmodel.QuestionInfoContentVM;
+import com.dm.quiz.dto.ClozeQuestionCreateRequest;
 import com.dm.quiz.dto.QuestionDto;
 import com.dm.quiz.mapper.DamingContentInfoMapper;
 import com.dm.quiz.viewmodel.QuestionExportVO;
@@ -123,6 +124,26 @@ public class DamingQuestionController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody QuestionDto questionDto) {
         return toAjax(damingQuestionService.insertDamingQuestion(questionDto));
+    }
+
+    /**
+     * 批量创建完形填空题（父题 + 多个子题）
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:question:add')")
+    @Log(title = "题目表-完形填空", businessType = BusinessType.INSERT)
+    @PostMapping("/cloze")
+    public AjaxResult addCloze(@RequestBody ClozeQuestionCreateRequest request) {
+        damingQuestionService.createClozeQuestion(request);
+        return success();
+    }
+
+    /**
+     * 获取完形填空题（父题 + 子题）详情
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:question:query')")
+    @GetMapping("/cloze/{id}")
+    public AjaxResult getCloze(@PathVariable("id") Long id) {
+        return success(damingQuestionService.getClozeQuestion(id));
     }
 
     /**

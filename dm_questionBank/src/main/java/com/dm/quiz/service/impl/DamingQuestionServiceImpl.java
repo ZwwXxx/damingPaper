@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSON;
@@ -11,10 +12,13 @@ import com.alibaba.fastjson2.JSONObject;
 import com.dm.quiz.domain.DamingContentInfo;
 import com.dm.quiz.domain.DamingQuestionAnswer;
 import com.dm.quiz.domain.DamingSubject;
+import com.dm.quiz.domain.DamingAnimation;
+import com.dm.quiz.mapper.DamingAnimationMapper;
 import com.dm.quiz.mapper.DamingQuestionAnswerMapper;
 import com.dm.quiz.viewmodel.QuestionInfoContentVM;
 import com.dm.quiz.viewmodel.QuestionOptionVM;
 import com.dm.quiz.viewmodel.QuestionExportVO;
+import com.dm.quiz.dto.ClozeQuestionCreateRequest;
 import com.dm.quiz.dto.QuestionDto;
 import com.dm.quiz.enums.QuestionTypeEnum;
 import com.dm.quiz.mapper.DamingContentInfoMapper;
@@ -44,6 +48,8 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
     private DamingContentInfoMapper damingContentInfoMapper;
     @Autowired
     private DamingSubjectMapper damingSubjectMapper;
+    @Autowired
+    private DamingAnimationMapper damingAnimationMapper;
 
     /**
      * 查询题目表
@@ -75,6 +81,17 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         questionDto.setScore(damingQuestion.getScore());
         questionDto.setQuestionType(damingQuestion.getQuestionType());
         questionDto.setSubjectId(damingQuestion.getSubjectId());
+        // 完形填空父子关系
+        questionDto.setParentId(damingQuestion.getParentId());
+        questionDto.setClozeIndex(damingQuestion.getClozeIndex());
+        // 动画解析（可选）
+        questionDto.setAnimationId(damingQuestion.getAnimationId());
+        if (damingQuestion.getAnimationId() != null && damingQuestion.getAnimationId() > 0) {
+            DamingAnimation animation = damingAnimationMapper.selectDamingAnimationByAnimationId(damingQuestion.getAnimationId());
+            if (animation != null) {
+                questionDto.setAnimationUrl(animation.getAnimationUrl());
+            }
+        }
         Integer questionType = damingQuestion.getQuestionType();
         if (questionType.equals(QuestionTypeEnum.Single.getCode())) {
             questionDto.setCorrect(questionInfoContentVM.getCorrect());
@@ -117,9 +134,16 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
      */
     @Override
     public int insertDamingQuestion(QuestionDto questionDto) {
-        // DamingPaperMapper.xml.参数校验
+        // 复用内部方法，忽略返回的主键ID
+        return doInsertQuestion(questionDto) != null ? 1 : 0;
+    }
+
+    /**
+     * 内部通用新增题目方法，返回插入后的题目主键ID
+     */
+    private Long doInsertQuestion(QuestionDto questionDto) {
         if (questionDto == null) {
-            return 0;
+            return null;
         }
         standardizeQuestionOptions(questionDto);
         String dtoToString = QuestionDtoToString(questionDto);
@@ -127,21 +151,23 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         questionInfo.setContent(dtoToString);
         damingContentInfoMapper.insertContentInfo(questionInfo);
 
-        // 3.组装问题实体
         DamingQuestion damingQuestion = new DamingQuestion();
         damingQuestion.setQuestionType(questionDto.getQuestionType());
         damingQuestion.setSubjectId(questionDto.getSubjectId());
+        damingQuestion.setParentId(questionDto.getParentId());
+        damingQuestion.setClozeIndex(questionDto.getClozeIndex());
         damingQuestion.setQuestionInfoId(questionInfo.getId());
-        // 如果是多选题，将答案列表拆为字符串
+        if (questionDto.getAnimationId() != null && questionDto.getAnimationId() > 0) {
+            damingQuestion.setAnimationId(questionDto.getAnimationId());
+        }
         damingQuestion.setCorrect(
-                questionDto.getQuestionType() == 2
+                questionDto.getQuestionType() == QuestionTypeEnum.Multiple.getCode()
                         ? String.join(",", questionDto.getCorrectArray())
                         : questionDto.getCorrect()
         );
         damingQuestion.setScore(questionDto.getScore());
-
-
-        return damingQuestionMapper.insertDamingQuestion(damingQuestion);
+        damingQuestionMapper.insertDamingQuestion(damingQuestion);
+        return damingQuestion.getId();
     }
 
     /**
@@ -198,12 +224,73 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         damingQuestion.setQuestionType(questionDto.getQuestionType());
         damingQuestion.setScore(questionDto.getScore());
         damingQuestion.setSubjectId(questionDto.getSubjectId());
+        damingQuestion.setParentId(questionDto.getParentId());
+        damingQuestion.setClozeIndex(questionDto.getClozeIndex());
+        if (questionDto.getAnimationId() != null) {
+            damingQuestion.setAnimationId(questionDto.getAnimationId() != null && questionDto.getAnimationId() > 0
+                    ? questionDto.getAnimationId()
+                    : null);
+        }
         damingQuestionMapper.updateDamingQuestion(damingQuestion);
         standardizeQuestionOptions(questionDto);
         DamingContentInfo damingContentInfo = damingContentInfoMapper.selectDamingContentInfoById(damingQuestion.getQuestionInfoId());
         String dtoToString = QuestionDtoToString(questionDto);
         damingContentInfo.setContent(dtoToString);
         return damingContentInfoMapper.updateDamingQuestionInfo(damingContentInfo);
+    }
+
+    @Override
+    @Transactional
+    public void createClozeQuestion(ClozeQuestionCreateRequest request) {
+        if (request == null || request.getParent() == null) {
+            throw new ServiceException("完形填空父题不能为空");
+        }
+        QuestionDto parent = request.getParent();
+        // 强制设置为完形填空题型
+        parent.setQuestionType(QuestionTypeEnum.Cloze.getCode());
+        // 父题不参与作答，不需要标准答案
+        parent.setCorrect(null);
+        parent.setCorrectArray(null);
+        parent.setParentId(null);
+        parent.setClozeIndex(null);
+        Long parentId = doInsertQuestion(parent);
+
+        List<QuestionDto> children = request.getChildren();
+        if (children == null || children.isEmpty()) {
+            return;
+        }
+        AtomicInteger index = new AtomicInteger(1);
+        for (QuestionDto child : children) {
+            if (child == null) {
+                continue;
+            }
+            // 子题沿用父题科目
+            child.setSubjectId(parent.getSubjectId());
+            child.setParentId(parentId);
+            child.setClozeIndex(index.getAndIncrement());
+            doInsertQuestion(child);
+        }
+    }
+
+    @Override
+    public ClozeQuestionCreateRequest getClozeQuestion(Long parentId) {
+        DamingQuestion parent = damingQuestionMapper.selectDamingQuestionById(parentId);
+        if (parent == null) {
+            throw new ServiceException("完形填空父题不存在");
+        }
+        QuestionDto parentDto = getQuestionDto(parent);
+
+        DamingQuestion query = new DamingQuestion();
+        query.setParentId(parentId);
+        List<DamingQuestion> children = damingQuestionMapper.selectDamingQuestionList(query);
+        List<QuestionDto> childDtos = children.stream()
+                .map(this::getQuestionDto)
+                .collect(Collectors.toList());
+
+        ClozeQuestionCreateRequest result = new ClozeQuestionCreateRequest();
+        result.setParent(parentDto);
+        result.setChildren(childDtos);
+        return result;
     }
 
     @Autowired
@@ -345,7 +432,8 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         boolean isJudge = Objects.equals(questionType, QuestionTypeEnum.Judge.getCode());
         boolean isSubjective = Objects.equals(questionType, QuestionTypeEnum.Subjective.getCode());
         boolean isFillBlank = Objects.equals(questionType, QuestionTypeEnum.FillBlank.getCode());
-        if (!isSingle && !isMultiple && !isJudge && !isSubjective && !isFillBlank) {
+        boolean isCloze = Objects.equals(questionType, QuestionTypeEnum.Cloze.getCode());
+        if (!isSingle && !isMultiple && !isJudge && !isSubjective && !isFillBlank && !isCloze) {
             throw new ServiceException("不支持的题目类型：" + questionType);
         }
 

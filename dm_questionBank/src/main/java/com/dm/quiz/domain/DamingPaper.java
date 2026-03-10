@@ -64,6 +64,19 @@ public class DamingPaper extends BaseEntity
     @Excel(name = "截止时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
+    /**
+     * 题号规则：1=按题型分组编号，2=按加入顺序全局编号（默认2）
+     */
+    private Integer numberMode;
+
+    public Integer getNumberMode() {
+        return numberMode;
+    }
+
+    public void setNumberMode(Integer numberMode) {
+        this.numberMode = numberMode;
+    }
+
     public Integer getPaperType() {
         return paperType;
     }
@@ -182,6 +195,7 @@ public class DamingPaper extends BaseEntity
                 .append("enableAntiCheat", getEnableAntiCheat())
                 .append("startTime", getStartTime())
                 .append("endTime", getEndTime())
+                .append("numberMode", getNumberMode())
                 .toString();
     }
 }

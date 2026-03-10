@@ -5,24 +5,46 @@
 <mapper namespace="com.dm.quiz.mapper.DamingQuestionMapper">
 
     <resultMap type="DamingQuestion" id="DamingQuestionResult">
-        <result property="id"    column="id"    />
-        <result property="questionType"    column="question_type"    />
-        <result property="questionInfoId"    column="question_info_id"    />
-        <result property="correct"    column="correct"    />
-        <result property="score"    column="score"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="subjectId"    column="subject_id"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id"           column="id" />
+        <result property="parentId"     column="parent_id" />
+        <result property="questionType" column="question_type" />
+        <result property="clozeIndex"   column="cloze_index" />
+        <result property="questionInfoId" column="question_info_id" />
+        <result property="animationId"  column="animation_id" />
+        <result property="correct"      column="correct" />
+        <result property="score"        column="score" />
+        <result property="delFlag"      column="del_flag" />
+        <result property="subjectId"    column="subject_id" />
+        <result property="createTime"   column="create_time" />
+        <result property="updateTime"   column="update_time" />
     </resultMap>
 
     <sql id="selectDamingQuestionVo">
-        select id, question_type, question_info_id, correct, score, del_flag, subject_id, create_time, update_time from daming_question
+        select id,
+               parent_id,
+               question_type,
+               cloze_index,
+               question_info_id,
+               animation_id,
+               correct,
+               score,
+               del_flag,
+               subject_id,
+               create_time,
+               update_time
+        from daming_question
     </sql>
 
     <select id="selectDamingQuestionList" parameterType="DamingQuestion" resultMap="DamingQuestionResult">
         <include refid="selectDamingQuestionVo"/>
         <where>
+            <!-- 默认仅查询顶层题目：parent_id 为空或 0；当显式传入 parentId 时，查询对应父题下的子题 -->
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="parentId == null">
+                and (parent_id is null or parent_id = 0)
+            </if>
             <if test="questionType != null ">and question_type = #{questionType}</if>
             <if test="questionInfoId != null ">and question_info_id = #{questionInfoId}</if>
             <if test="score != null ">and score = #{score}</if>
@@ -56,6 +78,7 @@
     <select id="selectRandomQuestions" resultMap="DamingQuestionResult">
         <include refid="selectDamingQuestionVo"/>
         WHERE del_flag != 2
+          AND (parent_id IS NULL OR parent_id = 0)
         <if test="subjectId != null">
             AND subject_id = #{subjectId}
         </if>
@@ -71,6 +94,7 @@
         <include refid="selectDamingQuestionVo"/>
         <where>
             and del_flag != 2
+            and (parent_id IS NULL OR parent_id = 0)
             <if test="subjectId != null">
                 AND subject_id = #{subjectId}
             </if>
@@ -87,8 +111,11 @@
     <insert id="insertDamingQuestion" parameterType="DamingQuestion" useGeneratedKeys="true" keyProperty="id">
         insert into daming_question
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
             <if test="questionType != null">question_type,</if>
+            <if test="clozeIndex != null">cloze_index,</if>
             <if test="questionInfoId != null">question_info_id,</if>
+            <if test="animationId != null">animation_id,</if>
             <if test="correct != null">correct,</if>
             <if test="score != null">score,</if>
             <if test="delFlag != null">del_flag,</if>
@@ -97,8 +124,11 @@
             <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
             <if test="questionType != null">#{questionType},</if>
+            <if test="clozeIndex != null">#{clozeIndex},</if>
             <if test="questionInfoId != null">#{questionInfoId},</if>
+            <if test="animationId != null">#{animationId},</if>
             <if test="correct != null">#{correct},</if>
             <if test="score != null">#{score},</if>
             <if test="delFlag != null">#{delFlag},</if>
@@ -111,8 +141,11 @@
     <update id="updateDamingQuestion" parameterType="DamingQuestion">
         update daming_question
         <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="questionType != null">question_type = #{questionType},</if>
+            <if test="clozeIndex != null">cloze_index = #{clozeIndex},</if>
             <if test="questionInfoId != null">question_info_id = #{questionInfoId},</if>
+            <if test="animationId != null">animation_id = #{animationId},</if>
             <if test="correct != null">correct = #{correct},</if>
             <if test="score != null">score = #{score},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>

@@ -103,11 +103,11 @@ public class CommonController
     {
         try
         {
-            // ⭐ 文件大小限制：2MB
-            long maxFileSize = 2 * 1024 * 1024; // 2MB = 2 * 1024 * 1024 bytes
+            // ⭐ 文件大小限制：5MB
+            long maxFileSize = 5 * 1024 * 1024; // 5MB
             if (file.getSize() > maxFileSize) 
             {
-                return AjaxResult.error("文件大小不能超过2MB，当前文件大小：" + formatFileSize(file.getSize()));
+                return AjaxResult.error("文件大小不能超过5MB，当前文件大小：" + formatFileSize(file.getSize()));
             }
             
             // ⭐ 文件类型限制：仅允许图片
@@ -163,11 +163,11 @@ public class CommonController
         try
         {
             // ⭐ 批量上传：每个文件都需要检查大小和类型
-            long maxFileSize = 2 * 1024 * 1024; // 2MB
+            long maxFileSize = 5 * 1024 * 1024; // 5MB
             for (MultipartFile file : files) {
                 if (file.getSize() > maxFileSize) {
                     return AjaxResult.error("文件'" + file.getOriginalFilename() + 
-                        "'大小超过2MB，当前大小：" + formatFileSize(file.getSize()));
+                        "'大小超过5MB，当前大小：" + formatFileSize(file.getSize()));
                 }
                 String contentType = file.getContentType();
                 if (contentType == null || !contentType.startsWith("image/")) {

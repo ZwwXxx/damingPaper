@@ -3,6 +3,7 @@ package com.dm.quiz.service.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -116,6 +117,8 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         damingPaper.setDelFlag(0);
         damingPaper.setPaperType(paperDto.getPaperType());
         damingPaper.setEnableAntiCheat(Boolean.TRUE.equals(paperDto.getEnableAntiCheat()));
+        // 题号规则：默认按加入顺序编号
+        damingPaper.setNumberMode(paperDto.getNumberMode() == null ? 2 : paperDto.getNumberMode());
         if (StringUtils.isNotEmpty(paperDto.getStartTime())) {
             damingPaper.setStartTime(DateUtils.parseDate(paperDto.getStartTime()));
         }
@@ -129,10 +132,20 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
     private static ComputeCountAndScoreResult getComputeCountAndScoreResult(PaperDto paperDto) {
         // 计算所有题目数量,流式操作，将多个题型map循环，映射每一个item为integer类型的size，得到每个题型的数量，存入数组
         // 将数组里的每一个题型的题目数量进行sum求和 ,
-        int totalCount = paperDto.getPaperQuestionTypeDto().stream().mapToInt(i -> i.getQuestionDtos().size()).sum();
+        int totalCount = paperDto.getPaperQuestionTypeDto().stream()
+                .flatMap(i -> i.getQuestionDtos().stream())
+                // 完形父题不计入题目数量（子题才是真正作答题）
+                .filter(q -> q != null && !Objects.equals(q.getQuestionType(), QuestionTypeEnum.Cloze.getCode()))
+                .mapToInt(q -> 1)
+                .sum();
         // 计算所有题目的总分
         // 由于分数流属于第二层，会有很多个intstream，因此第一层我们要提前把多个intstream压缩为一个，然后进行sum处理
-        int totalScore = paperDto.getPaperQuestionTypeDto().stream().flatMapToInt(i -> i.getQuestionDtos().stream().mapToInt(q -> q.getScore())).sum();
+        int totalScore = paperDto.getPaperQuestionTypeDto().stream()
+                .flatMap(i -> i.getQuestionDtos().stream())
+                // 完形父题不计入总分（子题分数之和才是有效总分）
+                .filter(q -> q != null && !Objects.equals(q.getQuestionType(), QuestionTypeEnum.Cloze.getCode()))
+                .mapToInt(q -> q.getScore() == null ? 0 : q.getScore())
+                .sum();
         ComputeCountAndScoreResult result = new ComputeCountAndScoreResult(totalCount, totalScore);
         return result;
     }
@@ -162,7 +175,12 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
                 PaperQuestionVM questionVM = modelMapper.map(q, PaperQuestionVM.class);
                 // PaperQuestionVM questionVM = new PaperQuestionVM();
                 // BeanUtils.copyProperties(q,questionVM);
-                questionVM.setItemOrder(index.getAndIncrement());
+                // 完形父题不占题号（itemOrder置空且不递增）
+                if (q != null && Objects.equals(q.getQuestionType(), QuestionTypeEnum.Cloze.getCode()) && q.getParentId() == null) {
+                    questionVM.setItemOrder(null);
+                } else {
+                    questionVM.setItemOrder(index.getAndIncrement());
+                }
                 return questionVM;
             }).collect(Collectors.toList());
             // 将遍历的出来新的的题目列表赋值给题型.name不用给了，映射好了
@@ -208,6 +226,7 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         ComputeCountAndScoreResult computeCountAndScoreResult = getComputeCountAndScoreResult(paperDto);
         damingPaper.setQuestionCount(computeCountAndScoreResult.totalCount);
         damingPaper.setScore(computeCountAndScoreResult.totalScore);
+        damingPaper.setNumberMode(paperDto.getNumberMode() == null ? damingPaper.getNumberMode() : paperDto.getNumberMode());
         // 5.更新paper
         return damingPaperMapper.updateDamingPaper(damingPaper);
 
@@ -255,16 +274,36 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         // 4.1根据id获取到每一个question
         List<DamingQuestion> damingQuestions = damingQuestionMapper.selectQuestionListByIds(questionIds);
         // 5.根据question，变为questionDTO然后设置order返回，map原题型数组，映射为DTO类型
+        // 统一重新计算 itemOrder：完形父题不占号，其他题目（包括完形子题）全局连续编号
+        AtomicInteger orderCounter = new AtomicInteger(0);
+
         List<PaperQuestionTypeDto> paperQuestionTypeDtos = questionTypeVMS.stream().map(i -> {
             PaperQuestionTypeDto paperQuestionTypeDto = modelMapper.map(i, PaperQuestionTypeDto.class);
-            List<QuestionDto> questionDtoStream = i.getPaperQuestionVMS().stream().map(x -> {
-                DamingQuestion question = damingQuestions.stream().filter(p -> p.getId().equals(x.getId())).findFirst().get();
-                // 5.1获取questionDto。
-                QuestionDto questionDto = damingQuestionService.getQuestionDto(question);
-                // 5.2此时的顺序只有VM的question才有也就是x
-                questionDto.setItemOrder(x.getItemOrder());
-                return questionDto;
-            }).collect(Collectors.toList());
+            List<QuestionDto> questionDtoStream = i.getPaperQuestionVMS().stream()
+                    .map(x -> {
+                        DamingQuestion question = damingQuestions.stream()
+                                .filter(p -> p.getId().equals(x.getId()))
+                                .findFirst()
+                                .orElse(null);
+                        if (question == null) {
+                            // 题目已被删除或不存在，跳过
+                            return null;
+                        }
+                        // 5.1获取questionDto。
+                        QuestionDto questionDto = damingQuestionService.getQuestionDto(question);
+                        // 5.2 重新设置顺序：完形父题不占题号，其余题目全局自增
+                        if (questionDto.getQuestionType() != null
+                                && questionDto.getQuestionType().equals(QuestionTypeEnum.Cloze.getCode())
+                                && questionDto.getParentId() == null) {
+                            // 完形父题：不参与排序编号
+                            questionDto.setItemOrder(null);
+                        } else {
+                            questionDto.setItemOrder(orderCounter.getAndIncrement());
+                        }
+                        return questionDto;
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
             // 5.3 将加工后的questionDto List设置给题型TypeDto
             paperQuestionTypeDto.setQuestionDtos(questionDtoStream);
             return paperQuestionTypeDto;
@@ -273,6 +312,7 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         paperDto.setPaperQuestionTypeDto(paperQuestionTypeDtos);
         paperDto.setEnableAntiCheat(damingPaper.getEnableAntiCheat());
         paperDto.setQuestionCount(damingPaper.getQuestionCount());
+        paperDto.setNumberMode(damingPaper.getNumberMode());
         // 手动处理Date到String的转换
         if (damingPaper.getStartTime() != null) {
             paperDto.setStartTime(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, damingPaper.getStartTime()));

@@ -210,11 +210,12 @@ export default {
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {
-        this.$message.error("图片插入失败");
+        this.$message.error(res.msg || "图片插入失败");
       }
     },
-    handleUploadError() {
-      this.$message.error("图片插入失败");
+    handleUploadError(err) {
+      const msg = err?.response?.data?.msg || err?.message || "图片插入失败";
+      this.$message.error(msg);
     },
     // 绑定图片预览事件
     bindImagePreviewEvents() {
