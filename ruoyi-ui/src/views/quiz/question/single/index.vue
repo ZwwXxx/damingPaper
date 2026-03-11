@@ -532,6 +532,56 @@ export default {
     }
   },
   methods: {
+    formatValidateKeyToLabel(key) {
+      const map = {
+        subjectId: '科目',
+        questionType: '题目类型',
+        questionTitle: '题干',
+        correct: '标准答案',
+        correctArray: '标准答案',
+        analysis: '解析',
+        score: '分数',
+        knowledgePointIds: '关联知识点'
+      };
+      if (!key) return '未填写项';
+      if (map[key]) return map[key];
+      // 填空题：fillBlankAnswers.0.value
+      const fb = String(key).match(/^fillBlankAnswers\.(\d+)\.value$/);
+      if (fb) return `第${Number(fb[1]) + 1}空答案`;
+      // 完形子题（若后续补齐 rules 会用到）
+      const clozeTitle = String(key).match(/^clozeChildren\.(\d+)\.questionTitle$/);
+      if (clozeTitle) return `完形第${Number(clozeTitle[1]) + 1}空子题题干`;
+      const clozeScore = String(key).match(/^clozeChildren\.(\d+)\.score$/);
+      if (clozeScore) return `完形第${Number(clozeScore[1]) + 1}空子题分数`;
+      const clozeType = String(key).match(/^clozeChildren\.(\d+)\.questionType$/);
+      if (clozeType) return `完形第${Number(clozeType[1]) + 1}空子题题型`;
+      return key;
+    },
+    showValidatePopup(fields) {
+      const keys = Object.keys(fields || {});
+      const labels = keys.map(k => this.formatValidateKeyToLabel(k));
+      const uniq = Array.from(new Set(labels));
+      const html = `
+        <div style="line-height: 1.8;">
+          <div style="margin-bottom: 8px;">请先完善以下必填项后再提交：</div>
+          <ul style="padding-left: 18px; margin: 0;">
+            ${uniq.map(x => `<li>${x}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+      this.$alert(html, '表单未填写完整', {
+        type: 'warning',
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '我知道了'
+      });
+      // 滚动到第一个错误项（避免不在当前视口察觉不到）
+      this.$nextTick(() => {
+        const first = this.$el && this.$el.querySelector && this.$el.querySelector('.el-form-item.is-error');
+        if (first && first.scrollIntoView) {
+          first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    },
     async loadSubjectOptions() {
       const res = await optionSubject();
       const list = res.data || [];
@@ -727,7 +777,15 @@ export default {
       child.items.splice(optionIndex, 1);
     },
     async submitForm() {
-      const valid = await this.$refs['elForm'].validate();
+      // 统一在提交时弹窗提示，不在输入框下方显示红字（页面样式里已隐藏错误文案）
+      const valid = await new Promise((resolve) => {
+        this.$refs['elForm'].validate((ok, fields) => {
+          if (!ok) {
+            this.showValidatePopup(fields);
+          }
+          resolve(ok);
+        });
+      });
       if (!valid) return;
       const type = this.formData.questionType;
       // 完形填空：走单独的批量保存接口
@@ -757,6 +815,28 @@ export default {
         const message = res.code === 200 ? "完形填空保存成功!" : "保存失败,请联系管理员!"
         const typeName = res.code === 200 ? "success" : "error"
         this.$message({ message, type: typeName });
+        // 新增成功后重置输入：只保留“科目 + 题型”，其余回到默认值（与其他题型保持一致）
+        if (res.code === 200) {
+          const keepSubjectId = this.formData.subjectId;
+          const keepQuestionType = this.formData.questionType; // 6
+
+          // 先按表单初始值整体重置，再恢复科目/题型
+          this.$refs['elForm'] && this.$refs['elForm'].resetFields();
+
+          // resetFields 不会处理这些“表单外状态”，这里一并清空
+          this.animationFileList = [];
+          this.knowledgePointOptions = [];
+
+          this.formData.subjectId = keepSubjectId;
+          this.formData.questionType = keepQuestionType;
+          // 完形题型下的一些默认结构（目前主要是子题列表）
+          this.applyQuestionTypeDefaults(keepQuestionType);
+          this.formData.clozeChildren = [];
+
+          this.$nextTick(() => {
+            this.$refs['elForm'] && this.$refs['elForm'].clearValidate();
+          });
+        }
         return;
       }
       if (type === 2) {
@@ -998,5 +1078,9 @@ export default {
 }
 
 </script>
-<style>
+<style scoped>
+/* 该页面采用“提交时统一弹窗提示”，隐藏每个输入框下方的红色校验文案 */
+::v-deep .el-form-item__error {
+  display: none !important;
+}
 </style>

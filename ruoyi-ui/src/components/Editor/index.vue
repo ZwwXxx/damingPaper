@@ -33,7 +33,6 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import { getToken } from "@/utils/auth";
 import ImageViewer from "@/components/ImageViewer";
-import { compressImageIfNeeded } from "@/utils/upload";
 
 export default {
   name: "Editor",
@@ -153,7 +152,7 @@ export default {
           if (value) {
             this.$refs.upload.$children[0].$refs.input.click();
           } else {
-            this.quill.format("image", false);
+            this.Quill.format("image", false);
           }
         });
       }
@@ -202,14 +201,22 @@ export default {
       if (res.code == 200) {
         // 获取富文本组件实例
         let quill = this.Quill;
-        // 获取光标所在位置
-        let length = quill.getSelection().index;
-        // ⭐ 直接使用后端返回的完整CDN URL（统一前后台逻辑）
-        // 后端已经返回完整的CDN地址，不需要再拼接
-        const imageUrl = res.url ;
-        quill.insertEmbed(length, "image", imageUrl);
+        quill.focus();
+        // 获取光标所在位置：编辑器未聚焦时 getSelection() 可能为 null
+        const range = quill.getSelection(true);
+        const length = range && typeof range.index === "number"
+          ? range.index
+          : Math.max(quill.getLength() - 1, 0);
+        // 兼容不同返回结构，并对特殊字符做编码（空格、括号等）
+        const rawUrl = (res.url || res.data?.url || res.data?.fileUrl || "").toString().trim();
+        if (!rawUrl) {
+          this.$message.error(res.msg || "图片插入失败：未返回图片URL");
+          return;
+        }
+        const imageUrl = encodeURI(rawUrl);
+        quill.insertEmbed(length, "image", imageUrl, "user");
         // 调整光标到最后
-        quill.setSelection(length + 1);
+        quill.setSelection(length + 1, 0, "silent");
       } else {
         this.$message.error(res.msg || "图片插入失败");
       }

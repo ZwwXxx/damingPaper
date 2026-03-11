@@ -129,8 +129,9 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="paperType != null">paper_type = #{paperType},</if>
             <if test="enableAntiCheat != null">enable_anti_cheat = #{enableAntiCheat},</if>
-            <if test="startTime != null">start_time = #{startTime},</if>
-            <if test="endTime != null">end_time = #{endTime},</if>
+            <!-- 允许前端传 null 来显式清空开始/截止时间 -->
+            start_time = #{startTime},
+            end_time = #{endTime},
             <if test="numberMode != null">number_mode = #{numberMode},</if>
         </trim>
         where paper_id = #{paperId}

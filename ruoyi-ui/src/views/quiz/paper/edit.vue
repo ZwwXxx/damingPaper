@@ -404,8 +404,9 @@ export default {
         subjectId: undefined,
         paperName: undefined,
         suggestTime: undefined,
-        startTime: '',
-        endTime: '',
+        // 未选择时间时用 null，避免后端解析空字符串失败
+        startTime: null,
+        endTime: null,
         enableAntiCheat: false,
         // 题号规则：1=按题型分组编号，2=按加入顺序全局编号（默认2）
         numberMode: 2,
@@ -541,6 +542,9 @@ export default {
     async getPaperById(paperId) {
       this.formData = (await getPaper(paperId)).data
       console.log(this.formData)
+      // 兼容后端可能返回空字符串的情况
+      if (this.formData.startTime === '') this.formData.startTime = null
+      if (this.formData.endTime === '') this.formData.endTime = null
       this.autoCompose.form.subjectId = this.formData.subjectId
       // 如果当前试卷配置为按加入顺序编号，则将题型扁平化为一个题目列表
       if (this.formData.numberMode === 2) {
@@ -776,6 +780,9 @@ export default {
         }
       })
       if (noSubmit) return
+      // 统一将“未设置时间”归一化为 null，避免传空字符串导致后端解析失败
+      if (!this.formData.startTime) this.formData.startTime = null
+      if (!this.formData.endTime) this.formData.endTime = null
       if (this.formData.startTime && this.formData.endTime && new Date(this.formData.startTime) >= new Date(this.formData.endTime)) {
         return this.$message.error('开始时间必须早于截止时间')
       }
@@ -788,11 +795,17 @@ export default {
         return this.$message.error("信息未填写完毕")
       }
       let res = null
-      if (this.formData.paperId) {
-        console.log("是修改")
-        res = await updatePaper(this.formData)
-      } else {
-        res = await addPaper(this.formData)
+      try {
+        if (this.formData.paperId) {
+          console.log("是修改")
+          res = await updatePaper(this.formData)
+        } else {
+          res = await addPaper(this.formData)
+        }
+      } catch (e) {
+        const msg = e?.response?.data?.msg || e?.message || '提交失败，请检查开始/截止时间格式或后端日志'
+        this.$message.error(msg)
+        return
       }
 
       const message = res.code === 200 ? "操作成功!" : "操作失败,请联系管理员!"
