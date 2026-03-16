@@ -11,6 +11,15 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="题干" prop="questionTitle">
+        <el-input
+          v-model="queryParams.questionTitle"
+          placeholder="请输入题干关键词"
+          clearable
+          style="width: 240px"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="题目分数" prop="score">
         <el-input
           v-model="queryParams.score"
@@ -358,6 +367,7 @@ export default {
         pageSize: 10,
         questionType: null,
         questionInfoId: null,
+        questionTitle: null,
         correct: null,
         score: null,
         subjectId: null,
@@ -544,6 +554,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.dateRange = [];
       this.handleQuery();
     },
     // 多选框选中数据

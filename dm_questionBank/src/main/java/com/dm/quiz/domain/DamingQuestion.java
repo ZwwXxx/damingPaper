@@ -51,6 +51,11 @@ public class DamingQuestion extends BaseEntity
     @Excel(name = "科目")
     private Integer subjectId;
 
+    /**
+     * 题干（仅用于列表查询/模糊搜索，不落库；真实题干存于 daming_content_info.content 的 JSON 中）
+     */
+    private String questionTitle;
+
     public void setId(Long id)
     {
         this.id = id;
@@ -144,6 +149,14 @@ public class DamingQuestion extends BaseEntity
         return subjectId;
     }
 
+    public String getQuestionTitle() {
+        return questionTitle;
+    }
+
+    public void setQuestionTitle(String questionTitle) {
+        this.questionTitle = questionTitle;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -157,6 +170,7 @@ public class DamingQuestion extends BaseEntity
                 .append("score", getScore())
                 .append("delFlag", getDelFlag())
                 .append("subjectId", getSubjectId())
+                .append("questionTitle", getQuestionTitle())
                 .append("createTime", getCreateTime())
                 .append("updateTime", getUpdateTime())
                 .toString();

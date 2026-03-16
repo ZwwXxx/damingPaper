@@ -20,70 +20,74 @@
     </resultMap>
 
     <sql id="selectDamingQuestionVo">
-        select id,
-               parent_id,
-               question_type,
-               cloze_index,
-               question_info_id,
-               animation_id,
-               correct,
-               score,
-               del_flag,
-               subject_id,
-               create_time,
-               update_time
-        from daming_question
+        select q.id,
+               q.parent_id,
+               q.question_type,
+               q.cloze_index,
+               q.question_info_id,
+               q.animation_id,
+               q.correct,
+               q.score,
+               q.del_flag,
+               q.subject_id,
+               q.create_time,
+               q.update_time
+        from daming_question q
     </sql>
 
     <select id="selectDamingQuestionList" parameterType="DamingQuestion" resultMap="DamingQuestionResult">
         <include refid="selectDamingQuestionVo"/>
+        left join daming_content_info ci on ci.id = q.question_info_id
         <where>
             <!-- 默认仅查询顶层题目：parent_id 为空或 0；当显式传入 parentId 时，查询对应父题下的子题 -->
             <if test="parentId != null">
-                and parent_id = #{parentId}
+                and q.parent_id = #{parentId}
             </if>
             <if test="parentId == null">
-                and (parent_id is null or parent_id = 0)
+                and (q.parent_id is null or q.parent_id = 0)
             </if>
-            <if test="questionType != null ">and question_type = #{questionType}</if>
-            <if test="questionInfoId != null ">and question_info_id = #{questionInfoId}</if>
-            <if test="score != null ">and score = #{score}</if>
-            <if test="subjectId != null ">and subject_id = #{subjectId}</if>
-            <if test="createTime != null ">and create_time = #{createTime}</if>
-            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="questionType != null ">and q.question_type = #{questionType}</if>
+            <if test="questionInfoId != null ">and q.question_info_id = #{questionInfoId}</if>
+            <if test="score != null ">and q.score = #{score}</if>
+            <if test="subjectId != null ">and q.subject_id = #{subjectId}</if>
+            <if test="createTime != null ">and q.create_time = #{createTime}</if>
+            <if test="updateTime != null ">and q.update_time = #{updateTime}</if>
+            <if test="questionTitle != null and questionTitle != ''">
+                and json_unquote(json_extract(ci.content, '$.questionTitle')) like concat('%', #{questionTitle}, '%')
+            </if>
             <if test="_parameter != null and params != null and params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+                AND date_format(q.create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
             </if>
             <if test="_parameter != null and params != null and params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+                AND date_format(q.create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
             </if>
-            and del_flag!=2
+            and q.del_flag!=2
         </where>
-        order by create_time desc
+        order by q.create_time desc
     </select>
 
     <select id="selectDamingQuestionById" parameterType="Long" resultMap="DamingQuestionResult">
         <include refid="selectDamingQuestionVo"/>
-        where id = #{id}
+        where q.id = #{id}
     </select>
     <select id="selectQuestionListByIds" resultMap="DamingQuestionResult">
         <include refid="selectDamingQuestionVo"/>
-        WHERE id IN
+        WHERE q.id IN
         <foreach item="id" collection="ids" open="(" separator="," close=")">
             #{id}
         </foreach>
-        and del_flag!=2
+        and q.del_flag!=2
     </select>
 
     <select id="selectRandomQuestions" resultMap="DamingQuestionResult">
         <include refid="selectDamingQuestionVo"/>
-        WHERE del_flag != 2
-          AND (parent_id IS NULL OR parent_id = 0)
+        WHERE q.del_flag != 2
+          AND (q.parent_id IS NULL OR q.parent_id = 0)
         <if test="subjectId != null">
-            AND subject_id = #{subjectId}
+            AND q.subject_id = #{subjectId}
         </if>
         <if test="questionType != null">
-            AND question_type = #{questionType}
+            AND q.question_type = #{questionType}
         </if>
         ORDER BY rand()
         LIMIT #{limit}
@@ -93,19 +97,19 @@
     <select id="selectQuestionsBySubjectAndCreateTime" resultMap="DamingQuestionResult">
         <include refid="selectDamingQuestionVo"/>
         <where>
-            and del_flag != 2
-            and (parent_id IS NULL OR parent_id = 0)
+            and q.del_flag != 2
+            and (q.parent_id IS NULL OR q.parent_id = 0)
             <if test="subjectId != null">
-                AND subject_id = #{subjectId}
+                AND q.subject_id = #{subjectId}
             </if>
             <if test="beginTime != null and beginTime != ''">
-                AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{beginTime},'%Y%m%d')
+                AND date_format(q.create_time,'%Y%m%d') &gt;= date_format(#{beginTime},'%Y%m%d')
             </if>
             <if test="endTime != null and endTime != ''">
-                AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{endTime},'%Y%m%d')
+                AND date_format(q.create_time,'%Y%m%d') &lt;= date_format(#{endTime},'%Y%m%d')
             </if>
         </where>
-        ORDER BY create_time ASC
+        ORDER BY q.create_time ASC
     </select>
 
     <insert id="insertDamingQuestion" parameterType="DamingQuestion" useGeneratedKeys="true" keyProperty="id">

@@ -25,12 +25,16 @@ public class QuestionKnowledgeServiceImpl implements IQuestionKnowledgeService {
     @Override
     @Transactional
     public void bindKnowledgePoints(QuestionKnowledgeBindDto dto) {
+        // 完型填空父题没有独立 question_id，不建立关联；仅对有 question_id 的题目绑定知识点
+        if (dto.getQuestionId() == null) {
+            return;
+        }
         relationMapper.deleteByQuestionId(dto.getQuestionId());
-        
+
         if (dto.getKnowledgePointIds() != null && !dto.getKnowledgePointIds().isEmpty()) {
             List<QuestionKnowledgeRelation> relations = new ArrayList<>();
             String username = SecurityUtils.getUsername();
-            
+
             for (Long knowledgePointId : dto.getKnowledgePointIds()) {
                 QuestionKnowledgeRelation relation = new QuestionKnowledgeRelation();
                 relation.setQuestionId(dto.getQuestionId());
@@ -40,7 +44,7 @@ public class QuestionKnowledgeServiceImpl implements IQuestionKnowledgeService {
                 relation.setCreateBy(username);
                 relations.add(relation);
             }
-            
+
             relationMapper.batchInsert(relations);
         }
     }

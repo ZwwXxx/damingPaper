@@ -1,9 +1,10 @@
 package com.ruoyi.web.controller.quiz.student;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -227,12 +228,12 @@ public class KnowledgeController extends BaseController
             knowledgePoint.setUpdateBy(username);
             knowledgePoint.setUpdateTime(new Date());
             
-            // 更新后需要重新审核
-            knowledgePoint.setAuditStatus(0);
+            // 无需审核，更新后仍为已发布状态
+            knowledgePoint.setAuditStatus(1);
             
             int result = knowledgePointService.updateKnowledgePoint(knowledgePoint);
             if (result > 0) {
-                return AjaxResult.success("更新成功，请等待管理员审核");
+                return AjaxResult.success("更新成功");
             } else {
                 return AjaxResult.error("更新失败");
             }
@@ -495,9 +496,9 @@ public class KnowledgeController extends BaseController
             knowledgePoint.setAuthorId(userId);  // 设置作者ID
             knowledgePoint.setAuthorName(user.getNickName() != null ? user.getNickName() : user.getUserName());  // 设置作者名称
             
-            // 设置审核状态为待审核
-            knowledgePoint.setAuditStatus(0); // 0-待审核
-            knowledgePoint.setStatus(1); // 1-正常
+            // 无需审核，直接发布成功（审核状态设为通过）
+            knowledgePoint.setAuditStatus(1); // 1-通过
+            knowledgePoint.setStatus(1); // 1-已发布
             
             // 初始化统计数据
             knowledgePoint.setViewCount(0);
@@ -509,7 +510,7 @@ public class KnowledgeController extends BaseController
             int result = knowledgePointService.insertKnowledgePoint(knowledgePoint);
             
             if (result > 0) {
-                return success("知识点发布成功，请等待管理员审核");
+                return success("知识点发布成功");
             } else {
                 return error("发布失败");
             }
@@ -517,6 +518,83 @@ public class KnowledgeController extends BaseController
         } catch (Exception e) {
             logger.error("发布知识点失败", e);
             return error("发布失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 导出当前用户发布的知识点（用于备份或迁移到正式环境导入）
+     */
+    @GetMapping("/export")
+    public AjaxResult exportMyKnowledge()
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            if (userId == null) {
+                return error("请先登录");
+            }
+            KnowledgePoint query = new KnowledgePoint();
+            query.setAuthorId(userId);
+            query.setStatus(1);
+            List<KnowledgePointBaseDTO> myList = knowledgePointService.selectKnowledgePointList(query);
+            List<Map<String, Object>> exportList = new ArrayList<>();
+            for (KnowledgePointBaseDTO base : myList) {
+                KnowledgePoint full = ((KnowledgePointServiceImpl) knowledgePointService).getCompleteKnowledgePoint(base.getPointId());
+                if (full == null) continue;
+                Map<String, Object> item = new HashMap<>();
+                item.put("subjectId", full.getSubjectId());
+                item.put("subjectName", full.getSubjectName());
+                item.put("title", full.getTitle());
+                item.put("summary", full.getSummary());
+                item.put("difficulty", full.getDifficulty());
+                item.put("content", full.getContent());
+                exportList.add(item);
+            }
+            return success(exportList);
+        } catch (Exception e) {
+            logger.error("导出知识点失败", e);
+            return error("导出失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 导入知识点（从导出文件恢复，便于正式环境一键导入）
+     */
+    @PostMapping("/import")
+    public AjaxResult importKnowledge(@RequestBody List<KnowledgePoint> list)
+    {
+        try {
+            Long userId = SecurityUtils.getUserId();
+            if (userId == null) {
+                return error("请先登录");
+            }
+            DamingUser user = userService.selectDamingUserByUserId(userId);
+            if (user == null) {
+                return error("用户信息不存在");
+            }
+            if (list == null || list.isEmpty()) {
+                return error("导入数据为空");
+            }
+            int successCount = 0;
+            for (KnowledgePoint item : list) {
+                if (item.getTitle() == null || item.getTitle().trim().isEmpty()) continue;
+                item.setPointId(null);
+                item.setAuthorId(userId);
+                item.setAuthorName(user.getNickName() != null ? user.getNickName() : user.getUserName());
+                item.setCreateBy(user.getUserName());
+                item.setUpdateBy(user.getUserName());
+                item.setAuditStatus(1);
+                item.setStatus(1);
+                item.setViewCount(0);
+                item.setLikeCount(0);
+                item.setCollectCount(0);
+                item.setCommentCount(0);
+                int ret = knowledgePointService.insertKnowledgePoint(item);
+                if (ret > 0) successCount++;
+            }
+            return success("成功导入 " + successCount + " 条知识点");
+        } catch (Exception e) {
+            logger.error("导入知识点失败", e);
+            return error("导入失败：" + e.getMessage());
         }
     }
 
