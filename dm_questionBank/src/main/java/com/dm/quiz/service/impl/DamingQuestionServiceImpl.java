@@ -133,9 +133,9 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
      * @return 结果
      */
     @Override
-    public int insertDamingQuestion(QuestionDto questionDto) {
-        // 复用内部方法，忽略返回的主键ID
-        return doInsertQuestion(questionDto) != null ? 1 : 0;
+    public Long insertDamingQuestion(QuestionDto questionDto) {
+        // 复用内部方法，直接返回插入后的主键ID，方便前端使用
+        return doInsertQuestion(questionDto);
     }
 
     /**
@@ -303,12 +303,13 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
      * @return 结果
      */
     @Override
+    @Transactional
     public int deleteDamingQuestionByIds(Long[] ids) {
-        // 如果该试卷下有其他作答记录，提示说已经绑定无法删除
+        // 如果该题目下有作答记录，禁止删除，直接抛业务异常
         for (Long id : ids) {
             List<DamingQuestionAnswer> damingQuestionAnswers = damingQuestionAnswerMapper.selectDamingQuestionAnswerByQuestionId(id);
-            if (damingQuestionAnswers.size()>0){
-                return 2;
+            if (damingQuestionAnswers != null && !damingQuestionAnswers.isEmpty()){
+                throw new ServiceException("该试卷下有答题记录，请先删除相关答题记录后再删除题目");
             }
         }
         return damingQuestionMapper.deleteDamingQuestionByIds(ids);

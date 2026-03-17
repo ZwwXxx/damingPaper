@@ -6,7 +6,10 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
+import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectRequest;
+import com.aliyun.oss.model.ResponseHeaderOverrides;
+import com.aliyun.oss.model.OSSObject;
 import com.ruoyi.common.config.AliOssProperties;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
@@ -18,6 +21,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 import java.util.Objects;
+import org.apache.commons.io.IOUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,7 +59,35 @@ public class AliOssClient {
         try (InputStream inputStream = file.getInputStream()) {
             ossClient = buildClient();
             String objectName = buildObjectName(file.getOriginalFilename());
-            PutObjectRequest request = new PutObjectRequest(properties.getBucketName(), objectName, inputStream);
+
+            // 显式设置 Content-Type，避免浏览器将 HTML/视频当作下载附件处理
+            ObjectMetadata metadata = new ObjectMetadata();
+            String originalFilename = file.getOriginalFilename();
+            String suffix = "";
+            if (StringUtils.isNotEmpty(originalFilename) && originalFilename.contains(".")) {
+                suffix = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
+            }
+
+            // 1. 对于 html / 视频，始终按后缀强制使用正确的预览 Content-Type
+            if ("html".equals(suffix) || "htm".equals(suffix)) {
+                metadata.setContentType("text/html;charset=UTF-8");
+            } else if ("mp4".equals(suffix)) {
+                metadata.setContentType("video/mp4");
+            } else if ("webm".equals(suffix)) {
+                metadata.setContentType("video/webm");
+            } else if ("ogg".equals(suffix)) {
+                metadata.setContentType("video/ogg");
+            } else {
+                // 2. 其他类型：优先使用浏览器上传的 contentType，兜底为 octet-stream
+                String contentType = file.getContentType();
+                if (StringUtils.isNotEmpty(contentType)) {
+                    metadata.setContentType(contentType);
+                } else {
+                    metadata.setContentType("application/octet-stream");
+                }
+            }
+
+            PutObjectRequest request = new PutObjectRequest(properties.getBucketName(), objectName, inputStream, metadata);
             ossClient.putObject(request);
             return new OssUploadResult(objectName, buildFileUrl(objectName));
         } catch (OSSException | ClientException | IOException ex) {
@@ -98,6 +130,88 @@ public class AliOssClient {
         } catch (OSSException | ClientException ex) {
             throw wrapException(ex);
         } finally {
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+    }
+
+    /**
+     * 生成临时签名URL（可覆盖响应头，用于预览 inline）。
+     */
+    public String generatePresignedUrl(String objectName,
+                                       long expireSeconds,
+                                       HttpMethod method,
+                                       String responseContentType,
+                                       String responseContentDisposition) {
+        if (!isEnabled()) {
+            throw new ServiceException("OSS未开启或配置不完整");
+        }
+        if (StringUtils.isBlank(objectName)) {
+            throw new ServiceException("对象名称不能为空");
+        }
+        long safeExpire = expireSeconds <= 0 ? 300 : Math.min(expireSeconds, 3600);
+        OSS ossClient = null;
+        try {
+            ossClient = buildClient();
+            Date expiration = new Date(System.currentTimeMillis() + safeExpire * 1000);
+            GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(properties.getBucketName(),
+                    trimObjectKey(objectName), method == null ? HttpMethod.GET : method);
+            request.setExpiration(expiration);
+
+            ResponseHeaderOverrides overrides = new ResponseHeaderOverrides();
+            if (StringUtils.isNotEmpty(responseContentType)) {
+                overrides.setContentType(responseContentType);
+            }
+            if (StringUtils.isNotEmpty(responseContentDisposition)) {
+                overrides.setContentDisposition(responseContentDisposition);
+            }
+            request.setResponseHeaders(overrides);
+
+            URL url = ossClient.generatePresignedUrl(request);
+            if (Objects.isNull(url)) {
+                throw new ServiceException("生成签名URL失败");
+            }
+            return url.toString();
+        } catch (OSSException | ClientException ex) {
+            throw wrapException(ex);
+        } finally {
+            if (ossClient != null) {
+                ossClient.shutdown();
+            }
+        }
+    }
+
+    /**
+     * 获取对象内容字节（用于后端代理预览，避免 OSS 强制下载策略影响）。
+     */
+    public byte[] getObjectBytes(String objectName) {
+        if (!isEnabled()) {
+            throw new ServiceException("OSS未开启或配置不完整");
+        }
+        if (StringUtils.isBlank(objectName)) {
+            throw new ServiceException("对象名称不能为空");
+        }
+        OSS ossClient = null;
+        OSSObject ossObject = null;
+        try {
+            ossClient = buildClient();
+            ossObject = ossClient.getObject(properties.getBucketName(), trimObjectKey(objectName));
+            if (ossObject == null || ossObject.getObjectContent() == null) {
+                throw new ServiceException("读取OSS对象失败");
+            }
+            try (InputStream is = ossObject.getObjectContent()) {
+                return IOUtils.toByteArray(is);
+            }
+        } catch (OSSException | ClientException | IOException ex) {
+            throw wrapException(ex);
+        } finally {
+            if (ossObject != null) {
+                try {
+                    ossObject.close();
+                } catch (Exception ignore) {
+                }
+            }
             if (ossClient != null) {
                 ossClient.shutdown();
             }

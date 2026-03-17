@@ -30,6 +30,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.dm.quiz.service.IQuestionKnowledgeService;
 import com.dm.quiz.dto.QuestionKnowledgeBindDto;
+import com.dm.quiz.service.IPracticeColumnService;
 
 /**
  * 题目表Controller
@@ -46,6 +47,8 @@ public class DamingQuestionController extends BaseController {
     private DamingContentInfoMapper damingContentInfoMapper;
     @Autowired
     private IQuestionKnowledgeService questionKnowledgeService;
+    @Autowired
+    private IPracticeColumnService practiceColumnService;
 
     /**
      * 查询题目表列表
@@ -123,7 +126,12 @@ public class DamingQuestionController extends BaseController {
     @Log(title = "题目表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody QuestionDto questionDto) {
-        return toAjax(damingQuestionService.insertDamingQuestion(questionDto));
+        Long id = damingQuestionService.insertDamingQuestion(questionDto);
+        if (id == null) {
+            return AjaxResult.error("新增题目失败");
+        }
+        // 返回新生成的题目主键ID，前端可用于绑定知识点、专项栏目等
+        return AjaxResult.success(id);
     }
 
     /**
@@ -163,10 +171,9 @@ public class DamingQuestionController extends BaseController {
     @Log(title = "题目表", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
-        int i = damingQuestionService.deleteDamingQuestionByIds(ids);
-        if (i == 2) {
-            return error("该试卷下有答题记录，请先删除");
-        }
+        // 具体的“是否存在答题记录”校验逻辑放在 Service 层，
+        // 这里直接调用即可，若有答题记录会抛 ServiceException 由全局异常处理。
+        damingQuestionService.deleteDamingQuestionByIds(ids);
         return success("删除成功");
     }
 
@@ -243,6 +250,26 @@ public class DamingQuestionController extends BaseController {
     @GetMapping("/{questionId}/knowledge-points")
     public AjaxResult getKnowledgePoints(@PathVariable Long questionId) {
         return success(questionKnowledgeService.getKnowledgePointsByQuestionId(questionId));
+    }
+
+    /**
+     * 获取题目绑定的专项栏目ID列表
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:question:query')")
+    @GetMapping("/{questionId}/practice-columns")
+    public AjaxResult getPracticeColumns(@PathVariable Long questionId) {
+        return success(practiceColumnService.selectBoundColumnIdsByQuestionId(questionId));
+    }
+
+    /**
+     * 保存题目绑定的专项栏目（全量覆盖）
+     * body: [columnId1, columnId2, ...]
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:question:edit')")
+    @PostMapping("/{questionId}/practice-columns")
+    public AjaxResult savePracticeColumns(@PathVariable Long questionId, @RequestBody List<Long> columnIds) {
+        practiceColumnService.saveQuestionColumns(questionId, columnIds);
+        return success("保存成功");
     }
 }
 

@@ -37,7 +37,7 @@ public interface IDamingQuestionService
      * @param questionDto 题目表
      * @return 结果
      */
-    public int insertDamingQuestion(com.dm.quiz.dto.QuestionDto questionDto);
+    public Long insertDamingQuestion(com.dm.quiz.dto.QuestionDto questionDto);
 
     /**
      * 修改题目表

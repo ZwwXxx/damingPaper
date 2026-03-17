@@ -3,9 +3,11 @@ package com.ruoyi.system.service.impl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.ruoyi.system.domain.KnowledgeAttachment;
 import com.ruoyi.system.domain.KnowledgePoint;
 import com.ruoyi.system.domain.dto.KnowledgePointBaseDTO;
 import com.ruoyi.system.domain.dto.KnowledgePointContentDTO;
+import com.ruoyi.system.mapper.KnowledgeAttachmentMapper;
 import com.ruoyi.system.mapper.KnowledgePointMapper;
 import com.ruoyi.system.service.IKnowledgePointService;
 
@@ -20,6 +22,9 @@ public class KnowledgePointServiceImpl implements IKnowledgePointService
 {
     @Autowired
     private KnowledgePointMapper knowledgePointMapper;
+
+    @Autowired(required = false)
+    private KnowledgeAttachmentMapper knowledgeAttachmentMapper;
     
     /**
      * 合并基础信息和内容信息，返回完整的KnowledgePoint对象
@@ -72,6 +77,12 @@ public class KnowledgePointServiceImpl implements IKnowledgePointService
             point.setContent(content.getContent());
             point.setContentHtml(content.getContentHtml());
             point.setAuditRemark(content.getAuditRemark());
+        }
+
+        // 附件信息（可选）
+        if (knowledgeAttachmentMapper != null) {
+            List<KnowledgeAttachment> attachments = knowledgeAttachmentMapper.selectKnowledgeAttachmentByPointId(pointId);
+            point.setAttachments(attachments);
         }
         
         return point;

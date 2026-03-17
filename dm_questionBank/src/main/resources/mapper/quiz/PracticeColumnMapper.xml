@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.PracticeColumnMapper">
+
+    <resultMap type="com.dm.quiz.domain.PracticeColumn" id="PracticeColumnResult">
+        <result property="columnId" column="column_id"/>
+        <result property="columnName" column="column_name"/>
+        <result property="subjectId" column="subject_id"/>
+        <result property="groupName" column="group_name"/>
+        <result property="groupSort" column="group_sort"/>
+        <result property="description" column="description"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="enablePractice" column="enable_practice"/>
+        <result property="paperId" column="paper_id"/>
+        <result property="createBy" column="create_user"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_user"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectPracticeColumnVo">
+        select column_id, column_name, subject_id, group_name, group_sort, description, sort_order, enable_practice, paper_id,
+               create_user, create_time, update_user, update_time
+        from daming_practice_column
+    </sql>
+
+    <select id="selectPracticeColumnById" parameterType="Long" resultMap="PracticeColumnResult">
+        <include refid="selectPracticeColumnVo"/>
+        where column_id = #{columnId}
+    </select>
+
+    <select id="selectPracticeColumnList" parameterType="com.dm.quiz.domain.PracticeColumn" resultMap="PracticeColumnResult">
+        <include refid="selectPracticeColumnVo"/>
+        <where>
+            <if test="columnName != null and columnName != ''">
+                and column_name like concat('%', #{columnName}, '%')
+            </if>
+            <if test="subjectId != null">
+                and subject_id = #{subjectId}
+            </if>
+            <if test="groupName != null and groupName != ''">
+                and group_name = #{groupName}
+            </if>
+            <if test="enablePractice != null">
+                and enable_practice = #{enablePractice}
+            </if>
+        </where>
+        order by group_sort desc, sort_order desc, update_time desc, create_time desc
+    </select>
+
+    <select id="selectGroupOptions" resultMap="PracticeColumnResult">
+        select
+            null as column_id,
+            null as column_name,
+            #{subjectId} as subject_id,
+            group_name,
+            max(group_sort) as group_sort,
+            null as description,
+            0 as sort_order,
+            1 as enable_practice,
+            null as paper_id,
+            null as create_user,
+            null as create_time,
+            null as update_user,
+            null as update_time
+        from daming_practice_column
+        <where>
+            <if test="subjectId != null">
+                subject_id = #{subjectId}
+            </if>
+            and group_name is not null
+            and group_name &lt;&gt; ''
+        </where>
+        group by group_name
+        order by max(group_sort) desc, group_name asc
+    </select>
+
+    <insert id="insertPracticeColumn" parameterType="com.dm.quiz.domain.PracticeColumn" useGeneratedKeys="true" keyProperty="columnId">
+        insert into daming_practice_column (
+          column_name, subject_id, group_name, group_sort, description, sort_order, enable_practice, paper_id,
+          create_user, create_time, update_user, update_time
+        ) values (
+          #{columnName}, #{subjectId}, #{groupName}, #{groupSort}, #{description}, #{sortOrder}, #{enablePractice}, #{paperId},
+          #{createBy}, now(), #{updateBy}, now()
+        )
+    </insert>
+
+    <update id="updatePracticeColumn" parameterType="com.dm.quiz.domain.PracticeColumn">
+        update daming_practice_column
+        <set>
+            <if test="columnName != null and columnName != ''">column_name = #{columnName},</if>
+            <if test="subjectId != null">subject_id = #{subjectId},</if>
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="groupSort != null">group_sort = #{groupSort},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="enablePractice != null">enable_practice = #{enablePractice},</if>
+            <if test="paperId != null">paper_id = #{paperId},</if>
+            update_user = #{updateBy},
+            update_time = now()
+        </set>
+        where column_id = #{columnId}
+    </update>
+
+    <delete id="deletePracticeColumnById" parameterType="Long">
+        delete from daming_practice_column where column_id = #{columnId}
+    </delete>
+
+    <update id="updatePaperId">
+        update daming_practice_column
+        set paper_id = #{paperId},
+            update_time = now()
+        where column_id = #{columnId}
+    </update>
+
+</mapper>
+

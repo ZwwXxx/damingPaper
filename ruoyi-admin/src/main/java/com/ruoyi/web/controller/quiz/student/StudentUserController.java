@@ -208,6 +208,9 @@ public class StudentUserController {
             return AjaxResult.error(401, "登录已过期，请重新登录");
         }
         Long followerId = loginUser.getDamingUser().getUserId();
+        if (followerId.equals(followingId)) {
+            return AjaxResult.error("不能关注自己");
+        }
         boolean result = followService.setFollow(followerId, followingId, follow);
         return result ? AjaxResult.success(follow ? "关注成功" : "取消关注") : AjaxResult.error(follow ? "关注失败" : "取消关注失败");
     }

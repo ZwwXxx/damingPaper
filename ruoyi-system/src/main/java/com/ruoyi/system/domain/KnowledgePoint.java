@@ -95,6 +95,9 @@ public class KnowledgePoint extends BaseEntity
     /** 标签列表 */
     private List<KnowledgeTag> tags;
 
+    /** 附件列表（HTML动画/视频/PDF等） */
+    private List<KnowledgeAttachment> attachments;
+
     /** 当前用户是否已点赞 */
     private Boolean isLiked;
 
@@ -115,6 +118,14 @@ public class KnowledgePoint extends BaseEntity
     public Long getPointId() 
     {
         return pointId;
+    }
+
+    public List<KnowledgeAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<KnowledgeAttachment> attachments) {
+        this.attachments = attachments;
     }
 
     public void setSubjectId(Long subjectId) 

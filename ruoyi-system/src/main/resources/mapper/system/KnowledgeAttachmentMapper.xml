@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.KnowledgeAttachmentMapper">
+
+    <resultMap id="KnowledgeAttachmentResult" type="com.ruoyi.system.domain.KnowledgeAttachment">
+        <id     property="attachmentId" column="attachment_id" />
+        <result property="pointId"      column="point_id" />
+        <result property="fileName"     column="file_name" />
+        <result property="fileUrl"      column="file_url" />
+        <result property="fileType"     column="file_type" />
+        <result property="fileSize"     column="file_size" />
+        <result property="fileHash"     column="file_hash" />
+        <result property="sortOrder"    column="sort_order" />
+        <result property="createTime"   column="create_time" />
+    </resultMap>
+
+    <sql id="selectKnowledgeAttachmentVo">
+        select attachment_id, point_id, file_name, file_url, file_type, file_size, file_hash, sort_order, create_time
+        from knowledge_attachment
+    </sql>
+
+    <select id="selectKnowledgeAttachmentById" resultMap="KnowledgeAttachmentResult">
+        <include refid="selectKnowledgeAttachmentVo"/>
+        where attachment_id = #{attachmentId}
+    </select>
+
+    <select id="selectKnowledgeAttachmentByPointId" resultMap="KnowledgeAttachmentResult">
+        <include refid="selectKnowledgeAttachmentVo"/>
+        where point_id = #{pointId}
+        order by sort_order asc, create_time desc
+    </select>
+
+    <select id="selectKnowledgeAttachmentList" parameterType="com.ruoyi.system.domain.KnowledgeAttachment" resultMap="KnowledgeAttachmentResult">
+        <include refid="selectKnowledgeAttachmentVo"/>
+        <where>
+            <if test="pointId != null">and point_id = #{pointId}</if>
+            <if test="fileType != null and fileType != ''">and file_type = #{fileType}</if>
+        </where>
+        order by point_id asc, sort_order asc, create_time desc
+    </select>
+
+    <select id="selectAttachmentGroupList" resultType="com.ruoyi.system.domain.dto.KnowledgeAttachmentGroupDTO">
+        select
+            ka.point_id as pointId,
+            kpb.title as title,
+            kpb.subject_id as subjectId,
+            count(1) as attachmentCount,
+            max(ka.create_time) as lastCreateTime
+        from knowledge_attachment ka
+        left join knowledge_point_base kpb on kpb.point_id = ka.point_id
+        <where>
+            <if test="title != null and title != ''">and kpb.title like concat('%', #{title}, '%')</if>
+            <if test="subjectId != null">and kpb.subject_id = #{subjectId}</if>
+        </where>
+        group by ka.point_id, kpb.title, kpb.subject_id
+        order by lastCreateTime desc
+    </select>
+
+    <select id="selectKnowledgeAttachmentByHash" resultMap="KnowledgeAttachmentResult">
+        <include refid="selectKnowledgeAttachmentVo"/>
+        where file_hash = #{fileHash}
+    </select>
+
+    <select id="selectOneByPointIdAndFileName" resultMap="KnowledgeAttachmentResult">
+        <include refid="selectKnowledgeAttachmentVo"/>
+        where point_id = #{pointId}
+          and file_name = #{fileName}
+        limit 1
+    </select>
+
+    <insert id="insertKnowledgeAttachment" parameterType="com.ruoyi.system.domain.KnowledgeAttachment" useGeneratedKeys="true" keyProperty="attachmentId">
+        insert into knowledge_attachment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            point_id,
+            file_name,
+            file_url,
+            <if test="fileType != null">file_type,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="fileHash != null">file_hash,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{pointId},
+            #{fileName},
+            #{fileUrl},
+            <if test="fileType != null">#{fileType},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="fileHash != null">#{fileHash},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            now()
+        </trim>
+    </insert>
+
+    <update id="updateKnowledgeAttachment" parameterType="com.ruoyi.system.domain.KnowledgeAttachment">
+        update knowledge_attachment
+        <set>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="fileUrl != null">file_url = #{fileUrl},</if>
+            <if test="fileType != null">file_type = #{fileType},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+        </set>
+        where attachment_id = #{attachmentId}
+    </update>
+
+    <delete id="deleteKnowledgeAttachmentById">
+        delete from knowledge_attachment where attachment_id = #{attachmentId}
+    </delete>
+
+    <delete id="deleteKnowledgeAttachmentByIds">
+        delete from knowledge_attachment where attachment_id in
+        <foreach collection="attachmentIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
+

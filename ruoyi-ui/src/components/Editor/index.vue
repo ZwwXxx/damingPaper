@@ -143,7 +143,31 @@ export default {
   },
   methods: {
     init() {
+      // 防止重复初始化导致工具栏渲染两遍（同一 DOM 多次 new Quill）
+      if (this.Quill) {
+        return;
+      }
       const editor = this.$refs.editor;
+      if (!editor) {
+        return;
+      }
+
+      // 若页面复用/缓存导致 DOM 残留，初始化前先清理已有 Quill 结构
+      try {
+        // 清理同级工具栏（Quill 会把 toolbar 插到 editor 前面）
+        const parent = editor.parentNode;
+        if (parent) {
+          const toolbars = parent.querySelectorAll(':scope > .ql-toolbar');
+          toolbars.forEach(el => el && el.remove && el.remove());
+        }
+        // 清理编辑器内部结构（.ql-container/.ql-editor）
+        editor.innerHTML = '';
+        // 还原 class，避免残留样式影响再次初始化
+        editor.classList.remove('ql-container');
+      } catch (e) {
+        // ignore - 清理失败不影响后续初始化
+      }
+
       this.Quill = new Quill(editor, this.options);
       // 如果设置了上传地址则自定义图片上传事件
       if (this.type == 'url') {

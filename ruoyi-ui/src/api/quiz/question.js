@@ -85,3 +85,20 @@ export function listKnowledgePoints(query) {
     params: query
   })
 }
+
+// 获取题目绑定的专项栏目ID列表
+export function getQuestionPracticeColumns(questionId) {
+  return request({
+    url: '/quiz/question/' + questionId + '/practice-columns',
+    method: 'get'
+  })
+}
+
+// 保存题目绑定的专项栏目（全量覆盖）
+export function bindQuestionPracticeColumns(questionId, columnIds) {
+  return request({
+    url: '/quiz/question/' + questionId + '/practice-columns',
+    method: 'post',
+    data: columnIds || []
+  })
+}

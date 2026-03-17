@@ -181,12 +181,11 @@
               {{ getQuestionTitlePreview(scope.row.questionTitle) }}
             </span>
             <el-button
-              v-if="shouldShowQuestionPreview(scope.row.questionTitle)"
               type="text"
               size="mini"
               @click="openQuestionPreview(scope.row)"
             >
-              查看详情
+              查看概览
             </el-button>
           </div>
         </template>
@@ -322,7 +321,19 @@
       :visible.sync="previewDialog.visible"
       width="60%"
       append-to-body>
-      <div v-if="previewDialog.content" class="question-preview-body" v-html="previewDialog.content"></div>
+      <div v-if="previewDialog.textHtml || (previewDialog.images && previewDialog.images.length)" class="question-preview-body">
+        <div v-if="previewDialog.textHtml" class="question-preview-text" v-html="previewDialog.textHtml"></div>
+        <div v-if="previewDialog.images && previewDialog.images.length" class="question-preview-images">
+          <el-image
+            v-for="(src, index) in previewDialog.images"
+            :key="index"
+            :src="src"
+            :preview-src-list="previewDialog.images"
+            fit="contain"
+            style="width: 300px; height: 220px; margin-right: 16px; margin-top: 12px; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);"
+          />
+        </div>
+      </div>
       <el-empty v-else description="暂无题干内容"/>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="previewDialog.visible=false">关 闭</el-button>
@@ -422,7 +433,9 @@ export default {
       previewDialog: {
         visible: false,
         title: '',
-        content: ''
+        content: '',
+        textHtml: '',
+        images: []
       }
     };
   },
@@ -501,18 +514,32 @@ export default {
     },
     getQuestionTitlePreview(title) {
       const plain = this.stripHtml(title);
-      if (plain.length <= 40) {
-        return plain || '-';
+      if (plain) {
+        if (plain.length <= 40) {
+          return plain;
+        }
+        return plain.slice(0, 40) + '...';
       }
-      return plain.slice(0, 40) + '...';
-    },
-    shouldShowQuestionPreview(title) {
-      const plain = this.stripHtml(title);
-      return plain.length > 40;
+      // 没有可见文字但有HTML（例如纯图片题干），给一个占位
+      if (title) {
+        return '[图文题干]';
+      }
+      return '-';
     },
     openQuestionPreview(row) {
       this.previewDialog.title = `题目ID：${row.id}`;
-      this.previewDialog.content = row.questionTitle || '';
+      const html = row.questionTitle || '';
+      this.previewDialog.content = html;
+      // 提取图片src并从文本中移除<img>，避免按原始分辨率直接渲染
+      const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
+      const images = [];
+      let cleaned = html.replace(imgRegex, (match, src) => {
+        images.push(src);
+        return '';
+      });
+      cleaned = cleaned && cleaned.trim() ? cleaned : '';
+      this.previewDialog.textHtml = cleaned;
+      this.previewDialog.images = images;
       this.previewDialog.visible = true;
     },
     /** 查询题目管理列表 */

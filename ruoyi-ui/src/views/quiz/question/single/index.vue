@@ -23,6 +23,55 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-divider content-position="left">专项刷题归属（可选）</el-divider>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="一级分组">
+            <el-select
+              v-model="practiceGroupName"
+              clearable
+              filterable
+              placeholder="选择章节/大类（可选）"
+              :style="{width: '100%'}"
+              :disabled="!formData.subjectId"
+              @change="handlePracticeGroupChange"
+            >
+              <el-option
+                v-for="(item, index) in practiceGroupOptions"
+                :key="index"
+                :label="item.groupName"
+                :value="item.groupName"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="二级栏目">
+            <el-select
+              v-model="practiceColumnIds"
+              multiple
+              clearable
+              filterable
+              placeholder="选择专项栏目（可多选）"
+              :style="{width: '100%'}"
+              :disabled="!formData.subjectId"
+            >
+              <el-option
+                v-for="col in practiceColumnOptions"
+                :key="col.columnId"
+                :label="col.columnName"
+                :value="col.columnId"
+              >
+                <span style="float: left">{{ col.columnName }}</span>
+                <span style="float: right; color: #909399; font-size: 12px">{{ col.groupName || '其他' }}</span>
+              </el-option>
+            </el-select>
+            <div style="margin-top: 5px; color: #909399; font-size: 12px">
+              💡 保存题目后会自动把题目绑定到所选栏目
+            </div>
+          </el-form-item>
+        </el-col>
       <!-- 父题题干（完形父题和普通题复用） -->
       <el-col :span="24">
           <el-form-item label="题干" prop="questionTitle">
@@ -65,7 +114,6 @@
             <el-form-item :label="item.prefix" :key="item.prefix" v-for="(item,index) in formData.items" required
                           label-width="50px" style="margin: 10px 0 !important; ">
               <div style="display: flex; align-items: flex-start; width: 100%;">
-                <el-input v-model="item.prefix" style="width:50px; margin-right: 10px;"/>
                 <div style="flex: 1; margin-right: 10px;">
                   <editor 
                     v-if="formData.optionFormat === 'html'"
@@ -139,7 +187,6 @@
                       style="margin: 10px 0 !important;"
                     >
                       <div style="display: flex; align-items: flex-start; width: 100%;">
-                        <el-input v-model="item.prefix" style="width:50px; margin-right: 10px;"/>
                         <div style="flex: 1; margin-right: 10px;">
                           <editor
                             v-model="item.content"
@@ -381,9 +428,10 @@
   </div>
 </template>
 <script>
-import { addQuestion, addClozeQuestion, getQuestion, getClozeQuestion, updateQuestion, bindKnowledgePoints, getQuestionKnowledgePoints, listKnowledgePoints } from "@/api/quiz/question";
+import { addQuestion, addClozeQuestion, getQuestion, getClozeQuestion, updateQuestion, bindKnowledgePoints, getQuestionKnowledgePoints, listKnowledgePoints, getQuestionPracticeColumns, bindQuestionPracticeColumns } from "@/api/quiz/question";
 import { optionSubject } from "@/api/quiz/subject";
 import { listAnimation, getAnimation } from "@/api/quiz/animation";
+import { listPracticeGroupOptions, listPracticeColumnOptions } from "@/api/quiz/practiceColumn";
 import Editor from "@/components/Editor";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { getToken } from "@/utils/auth";
@@ -489,6 +537,10 @@ export default {
         }],
       },
       subjectIdOptions: [],
+      practiceGroupOptions: [],
+      practiceGroupName: '',
+      practiceColumnOptions: [],
+      practiceColumnIds: [],
       questionTypeOptions: [{
         "label": "单选题",
         "value": 1
@@ -524,6 +576,7 @@ export default {
   watch: {},
   async created() {
     await this.loadSubjectOptions();
+    await this.loadPracticeOptions();
     // 初始化动画上传分类（科目）
     this.animationUpload.extraData.subjectId = this.formData.subjectId;
     const id = this.$route.query.id;
@@ -532,6 +585,30 @@ export default {
     }
   },
   methods: {
+    async loadPracticeOptions() {
+      // subjectId 未选时不加载
+      if (!this.formData.subjectId) {
+        this.practiceGroupOptions = [];
+        this.practiceColumnOptions = [];
+        return;
+      }
+      const [gRes, cRes] = await Promise.all([
+        listPracticeGroupOptions({ subjectId: this.formData.subjectId }),
+        listPracticeColumnOptions({ subjectId: this.formData.subjectId })
+      ]);
+      this.practiceGroupOptions = (gRes && gRes.data) || [];
+      this.practiceColumnOptions = (cRes && cRes.data) || [];
+    },
+    async handlePracticeGroupChange(val) {
+      // 按一级分组过滤二级栏目选项；清空已选不在范围内的栏目
+      if (!this.formData.subjectId) return;
+      const params = { subjectId: this.formData.subjectId };
+      if (val) params.groupName = val;
+      const res = await listPracticeColumnOptions(params);
+      this.practiceColumnOptions = (res && res.data) || [];
+      const allowed = new Set(this.practiceColumnOptions.map(x => x.columnId));
+      this.practiceColumnIds = (this.practiceColumnIds || []).filter(id => allowed.has(id));
+    },
     formatValidateKeyToLabel(key) {
       const map = {
         subjectId: '科目',
@@ -601,6 +678,10 @@ export default {
       this.animationUpload.extraData.subjectId = value;
       this.clearAnimation();
       this.animationOptions = [];
+      // 专项刷题归属：随科目变化刷新
+      this.practiceGroupName = '';
+      this.practiceColumnIds = [];
+      await this.loadPracticeOptions();
     },
     applyQuestionTypeDefaults(questionType, options = {}) {
       const { preserveAnswer = false } = options;
@@ -694,6 +775,17 @@ export default {
           this.animationFileList = [];
         }
         this.applyQuestionTypeDefaults(this.formData.questionType, { preserveAnswer: true });
+
+        // 回显：专项栏目绑定
+        const pcRes = await getQuestionPracticeColumns(id);
+        this.practiceColumnIds = (pcRes && pcRes.data) ? pcRes.data : [];
+        // 回显：根据栏目反推一级分组（若混选多个分组，则不强行选中）
+        if (Array.isArray(this.practiceColumnIds) && this.practiceColumnIds.length) {
+          await this.loadPracticeOptions();
+          const picked = (this.practiceColumnOptions || []).filter(c => this.practiceColumnIds.includes(c.columnId));
+          const uniqGroups = Array.from(new Set(picked.map(x => (x.groupName || '').trim()).filter(Boolean)));
+          this.practiceGroupName = uniqGroups.length === 1 ? uniqGroups[0] : '';
+        }
 
         // 如果是完形填空父题，额外加载子题列表
         if (this.formData.questionType === 6) {
@@ -873,6 +965,8 @@ export default {
 
       if (res.code === 200) {
         const questionId = this.formData.id || res.data;
+        // 绑定专项栏目（可选）
+        await bindQuestionPracticeColumns(questionId, this.practiceColumnIds || []);
         if (this.formData.knowledgePointIds && this.formData.knowledgePointIds.length > 0) {
           await bindKnowledgePoints({
             questionId: questionId,

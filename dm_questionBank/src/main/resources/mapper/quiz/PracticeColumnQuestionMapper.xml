@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dm.quiz.mapper.PracticeColumnQuestionMapper">
+
+    <select id="selectQuestionIdsByColumnId" parameterType="Long" resultType="Long">
+        select question_id
+        from daming_practice_column_question
+        where column_id = #{columnId}
+        order by sort_order asc, id asc
+    </select>
+
+    <select id="selectColumnIdsByQuestionId" parameterType="Long" resultType="Long">
+        select column_id
+        from daming_practice_column_question
+        where question_id = #{questionId}
+        order by sort_order asc, id asc
+    </select>
+
+    <delete id="deleteByColumnId" parameterType="Long">
+        delete from daming_practice_column_question where column_id = #{columnId}
+    </delete>
+
+    <delete id="deleteByQuestionId" parameterType="Long">
+        delete from daming_practice_column_question where question_id = #{questionId}
+    </delete>
+
+    <insert id="batchInsert">
+        insert into daming_practice_column_question (column_id, question_id, sort_order, create_time)
+        values
+        <foreach collection="list" item="it" separator=",">
+            (#{it.columnId}, #{it.questionId}, #{it.sortOrder}, now())
+        </foreach>
+    </insert>
+
+</mapper>
+
