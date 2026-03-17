@@ -22,9 +22,12 @@ import com.dm.quiz.mapper.PracticeColumnQuestionMapper;
 import com.dm.quiz.service.IDamingPaperService;
 import com.dm.quiz.service.IPracticeColumnService;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 
 @Service
 public class PracticeColumnServiceImpl implements IPracticeColumnService {
+
+    private static final String DEFAULT_COLUMN_NAME = "其它/零散题";
 
     @Autowired
     private PracticeColumnMapper practiceColumnMapper;
@@ -50,11 +53,44 @@ public class PracticeColumnServiceImpl implements IPracticeColumnService {
 
     @Override
     public int insert(PracticeColumn column) {
+        if (column == null) {
+            throw new ServiceException("栏目不能为空");
+        }
+        if (column.getSubjectId() == null) {
+            throw new ServiceException("请选择科目");
+        }
+        // groupName 前端通常必填，这里仍做一下规整
+        if (column.getGroupName() != null) {
+            column.setGroupName(column.getGroupName().trim());
+        }
+        if (StringUtils.isBlank(column.getColumnName())) {
+            column.setColumnName(DEFAULT_COLUMN_NAME);
+        } else {
+            column.setColumnName(column.getColumnName().trim());
+        }
+        // 新建栏目默认不绑定试卷
+        if (column.getPaperId() == null) {
+            column.setPaperId(null);
+        }
         return practiceColumnMapper.insertPracticeColumn(column);
     }
 
     @Override
     public int update(PracticeColumn column) {
+        if (column == null || column.getColumnId() == null) {
+            throw new ServiceException("栏目ID不能为空");
+        }
+        if (column.getGroupName() != null) {
+            column.setGroupName(column.getGroupName().trim());
+        }
+        // 编辑时：若用户把栏目名清空，也自动回填默认值（避免 column_name NOT NULL 且保持一致体验）
+        if (column.getColumnName() != null) {
+            if (StringUtils.isBlank(column.getColumnName())) {
+                column.setColumnName(DEFAULT_COLUMN_NAME);
+            } else {
+                column.setColumnName(column.getColumnName().trim());
+            }
+        }
         return practiceColumnMapper.updatePracticeColumn(column);
     }
 

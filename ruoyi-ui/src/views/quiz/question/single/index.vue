@@ -448,6 +448,10 @@ const defaultJudgeOptions = () => ([
   { prefix: 'B', content: '错误' }
 ]);
 
+// 本页面草稿本地存储 key（按路由区分）
+const LOCAL_DRAFT_KEY = 'dm_question_single_draft';
+const LOCAL_DRAFT_VERSION = 1;
+
 export default {
   name: 'QuestionEditor',
   components: { Editor, MarkdownEditor },
@@ -563,6 +567,8 @@ export default {
       // 完形填空父子关系（单题编辑时使用）
       parentIdVisible: false,
       clozeIndexVisible: false,
+      // 本地草稿保存节流定时器
+      draftSaveTimer: null,
     }
   },
   computed: {
@@ -581,10 +587,89 @@ export default {
     this.animationUpload.extraData.subjectId = this.formData.subjectId;
     const id = this.$route.query.id;
     if (id) {
+      // 编辑模式：不使用本地草稿，直接从后端加载
       this.getData(id);
+    } else {
+      // 新增模式：尝试恢复草稿
+      this.loadDraft();
+      // 监听表单变化，自动保存草稿（深度监听）
+      this.$watch('formData', this.scheduleSaveDraft, { deep: true });
+      this.$watch('practiceGroupName', this.scheduleSaveDraft);
+      this.$watch('practiceColumnIds', this.scheduleSaveDraft, { deep: true });
     }
   },
   methods: {
+    // ========== 本地草稿存取 ==========
+    scheduleSaveDraft() {
+      if (this.$route.query.id) return; // 编辑模式不保存草稿
+      if (this.draftSaveTimer) {
+        clearTimeout(this.draftSaveTimer);
+      }
+      this.draftSaveTimer = setTimeout(() => {
+        this.saveDraftNow();
+      }, 500);
+    },
+    saveDraftNow() {
+      if (this.$route.query.id) return;
+      try {
+        const payload = {
+          v: LOCAL_DRAFT_VERSION,
+          formData: this.formData,
+          practiceGroupName: this.practiceGroupName,
+          practiceColumnIds: this.practiceColumnIds
+        };
+        window.localStorage.setItem(LOCAL_DRAFT_KEY, JSON.stringify(payload));
+      } catch (e) {
+        // 本地存储失败忽略即可
+      }
+    },
+    async loadDraft() {
+      try {
+        const raw = window.localStorage.getItem(LOCAL_DRAFT_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (!data || data.v !== LOCAL_DRAFT_VERSION) return;
+        if (data.formData && !this.formData.id) {
+          this.formData = {
+            ...this.formData,
+            ...data.formData,
+            items: Array.isArray(data.formData.items) && data.formData.items.length
+              ? data.formData.items
+              : this.formData.items,
+            clozeChildren: Array.isArray(data.formData.clozeChildren)
+              ? data.formData.clozeChildren
+              : this.formData.clozeChildren,
+            fillBlankAnswers: Array.isArray(data.formData.fillBlankAnswers) && data.formData.fillBlankAnswers.length
+              ? data.formData.fillBlankAnswers
+              : this.formData.fillBlankAnswers,
+          };
+        }
+        if (typeof data.practiceGroupName === 'string') {
+          this.practiceGroupName = data.practiceGroupName;
+        }
+        if (Array.isArray(data.practiceColumnIds)) {
+          this.practiceColumnIds = data.practiceColumnIds;
+        }
+        // 草稿里如果带了科目，刷新完后要主动加载一次专栏选项，
+        // 否则 el-select 会只显示数值 ID（例如 8），而不是栏目中文名
+        if (this.formData.subjectId) {
+          await this.loadPracticeOptions();
+          // 若已选择了一级分组，则按分组再过滤一次二级栏目列表
+          if (this.practiceGroupName) {
+            await this.handlePracticeGroupChange(this.practiceGroupName);
+          }
+        }
+      } catch (e) {
+        // 解析失败直接忽略
+      }
+    },
+    clearDraft() {
+      try {
+        window.localStorage.removeItem(LOCAL_DRAFT_KEY);
+      } catch (e) {
+        // ignore
+      }
+    },
     async loadPracticeOptions() {
       // subjectId 未选时不加载
       if (!this.formData.subjectId) {
@@ -776,13 +861,16 @@ export default {
         }
         this.applyQuestionTypeDefaults(this.formData.questionType, { preserveAnswer: true });
 
+        // 编辑时先加载专项选项（一级分组、二级栏目），否则下拉会显示“无数据”
+        if (this.formData.subjectId) {
+          await this.loadPracticeOptions();
+        }
         // 回显：专项栏目绑定
         const pcRes = await getQuestionPracticeColumns(id);
         this.practiceColumnIds = (pcRes && pcRes.data) ? pcRes.data : [];
         // 回显：根据栏目反推一级分组（若混选多个分组，则不强行选中）
-        if (Array.isArray(this.practiceColumnIds) && this.practiceColumnIds.length) {
-          await this.loadPracticeOptions();
-          const picked = (this.practiceColumnOptions || []).filter(c => this.practiceColumnIds.includes(c.columnId));
+        if (Array.isArray(this.practiceColumnIds) && this.practiceColumnIds.length && (this.practiceColumnOptions || []).length) {
+          const picked = this.practiceColumnOptions.filter(c => this.practiceColumnIds.includes(c.columnId));
           const uniqGroups = Array.from(new Set(picked.map(x => (x.groupName || '').trim()).filter(Boolean)));
           this.practiceGroupName = uniqGroups.length === 1 ? uniqGroups[0] : '';
         }
@@ -1023,6 +1111,8 @@ export default {
           this.$nextTick(() => {
             this.$refs['elForm'].clearValidate();
           });
+          // 新增成功后，清空本地草稿
+          this.clearDraft();
         }
       }
 
@@ -1061,6 +1151,8 @@ export default {
       this.formData.subjectId = keepSubjectId;
       this.formData.questionType = keepType;
       this.applyQuestionTypeDefaults(keepType);
+      // 手动重置时，同步更新草稿
+      this.scheduleSaveDraft();
     },
     optionItemRemove(index) {
       this.formData.items.splice(index, 1)

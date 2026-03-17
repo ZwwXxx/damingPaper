@@ -139,7 +139,18 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="一级分组" prop="groupName">
-              <el-input v-model="form.groupName" placeholder="如：计算机组成与结构" />
+              <el-autocomplete
+                ref="groupAuto"
+                v-model="form.groupName"
+                placeholder="如：计算机组成与结构"
+                :fetch-suggestions="queryGroupSuggestions"
+                :trigger-on-focus="true"
+                :debounce="150"
+                clearable
+                style="width: 100%"
+                @focus="onGroupFocus"
+                @select="handleGroupSelect"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -150,7 +161,18 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="栏目名称" prop="columnName">
-              <el-input v-model="form.columnName" placeholder="如：存储系统" />
+              <el-autocomplete
+                ref="columnAuto"
+                v-model="form.columnName"
+                placeholder="如：存储系统（不填则默认：其它/零散题）"
+                :fetch-suggestions="queryColumnSuggestions"
+                :trigger-on-focus="true"
+                :debounce="150"
+                clearable
+                style="width: 100%"
+                @focus="onColumnFocus"
+                @select="handleColumnSelect"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -315,7 +337,12 @@
 
 <script>
 import draggable from 'vuedraggable'
-import { listPracticeColumnOptions, getPracticeColumnQuestionIds, savePracticeColumnQuestions } from '@/api/quiz/practiceColumn'
+import {
+  listPracticeGroupOptions,
+  listPracticeColumnOptions,
+  getPracticeColumnQuestionIds,
+  savePracticeColumnQuestions
+} from '@/api/quiz/practiceColumn'
 import { optionSubject } from '@/api/quiz/subject'
 import { listQuestion, getQuestion } from '@/api/quiz/question'
 import request from '@/utils/request'
@@ -348,10 +375,16 @@ export default {
         enablePractice: 1,
         description: ''
       },
+      // 一级分组 / 二级栏目 自动补全缓存（避免每次输入都请求）
+      groupOptionNames: [],
+      groupOptionSubjectId: undefined,
+      columnOptionList: [],
+      columnOptionKey: '',
       rules: {
         subjectId: [{ required: true, message: '请选择科目', trigger: 'change' }],
         groupName: [{ required: true, message: '请输入一级分组', trigger: 'blur' }],
-        columnName: [{ required: true, message: '请输入栏目名称', trigger: 'blur' }]
+        // columnName 可不填：后端会自动补默认值“其它/零散题”
+        columnName: []
       },
       configDialogVisible: false,
       currentConfigColumn: null,
@@ -453,6 +486,108 @@ export default {
         description: row.description
       }
       this.open = true
+    },
+    onGroupFocus() {
+      // 某些场景下仅依赖 trigger-on-focus 不会触发，这里主动拉取并展开候选
+      this.$nextTick(() => {
+        const c = this.$refs.groupAuto
+        if (c && typeof c.getData === 'function') {
+          c.getData(this.form.groupName || '')
+        }
+      })
+    },
+    onColumnFocus() {
+      this.$nextTick(() => {
+        const c = this.$refs.columnAuto
+        if (c && typeof c.getData === 'function') {
+          c.getData(this.form.columnName || '')
+        }
+      })
+    },
+    async ensureGroupOptionsLoaded() {
+      const subjectId = this.form ? this.form.subjectId : undefined
+      if (this.groupOptionNames && this.groupOptionNames.length > 0 && this.groupOptionSubjectId === subjectId) {
+        return
+      }
+      this.groupOptionSubjectId = subjectId
+      const res = await listPracticeGroupOptions({ subjectId })
+      const list = (res && res.data) || []
+      this.groupOptionNames = (Array.isArray(list) ? list : [])
+        .map(x => {
+          if (x == null) return ''
+          if (typeof x === 'string' || typeof x === 'number') return String(x).trim()
+          // 兼容后端返回对象的情况：优先取 groupName
+          const name = x.groupName || x.label || x.value || x.name
+          return name == null ? '' : String(name).trim()
+        })
+        .filter(Boolean)
+    },
+    async ensureColumnOptionsLoaded() {
+      const subjectId = this.form ? this.form.subjectId : undefined
+      const groupName = this.form ? (this.form.groupName || '').trim() : ''
+      const key = `${subjectId || ''}__${groupName}`
+      if (this.columnOptionKey === key && this.columnOptionList && this.columnOptionList.length > 0) {
+        return
+      }
+      this.columnOptionKey = key
+      const res = await listPracticeColumnOptions({ subjectId, groupName })
+      const list = (res && res.data) || []
+      this.columnOptionList = Array.isArray(list) ? list : []
+    },
+    async queryGroupSuggestions(queryString, cb) {
+      try {
+        await this.ensureGroupOptionsLoaded()
+        const q = (queryString || '').trim().toLowerCase()
+        const result = (this.groupOptionNames || [])
+          .filter(name => {
+            if (!q) return true
+            return String(name).toLowerCase().includes(q)
+          })
+          .slice(0, 50)
+          .map(name => ({ value: name }))
+        cb(result)
+      } catch (e) {
+        cb([])
+      }
+    },
+    async queryColumnSuggestions(queryString, cb) {
+      try {
+        await this.ensureColumnOptionsLoaded()
+        const q = (queryString || '').trim().toLowerCase()
+        const uniq = new Set()
+        const result = (this.columnOptionList || [])
+          .map(it => ({
+            value: it && it.columnName != null ? String(it.columnName) : '',
+            columnId: it ? it.columnId : undefined,
+            groupName: it && it.groupName != null ? String(it.groupName) : ''
+          }))
+          .filter(it => it.value)
+          .filter(it => {
+            if (!q) return true
+            return it.value.toLowerCase().includes(q)
+          })
+          .filter(it => {
+            const k = `${it.groupName}__${it.value}`
+            if (uniq.has(k)) return false
+            uniq.add(k)
+            return true
+          })
+          .slice(0, 50)
+        cb(result)
+      } catch (e) {
+        cb([])
+      }
+    },
+    handleGroupSelect(item) {
+      // 选择一级分组后，二级栏目候选依赖 groupName：清缓存，确保下一次聚焦即可拉取新候选
+      this.columnOptionKey = ''
+      this.columnOptionList = []
+    },
+    handleColumnSelect(item) {
+      // 若用户先选了栏目但没填分组，则用返回的 groupName 自动补齐
+      if (item && item.groupName && !String(this.form.groupName || '').trim()) {
+        this.form.groupName = item.groupName
+      }
     },
     submitForm() {
       this.$refs.form.validate(async valid => {

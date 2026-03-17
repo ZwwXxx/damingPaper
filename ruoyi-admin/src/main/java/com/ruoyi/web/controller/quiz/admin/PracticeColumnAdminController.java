@@ -96,6 +96,9 @@ public class PracticeColumnAdminController extends BaseController {
         if (column.getEnablePractice() == null) {
             column.setEnablePractice(1);
         }
+        if (column.getGroupSort() == null) {
+            column.setGroupSort(0);
+        }
         if (column.getSortOrder() == null) {
             column.setSortOrder(0);
         }

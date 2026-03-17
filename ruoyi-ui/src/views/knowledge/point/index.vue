@@ -431,7 +431,6 @@ export default {
         if (this.form.pointId) {
           updateKnowledge(this.form).then(() => {
             this.$modal.msgSuccess("修改成功");
-            this.open = false;
             this.getList();
           });
         } else {
