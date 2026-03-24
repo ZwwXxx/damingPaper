@@ -20,6 +20,28 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="原卷题号" prop="originOrder">
+        <el-input
+          v-model="queryParams.originOrder"
+          placeholder="例如 70（可不填）"
+          clearable
+          style="width: 160px"
+        />
+      </el-form-item>
+      <el-form-item label="年份" prop="examYear">
+        <el-input
+          v-model="queryParams.examYear"
+          placeholder="例如 2023（可不填）"
+          clearable
+          style="width: 160px"
+        />
+      </el-form-item>
+      <el-form-item label="批次" prop="examHalf">
+        <el-select v-model="queryParams.examHalf" placeholder="上/下半年" clearable style="width: 140px">
+          <el-option :value="1" label="上半年" />
+          <el-option :value="2" label="下半年" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="题目分数" prop="score">
         <el-input
           v-model="queryParams.score"
@@ -191,9 +213,49 @@
         </template>
       </el-table-column>
       <el-table-column label="题目分数" align="center" prop="score"/>
+      <el-table-column label="原卷题号" align="center" width="180">
+        <template slot-scope="scope">
+          <template v-if="scope.row.originOrder === null || scope.row.originOrder === undefined">
+            <span style="color: #909399; margin-right: 6px;">无</span>
+            <el-button type="text" size="mini" @click="openOriginOrderEditor(scope.row)">设置</el-button>
+          </template>
+          <template v-else>
+            <el-input-number
+              v-model="scope.row.originOrder"
+              :min="1"
+              :max="9999"
+              size="mini"
+              controls-position="right"
+              style="width: 140px;"
+              @change="handleOriginOrderChange(scope.row)"
+            />
+          </template>
+        </template>
+      </el-table-column>
       <el-table-column label="科目" align="center" prop="subjectId">
         <template slot-scope="scope">
           <span>{{ getSubjectLabel(scope.row.subjectId) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="年份" align="center" prop="examYear" width="110">
+        <template slot-scope="scope">
+          <span v-if="scope.row.examYear">{{ scope.row.examYear }}</span>
+          <span v-else style="color:#909399;">-</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="批次" align="center" prop="examHalf" width="140">
+        <template slot-scope="scope">
+          <el-select
+            v-model="scope.row.examHalf"
+            placeholder="选择批次"
+            clearable
+            size="mini"
+            style="width: 110px"
+            @change="handleExamHalfChange(scope.row)"
+          >
+            <el-option :value="1" label="上半年" />
+            <el-option :value="2" label="下半年" />
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
@@ -343,7 +405,7 @@
 </template>
 
 <script>
-import {listQuestion, getQuestion, delQuestion, addQuestion, updateQuestion} from "@/api/quiz/question";
+import {listQuestion, getQuestion, delQuestion, addQuestion, updateQuestion, updateQuestionOriginOrder, updateQuestionExamHalf} from "@/api/quiz/question";
 import {optionSubject} from "@/api/quiz/subject";
 import { getToken } from "@/utils/auth";
 
@@ -382,8 +444,11 @@ export default {
         correct: null,
         score: null,
         subjectId: null,
+        examYear: null,
+        examHalf: null,
         createTime: null,
-        updateTime: null
+        updateTime: null,
+        originOrder: null
       },
       // 表单参数
       form: {},
@@ -454,6 +519,48 @@ export default {
     }
   },
   methods: {
+    async handleExamHalfChange(row) {
+      if (!row || !row.id) return;
+      try {
+        await updateQuestionExamHalf({
+          id: row.id,
+          examHalf: row.examHalf
+        });
+        this.$message.success('考试批次已更新');
+      } catch (e) {
+        this.$message.error(e?.response?.data?.msg || e?.message || '更新考试批次失败');
+      }
+    },
+    async openOriginOrderEditor(row) {
+      if (!row || !row.id) return;
+      try {
+        const { value } = await this.$prompt('请输入原卷题号（正整数）', '设置原卷题号', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^[1-9]\d*$/,
+          inputErrorMessage: '请输入大于 0 的整数',
+          inputValue: row.originOrder ? String(row.originOrder) : ''
+        });
+        const n = Number(value);
+        if (!Number.isFinite(n) || n <= 0) return;
+        row.originOrder = Math.floor(n);
+        await this.handleOriginOrderChange(row);
+      } catch (e) {
+        // 取消不提示
+      }
+    },
+    async handleOriginOrderChange(row) {
+      if (!row || !row.id) return
+      try {
+        await updateQuestionOriginOrder({
+          id: row.id,
+          originOrder: row.originOrder
+        })
+        this.$message.success('原卷题号已更新')
+      } catch (e) {
+        this.$message.error(e?.response?.data?.msg || e?.message || '更新原卷题号失败')
+      }
+    },
     ensureDictTypes() {
       const fallbackTypes = [
         {label: '单选题', value: '1', listClass: 'primary'},

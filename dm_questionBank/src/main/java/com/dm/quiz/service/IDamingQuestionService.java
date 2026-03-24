@@ -94,4 +94,27 @@ public interface IDamingQuestionService
      * @param parentId 父题ID
      */
     ClozeQuestionCreateRequest getClozeQuestion(Long parentId);
+
+    /**
+     * 更新完形填空题（父题 + 子题）
+     *
+     * <p>规则：</p>
+     * <ul>
+     *   <li>父题必须携带 id；questionType 会被强制为 6</li>
+     *   <li>子题携带 id 则更新；不带 id 则新增</li>
+     *   <li>服务端会按 children 顺序重算 clozeIndex（从1开始）</li>
+     *   <li>若原有子题在本次提交中被移除，会被删除（若存在答题记录则禁止删除）</li>
+     * </ul>
+     */
+    void updateClozeQuestion(ClozeQuestionCreateRequest request);
+
+    /**
+     * 仅更新题目的原卷题号
+     */
+    int updateOriginOrder(Long id, Integer originOrder);
+
+    /**
+     * 仅更新题目的考试批次（上/下半年）
+     */
+    int updateExamHalf(Long id, Integer examHalf);
 }

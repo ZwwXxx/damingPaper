@@ -1,8 +1,11 @@
 package com.dm.quiz.service.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,6 +18,8 @@ import com.dm.quiz.domain.*;
 import com.dm.quiz.dto.AutoAssemblePaperRequest;
 import com.dm.quiz.dto.AutoAssembleRuleDto;
 import com.dm.quiz.dto.PaperDto;
+import com.dm.quiz.dto.PaperSyncImportResultDto;
+import com.dm.quiz.dto.PaperSyncPackageDto;
 import com.dm.quiz.dto.PaperQuestionTypeDto;
 import com.dm.quiz.dto.QuestionDto;
 import com.dm.quiz.mapper.*;
@@ -270,7 +275,11 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         // 3.然后根据该内容转为list，然后由该list<VM> 转为list<Dto>给前端 这个dto包含了题目排序，
         List<PaperQuestionTypeVM> questionTypeVMS = JSONArray.parseArray(content, PaperQuestionTypeVM.class);
         // 4.拿到每个题型里的所有question的questionIDS，数据库查question集合,由于是二层结构，外层使用flatMap摊平
-        List<Long> questionIds = questionTypeVMS.stream().flatMap(i -> i.getPaperQuestionVMS().stream().map(x -> x.getId())).collect(Collectors.toList());
+        List<Long> questionIds = questionTypeVMS.stream()
+                .flatMap(i -> i.getPaperQuestionVMS().stream().map(PaperQuestionVM::getId))
+                .collect(Collectors.toList());
+        // 用于兜底：避免“试卷内容只存了完形父题ID，漏了子题ID”导致学生端看不到子题
+        Set<Long> includedIds = new HashSet<>(questionIds);
         // 4.1根据id获取到每一个question
         List<DamingQuestion> damingQuestions = damingQuestionMapper.selectQuestionListByIds(questionIds);
         // 5.根据question，变为questionDTO然后设置order返回，map原题型数组，映射为DTO类型
@@ -279,31 +288,69 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
 
         List<PaperQuestionTypeDto> paperQuestionTypeDtos = questionTypeVMS.stream().map(i -> {
             PaperQuestionTypeDto paperQuestionTypeDto = modelMapper.map(i, PaperQuestionTypeDto.class);
-            List<QuestionDto> questionDtoStream = i.getPaperQuestionVMS().stream()
-                    .map(x -> {
-                        DamingQuestion question = damingQuestions.stream()
-                                .filter(p -> p.getId().equals(x.getId()))
-                                .findFirst()
-                                .orElse(null);
-                        if (question == null) {
-                            // 题目已被删除或不存在，跳过
-                            return null;
+            List<QuestionDto> questionDtoStream = new ArrayList<>();
+            List<PaperQuestionVM> paperQuestions = i.getPaperQuestionVMS();
+            if (paperQuestions == null) {
+                paperQuestions = new ArrayList<>();
+            }
+            for (PaperQuestionVM x : paperQuestions) {
+                if (x == null || x.getId() == null) {
+                    continue;
+                }
+                DamingQuestion question = damingQuestions.stream()
+                        .filter(p -> p != null && p.getId() != null && p.getId().equals(x.getId()))
+                        .findFirst()
+                        .orElse(null);
+                if (question == null) {
+                    // 题目已被删除或不存在，跳过
+                    continue;
+                }
+                QuestionDto questionDto = damingQuestionService.getQuestionDto(question);
+                if (questionDto == null) {
+                    continue;
+                }
+
+                boolean isClozeParent = questionDto.getQuestionType() != null
+                        && questionDto.getQuestionType().equals(QuestionTypeEnum.Cloze.getCode())
+                        && questionDto.getParentId() == null;
+
+                if (isClozeParent) {
+                    // 完形父题：不参与题号
+                    questionDto.setItemOrder(null);
+                    questionDtoStream.add(questionDto);
+
+                    // 兜底补齐子题：若试卷内容里没存子题ID，则按 parentId 查询子题并追加
+                    DamingQuestion query = new DamingQuestion();
+                    query.setParentId(questionDto.getId());
+                    List<DamingQuestion> children = damingQuestionMapper.selectDamingQuestionList(query);
+                    if (!CollectionUtils.isEmpty(children)) {
+                        List<QuestionDto> childDtos = children.stream()
+                                .filter(Objects::nonNull)
+                                .map(damingQuestionService::getQuestionDto)
+                                .filter(Objects::nonNull)
+                                // 按 clozeIndex 排序，保证“第几空”顺序稳定
+                                .sorted((a, b) -> {
+                                    Integer ai = a.getClozeIndex() == null ? 0 : a.getClozeIndex();
+                                    Integer bi = b.getClozeIndex() == null ? 0 : b.getClozeIndex();
+                                    return ai.compareTo(bi);
+                                })
+                                .collect(Collectors.toList());
+
+                        for (QuestionDto childDto : childDtos) {
+                            if (childDto.getId() != null && includedIds.contains(childDto.getId())) {
+                                // 已经在试卷内容里显式包含过的子题，避免重复追加
+                                continue;
+                            }
+                            childDto.setItemOrder(orderCounter.getAndIncrement());
+                            questionDtoStream.add(childDto);
                         }
-                        // 5.1获取questionDto。
-                        QuestionDto questionDto = damingQuestionService.getQuestionDto(question);
-                        // 5.2 重新设置顺序：完形父题不占题号，其余题目全局自增
-                        if (questionDto.getQuestionType() != null
-                                && questionDto.getQuestionType().equals(QuestionTypeEnum.Cloze.getCode())
-                                && questionDto.getParentId() == null) {
-                            // 完形父题：不参与排序编号
-                            questionDto.setItemOrder(null);
-                        } else {
-                            questionDto.setItemOrder(orderCounter.getAndIncrement());
-                        }
-                        return questionDto;
-                    })
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    }
+                } else {
+                    // 普通题 / 完形子题：全局自增题号
+                    questionDto.setItemOrder(orderCounter.getAndIncrement());
+                    questionDtoStream.add(questionDto);
+                }
+            }
             // 5.3 将加工后的questionDto List设置给题型TypeDto
             paperQuestionTypeDto.setQuestionDtos(questionDtoStream);
             return paperQuestionTypeDto;
@@ -461,5 +508,175 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
             }
         }
         return "题型" + rule.getQuestionType();
+    }
+
+    @Override
+    public PaperSyncPackageDto exportPaperSyncPackage(Long paperId) {
+        if (paperId == null) {
+            throw new ServiceException("试卷ID不能为空");
+        }
+        PaperDto paperDto = paperIdtoDto(paperId);
+        if (paperDto == null) {
+            throw new ServiceException("试卷不存在");
+        }
+        PaperSyncPackageDto syncPackageDto = new PaperSyncPackageDto();
+        syncPackageDto.setVersion("v1");
+        syncPackageDto.setSourcePaperId(paperId);
+        syncPackageDto.setPaper(paperDto);
+        return syncPackageDto;
+    }
+
+    @Override
+    @Transactional
+    public PaperSyncImportResultDto importPaperSyncPackage(PaperSyncPackageDto syncPackageDto) {
+        if (syncPackageDto == null || syncPackageDto.getPaper() == null) {
+            throw new ServiceException("导入数据不能为空");
+        }
+        PaperDto sourcePaper = syncPackageDto.getPaper();
+        if (sourcePaper.getSubjectId() == null) {
+            throw new ServiceException("试卷科目不能为空");
+        }
+        if (CollectionUtils.isEmpty(sourcePaper.getPaperQuestionTypeDto())) {
+            throw new ServiceException("试卷题目不能为空");
+        }
+
+        PaperDto importPaper = modelMapper.map(sourcePaper, PaperDto.class);
+        importPaper.setPaperId(null);
+
+        int insertedCount = 0;
+        int skippedCount = 0;
+        Map<Long, Long> sourceToTargetQuestionId = new HashMap<>();
+        List<PaperQuestionTypeDto> mappedTypeList = new ArrayList<>();
+
+        for (PaperQuestionTypeDto typeDto : sourcePaper.getPaperQuestionTypeDto()) {
+            PaperQuestionTypeDto mappedType = modelMapper.map(typeDto, PaperQuestionTypeDto.class);
+            List<QuestionDto> mappedQuestions = new ArrayList<>();
+            List<QuestionDto> sourceQuestions = typeDto.getQuestionDtos();
+            if (CollectionUtils.isEmpty(sourceQuestions)) {
+                mappedType.setQuestionDtos(mappedQuestions);
+                mappedTypeList.add(mappedType);
+                continue;
+            }
+            List<QuestionDto> sortedQuestions = sourceQuestions.stream()
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(QuestionDto::getItemOrder, Comparator.nullsLast(Integer::compareTo)))
+                    .collect(Collectors.toList());
+            for (QuestionDto sourceQuestion : sortedQuestions) {
+                QuestionDto importQuestion = cloneQuestionForImport(sourceQuestion, sourcePaper.getSubjectId());
+                Long sourceParentId = sourceQuestion.getParentId();
+                if (sourceParentId != null) {
+                    importQuestion.setParentId(sourceToTargetQuestionId.get(sourceParentId));
+                }
+                Long existId = findExistingQuestionId(importQuestion);
+                Long targetId;
+                if (existId != null) {
+                    targetId = existId;
+                    skippedCount++;
+                } else {
+                    targetId = damingQuestionService.insertDamingQuestion(importQuestion);
+                    insertedCount++;
+                }
+                if (sourceQuestion.getId() != null) {
+                    sourceToTargetQuestionId.put(sourceQuestion.getId(), targetId);
+                }
+                importQuestion.setId(targetId);
+                mappedQuestions.add(importQuestion);
+            }
+            mappedType.setQuestionDtos(mappedQuestions);
+            mappedTypeList.add(mappedType);
+        }
+
+        importPaper.setPaperQuestionTypeDto(mappedTypeList);
+        DamingPaper insertedPaper = insertDamingPaper(importPaper);
+        if (insertedPaper == null || insertedPaper.getPaperId() == null) {
+            throw new ServiceException("试卷导入失败");
+        }
+        PaperSyncImportResultDto resultDto = new PaperSyncImportResultDto();
+        resultDto.setNewPaperId(insertedPaper.getPaperId());
+        resultDto.setInsertedQuestionCount(insertedCount);
+        resultDto.setSkippedQuestionCount(skippedCount);
+        return resultDto;
+    }
+
+    private QuestionDto cloneQuestionForImport(QuestionDto sourceQuestion, Integer subjectId) {
+        QuestionDto importQuestion = modelMapper.map(sourceQuestion, QuestionDto.class);
+        importQuestion.setId(null);
+        importQuestion.setSubjectId(subjectId);
+        importQuestion.setItemOrder(null);
+        return importQuestion;
+    }
+
+    private Long findExistingQuestionId(QuestionDto importQuestion) {
+        if (importQuestion == null
+                || importQuestion.getSubjectId() == null
+                || importQuestion.getQuestionType() == null
+                || StringUtils.isEmpty(importQuestion.getQuestionTitle())) {
+            return null;
+        }
+        List<DamingQuestion> candidates = damingQuestionMapper.selectQuestionsBySubjectTypeAndTitle(
+                importQuestion.getSubjectId(),
+                importQuestion.getQuestionType(),
+                importQuestion.getQuestionTitle()
+        );
+        if (CollectionUtils.isEmpty(candidates)) {
+            return null;
+        }
+        for (DamingQuestion candidate : candidates) {
+            QuestionDto existingDto = damingQuestionService.getQuestionDto(candidate);
+            if (isSameQuestion(existingDto, importQuestion)) {
+                return candidate.getId();
+            }
+        }
+        return null;
+    }
+
+    private boolean isSameQuestion(QuestionDto a, QuestionDto b) {
+        if (a == null || b == null) {
+            return false;
+        }
+        if (!Objects.equals(a.getSubjectId(), b.getSubjectId())
+                || !Objects.equals(a.getQuestionType(), b.getQuestionType())
+                || !Objects.equals(trimToEmpty(a.getQuestionTitle()), trimToEmpty(b.getQuestionTitle()))
+                || !Objects.equals(trimToEmpty(a.getAnalysis()), trimToEmpty(b.getAnalysis()))
+                || !Objects.equals(a.getScore(), b.getScore())
+                || !Objects.equals(a.getDifficulty(), b.getDifficulty())
+                || !Objects.equals(a.getExamYear(), b.getExamYear())
+                || !Objects.equals(a.getExamHalf(), b.getExamHalf())
+                || !Objects.equals(a.getParentId(), b.getParentId())
+                || !Objects.equals(a.getClozeIndex(), b.getClozeIndex())) {
+            return false;
+        }
+        if (Objects.equals(a.getQuestionType(), QuestionTypeEnum.Multiple.getCode())) {
+            String[] left = a.getCorrectArray() == null ? new String[0] : a.getCorrectArray();
+            String[] right = b.getCorrectArray() == null ? new String[0] : b.getCorrectArray();
+            Set<String> lSet = new HashSet<>();
+            Set<String> rSet = new HashSet<>();
+            for (String s : left) {
+                lSet.add(trimToEmpty(s));
+            }
+            for (String s : right) {
+                rSet.add(trimToEmpty(s));
+            }
+            if (!lSet.equals(rSet)) {
+                return false;
+            }
+        } else if (!Objects.equals(trimToEmpty(a.getCorrect()), trimToEmpty(b.getCorrect()))) {
+            return false;
+        }
+        return normalizeOptions(a).equals(normalizeOptions(b));
+    }
+
+    private List<String> normalizeOptions(QuestionDto dto) {
+        if (dto == null || CollectionUtils.isEmpty(dto.getItems())) {
+            return new ArrayList<>();
+        }
+        return dto.getItems().stream()
+                .filter(Objects::nonNull)
+                .map(i -> trimToEmpty(i.getPrefix()) + "|" + trimToEmpty(i.getContent()) + "|" + i.getScore())
+                .collect(Collectors.toList());
+    }
+
+    private String trimToEmpty(String value) {
+        return value == null ? "" : value.trim();
     }
 }

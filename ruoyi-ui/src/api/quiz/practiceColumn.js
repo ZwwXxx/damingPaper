@@ -37,3 +37,12 @@ export function savePracticeColumnQuestions(columnId, questionIds) {
   })
 }
 
+// 新增二级栏目
+export function addPracticeColumn(data) {
+  return request({
+    url: `${module}`,
+    method: 'post',
+    data
+  })
+}
+

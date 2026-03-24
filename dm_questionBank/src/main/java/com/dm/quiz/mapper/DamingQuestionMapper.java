@@ -86,4 +86,21 @@ public interface DamingQuestionMapper
     List<DamingQuestion> selectQuestionsBySubjectAndCreateTime(@Param("subjectId") Integer subjectId,
                                                                @Param("beginTime") String beginTime,
                                                                @Param("endTime") String endTime);
+
+    /**
+     * 仅更新原卷题号
+     */
+    int updateOriginOrder(@Param("id") Long id, @Param("originOrder") Integer originOrder);
+
+    /**
+     * 仅更新考试批次（上/下半年）
+     */
+    int updateExamHalf(@Param("id") Long id, @Param("examHalf") Integer examHalf);
+
+    /**
+     * 导入去重：按科目+题型+题干查询候选题
+     */
+    List<DamingQuestion> selectQuestionsBySubjectTypeAndTitle(@Param("subjectId") Integer subjectId,
+                                                               @Param("questionType") Integer questionType,
+                                                               @Param("questionTitle") String questionTitle);
 }

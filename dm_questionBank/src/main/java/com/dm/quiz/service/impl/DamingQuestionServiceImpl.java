@@ -1,9 +1,12 @@
 package com.dm.quiz.service.impl;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -79,11 +82,16 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         questionDto.setItems(questionInfoContentVM.getQuestionOptionList());
         questionDto.setId(damingQuestion.getId());
         questionDto.setScore(damingQuestion.getScore());
+        questionDto.setDifficulty(damingQuestion.getDifficulty());
         questionDto.setQuestionType(damingQuestion.getQuestionType());
         questionDto.setSubjectId(damingQuestion.getSubjectId());
         // 完形填空父子关系
         questionDto.setParentId(damingQuestion.getParentId());
         questionDto.setClozeIndex(damingQuestion.getClozeIndex());
+        questionDto.setOriginOrder(damingQuestion.getOriginOrder());
+        // 年份/考试批次（可选）
+        questionDto.setExamYear(damingQuestion.getExamYear());
+        questionDto.setExamHalf(damingQuestion.getExamHalf());
         // 动画解析（可选）
         questionDto.setAnimationId(damingQuestion.getAnimationId());
         if (damingQuestion.getAnimationId() != null && damingQuestion.getAnimationId() > 0) {
@@ -156,6 +164,11 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         damingQuestion.setSubjectId(questionDto.getSubjectId());
         damingQuestion.setParentId(questionDto.getParentId());
         damingQuestion.setClozeIndex(questionDto.getClozeIndex());
+        damingQuestion.setOriginOrder(questionDto.getOriginOrder());
+        damingQuestion.setExamYear(questionDto.getExamYear());
+        damingQuestion.setExamHalf(questionDto.getExamHalf());
+        damingQuestion.setDifficulty(questionDto.getDifficulty());
+        damingQuestion.setDifficulty(questionDto.getDifficulty());
         damingQuestion.setQuestionInfoId(questionInfo.getId());
         if (questionDto.getAnimationId() != null && questionDto.getAnimationId() > 0) {
             damingQuestion.setAnimationId(questionDto.getAnimationId());
@@ -226,6 +239,9 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         damingQuestion.setSubjectId(questionDto.getSubjectId());
         damingQuestion.setParentId(questionDto.getParentId());
         damingQuestion.setClozeIndex(questionDto.getClozeIndex());
+        damingQuestion.setOriginOrder(questionDto.getOriginOrder());
+        damingQuestion.setExamYear(questionDto.getExamYear());
+        damingQuestion.setExamHalf(questionDto.getExamHalf());
         if (questionDto.getAnimationId() != null) {
             damingQuestion.setAnimationId(questionDto.getAnimationId() != null && questionDto.getAnimationId() > 0
                     ? questionDto.getAnimationId()
@@ -266,9 +282,102 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
             }
             // 子题沿用父题科目
             child.setSubjectId(parent.getSubjectId());
+            // 子题沿用父题年份/考试批次（若子题没填）
+            if (child.getExamYear() == null) {
+                child.setExamYear(parent.getExamYear());
+            }
+            if (child.getExamHalf() == null) {
+                child.setExamHalf(parent.getExamHalf());
+            }
             child.setParentId(parentId);
             child.setClozeIndex(index.getAndIncrement());
             doInsertQuestion(child);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateClozeQuestion(ClozeQuestionCreateRequest request) {
+        if (request == null || request.getParent() == null) {
+            throw new ServiceException("完形填空父题不能为空");
+        }
+        QuestionDto parent = request.getParent();
+        if (parent.getId() == null) {
+            throw new ServiceException("完形填空父题ID不能为空");
+        }
+        Long parentId = parent.getId();
+        DamingQuestion parentEntity = damingQuestionMapper.selectDamingQuestionById(parentId);
+        if (parentEntity == null) {
+            throw new ServiceException("完形填空父题不存在");
+        }
+
+        // 强制设置为完形填空题型；父题不参与作答，不需要标准答案
+        parent.setQuestionType(QuestionTypeEnum.Cloze.getCode());
+        parent.setCorrect(null);
+        parent.setCorrectArray(null);
+        parent.setParentId(null);
+        parent.setClozeIndex(null);
+        updateDamingQuestion(parent);
+
+        // 读取原有子题（用于更新/删除）
+        DamingQuestion query = new DamingQuestion();
+        query.setParentId(parentId);
+        List<DamingQuestion> existingChildren = damingQuestionMapper.selectDamingQuestionList(query);
+        Set<Long> existingIds = existingChildren.stream()
+                .filter(Objects::nonNull)
+                .map(DamingQuestion::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Set<Long> incomingIds = new HashSet<>();
+        List<QuestionDto> children = request.getChildren();
+        if (children == null) {
+            children = new ArrayList<>();
+        }
+
+        AtomicInteger index = new AtomicInteger(1);
+        for (QuestionDto child : children) {
+            if (child == null) {
+                continue;
+            }
+            // 子题沿用父题科目
+            child.setSubjectId(parent.getSubjectId());
+            // 子题沿用父题年份/考试批次（若子题没填）
+            if (child.getExamYear() == null) {
+                child.setExamYear(parent.getExamYear());
+            }
+            if (child.getExamHalf() == null) {
+                child.setExamHalf(parent.getExamHalf());
+            }
+            child.setParentId(parentId);
+            // 服务端按提交顺序重算 clozeIndex（从1开始）
+            child.setClozeIndex(index.getAndIncrement());
+
+            if (child.getId() != null && existingIds.contains(child.getId())) {
+                incomingIds.add(child.getId());
+                updateDamingQuestion(child);
+            } else {
+                // 新增子题：忽略传入 id（若有），避免误更新到其他题
+                child.setId(null);
+                doInsertQuestion(child);
+            }
+        }
+
+        // 删除本次提交里被移除的子题（软删：del_flag=2），但若存在答题记录则禁止删除
+        List<Long> toDelete = existingChildren.stream()
+                .filter(Objects::nonNull)
+                .map(DamingQuestion::getId)
+                .filter(Objects::nonNull)
+                .filter(id -> !incomingIds.contains(id))
+                .collect(Collectors.toList());
+        if (!toDelete.isEmpty()) {
+            for (Long id : toDelete) {
+                List<DamingQuestionAnswer> answers = damingQuestionAnswerMapper.selectDamingQuestionAnswerByQuestionId(id);
+                if (answers != null && !answers.isEmpty()) {
+                    throw new ServiceException("该完形子题存在答题记录，禁止删除");
+                }
+            }
+            damingQuestionMapper.deleteDamingQuestionByIds(toDelete.toArray(new Long[0]));
         }
     }
 
@@ -493,5 +602,21 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
             questionDto.setCorrect(StringUtils.defaultString(exportVO.getCorrect()).trim());
         }
         return questionDto;
+    }
+
+    @Override
+    public int updateOriginOrder(Long id, Integer originOrder) {
+        if (id == null) {
+            throw new ServiceException("题目ID不能为空");
+        }
+        return damingQuestionMapper.updateOriginOrder(id, originOrder);
+    }
+
+    @Override
+    public int updateExamHalf(Long id, Integer examHalf) {
+        if (id == null) {
+            throw new ServiceException("题目ID不能为空");
+        }
+        return damingQuestionMapper.updateExamHalf(id, examHalf);
     }
 }

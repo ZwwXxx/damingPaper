@@ -9,12 +9,16 @@
         <result property="parentId"     column="parent_id" />
         <result property="questionType" column="question_type" />
         <result property="clozeIndex"   column="cloze_index" />
+        <result property="originOrder"  column="origin_order" />
         <result property="questionInfoId" column="question_info_id" />
         <result property="animationId"  column="animation_id" />
         <result property="correct"      column="correct" />
         <result property="score"        column="score" />
+        <result property="difficulty"   column="difficulty" />
         <result property="delFlag"      column="del_flag" />
         <result property="subjectId"    column="subject_id" />
+        <result property="examYear"     column="exam_year" />
+        <result property="examHalf"     column="exam_half" />
         <result property="createTime"   column="create_time" />
         <result property="updateTime"   column="update_time" />
     </resultMap>
@@ -24,12 +28,16 @@
                q.parent_id,
                q.question_type,
                q.cloze_index,
+               q.origin_order,
                q.question_info_id,
                q.animation_id,
                q.correct,
                q.score,
+               q.difficulty,
                q.del_flag,
                q.subject_id,
+               q.exam_year,
+               q.exam_half,
                q.create_time,
                q.update_time
         from daming_question q
@@ -50,6 +58,8 @@
             <if test="questionInfoId != null ">and q.question_info_id = #{questionInfoId}</if>
             <if test="score != null ">and q.score = #{score}</if>
             <if test="subjectId != null ">and q.subject_id = #{subjectId}</if>
+            <if test="examYear != null ">and q.exam_year = #{examYear}</if>
+            <if test="examHalf != null ">and q.exam_half = #{examHalf}</if>
             <if test="createTime != null ">and q.create_time = #{createTime}</if>
             <if test="updateTime != null ">and q.update_time = #{updateTime}</if>
             <if test="questionTitle != null and questionTitle != ''">
@@ -112,18 +122,33 @@
         ORDER BY q.create_time ASC
     </select>
 
+    <select id="selectQuestionsBySubjectTypeAndTitle" resultMap="DamingQuestionResult">
+        <include refid="selectDamingQuestionVo"/>
+        left join daming_content_info ci on ci.id = q.question_info_id
+        <where>
+            and q.del_flag != 2
+            and q.subject_id = #{subjectId}
+            and q.question_type = #{questionType}
+            and json_unquote(json_extract(ci.content, '$.questionTitle')) = #{questionTitle}
+        </where>
+    </select>
+
     <insert id="insertDamingQuestion" parameterType="DamingQuestion" useGeneratedKeys="true" keyProperty="id">
         insert into daming_question
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="parentId != null">parent_id,</if>
             <if test="questionType != null">question_type,</if>
             <if test="clozeIndex != null">cloze_index,</if>
+            <if test="originOrder != null">origin_order,</if>
             <if test="questionInfoId != null">question_info_id,</if>
             <if test="animationId != null">animation_id,</if>
             <if test="correct != null">correct,</if>
             <if test="score != null">score,</if>
+            <if test="difficulty != null">difficulty,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="subjectId != null">subject_id,</if>
+            <if test="examYear != null">exam_year,</if>
+            <if test="examHalf != null">exam_half,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
         </trim>
@@ -131,12 +156,16 @@
             <if test="parentId != null">#{parentId},</if>
             <if test="questionType != null">#{questionType},</if>
             <if test="clozeIndex != null">#{clozeIndex},</if>
+            <if test="originOrder != null">#{originOrder},</if>
             <if test="questionInfoId != null">#{questionInfoId},</if>
             <if test="animationId != null">#{animationId},</if>
             <if test="correct != null">#{correct},</if>
             <if test="score != null">#{score},</if>
+            <if test="difficulty != null">#{difficulty},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="subjectId != null">#{subjectId},</if>
+            <if test="examYear != null">#{examYear},</if>
+            <if test="examHalf != null">#{examHalf},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
         </trim>
@@ -148,15 +177,33 @@
             <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="questionType != null">question_type = #{questionType},</if>
             <if test="clozeIndex != null">cloze_index = #{clozeIndex},</if>
+            <if test="originOrder != null">origin_order = #{originOrder},</if>
             <if test="questionInfoId != null">question_info_id = #{questionInfoId},</if>
             <if test="animationId != null">animation_id = #{animationId},</if>
             <if test="correct != null">correct = #{correct},</if>
             <if test="score != null">score = #{score},</if>
+            <if test="difficulty != null">difficulty = #{difficulty},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="subjectId != null">subject_id = #{subjectId},</if>
+            <if test="examYear != null">exam_year = #{examYear},</if>
+            <if test="examHalf != null">exam_half = #{examHalf},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
+        where id = #{id}
+    </update>
+
+    <!-- 仅更新原卷题号 -->
+    <update id="updateOriginOrder">
+        update daming_question
+        set origin_order = #{originOrder}
+        where id = #{id}
+    </update>
+
+    <!-- 仅更新考试批次（上/下半年） -->
+    <update id="updateExamHalf">
+        update daming_question
+        set exam_half = #{examHalf}
         where id = #{id}
     </update>
 

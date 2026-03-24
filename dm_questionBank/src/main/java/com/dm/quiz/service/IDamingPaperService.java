@@ -5,6 +5,8 @@ import java.util.List;
 import com.dm.quiz.domain.DamingPaper;
 import com.dm.quiz.dto.AutoAssemblePaperRequest;
 import com.dm.quiz.dto.PaperDto;
+import com.dm.quiz.dto.PaperSyncImportResultDto;
+import com.dm.quiz.dto.PaperSyncPackageDto;
 
 /**
  * 试卷Service接口
@@ -76,4 +78,14 @@ public interface IDamingPaperService
      * 按日期范围自动组卷（将时间范围内的所有题目，按题型自动分组，仅返回建议内容，不落库）
      */
     PaperDto autoAssemblePaperByDate(AutoAssemblePaperRequest request);
+
+    /**
+     * 导出试卷同步包（含试卷与完整题目数据）
+     */
+    PaperSyncPackageDto exportPaperSyncPackage(Long paperId);
+
+    /**
+     * 导入试卷同步包（自动导入题目，已存在题目跳过）
+     */
+    PaperSyncImportResultDto importPaperSyncPackage(PaperSyncPackageDto syncPackageDto);
 }

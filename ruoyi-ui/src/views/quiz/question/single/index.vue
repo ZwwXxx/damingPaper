@@ -2,7 +2,7 @@
   <div style="padding: 20px">
     <el-row :gutter="15">
       <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
-        <el-col :span="12">
+        <el-col :span="12" v-if="showOriginOrder">
           <el-form-item label="科目" prop="subjectId">
             <el-select v-model="formData.subjectId" placeholder="请输入科目" clearable :style="{width: '100%'}" @change="handleSubjectChange">
               <el-option v-for="(item, index) in subjectIdOptions" :key="index" :label="item.label"
@@ -23,6 +23,53 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="12">
+          <el-form-item label="是否真题">
+            <el-switch
+              v-model="formData.isRealQuestion"
+              active-text="真题"
+              inactive-text="非真题"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-if="showOriginOrder && formData.isRealQuestion">
+          <el-form-item label="原卷题号">
+            <el-input-number
+              v-model="formData.originOrder"
+              :min="1"
+              :max="9999"
+              controls-position="right"
+              style="width: 180px;"
+              placeholder="不填则不参与原卷排序"
+            />
+            <div v-if="formData.questionType === 6" style="margin-top: 5px; color: #909399; font-size: 12px">
+              💡 完形/复合题父题不编号时，这里填“首个子题的原卷题号”
+            </div>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-if="formData.isRealQuestion">
+          <el-form-item label="题目年份">
+            <el-input-number
+              v-model="formData.examYear"
+              :min="2000"
+              :max="2100"
+              controls-position="right"
+              style="width: 180px;"
+              placeholder="例如 2020"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-if="formData.isRealQuestion">
+          <el-form-item label="考试批次">
+            <el-select v-model="formData.examHalf" placeholder="上/下半年（可不选）" clearable :style="{width: '100%'}">
+              <el-option :value="1" label="上半年" />
+              <el-option :value="2" label="下半年" />
+            </el-select>
+            <div style="margin-top: 5px; color: #909399; font-size: 12px">
+              💡 不选表示该年份仅考一次
+            </div>
+          </el-form-item>
+        </el-col>
         <el-col :span="24">
           <el-divider content-position="left">专项刷题归属（可选）</el-divider>
         </el-col>
@@ -35,6 +82,7 @@
               placeholder="选择章节/大类（可选）"
               :style="{width: '100%'}"
               :disabled="!formData.subjectId"
+              @visible-change="handlePracticeGroupDropdown"
               @change="handlePracticeGroupChange"
             >
               <el-option
@@ -56,11 +104,13 @@
               placeholder="选择专项栏目（可多选）"
               :style="{width: '100%'}"
               :disabled="!formData.subjectId"
+              @visible-change="handlePracticeColumnDropdown"
+              @change="handlePracticeColumnIdsChange"
             >
               <el-option
                 v-for="col in practiceColumnOptions"
                 :key="col.columnId"
-                :label="col.columnName"
+                :label="formatPracticeColumnLabel(col)"
                 :value="col.columnId"
               >
                 <span style="float: left">{{ col.columnName }}</span>
@@ -72,6 +122,43 @@
             </div>
           </el-form-item>
         </el-col>
+      <el-col :span="24">
+        <el-form-item label="智能录题">
+          <div class="ai-generate-box">
+            <div class="ai-generate-row">
+              <el-upload
+                ref="aiImageUpload"
+                :auto-upload="false"
+                :show-file-list="true"
+                :limit="1"
+                accept="image/*"
+                :on-change="handleAiImageChange"
+                :on-remove="handleAiImageRemove"
+                :on-exceed="handleAiImageExceed"
+                action="#"
+              >
+                <el-button size="small" icon="el-icon-picture-outline">选择题目图片</el-button>
+              </el-upload>
+              <el-switch
+                v-model="aiGenerate.autoAssignColumn"
+                active-text="自动分配专栏"
+                inactive-text="不自动分配"
+                @change="handleAutoAssignColumnSwitchChange"
+              />
+              <el-button
+                type="primary"
+                size="small"
+                :loading="aiGenerate.loading"
+                @click="handleAiGenerateFromImage"
+              >智能生成题目解析</el-button>
+            </div>
+            <div class="ai-generate-tip">
+              上传截图后自动回填题型、题干、选项、答案、解析、难度；单题/完形均可识别，完形时回填多子题选项与答案；开启自动分配时尝试回填二级栏目。
+              若当前为<strong>真题</strong>，将额外识别卷面<strong>原卷题号</strong>并填入「原卷题号」。
+            </div>
+          </div>
+        </el-form-item>
+      </el-col>
       <!-- 父题题干（完形父题和普通题复用） -->
       <el-col :span="24">
           <el-form-item label="题干" prop="questionTitle">
@@ -140,7 +227,18 @@
         <el-col :span="24" v-if="formData.questionType === 6">
           <el-form-item label="完形子题列表">
             <div style="margin-bottom: 10px;">
-              <el-button type="primary" size="mini" icon="el-icon-plus" @click="addClozeChild">添加子题</el-button>
+              <el-button type="primary" size="mini" icon="el-icon-plus" @click="addClozeChild(1)">添加子题</el-button>
+              <span style="margin-left: 12px; color:#909399; font-size: 12px;">批量添加：</span>
+              <el-input-number
+                v-model="clozeChildBatchCount"
+                size="mini"
+                :min="1"
+                :max="50"
+                style="width: 120px; margin-right: 8px;"
+              />
+              <el-button type="success" size="mini" icon="el-icon-circle-plus-outline" @click="addClozeChild(clozeChildBatchCount)">
+                批量添加
+              </el-button>
             </div>
             <el-card
               v-for="(child, cIndex) in formData.clozeChildren"
@@ -385,6 +483,19 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
+          <el-form-item label="难度" prop="difficulty">
+            <el-select
+              v-model="formData.difficulty"
+              placeholder="请选择难度"
+              :style="{ width: '260px' }"
+            >
+              <el-option :value="1" label="简单" />
+              <el-option :value="2" label="中等" />
+              <el-option :value="3" label="困难" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
           <el-form-item label="关联知识点">
             <el-select
               v-model="formData.knowledgePointIds"
@@ -428,10 +539,11 @@
   </div>
 </template>
 <script>
-import { addQuestion, addClozeQuestion, getQuestion, getClozeQuestion, updateQuestion, bindKnowledgePoints, getQuestionKnowledgePoints, listKnowledgePoints, getQuestionPracticeColumns, bindQuestionPracticeColumns } from "@/api/quiz/question";
+import { addQuestion, addClozeQuestion, updateClozeQuestion, getQuestion, getClozeQuestion, updateQuestion, bindKnowledgePoints, getQuestionKnowledgePoints, listKnowledgePoints, getQuestionPracticeColumns, bindQuestionPracticeColumns, createQuestionAiImageTask, queryQuestionAiImageTask } from "@/api/quiz/question";
 import { optionSubject } from "@/api/quiz/subject";
 import { listAnimation, getAnimation } from "@/api/quiz/animation";
-import { listPracticeGroupOptions, listPracticeColumnOptions } from "@/api/quiz/practiceColumn";
+import { listPracticeGroupOptions, listPracticeColumnOptions, addPracticeColumn } from "@/api/quiz/practiceColumn";
+import { uploadFile } from "@/api/common";
 import Editor from "@/components/Editor";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { getToken } from "@/utils/auth";
@@ -448,10 +560,6 @@ const defaultJudgeOptions = () => ([
   { prefix: 'B', content: '错误' }
 ]);
 
-// 本页面草稿本地存储 key（按路由区分）
-const LOCAL_DRAFT_KEY = 'dm_question_single_draft';
-const LOCAL_DRAFT_VERSION = 1;
-
 export default {
   name: 'QuestionEditor',
   components: { Editor, MarkdownEditor },
@@ -461,6 +569,11 @@ export default {
       default: 1
     },
     allowTypeSwitch: {
+      type: Boolean,
+      default: true
+    },
+    // 是否显示“原卷题号”输入框（组卷管理中可关闭）
+    showOriginOrder: {
       type: Boolean,
       default: true
     },
@@ -476,6 +589,10 @@ export default {
         id: undefined,
         subjectId: undefined,
         questionType: initialType,
+        originOrder: null,
+        examYear: null,
+        examHalf: null,
+        isRealQuestion: true,
         questionTitle: undefined,
         animationId: null,
         animationUrl: '',
@@ -490,6 +607,7 @@ export default {
         analysis: '无',
         analysisFormat: 'html', // 解析内容格式：html或markdown
         score: 1,
+        difficulty: 1,
         knowledgePointIds: [],
         items: initialType === 3
             ? []
@@ -545,6 +663,13 @@ export default {
       practiceGroupName: '',
       practiceColumnOptions: [],
       practiceColumnIds: [],
+      clozeChildBatchCount: 3,
+      aiGenerate: {
+        loading: false,
+        imageFile: null,
+        autoAssignColumn: false,
+        moduleCandidates: []
+      },
       questionTypeOptions: [{
         "label": "单选题",
         "value": 1
@@ -567,8 +692,6 @@ export default {
       // 完形填空父子关系（单题编辑时使用）
       parentIdVisible: false,
       clozeIndexVisible: false,
-      // 本地草稿保存节流定时器
-      draftSaveTimer: null,
     }
   },
   computed: {
@@ -579,7 +702,22 @@ export default {
       return this.questionTypeOptions;
     }
   },
-  watch: {},
+  watch: {
+    'formData.isRealQuestion'(val) {
+      // 非真题：隐藏并清空“原卷题号/年份/批次”，避免误保存
+      if (val === false) {
+        this.formData.originOrder = null;
+        this.formData.examYear = null;
+        this.formData.examHalf = null;
+      }
+    },
+    'formData.analysis'(val) {
+      // 仅单选题：从解析文本中自动识别“答案：X”并设置标准答案
+      this.autoInferSingleChoiceAnswerFromAnalysis(val);
+      // 从解析中识别“知识点：XXX”并自动选择对应专栏
+      this.autoInferPracticeColumnFromAnalysis(val);
+    }
+  },
   async created() {
     await this.loadSubjectOptions();
     await this.loadPracticeOptions();
@@ -590,85 +728,66 @@ export default {
       // 编辑模式：不使用本地草稿，直接从后端加载
       this.getData(id);
     } else {
-      // 新增模式：尝试恢复草稿
-      this.loadDraft();
-      // 监听表单变化，自动保存草稿（深度监听）
-      this.$watch('formData', this.scheduleSaveDraft, { deep: true });
-      this.$watch('practiceGroupName', this.scheduleSaveDraft);
-      this.$watch('practiceColumnIds', this.scheduleSaveDraft, { deep: true });
+      // 新增模式：不再做本地草稿保存/恢复
     }
   },
   methods: {
-    // ========== 本地草稿存取 ==========
-    scheduleSaveDraft() {
-      if (this.$route.query.id) return; // 编辑模式不保存草稿
-      if (this.draftSaveTimer) {
-        clearTimeout(this.draftSaveTimer);
+    getNextOriginOrderAfterCreate(span = 1) {
+      if (!this.formData || this.formData.isRealQuestion !== true) return null;
+      const raw = this.formData.originOrder;
+      if (raw === null || raw === undefined || raw === '') return null;
+      const n = Number(raw);
+      if (!Number.isFinite(n)) return null;
+      const s = Number(span);
+      if (!Number.isFinite(s) || s <= 0) {
+        return Math.floor(n) + 1;
       }
-      this.draftSaveTimer = setTimeout(() => {
-        this.saveDraftNow();
-      }, 500);
+      return Math.floor(n) + Math.floor(s);
     },
-    saveDraftNow() {
-      if (this.$route.query.id) return;
+    getRecentPracticeColumnIds() {
       try {
-        const payload = {
-          v: LOCAL_DRAFT_VERSION,
-          formData: this.formData,
-          practiceGroupName: this.practiceGroupName,
-          practiceColumnIds: this.practiceColumnIds
-        };
-        window.localStorage.setItem(LOCAL_DRAFT_KEY, JSON.stringify(payload));
+        const raw = localStorage.getItem('dm_recent_practice_columns');
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        return Array.isArray(arr) ? arr : [];
       } catch (e) {
-        // 本地存储失败忽略即可
+        return [];
       }
     },
-    async loadDraft() {
+    saveRecentPracticeColumnIds(ids) {
       try {
-        const raw = window.localStorage.getItem(LOCAL_DRAFT_KEY);
-        if (!raw) return;
-        const data = JSON.parse(raw);
-        if (!data || data.v !== LOCAL_DRAFT_VERSION) return;
-        if (data.formData && !this.formData.id) {
-          this.formData = {
-            ...this.formData,
-            ...data.formData,
-            items: Array.isArray(data.formData.items) && data.formData.items.length
-              ? data.formData.items
-              : this.formData.items,
-            clozeChildren: Array.isArray(data.formData.clozeChildren)
-              ? data.formData.clozeChildren
-              : this.formData.clozeChildren,
-            fillBlankAnswers: Array.isArray(data.formData.fillBlankAnswers) && data.formData.fillBlankAnswers.length
-              ? data.formData.fillBlankAnswers
-              : this.formData.fillBlankAnswers,
-          };
-        }
-        if (typeof data.practiceGroupName === 'string') {
-          this.practiceGroupName = data.practiceGroupName;
-        }
-        if (Array.isArray(data.practiceColumnIds)) {
-          this.practiceColumnIds = data.practiceColumnIds;
-        }
-        // 草稿里如果带了科目，刷新完后要主动加载一次专栏选项，
-        // 否则 el-select 会只显示数值 ID（例如 8），而不是栏目中文名
-        if (this.formData.subjectId) {
-          await this.loadPracticeOptions();
-          // 若已选择了一级分组，则按分组再过滤一次二级栏目列表
-          if (this.practiceGroupName) {
-            await this.handlePracticeGroupChange(this.practiceGroupName);
-          }
-        }
+        localStorage.setItem('dm_recent_practice_columns', JSON.stringify(ids || []));
       } catch (e) {
-        // 解析失败直接忽略
       }
     },
-    clearDraft() {
-      try {
-        window.localStorage.removeItem(LOCAL_DRAFT_KEY);
-      } catch (e) {
-        // ignore
+    applyRecentOrderToColumns(list) {
+      if (!Array.isArray(list) || !list.length) return list;
+      const recent = this.getRecentPracticeColumnIds();
+      if (!recent.length) return list;
+      const orderMap = new Map();
+      recent.forEach((id, idx) => {
+        if (!orderMap.has(id)) {
+          orderMap.set(id, idx);
+        }
+      });
+      return [...list].sort((a, b) => {
+        const ia = orderMap.has(a.columnId) ? orderMap.get(a.columnId) : Infinity;
+        const ib = orderMap.has(b.columnId) ? orderMap.get(b.columnId) : Infinity;
+        if (ia !== ib) return ia - ib;
+        return (a.columnId || 0) - (b.columnId || 0);
+      });
+    },
+    getNextOriginOrderAfterCreate(span = 1) {
+      if (!this.formData || this.formData.isRealQuestion !== true) return null;
+      const raw = this.formData.originOrder;
+      if (raw === null || raw === undefined || raw === '') return null;
+      const n = Number(raw);
+      if (!Number.isFinite(n)) return null;
+      const s = Number(span);
+      if (!Number.isFinite(s) || s <= 0) {
+        return Math.floor(n) + 1;
       }
+      return Math.floor(n) + Math.floor(s);
     },
     async loadPracticeOptions() {
       // subjectId 未选时不加载
@@ -682,17 +801,487 @@ export default {
         listPracticeColumnOptions({ subjectId: this.formData.subjectId })
       ]);
       this.practiceGroupOptions = (gRes && gRes.data) || [];
-      this.practiceColumnOptions = (cRes && cRes.data) || [];
+      const cols = (cRes && cRes.data) || [];
+      this.practiceColumnOptions = this.applyRecentOrderToColumns(cols);
+    },
+    formatPracticeColumnLabel(col) {
+      if (!col) return '';
+      const g = (col.groupName || '其他').trim ? (col.groupName || '其他').trim() : (col.groupName || '其他');
+      const c = (col.columnName || '').trim ? (col.columnName || '').trim() : (col.columnName || '');
+      if (!c) return g;
+      return `${g} / ${c}`;
     },
     async handlePracticeGroupChange(val) {
-      // 按一级分组过滤二级栏目选项；清空已选不在范围内的栏目
+      // 按一级分组过滤二级栏目选项；
+      // 规则：当一级分组被清空时，二级已选也要同步清空（避免脏数据）
       if (!this.formData.subjectId) return;
       const params = { subjectId: this.formData.subjectId };
-      if (val) params.groupName = val;
+      if (!val) {
+        // 清空一级分组 => 清空二级已选，并恢复“当前科目下全量二级栏目”
+        this.practiceColumnIds = [];
+      } else {
+        params.groupName = val;
+      }
       const res = await listPracticeColumnOptions(params);
-      this.practiceColumnOptions = (res && res.data) || [];
+      const cols = (res && res.data) || [];
+      this.practiceColumnOptions = this.applyRecentOrderToColumns(cols);
       const allowed = new Set(this.practiceColumnOptions.map(x => x.columnId));
       this.practiceColumnIds = (this.practiceColumnIds || []).filter(id => allowed.has(id));
+    },
+    async handlePracticeGroupDropdown(visible) {
+      if (!visible) return;
+      // 下拉展开时强制刷新，避免跨页面新增栏目后这里仍是旧数据
+      await this.loadPracticeOptions();
+    },
+    async handlePracticeColumnDropdown(visible) {
+      if (!visible) return;
+      if (!this.formData.subjectId) return;
+      // 有选择一级分组则按分组刷新，否则刷新全量
+      if (this.practiceGroupName) {
+        await this.handlePracticeGroupChange(this.practiceGroupName);
+      } else {
+        await this.loadPracticeOptions();
+      }
+    },
+    handlePracticeColumnIdsChange(val) {
+      // 需求：新增题目时，选择了二级栏目后，若一级分组未选则自动补全
+      if (!this.formData.subjectId) return;
+      const selectedIds = Array.isArray(val) ? val : (this.practiceColumnIds || []);
+      if (!selectedIds.length) {
+        // 仅清空选择时不更新最近使用列表
+        return;
+      }
+      // 若一级分组已选，则不自动覆盖用户选择
+      if (this.practiceGroupName && String(this.practiceGroupName).trim()) {
+        // 已经有分组就不自动推断
+      } else {
+        const picked = (this.practiceColumnOptions || []).filter(c => selectedIds.includes(c.columnId));
+        const uniqGroups = Array.from(new Set(picked.map(x => (x.groupName || '').trim()).filter(Boolean)));
+        if (uniqGroups.length === 1) {
+          this.practiceGroupName = uniqGroups[0];
+        }
+      }
+      // 更新“最近使用栏目”缓存：本次选择的在前，其它保持
+      const recent = this.getRecentPracticeColumnIds();
+      const set = new Set();
+      const merged = [];
+      selectedIds.forEach(id => {
+        if (!set.has(id)) {
+          set.add(id);
+          merged.push(id);
+        }
+      });
+      recent.forEach(id => {
+        if (!set.has(id)) {
+          set.add(id);
+          merged.push(id);
+        }
+      });
+      this.saveRecentPracticeColumnIds(merged);
+      this.practiceColumnOptions = this.applyRecentOrderToColumns(this.practiceColumnOptions || []);
+    },
+    handleAiImageChange(file) {
+      this.aiGenerate.imageFile = file && file.raw ? file.raw : null;
+    },
+    /** limit=1 时再次选图会走 exceed：先清空再接纳新文件，无需先点 × */
+    handleAiImageExceed(files) {
+      if (!files || !files.length) return;
+      const ref = this.$refs.aiImageUpload;
+      if (!ref || typeof ref.clearFiles !== 'function' || typeof ref.handleStart !== 'function') return;
+      ref.clearFiles();
+      ref.handleStart(files[0]);
+    },
+    handleAutoAssignColumnSwitchChange(val) {
+      if (val && !this.formData.subjectId) {
+        this.$message.warning('请先选择科目');
+        this.aiGenerate.autoAssignColumn = false;
+      }
+    },
+    handleAiImageRemove() {
+      this.aiGenerate.imageFile = null;
+    },
+    /** 清空智能录题图片：与点文件列表上的「×」一致，便于新增成功后连续录题 */
+    clearAiImageUpload() {
+      this.aiGenerate.imageFile = null;
+      const u = this.$refs.aiImageUpload;
+      if (u && typeof u.clearFiles === 'function') {
+        u.clearFiles();
+      }
+    },
+    mapAiQuestionType(questionType) {
+      const t = String(questionType || '').toUpperCase();
+      if (t === 'SINGLE') return 1;
+      if (t === 'MULTIPLE') return 2;
+      if (t === 'SUBJECTIVE') return 3;
+      if (t === 'JUDGE') return 4;
+      // 业务仅支持客观单选/多选/判断与完形；模型勿返回 FILL_BLANK，若仍返回则按单选处理
+      if (t === 'FILL_BLANK') return 1;
+      if (t === 'CLOZE') return 6;
+      return this.formData.questionType || 1;
+    },
+    /** AI 子题题型 -> 后台 questionType（仅单选/多选/判断） */
+    mapAiChildQuestionType(questionType) {
+      const t = String(questionType || '').toUpperCase();
+      if (t === 'MULTIPLE') return 2;
+      if (t === 'JUDGE') return 4;
+      return 1;
+    },
+    async handleAiGenerateFromImage() {
+      if (!this.aiGenerate.imageFile) {
+        this.$message.warning('请先选择题目图片');
+        return;
+      }
+      if (!this.formData.subjectId) {
+        this.$message.warning('请先选择科目');
+        return;
+      }
+      if (this.formData.isRealQuestion === true) {
+        if (this.formData.examYear == null || this.formData.examYear === '') {
+          this.$message.warning('已勾选真题，请先填写题目年份');
+          return;
+        }
+        if (this.formData.examHalf == null || this.formData.examHalf === '') {
+          this.$message.warning('已勾选真题，请先选择考试批次');
+          return;
+        }
+      }
+      this.aiGenerate.loading = true;
+      try {
+        // 自动分配专栏依赖一级分组/二级栏目；若未刷新会导致 pointCandidates 为空、knowledgePointId 无法匹配
+        if (this.formData.subjectId) {
+          await this.loadPracticeOptions();
+        }
+        // 先上传到OSS；仅在AI结果完成后再统一回填，避免图片提前回显
+        const ossForm = new FormData();
+        ossForm.append('file', this.aiGenerate.imageFile);
+        const uploadRes = await uploadFile(ossForm);
+        const imageUrl = uploadRes && (uploadRes.url || (uploadRes.data && uploadRes.data.url));
+        if (!imageUrl) {
+          this.$message.error('图片上传OSS失败');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('imageFile', this.aiGenerate.imageFile);
+        formData.append('autoAssignColumn', String(this.aiGenerate.autoAssignColumn));
+        formData.append('isRealQuestion', String(this.formData.isRealQuestion === true));
+        if (this.aiGenerate.autoAssignColumn) {
+          const candidates = this.buildModuleLevelCandidates();
+          this.aiGenerate.moduleCandidates = candidates;
+          formData.append('pointCandidates', JSON.stringify(candidates));
+        }
+        const createRes = await createQuestionAiImageTask(formData);
+        const taskId = createRes && createRes.data && createRes.data.taskId;
+        if (!taskId) {
+          this.$message.error((createRes && createRes.msg) || '创建AI任务失败');
+          return;
+        }
+        const result = await this.pollAiTaskResult(taskId, 30, 2000);
+        if (!result || result.status !== 'SUCCESS' || !result.result) {
+          this.$message.error((result && result.errorMessage) || 'AI任务失败');
+          return;
+        }
+        await this.applyAiResultToForm(this.normalizeAiImageResult(result.result), imageUrl);
+        this.$message.success('AI回填成功，请检查后再提交');
+      } finally {
+        this.aiGenerate.loading = false;
+      }
+    },
+    async pollAiTaskResult(taskId, maxCount, intervalMs) {
+      for (let i = 0; i < maxCount; i++) {
+        const res = await queryQuestionAiImageTask(taskId);
+        const data = res && res.data;
+        if (data && (data.status === 'SUCCESS' || data.status === 'FAILED')) {
+          return data;
+        }
+        await new Promise(resolve => setTimeout(resolve, intervalMs));
+      }
+      return { status: 'FAILED', errorMessage: 'AI任务超时，请稍后重试' };
+    },
+    /** 解析模型偶发返回的 JSON 字符串、统一 subAnswers 结构 */
+    normalizeAiImageResult(raw) {
+      const ai = raw && typeof raw === 'object' ? { ...raw } : {};
+      const parseMaybe = (v) => {
+        if (typeof v === 'string') {
+          const s = v.trim();
+          if (s.startsWith('[') || s.startsWith('{')) {
+            try {
+              return JSON.parse(s);
+            } catch (e) {
+              return v;
+            }
+          }
+        }
+        return v;
+      };
+      ai.subQuestions = parseMaybe(ai.subQuestions);
+      ai.subAnswers = parseMaybe(ai.subAnswers);
+      if (ai.subQuestions != null && !Array.isArray(ai.subQuestions)) {
+        ai.subQuestions = [];
+      }
+      if (ai.subAnswers != null && typeof ai.subAnswers !== 'object') {
+        ai.subAnswers = null;
+      }
+      return ai;
+    },
+    /** 模型常把完形判成 SINGLE：只要有多空结构就按完形回填 */
+    shouldTreatAiResultAsCloze(ai) {
+      const t = String(ai.questionType || '').toUpperCase();
+      if (t === 'CLOZE') return true;
+      const subs = ai.subQuestions;
+      if (Array.isArray(subs) && subs.length > 1) return true;
+      const sa = ai.subAnswers;
+      if (sa && typeof sa === 'object') {
+        const keys = Object.keys(sa).filter(k => String(k).trim() !== '');
+        if (keys.length > 1) return true;
+      }
+      return false;
+    },
+    async applyAiResultToForm(ai, imageUrl) {
+      const mappedType = this.shouldTreatAiResultAsCloze(ai) ? 6 : this.mapAiQuestionType(ai.questionType);
+      this.formData.questionType = mappedType;
+      this.applyQuestionTypeDefaults(mappedType);
+
+      this.formData.questionTitle = this.buildStemWithImageFirst(imageUrl, ai.stemText || '');
+      if (mappedType === 6) {
+        this.applyAiClozeResult(ai);
+      } else {
+        if (Array.isArray(ai.options) && [1, 2, 4].includes(mappedType)) {
+          this.formData.items = ai.options.map(opt => ({
+            prefix: opt.key,
+            content: opt.text || ''
+          }));
+        }
+        if (ai.answer && ai.answer.option) {
+          const optionText = String(ai.answer.option || '');
+          if (mappedType === 2) {
+            this.formData.correctArray = optionText.split('').filter(Boolean);
+            this.formData.correct = '';
+          } else {
+            this.formData.correct = optionText;
+          }
+        }
+        if (ai.analysis) this.formData.analysis = ai.analysis;
+        if (ai.difficultyTag) {
+          this.formData.difficulty = ai.difficultyTag === 'HARD_LATER' ? 3 : 1;
+        }
+      }
+      this.applyAiOriginOrder(ai);
+
+      if (this.aiGenerate.autoAssignColumn) {
+        // 优先使用 knowledgeColumnId；若模型未命中真实二级ID，则根据一级模块候选回填
+        const targetId = Number(ai.knowledgeColumnId || 0);
+        const exists = (this.practiceColumnOptions || []).some(c => Number(c.columnId) === targetId);
+        if (targetId && exists) {
+          this.practiceColumnIds = [targetId];
+          this.handlePracticeColumnIdsChange(this.practiceColumnIds);
+        } else {
+          // 一级模块兜底：根据 AI 返回的 knowledgePointId 映射到一级分组，再落到该分组“其他/零散题”
+          const groupName = this.resolveGroupNameFromAi(ai);
+          if (!groupName) {
+            this.$message.warning('未命中一级专栏：请检查科目下是否有专项分组，或手动选择专栏（模型返回的 knowledgePointId 与候选不一致）');
+          } else {
+            const picked = await this.pickOrCreateDefaultColumnByGroup(groupName);
+            if (picked && picked.columnId) {
+              this.practiceColumnIds = [picked.columnId];
+              this.handlePracticeColumnIdsChange(this.practiceColumnIds);
+              this.$message.success(`已自动归入：${picked.groupName || '未分组'} / ${picked.columnName}`);
+            } else {
+              this.$message.warning('未命中一级专栏，请先创建一级专栏');
+            }
+          }
+        }
+      }
+    },
+    /** 真题模式下回填「原卷题号」，对应后端字段 originOrder */
+    applyAiOriginOrder(ai) {
+      if (!this.formData || this.formData.isRealQuestion !== true) return;
+      const v = ai.originOrder;
+      if (v === null || v === undefined || v === '') return;
+      const n = Number(v);
+      if (!Number.isFinite(n) || n < 1) return;
+      this.formData.originOrder = Math.floor(n);
+    },
+    /**
+     * 完形填空：解析 AI 返回的 subQuestions / subAnswers，回填 clozeChildren。
+     * subAnswers 形如 {"1":"B","2":"C"}；子题题干无单独文字时 questionTitle 可为空，仅填选项与答案。
+     */
+    applyAiClozeResult(ai) {
+      const subAnswers = ai.subAnswers && typeof ai.subAnswers === 'object' ? ai.subAnswers : null;
+      let list = Array.isArray(ai.subQuestions) ? ai.subQuestions.slice() : [];
+
+      if (list.length === 0 && subAnswers) {
+        const keys = Object.keys(subAnswers).sort((a, b) => Number(a) - Number(b));
+        for (const k of keys) {
+          list.push({
+            index: Number(k),
+            questionTitle: '',
+            questionType: 'SINGLE',
+            options: [],
+            answer: { option: String(subAnswers[k] != null ? subAnswers[k] : '').trim() }
+          });
+        }
+      }
+      // subQuestions 只有 1 条但 subAnswers 有多键时，按 subAnswers 补全各空
+      if (subAnswers && list.length > 0) {
+        const keys = Object.keys(subAnswers).sort((a, b) => Number(a) - Number(b));
+        for (const k of keys) {
+          const idxNum = Number(k);
+          if (!list.some(x => Number(x.index) === idxNum || String(x.index) === String(k))) {
+            list.push({
+              index: idxNum,
+              questionTitle: '',
+              questionType: 'SINGLE',
+              options: [],
+              answer: { option: String(subAnswers[k] != null ? subAnswers[k] : '').trim() }
+            });
+          }
+        }
+      }
+
+      list.sort((a, b) => (Number(a.index) || 0) - (Number(b.index) || 0));
+
+      const children = list.map((sq, idx) => {
+        const idxKey = String(sq.index != null ? sq.index : idx + 1);
+        let letter = '';
+        if (sq.answer && sq.answer.option != null && String(sq.answer.option).trim() !== '') {
+          letter = String(sq.answer.option).trim();
+        } else if (subAnswers && subAnswers[idxKey] != null) {
+          letter = String(subAnswers[idxKey]).trim();
+        }
+        const qt = this.mapAiChildQuestionType(sq.questionType || 'SINGLE');
+        let items = [];
+        if (qt === 4) {
+          items = defaultJudgeOptions();
+        } else if (Array.isArray(sq.options) && sq.options.length > 0) {
+          items = sq.options.map(opt => ({
+            prefix: String(opt.key || '').toUpperCase(),
+            content: opt.text != null ? String(opt.text) : ''
+          }));
+        } else {
+          items = defaultChoiceOptions();
+        }
+        const child = {
+          questionType: qt,
+          questionTitle: sq.questionTitle != null ? String(sq.questionTitle) : '',
+          score: 1,
+          items,
+          correct: '',
+          correctArray: []
+        };
+        if (qt === 2 && letter) {
+          child.correctArray = letter.replace(/[^A-Za-z]/g, '').toUpperCase().split('').filter(Boolean);
+        } else if (qt === 4 && letter) {
+          const u = letter.toUpperCase();
+          child.correct = u.startsWith('A') || u.indexOf('对') >= 0 || u === 'T' ? 'A' : 'B';
+        } else if (letter) {
+          child.correct = letter.toUpperCase().charAt(0);
+        }
+        return child;
+      });
+
+      this.formData.clozeChildren = children;
+      if (ai.analysis) this.formData.analysis = ai.analysis;
+      if (ai.difficultyTag) {
+        this.formData.difficulty = ai.difficultyTag === 'HARD_LATER' ? 3 : 1;
+      }
+    },
+    resolveGroupNameFromAi(ai) {
+      const raw = ai && ai.knowledgePointId;
+      if (raw === null || raw === undefined || raw === '') return '';
+      const pointId = Number(raw);
+      if (!Number.isFinite(pointId)) return '';
+      const candidates = this.aiGenerate.moduleCandidates || [];
+      const hit = candidates.find(c =>
+        Number(c.pointId) === pointId ||
+        String(c.pointId) === String(raw)
+      );
+      if (hit && hit.pointName) {
+        return String(hit.pointName).trim();
+      }
+      return '';
+    },
+    async pickOrCreateDefaultColumnByGroup(groupName) {
+      const matchedGroup = String(groupName || '').trim();
+      if (!matchedGroup) return null;
+      const inGroup = (this.practiceColumnOptions || []).filter(c => String(c.groupName || '').trim() === matchedGroup);
+      const prefer = inGroup.find(c => this.isDefaultScatterColumn(String(c.columnName || '')));
+      if (prefer) {
+        this.practiceGroupName = matchedGroup;
+        return prefer;
+      }
+      // 该一级下无默认二级才创建
+      try {
+        const addRes = await addPracticeColumn({
+          subjectId: this.formData.subjectId,
+          groupName: matchedGroup,
+          columnName: '其它/零散题',
+          enablePractice: 1,
+          groupSort: 0,
+          sortOrder: 9999
+        });
+        if (!addRes || addRes.code !== 200) return null;
+        await this.loadPracticeOptions();
+        const refreshed = (this.practiceColumnOptions || []).find(
+          c => String(c.groupName || '').trim() === matchedGroup && this.isDefaultScatterColumn(String(c.columnName || ''))
+        );
+        if (refreshed) {
+          this.practiceGroupName = matchedGroup;
+          return refreshed;
+        }
+      } catch (e) {
+        // ignore
+      }
+      return null;
+    },
+    isDefaultScatterColumn(name) {
+      const raw = String(name || '').trim();
+      if (!raw) return false;
+      const normalized = raw.replace(/\s+/g, '').replace(/｜/g, '|').replace(/／/g, '/').toLowerCase();
+      if (['其他', '其它', '默认', '零散题', '其他/零散题', '其它/零散题', '其他/默认', '其它/默认'].includes(normalized)) {
+        return true;
+      }
+      return (normalized.includes('其他') || normalized.includes('其它') || normalized.includes('默认')) && normalized.includes('零散');
+    },
+    buildModuleLevelCandidates() {
+      // 规则：只把所有一级分组发给AI，不提前创建二级默认栏目
+      const groups = (this.practiceGroupOptions || []).map(g => String(g.groupName || '').trim()).filter(Boolean);
+      if (!groups.length) return [];
+      return groups.map((groupName, index) => {
+        const inGroup = (this.practiceColumnOptions || []).filter(
+          c => String(c.groupName || '').trim() === groupName && Number(c.columnId) > 0
+        );
+        // 使用该一级分组下真实存在的 columnId 作为 pointId，避免虚拟ID造成混淆
+        const sorted = inGroup.slice().sort((a, b) => Number(a.columnId) - Number(b.columnId));
+        const realPointId = sorted.length ? Number(sorted[0].columnId) : (900000 + index);
+        return {
+          pointId: realPointId,
+          pointName: groupName,
+          columnId: 0,
+          columnName: ''
+        };
+      });
+    },
+    buildStemWithImageFirst(imageUrl, stemText) {
+      const text = String(stemText || '').trim();
+      const url = String(imageUrl || '').trim();
+      if (!url) {
+        return text;
+      }
+      if (this.formData.questionTitleFormat === 'markdown') {
+        return text ? `![题目图片](${url})\n\n${text}` : `![题目图片](${url})`;
+      }
+      const safeText = this.escapeHtml(text);
+      const imageHtml = `<p><img src="${url}" style="max-width: 100%; height: auto;" /></p>`;
+      return text ? `${imageHtml}<p>${safeText}</p>` : imageHtml;
+    },
+    escapeHtml(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     },
     formatValidateKeyToLabel(key) {
       const map = {
@@ -770,6 +1359,16 @@ export default {
     },
     applyQuestionTypeDefaults(questionType, options = {}) {
       const { preserveAnswer = false } = options;
+      if (questionType === 6) {
+        this.formData.items = [];
+        this.formData.correct = '';
+        this.formData.correctArray = [];
+        this.formData.fillBlankAnswers = [];
+        if (!preserveAnswer) {
+          this.formData.clozeChildren = [];
+        }
+        return;
+      }
       if (questionType === 3) {
         this.formData.items = [];
         if (!preserveAnswer) {
@@ -837,6 +1436,9 @@ export default {
         // 读取标准答案格式（默认html，仅主观题）
         const correctFormat = response.data.correctFormat || 'html';
         
+        const inferredIsReal = (response.data.originOrder !== null && response.data.originOrder !== undefined)
+          || (response.data.examYear !== null && response.data.examYear !== undefined)
+          || (response.data.examHalf !== null && response.data.examHalf !== undefined);
         this.formData = {
           ...response.data,
           correctArray: response.data.correctArray || [],
@@ -848,6 +1450,7 @@ export default {
           optionFormat: optionFormat,
           correctFormat: correctFormat,
           analysisFormat: analysisFormat,
+          isRealQuestion: inferredIsReal,
           // 默认无完形子题，后续如为完形再单独加载
           clozeChildren: []
         };
@@ -880,6 +1483,7 @@ export default {
           const clozeRes = await getClozeQuestion(id);
           if (clozeRes.code === 200 && clozeRes.data) {
             const children = (clozeRes.data.children || []).map(child => ({
+              id: child.id,
               questionType: child.questionType,
               questionTitle: child.questionTitle,
               score: child.score,
@@ -924,18 +1528,21 @@ export default {
         );
       });
     },
-    addClozeChild() {
+    addClozeChild(count = 1) {
       if (!Array.isArray(this.formData.clozeChildren)) {
         this.formData.clozeChildren = [];
       }
-      this.formData.clozeChildren.push({
-        questionType: 1,
-        questionTitle: '',
-        score: 1,
-        items: defaultChoiceOptions(),
-        correct: '',
-        correctArray: []
-      });
+      const n = Math.max(1, Math.min(50, Number(count) || 1));
+      for (let i = 0; i < n; i++) {
+        this.formData.clozeChildren.push({
+          questionType: 1,
+          questionTitle: '',
+          score: 1,
+          items: defaultChoiceOptions(),
+          correct: '',
+          correctArray: []
+        });
+      }
     },
     removeClozeChild(index) {
       if (!Array.isArray(this.formData.clozeChildren)) return;
@@ -970,33 +1577,48 @@ export default {
       const type = this.formData.questionType;
       // 完形填空：走单独的批量保存接口
       if (type === 6) {
+        const keepIsReal = this.formData.isRealQuestion === true;
+        const keepExamYear = keepIsReal ? this.formData.examYear : null;
+        const keepExamHalf = keepIsReal ? this.formData.examHalf : null;
+        // 完形父题原卷题号表示“首个子题题号”，新增一组后应按子题数量跳号
+        const clozeSpan = (this.formData.clozeChildren || []).filter(Boolean).length || 1;
+        const nextOriginOrder = this.getNextOriginOrderAfterCreate(clozeSpan);
         const children = (this.formData.clozeChildren || []).map((child, index) => {
           return {
+            id: child.id,
             questionType: child.questionType,
             questionTitle: child.questionTitle,
             score: child.score,
             items: child.items,
             correct: child.correct,
             correctArray: child.correctArray,
-            itemOrder: index
+            clozeIndex: index + 1
           };
         });
         const payload = {
           parent: {
+            id: this.formData.id,
             subjectId: this.formData.subjectId,
             questionType: 6,
             questionTitle: this.formData.questionTitle,
             analysis: this.formData.analysis,
-            score: this.formData.score
+            score: this.formData.score,
+            animationId: this.formData.animationId,
+            originOrder: keepIsReal ? this.formData.originOrder : null,
+            examYear: keepExamYear,
+            examHalf: keepExamHalf,
+            analysisFormat: this.formData.analysisFormat,
+            questionTitleFormat: this.formData.questionTitleFormat
           },
           children: children
         };
-        const res = await addClozeQuestion(payload);
+        const isEdit = !!this.formData.id;
+        const res = isEdit ? await updateClozeQuestion(payload) : await addClozeQuestion(payload);
         const message = res.code === 200 ? "完形填空保存成功!" : "保存失败,请联系管理员!"
         const typeName = res.code === 200 ? "success" : "error"
         this.$message({ message, type: typeName });
-        // 新增成功后重置输入：只保留“科目 + 题型”，其余回到默认值（与其他题型保持一致）
-        if (res.code === 200) {
+        // 新增：重置输入；编辑：刷新一次数据，保证子题id/索引回显一致
+        if (res.code === 200 && !isEdit) {
           const keepSubjectId = this.formData.subjectId;
           const keepQuestionType = this.formData.questionType; // 6
 
@@ -1006,16 +1628,36 @@ export default {
           // resetFields 不会处理这些“表单外状态”，这里一并清空
           this.animationFileList = [];
           this.knowledgePointOptions = [];
+          this.practiceGroupName = '';
+          this.practiceColumnIds = [];
+          this.formData.animationId = null;
+          this.formData.animationUrl = '';
+          this.formData.knowledgePointIds = [];
 
           this.formData.subjectId = keepSubjectId;
           this.formData.questionType = keepQuestionType;
-          // 完形题型下的一些默认结构（目前主要是子题列表）
+          this.formData.isRealQuestion = keepIsReal;
+          this.formData.examYear = keepExamYear;
+          this.formData.examHalf = keepExamHalf;
+          this.formData.originOrder = nextOriginOrder;
+          // 仅保留科目/题型：其余全部按默认初始化
+          this.formData.score = 1;
+          this.formData.analysis = '无';
+          this.formData.questionTitle = '';
+          this.formData.correct = '';
+          this.formData.correctArray = [];
+          this.formData.fillBlankAnswers = [{ value: '' }];
+          this.formData.requireOrder = false;
           this.applyQuestionTypeDefaults(keepQuestionType);
           this.formData.clozeChildren = [];
+          this.clearAiImageUpload();
 
           this.$nextTick(() => {
             this.$refs['elForm'] && this.$refs['elForm'].clearValidate();
           });
+        }
+        if (res.code === 200 && isEdit) {
+          await this.getData(this.formData.id);
         }
         return;
       }
@@ -1064,55 +1706,51 @@ export default {
         }
         
         if (this.formData.id === undefined) {
-          // 新增成功后，保留科目和题型，只清空题干、选项、答案、解析
+          const keepIsReal = this.formData.isRealQuestion === true;
+          const keepExamYear = keepIsReal ? this.formData.examYear : null;
+          const keepExamHalf = keepIsReal ? this.formData.examHalf : null;
+          const nextOriginOrder = this.getNextOriginOrderAfterCreate();
+          // 新增成功后：只保留科目+题型，其余全部清空，便于连续录题
           const keepSubjectId = this.formData.subjectId;
           const keepQuestionType = this.formData.questionType;
-          const keepScore = this.formData.score;
-          
-          // 清空题干和解析
-          this.formData.questionTitle = '';
-          this.formData.analysis = '无';
-          
-          // 根据题型清空答案和选项
-          if (keepQuestionType === 1) {
-            // 单选题：保留选项结构，清空内容和答案
-            this.formData.items = defaultChoiceOptions();
-            this.formData.correct = '';
-            this.formData.correctArray = [];
-          } else if (keepQuestionType === 2) {
-            // 多选题：保留选项结构，清空内容和答案
-            this.formData.items = defaultChoiceOptions();
-            this.formData.correct = '';
-            this.formData.correctArray = [];
-          } else if (keepQuestionType === 3) {
-            // 主观题：清空答案
-            this.formData.items = [];
-            this.formData.correct = '';
-            this.formData.correctArray = [];
-          } else if (keepQuestionType === 5) {
-            // 填空题：清空答案数组，保留顺序设置
-            this.formData.items = [];
-            this.formData.fillBlankAnswers = [{ value: '' }];
-            this.formData.correctArray = [];
-            // 不清空requireOrder，保持用户设置
-          } else if (keepQuestionType === 4) {
-            // 判断题：保留正确/错误选项，清空答案
-            this.formData.items = defaultJudgeOptions();
-            this.formData.correct = '';
-            this.formData.correctArray = [];
-          }
-          
-          // 保留科目、题型和分数
+          // 直接整体重置到初始默认，再回填科目/题型
+          this.$refs['elForm'] && this.$refs['elForm'].resetFields();
+          // 表单外状态同步清空
+          this.practiceGroupName = '';
+          this.practiceColumnIds = [];
+          this.animationFileList = [];
+          this.knowledgePointOptions = [];
+          this.animationOptions = [];
+          // 回填科目/题型
           this.formData.subjectId = keepSubjectId;
           this.formData.questionType = keepQuestionType;
-          this.formData.score = keepScore;
-          
+          this.formData.isRealQuestion = keepIsReal;
+          this.formData.examYear = keepExamYear;
+          this.formData.examHalf = keepExamHalf;
+          this.formData.originOrder = nextOriginOrder;
+          // 强制其余默认（resetFields 可能受当前表单结构影响，这里显式兜底）
+          this.formData.id = undefined;
+          this.formData.questionTitle = '';
+          this.formData.analysis = '无';
+          this.formData.score = 1;
+          this.formData.correct = '';
+          this.formData.correctArray = [];
+          this.formData.fillBlankAnswers = [{ value: '' }];
+          this.formData.requireOrder = false;
+          this.formData.animationId = null;
+          this.formData.animationUrl = '';
+          this.formData.knowledgePointIds = [];
+          this.applyQuestionTypeDefaults(keepQuestionType);
+          // resetFields 不覆盖 items；applyQuestionTypeDefaults 在单选/多选且 items 非空时也不会重建选项，需显式清空
+          if ([1, 2].includes(keepQuestionType)) {
+            this.formData.items = defaultChoiceOptions();
+          }
+          this.clearAiImageUpload();
+
           // 清除表单验证状态，避免显示红色提示信息
           this.$nextTick(() => {
             this.$refs['elForm'].clearValidate();
           });
-          // 新增成功后，清空本地草稿
-          this.clearDraft();
         }
       }
 
@@ -1151,8 +1789,6 @@ export default {
       this.formData.subjectId = keepSubjectId;
       this.formData.questionType = keepType;
       this.applyQuestionTypeDefaults(keepType);
-      // 手动重置时，同步更新草稿
-      this.scheduleSaveDraft();
     },
     optionItemRemove(index) {
       this.formData.items.splice(index, 1)
@@ -1214,6 +1850,93 @@ export default {
       }
     },
 
+    // 从解析内容中自动识别单选题标准答案（仅在未手动选择答案时生效）
+    autoInferSingleChoiceAnswerFromAnalysis(text) {
+      // 只对单选题生效
+      if (!this.formData || this.formData.questionType !== 1) return;
+      // 已经有标准答案时不覆盖人工选择
+      if (this.formData.correct) return;
+      if (!text) return;
+      const raw = String(text);
+      // 富文本模式下简单去掉 HTML 标签，只看纯文本
+      const plain = raw.replace(/<[^>]*>/g, ' ');
+      // 需求：找到“答案”二字后，若干字符范围内出现的第一个字母作为选项
+      const idx = plain.indexOf('答案');
+      if (idx === -1) return;
+      const tail = plain.slice(idx + 2); // 跳过“答案”两个字
+      // 允许中间有“：”“:”“为”“是”等字以及空格和少量其他字符
+      const around = tail.slice(0, 20); // 只看“答案”后面最多20个字符
+      const match = around.match(/[A-Z]/i);
+      if (!match) return;
+      const letter = String(match[0] || '').toUpperCase();
+      if (!letter) return;
+      // 只在当前选项前缀中存在时才设置
+      const hasOption = (this.formData.items || []).some(item => item && item.prefix === letter);
+      if (!hasOption) return;
+      this.formData.correct = letter;
+      // 这里不再弹出提示，避免与知识点专栏提示叠加打扰
+    },
+
+    // 从解析中识别“知识点：XXX”，并自动选择对应一级/二级专栏（优先选择该一级分组下名称为“其他”或“默认”的二级栏目）
+    async autoInferPracticeColumnFromAnalysis(text) {
+      if (!this.formData || !this.formData.subjectId) return;
+      if (!text) return;
+      const raw = String(text);
+      // 去掉 HTML 标签
+      const plain = raw.replace(/<[^>]*>/g, ' ');
+      // 匹配“知识点：软件测试”这类格式，取“知识点：”后面连续的一段非标点/空白字符作为分组名称
+      const m = plain.match(/知识点\s*[：:]\s*([^\s，。、；;]+)/);
+      if (!m) return;
+      const groupName = (m[1] || '').trim();
+      if (!groupName) return;
+
+      // 若当前一级分组已与解析里识别的一致且已经选过二级栏目，则不重复覆盖
+      if (this.practiceGroupName === groupName && Array.isArray(this.practiceColumnIds) && this.practiceColumnIds.length) {
+        return;
+      }
+
+      // 确保当前科目的专栏选项已加载
+      if (!Array.isArray(this.practiceGroupOptions) || !this.practiceGroupOptions.length
+        || !Array.isArray(this.practiceColumnOptions) || !this.practiceColumnOptions.length) {
+        await this.loadPracticeOptions();
+      }
+
+      // 一级分组名称支持“相似匹配”，只要包含关系即可，例如解析里是“软件测试”，系统里是“软件测试基础”
+      const existsGroup = (this.practiceGroupOptions || []).some(g => {
+        const name = (g.groupName || '').trim();
+        if (!name || !groupName) return false;
+        return name.includes(groupName) || groupName.includes(name);
+      });
+      if (!existsGroup) {
+        // 若系统里没有这个一级分组，就不做任何自动选择，避免误判
+        return;
+      }
+
+      // 二级栏目也按分组名称做“相似匹配”
+      const candidates = (this.practiceColumnOptions || []).filter(c => {
+        const name = (c.groupName || '').trim();
+        if (!name || !groupName) return false;
+        return name.includes(groupName) || groupName.includes(name);
+      });
+      if (!candidates.length) return;
+
+      // 优先选择名称为“其他”或“默认”的二级栏目，否则就取该分组下第一个栏目
+      const preferNames = ['其他', '默认'];
+      let picked = candidates.find(c => preferNames.includes((c.columnName || '').trim()));
+      if (!picked) {
+        picked = candidates[0];
+      }
+      if (!picked || !picked.columnId) return;
+
+      this.practiceGroupName = groupName;
+      this.practiceColumnIds = [picked.columnId];
+
+      // 更新最近使用缓存与排序
+      this.handlePracticeColumnIdsChange(this.practiceColumnIds);
+      // 仅保留一个提示，避免与答案提示叠加
+      this.$message.success(`已根据解析中的知识点自动选择专栏：${groupName} / ${picked.columnName || '其他/零散题'}`);
+    },
+
     beforeAnimationUpload(file) {
       const ext = (file.name || '').split('.').pop();
       const ok = ['html', 'htm'].includes(String(ext || '').toLowerCase());
@@ -1268,5 +1991,25 @@ export default {
 /* 该页面采用“提交时统一弹窗提示”，隐藏每个输入框下方的红色校验文案 */
 ::v-deep .el-form-item__error {
   display: none !important;
+}
+
+.ai-generate-box {
+  padding: 10px 12px;
+  border: 1px dashed #dcdfe6;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.ai-generate-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ai-generate-tip {
+  margin-top: 8px;
+  color: #909399;
+  font-size: 12px;
 }
 </style>

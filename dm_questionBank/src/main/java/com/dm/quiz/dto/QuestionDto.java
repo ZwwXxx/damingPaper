@@ -22,6 +22,8 @@ public class QuestionDto {
     private String[] correctArray;
     // 该题总分（多选就几个选项加一起）
     private Integer score;
+    // 难度：1=简单，2=中等，3=困难
+    private Integer difficulty;
     // 题目
     private String questionTitle;
     //所属科目
@@ -32,6 +34,12 @@ public class QuestionDto {
     private Integer clozeIndex;
     // 题目序号表示第几题
     private Integer itemOrder;
+    // 原卷题号（复合题可填首子题题号）
+    private Integer originOrder;
+    // 题目年份（用于按年份筛题/组卷）
+    private Integer examYear;
+    // 考试批次：1=上半年，2=下半年；为空表示该年份仅考一次
+    private Integer examHalf;
     // 填空题答案是否要求按顺序（true=要求按顺序，false=不要求按顺序）
     private Boolean requireOrder;
     // 解析内容格式（html=富文本，markdown=Markdown格式，默认html）
@@ -49,6 +57,30 @@ public class QuestionDto {
 
     public void setItemOrder(Integer itemOrder) {
         this.itemOrder = itemOrder;
+    }
+
+    public Integer getOriginOrder() {
+        return originOrder;
+    }
+
+    public void setOriginOrder(Integer originOrder) {
+        this.originOrder = originOrder;
+    }
+
+    public Integer getExamYear() {
+        return examYear;
+    }
+
+    public void setExamYear(Integer examYear) {
+        this.examYear = examYear;
+    }
+
+    public Integer getExamHalf() {
+        return examHalf;
+    }
+
+    public void setExamHalf(Integer examHalf) {
+        this.examHalf = examHalf;
     }
 
     public Long getId() {
@@ -121,6 +153,13 @@ public class QuestionDto {
 
     public void setScore(Integer score) {
         this.score = score;
+    }
+    public Integer getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Integer difficulty) {
+        this.difficulty = difficulty;
     }
 
     public String getQuestionTitle() {

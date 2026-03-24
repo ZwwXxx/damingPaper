@@ -220,7 +220,7 @@
                     :class="{'qa-tag-active': activeQuestionOrder === question.itemOrder}"
                     @click="jumpToQuestion(question.itemOrder)"
                   >
-                    {{ question.itemOrder + 1 }}
+                    {{ getDisplayNo(question) }}
                   </el-tag>
                 </div>
               </div>
@@ -281,7 +281,7 @@
               <!-- 题目 -->
               <div class="question-title" style="margin-bottom: 15px;">
                 <p style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">
-                  <span>{{ question.itemOrder + 1 }}. </span>
+                  <span>{{ getDisplayNo(question) }}. </span>
                   <span
                     class="question-title-content"
                     :class="{'is-collapsed': shouldCollapseQuestion(question)}"
@@ -512,6 +512,26 @@ export default {
     this.getList();
   },
   methods: {
+    /** 题号展示：当试卷配置为“按原卷题号”时，直接使用 originOrder，不做补位；否则沿用 itemOrder+1 */
+    getDisplayNo(question) {
+      if (!question) return '';
+      const paper = this.paperReviewData && this.paperReviewData.paperDto;
+      const numberMode = paper && paper.numberMode;
+      // 约定：numberMode === 3 表示“按原卷题号展示”
+      if (numberMode === 3) {
+        const raw = question.originOrder;
+        if (raw === null || raw === undefined || raw === '') return '';
+        const n = Number(raw);
+        if (Number.isFinite(n)) {
+          return n;
+        }
+        // 非纯数字时，原样返回（比如 "1-3" 这种区间）
+        return String(raw);
+      }
+      const base = question.itemOrder;
+      const idx = (base === null || base === undefined) ? 0 : Number(base);
+      return Number.isFinite(idx) ? idx + 1 : '';
+    },
     async loadSubjectOptions() {
       const res = await optionSubject();
       const list = res.data || [];

@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dm.quiz.dto.AutoAssemblePaperRequest;
 import com.dm.quiz.dto.PaperDto;
+import com.dm.quiz.dto.PaperSyncImportResultDto;
+import com.dm.quiz.dto.PaperSyncPackageDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,6 +109,26 @@ public class DamingPaperController extends BaseController
     @PostMapping("/auto-compose-by-date")
     public AjaxResult autoComposeByDate(@RequestBody AutoAssemblePaperRequest request) {
         return success(damingPaperService.autoAssemblePaperByDate(request));
+    }
+
+    /**
+     * 导出试卷同步包（含试卷和完整题目）
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:paper:query')")
+    @GetMapping("/sync/export/{paperId}")
+    public AjaxResult exportSyncPackage(@PathVariable("paperId") Long paperId) {
+        return success(damingPaperService.exportPaperSyncPackage(paperId));
+    }
+
+    /**
+     * 导入试卷同步包（自动导入题目，已存在题目跳过）
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:paper:add')")
+    @Log(title = "试卷同步导入", businessType = BusinessType.IMPORT)
+    @PostMapping("/sync/import")
+    public AjaxResult importSyncPackage(@RequestBody PaperSyncPackageDto syncPackageDto) {
+        PaperSyncImportResultDto result = damingPaperService.importPaperSyncPackage(syncPackageDto);
+        return success(result);
     }
 
     /**

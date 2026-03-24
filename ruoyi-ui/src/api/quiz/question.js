@@ -35,6 +35,15 @@ export function addClozeQuestion(data) {
   })
 }
 
+// 更新完形填空题（父题 + 子题）
+export function updateClozeQuestion(data) {
+  return request({
+    url: '/quiz/question/cloze',
+    method: 'put',
+    data: data
+  })
+}
+
 // 查询完形填空题详情（父题 + 子题）
 export function getClozeQuestion(id) {
   return request({
@@ -47,6 +56,24 @@ export function getClozeQuestion(id) {
 export function updateQuestion(data) {
   return request({
     url: '/quiz/question',
+    method: 'put',
+    data: data
+  })
+}
+
+// 仅更新题目的原卷题号
+export function updateQuestionOriginOrder(data) {
+  return request({
+    url: '/quiz/question/origin-order',
+    method: 'put',
+    data: data
+  })
+}
+
+// 仅更新题目的考试批次（上/下半年）
+export function updateQuestionExamHalf(data) {
+  return request({
+    url: '/quiz/question/exam-half',
     method: 'put',
     data: data
   })
@@ -100,5 +127,25 @@ export function bindQuestionPracticeColumns(questionId, columnIds) {
     url: '/quiz/question/' + questionId + '/practice-columns',
     method: 'post',
     data: columnIds || []
+  })
+}
+
+// 图片智能录题：创建任务（代理到 daming-ai）
+export function createQuestionAiImageTask(formData) {
+  return request({
+    url: '/quiz/question/ai-image/task',
+    method: 'post',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+// 图片智能录题：查询任务
+export function queryQuestionAiImageTask(taskId) {
+  return request({
+    url: '/quiz/question/ai-image/task/' + taskId,
+    method: 'get'
   })
 }

@@ -28,6 +28,9 @@ public class DamingQuestion extends BaseEntity
     /** 完形第几空索引（从1开始），普通题为空 */
     private Integer clozeIndex;
 
+    /** 原卷题号（复合题可填首子题题号） */
+    private Integer originOrder;
+
     /** 题目内容id */
     @Excel(name = "题目内容id")
     private Long questionInfoId;
@@ -44,12 +47,26 @@ public class DamingQuestion extends BaseEntity
     @Excel(name = "总分")
     private Integer score;
 
+    /** 难度：1=简单，2=中等，3=困难 */
+    @Excel(name = "难度")
+    private Integer difficulty;
+
     /** 是否删除 */
     private Integer delFlag;
 
     /** 科目 */
     @Excel(name = "科目")
     private Integer subjectId;
+
+    /** 题目年份（用于按年份筛题/组卷） */
+    @Excel(name = "题目年份")
+    private Integer examYear;
+
+    /**
+     * 考试批次：1=上半年，2=下半年；为空表示该年份仅考一次
+     */
+    @Excel(name = "考试批次")
+    private Integer examHalf;
 
     /**
      * 题干（仅用于列表查询/模糊搜索，不落库；真实题干存于 daming_content_info.content 的 JSON 中）
@@ -92,6 +109,14 @@ public class DamingQuestion extends BaseEntity
     {
         this.clozeIndex = clozeIndex;
     }
+
+    public Integer getOriginOrder() {
+        return originOrder;
+    }
+
+    public void setOriginOrder(Integer originOrder) {
+        this.originOrder = originOrder;
+    }
     public void setQuestionInfoId(Long questionInfoId)
     {
         this.questionInfoId = questionInfoId;
@@ -130,6 +155,13 @@ public class DamingQuestion extends BaseEntity
     {
         return score;
     }
+    public Integer getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Integer difficulty) {
+        this.difficulty = difficulty;
+    }
     public void setDelFlag(Integer delFlag)
     {
         this.delFlag = delFlag;
@@ -149,6 +181,22 @@ public class DamingQuestion extends BaseEntity
         return subjectId;
     }
 
+    public Integer getExamYear() {
+        return examYear;
+    }
+
+    public void setExamYear(Integer examYear) {
+        this.examYear = examYear;
+    }
+
+    public Integer getExamHalf() {
+        return examHalf;
+    }
+
+    public void setExamHalf(Integer examHalf) {
+        this.examHalf = examHalf;
+    }
+
     public String getQuestionTitle() {
         return questionTitle;
     }
@@ -164,12 +212,16 @@ public class DamingQuestion extends BaseEntity
                 .append("parentId", getParentId())
                 .append("questionType", getQuestionType())
                 .append("clozeIndex", getClozeIndex())
+                .append("originOrder", getOriginOrder())
                 .append("questionInfoId", getQuestionInfoId())
                 .append("animationId", getAnimationId())
                 .append("correct", getCorrect())
                 .append("score", getScore())
+                .append("difficulty", getDifficulty())
                 .append("delFlag", getDelFlag())
                 .append("subjectId", getSubjectId())
+                .append("examYear", getExamYear())
+                .append("examHalf", getExamHalf())
                 .append("questionTitle", getQuestionTitle())
                 .append("createTime", getCreateTime())
                 .append("updateTime", getUpdateTime())

@@ -155,6 +155,17 @@ public class DamingQuestionController extends BaseController {
     }
 
     /**
+     * 更新完形填空题（父题 + 子题）
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:question:edit')")
+    @Log(title = "题目表-完形填空", businessType = BusinessType.UPDATE)
+    @PutMapping("/cloze")
+    public AjaxResult updateCloze(@RequestBody ClozeQuestionCreateRequest request) {
+        damingQuestionService.updateClozeQuestion(request);
+        return success();
+    }
+
+    /**
      * 修改题目表
      */
     @PreAuthorize("@ss.hasPermi('quiz:question:edit')")
@@ -162,6 +173,34 @@ public class DamingQuestionController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody QuestionDto questionDto) {
         return toAjax(damingQuestionService.updateDamingQuestion(questionDto));
+    }
+
+    /**
+     * 仅更新题目的原卷题号
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:question:edit')")
+    @Log(title = "题目表-原卷题号", businessType = BusinessType.UPDATE)
+    @PutMapping("/origin-order")
+    public AjaxResult updateOriginOrder(@RequestBody QuestionDto questionDto) {
+        if (questionDto.getId() == null) {
+            return AjaxResult.error("题目ID不能为空");
+        }
+        damingQuestionService.updateOriginOrder(questionDto.getId(), questionDto.getOriginOrder());
+        return success();
+    }
+
+    /**
+     * 仅更新题目的考试批次（上/下半年）
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:question:edit')")
+    @Log(title = "题目表-考试批次", businessType = BusinessType.UPDATE)
+    @PutMapping("/exam-half")
+    public AjaxResult updateExamHalf(@RequestBody QuestionDto questionDto) {
+        if (questionDto.getId() == null) {
+            return AjaxResult.error("题目ID不能为空");
+        }
+        damingQuestionService.updateExamHalf(questionDto.getId(), questionDto.getExamHalf());
+        return success();
     }
 
     /**

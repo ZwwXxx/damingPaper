@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 20px">
     <el-row :gutter="15">
-      <el-form ref="elForm1" :model="formData" :rules="rules" size="medium" label-width="100px">
+      <el-form ref="elForm1" :model="formData" :rules="rules" :show-message="false" size="medium" label-width="100px">
         <el-col :span="12">
           <el-form-item label="科目" prop="subjectId">
             <el-select v-model="formData.subjectId" placeholder="请选择科目" clearable :style="{width: '100%'}">
@@ -67,6 +67,7 @@
             <el-radio-group v-model="formData.numberMode">
               <el-radio :label="1">按题型分组</el-radio>
               <el-radio :label="2">按加入顺序</el-radio>
+              <el-radio :label="3">按原卷题序</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -83,7 +84,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item
-            :label="formData.numberMode === 1 ? ('题型'+(qtypeIndex+1)+':') : '题目列表'"
+            :label="formData.numberMode === 1 ? ('题型'+(qtypeIndex+1)+':') : (questionType.name || '题目')"
             v-for="(questionType,qtypeIndex) in formData.paperQuestionTypeDto"
             :key="qtypeIndex"
           >
@@ -117,7 +118,7 @@
                   :key="q.id || questionIndex"
                   class="question-drag-item"
                 >
-                  <el-form-item :label="'题目'+(questionIndex+1)+'：'" class="question-item-form">
+                  <el-form-item :label="getQuestionDisplayLabel(questionType, q, questionIndex)" class="question-item-form">
                     <el-row>
                       <el-col :span="1" class="drag-handle-col">
                         <i class="el-icon-rank question-drag-handle" title="拖拽调整题序"/>
@@ -130,6 +131,49 @@
                         </span>
                       </el-col>
                       <el-col :span="3">
+                        <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 2px;">
+                          <span style="font-size: 12px; color: #909399;">
+                            {{ hasChildren(questionType, q) ? '原卷(首子题)' : '原卷' }}
+                          </span>
+                          <el-input-number
+                            v-model="originOrderMap[q.id]"
+                            size="mini"
+                            :disabled="true"
+                            :min="1"
+                            :max="9999"
+                            :controls="true"
+                            controls-position="right"
+                            style="width: 120px;"
+                            placeholder="题号"
+                          />
+                        </div>
+                        <el-popover placement="left" width="420" trigger="click">
+                          <div style="max-height: 360px; overflow: auto; line-height: 1.6;">
+                            <div style="font-weight: 600; margin-bottom: 6px;">
+                              {{ getQuestionTypeLabel(q.questionType) }}（ID: {{ q.id }}）
+                            </div>
+                          <div
+                            style="white-space: pre-wrap; word-break: break-word;"
+                            v-html="renderContent(q.questionTitle, q.questionTitleFormat)"
+                          ></div>
+                            <div v-if="q.items && q.items.length" style="margin-top: 10px;">
+                              <div style="font-weight: 600; margin-bottom: 6px;">选项</div>
+                              <div v-for="(op, opIndex) in q.items" :key="opIndex" style="margin-bottom: 4px;">
+                                <span style="display: inline-block; width: 22px; font-weight: 600;">{{ op.prefix }}</span>
+                                <span
+                                  style="white-space: pre-wrap; word-break: break-word;"
+                                  v-html="renderContent(op.content, q.optionFormat)"
+                                ></span>
+                              </div>
+                            </div>
+                            <div v-if="q.questionType === 6" style="margin-top: 10px;">
+                              <div style="font-weight: 600; margin-bottom: 6px;">完形填空</div>
+                              <div>子题数量：{{ getClozeChildCount(questionType, q) }}</div>
+                            </div>
+                          </div>
+                          <el-button slot="reference" type="text">题目概览</el-button>
+                        </el-popover>
+                        <el-button type="text" @click="handleAdjustQuestionOrder(questionType, q)">调整题序</el-button>
                         <el-button type="text" @click="removeQuestionWithChildren(questionType, q)">删除题目</el-button>
                       </el-col>
                     </el-row>
@@ -144,7 +188,12 @@
           <el-form-item size="large">
             <el-button type="primary" @click="submitForm">提交</el-button>
             <el-button @click="resetForm">重置</el-button>
-            <el-button type="warning" @click="addQuestionTypeInput">添加题型</el-button>
+            <el-button
+              type="primary"
+              plain
+              icon="el-icon-plus"
+              @click="formData.numberMode === 1 ? addQuestionTypeInput() : handleAddQuestionNormal()"
+            >{{ formData.numberMode === 1 ? '添加题型' : '添加题目' }}</el-button>
 
           </el-form-item>
         </el-col>
@@ -198,6 +247,32 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="年份">
+              <el-input-number
+                v-model="questionList.queryParams.examYear"
+                :min="2000"
+                :max="2100"
+                :controls="true"
+                controls-position="right"
+                placeholder="例如 2024"
+                style="width: 100%;"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="批次">
+              <el-select
+                v-model="questionList.queryParams.examHalf"
+                placeholder="上/下半年（可不选）"
+                clearable
+                :style="{width: '100%'}"
+              >
+                <el-option :value="1" label="上半年" />
+                <el-option :value="2" label="下半年" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="日期">
               <el-date-picker
                 v-model="questionList.dateRange"
@@ -218,8 +293,34 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="插入">
+              <el-input-number
+                v-model="questionInsertPosition"
+                :min="1"
+                :max="9999"
+                :controls="true"
+                controls-position="right"
+                style="width: 100%;"
+              />
+              <div style="margin-top: 4px; color: #909399; font-size: 12px;">
+                不填则追加到末尾；填 1 表示插到最前面（以“题目序号/可展示题目”为准，完形子题会跟随父题一起插入）
+              </div>
+            </el-form-item>
+          </el-col>
           <el-col style="margin-bottom: 10px;">
             <el-button type="primary" icon="el-icon-search" size="medium" @click="queryQuestionList">查询</el-button>
+            <el-button
+              type="success"
+              plain
+              icon="el-icon-check"
+              size="medium"
+              :loading="questionList.bulkSelecting"
+              @click="selectAllMatchingQuestionsCrossPage"
+            >全选跨页结果</el-button>
+            <span style="margin-left: 12px; color: #606266; font-size: 13px;">
+              已选 <b>{{ (questionList.selectionList || []).length }}</b> 题
+            </span>
           </el-col>
         </el-form>
       </el-row>
@@ -230,6 +331,23 @@
         :data="questionList.tableData"
                 @selection-change="handleSelectionChange" border fit highlight-current-row style="width: 100%">
         <el-table-column type="selection" width="40"></el-table-column>
+        <el-table-column label="原卷题号" width="120">
+          <template v-slot="scope">
+            <el-input-number
+              v-model="originOrderDraft[scope.row.id]"
+              size="mini"
+              :disabled="true"
+              :min="1"
+              :max="9999"
+              :controls="true"
+              controls-position="right"
+              style="width: 100%;"
+            />
+            <div v-if="scope.row.questionType === 6" style="font-size: 12px; color: #909399; margin-top: 2px;">
+              填首个子题题号
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="id" label="Id" width="60px"/>
         <el-table-column label="科目" width="70px">
           <template v-slot="scope">
@@ -239,6 +357,17 @@
         <el-table-column label="题型" width="70px">
           <template v-slot="scope">
             {{ getQuestionTypeLabel(scope.row.questionType) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="年份" width="72" align="center">
+          <template v-slot="scope">
+            <span v-if="scope.row.examYear">{{ scope.row.examYear }}</span>
+            <span v-else style="color:#909399;">-</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="批次" width="88" align="center">
+          <template v-slot="scope">
+            {{ getExamHalfLabel(scope.row.examHalf) }}
           </template>
         </el-table-column>
         <el-table-column prop="questionTitle" label="题干" show-overflow-tooltip/>
@@ -330,10 +459,12 @@
   </div>
 </template>
 <script>
-import {getQuestion, getClozeQuestion, listQuestion} from "@/api/quiz/question";
+import {getClozeQuestion, listQuestion} from "@/api/quiz/question";
 import {addPaper, getPaper, updatePaper, autoComposePaper, autoComposePaperByDate} from "@/api/quiz/paper";
 import {optionSubject} from "@/api/quiz/subject";
 import draggable from 'vuedraggable';
+import DOMPurify from 'dompurify';
+import { marked } from 'marked';
 
 export default {
   components: { draggable },
@@ -388,6 +519,8 @@ export default {
           questionTitle: undefined,
           questionType: undefined,
           subjectId: undefined,
+          examYear: undefined,
+          examHalf: undefined,
           pageNum: 1,
           pageSize: 5
         },
@@ -396,7 +529,17 @@ export default {
         tableData: [],
         total: 0,
         loading: undefined,
+        /** 程序化同步表格勾选时忽略 selection-change，避免冲掉跨页已选 */
+        selectionSyncing: false,
+        /** 跨页全选请求中 */
+        bulkSelecting: false,
       },
+      // 新增题目时：插入到第几个（从1开始），为空则追加到末尾
+      questionInsertPosition: null,
+      // 原卷题号（仅前端展示/排序使用，不提交后端）
+      originOrderMap: {},
+      // 新增题目弹框里临时编辑用的“原卷题号”
+      originOrderDraft: {},
 
       formData: {
         paperId: undefined,
@@ -502,8 +645,14 @@ export default {
       this.autoComposeByDate.form.subjectId = val
     },
     'formData.numberMode'(val, oldVal) {
-      // 切换为“按加入顺序”时，将题型扁平为单一题目列表，避免残留空题型块
-      if (val === 2) {
+      // 统一为数字，避免接口/控件返回字符串导致分支判断失效
+      let mode = Number(val)
+      if (Number.isNaN(mode)) mode = 2
+      if (this.formData.numberMode !== mode) {
+        this.formData.numberMode = mode
+      }
+      // 仅在「进入」非按题型分组（2/3）时合并一次，避免重复触发或反复合并
+      if ((mode === 2 || mode === 3) && !(Number(oldVal) === 2 || Number(oldVal) === 3)) {
         this.mergeQuestionTypesAsFlatList()
       }
     }
@@ -513,11 +662,263 @@ export default {
     let paperId = this.$route.query.paperId
     if (paperId) {
       this.getPaperById(paperId)
+    } else {
+      // 新建试卷进入页先创建占位块（numberMode=2 下只有一个占位块，名称仅用于页面展示）
+      this.ensureDefaultQuestionBlock()
     }
   },
   mounted() {
   },
   methods: {
+    getQuestionDisplayLabel(questionType, q, questionIndex) {
+      const no = this.getOriginDisplayNo(questionType, q, questionIndex)
+      return `题目${no}：`
+    },
+    // 严格按原卷题序显示：有 originOrder 就用它（允许跳号）；复合题显示范围
+    // fallback：没有 originOrder 时显示“无”
+    /** 题目对象上的原卷题号（后端字段 originOrder；兼容 originalOrder） */
+    getStrictOriginOrder(q) {
+      if (!q) return null
+      const raw =
+        q.originOrder !== undefined && q.originOrder !== null && q.originOrder !== ''
+          ? q.originOrder
+          : (q.originalOrder !== undefined && q.originalOrder !== null && q.originalOrder !== ''
+            ? q.originalOrder
+            : null)
+      if (raw === '' || raw === null || raw === undefined) return null
+      const n = Number(raw)
+      if (!Number.isFinite(n) || n <= 0) return null
+      return Math.floor(n)
+    },
+    getOriginDisplayNo(questionType, q, questionIndex) {
+      if (!q) return '无'
+      // 子题不展示（getDisplayQuestions 已过滤），这里只处理父题/普通题
+      const n = this.getStrictOriginOrder(q)
+      if (n != null) {
+        const start = n
+        const span = Math.max(1, Number(this.estimateOriginSpan(questionType, q)) || 1)
+        if (span > 1) return `${start}-${start + span - 1}`
+        return String(start)
+      }
+      return '无'
+    },
+    hasChildren(questionType, parentQuestion) {
+      if (!questionType || !parentQuestion || !parentQuestion.id) return false
+      const list = questionType.questionDtos || []
+      return list.some(x => x && x.parentId === parentQuestion.id)
+    },
+    // 估算“这道题在原卷里占用了多少个题号”
+    // - 普通题固定占 1
+    // - 复合题父题（有子题）按子题数量占号（原卷一般从首子题开始编号）
+    estimateOriginSpan(questionType, q) {
+      if (!q) return 1
+      // 子题本身不单独计号（跟随父题）
+      if (q.parentId) return 0
+
+      // 只要存在子题（不局限完形题型），按子题数占号
+      if (this.hasChildren(questionType, q)) {
+        const list = questionType.questionDtos || []
+        const n = list.filter(x => x && x.parentId === q.id).length
+        return Math.max(1, Number(n) || 1)
+      }
+      return 1
+    },
+    // 智能续号：按“当前展示顺序”或“按原卷顺序”后的顺序，给后续未填写的原卷题号自动顺延
+    // 规则：只对“可展示题目”（非子题）生效；完形父题按子题数量占号
+    autoFillOriginOrders(questionType) {
+      if (!questionType) return
+      const displayList = this.getDisplayQuestions(questionType)
+      if (!Array.isArray(displayList) || !displayList.length) return
+
+      // 从左到右扫描：遇到已填写题号就作为锚点；后续空缺按“占号数”顺延
+      let lastNumber = null
+      let lastSpan = 1
+      let filled = 0
+      for (const q of displayList) {
+        if (!q || q.id === undefined || q.id === null) continue
+        const raw = this.originOrderMap[q.id]
+        const n = raw === '' || raw === null || raw === undefined ? null : Number(raw)
+        const has = Number.isFinite(n) && n > 0
+
+        if (has) {
+          lastNumber = Math.floor(n)
+          lastSpan = this.estimateOriginSpan(questionType, q) || 1
+          continue
+        }
+        if (lastNumber === null) {
+          // 还没有锚点，跳过（避免乱填）
+          continue
+        }
+        const next = lastNumber + Math.max(1, Number(lastSpan) || 1)
+        this.$set(this.originOrderMap, q.id, next)
+        filled++
+        lastNumber = next
+        lastSpan = this.estimateOriginSpan(questionType, q) || 1
+      }
+
+      if (!filled) {
+        this.$message.warning('未能自动续号：请先给第一道（或任意一道）题填一个原卷题号作为锚点。')
+      } else {
+        this.$message.success(`已智能续号 ${filled} 道题（小题数来自题干文本；图片内小题无法识别）`)
+      }
+    },
+    sortQuestionsByOriginOrder(questionType) {
+      if (!questionType) return
+      const displayList = this.getDisplayQuestions(questionType)
+      if (!Array.isArray(displayList) || !displayList.length) return
+
+      const withIndex = displayList.map((q, idx) => {
+        // 优先用 originOrderMap（新增/展示过程只保证 map 被正确设置），否则再回退到题目对象字段
+        const nFromObj = this.getStrictOriginOrder(q)
+        const rawFromMap = (q && q.id != null) ? this.originOrderMap[q.id] : null
+        const nFromMap = rawFromMap === '' || rawFromMap === null || rawFromMap === undefined ? null : Number(rawFromMap)
+
+        const n = nFromObj != null ? nFromObj
+          : (Number.isFinite(nFromMap) && nFromMap > 0 ? Math.floor(nFromMap) : null)
+
+        const key = n != null ? n : Number.POSITIVE_INFINITY
+        return { q, idx, key }
+      })
+      withIndex.sort((a, b) => {
+        if (a.key !== b.key) return a.key - b.key
+        return a.idx - b.idx
+      })
+      const newOrder = withIndex.map(x => x.q)
+      this.applyDisplayOrder(questionType, newOrder)
+    },
+    getClozeChildCount(questionType, parentQuestion) {
+      if (!questionType || !parentQuestion || !parentQuestion.id) return 0
+      const list = questionType.questionDtos || []
+      return list.filter(x => x && x.parentId === parentQuestion.id).length
+    },
+    /** 渲染内容（支持HTML和Markdown），格式取决于存储时的 format 字段 */
+    renderContent(content, format) {
+      if (!content) return '';
+      const contentFormat = format || 'html';
+      if (contentFormat === 'markdown') {
+        try {
+          let html = marked(content);
+          // 处理表格，添加边框样式
+          html = html.replace(/<table([^>]*)>/gi, (match, attrs) => {
+            return `<table${attrs} style="border-collapse: collapse; width: 100%; margin: 10px 0; border: 1px solid #dcdfe6;">`;
+          });
+          html = html.replace(/<th([^>]*)>/gi, (match, attrs) => {
+            return `<th${attrs} style="border: 1px solid #dcdfe6; padding: 8px 12px; text-align: left; background-color: #f5f7fa; font-weight: 600;">`;
+          });
+          html = html.replace(/<td([^>]*)>/gi, (match, attrs) => {
+            return `<td${attrs} style="border: 1px solid #dcdfe6; padding: 8px 12px; text-align: left;">`;
+          });
+          return DOMPurify.sanitize(html, {
+            ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ol', 'ul', 'li', 'img', 'a', 'span', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'code', 'pre', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
+            ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'style', 'target'],
+            ALLOW_DATA_ATTR: false
+          });
+        } catch (error) {
+          console.error('Markdown渲染失败:', error);
+          return this.sanitizeHtml(String(content).replace(/\n/g, '<br>'));
+        }
+      } else {
+        return this.sanitizeHtml(content);
+      }
+    },
+    /** HTML安全处理 */
+    sanitizeHtml(html) {
+      if (!html) return '';
+      const str = String(html);
+      if (!/<[^>]+>/.test(str)) {
+        return str;
+      }
+      return DOMPurify.sanitize(str, {
+        ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ol', 'ul', 'li', 'img', 'a', 'span', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'code', 'pre', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
+        ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'style', 'target'],
+        ALLOW_DATA_ATTR: false
+      });
+    },
+    showValidatePopup(fields) {
+      const fieldMap = fields || {};
+      const keys = Object.keys(fieldMap);
+      if (!keys.length) {
+        return this.$alert('请完善表单必填项后再提交。', '校验未通过', { type: 'warning' });
+      }
+
+      const messages = [];
+      keys.forEach((k) => {
+        const arr = fieldMap[k];
+        if (Array.isArray(arr) && arr.length) {
+          const msg = arr[0] && arr[0].message ? String(arr[0].message) : '';
+          if (msg) messages.push(msg);
+        }
+      });
+      const uniq = [...new Set(messages)].slice(0, 8);
+      const html = uniq.length ? uniq.map(m => `- ${m}`).join('<br/>') : '请完善表单必填项后再提交。';
+
+      return this.$alert(html, '校验未通过', {
+        type: 'warning',
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '知道了'
+      });
+    },
+    normalizeInsertPosition(pos) {
+      if (pos === null || pos === undefined || pos === '') return null
+      const n = Number(pos)
+      if (!Number.isFinite(n)) return null
+      const i = Math.floor(n)
+      return i >= 1 ? i : 1
+    },
+    // 根据“可展示题目”的第 N 个（从1开始），计算在 questionDtos 里的真实插入下标
+    getRawInsertIndexByDisplayPosition(questionType, displayPos) {
+      if (!questionType || !Array.isArray(questionType.questionDtos)) return 0
+      const normalized = this.normalizeInsertPosition(displayPos)
+      if (!normalized) return questionType.questionDtos.length
+      if (normalized === 1) return 0
+      let displayCount = 0
+      const dtos = questionType.questionDtos
+      for (let rawIndex = 0; rawIndex < dtos.length; rawIndex++) {
+        const q = dtos[rawIndex]
+        if (!q || q.parentId) continue
+        displayCount++
+        // displayCount 已经是当前 rawIndex 对应的“第 displayCount 个可展示题目”
+        // 要插入到第 normalized 个 => 插入点应在第 normalized-1 个之后
+        if (displayCount === normalized - 1) {
+          return rawIndex + 1
+        }
+      }
+      // 超过当前长度 => 追加
+      return dtos.length
+    },
+    insertQuestionsAtPosition(questionType, rawIndex, questionsToInsert) {
+      if (!questionType) return
+      if (!Array.isArray(questionType.questionDtos)) {
+        this.$set(questionType, 'questionDtos', [])
+      }
+      const list = questionType.questionDtos
+      const idx = Math.max(0, Math.min(Number(rawIndex) || 0, list.length))
+      list.splice(idx, 0, ...(questionsToInsert || []))
+    },
+    async handleAdjustQuestionOrder(questionType, question) {
+      if (!questionType || !question || question.parentId) return
+      const displayList = this.getDisplayQuestions(questionType)
+      const currIndex = displayList.findIndex(x => x && x.id === question.id)
+      if (currIndex < 0) return
+      const max = displayList.length
+      try {
+        const { value } = await this.$prompt(`请输入要调整到第几题（1-${max}）`, '调整题序', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputValue: String(currIndex + 1),
+          inputPattern: /^[1-9]\d*$/,
+          inputErrorMessage: '请输入正整数'
+        })
+        const target = Math.max(1, Math.min(max, Math.floor(Number(value) || 1)))
+        if (target === currIndex + 1) return
+        const newOrder = [...displayList]
+        const [moved] = newOrder.splice(currIndex, 1)
+        newOrder.splice(target - 1, 0, moved)
+        this.applyDisplayOrder(questionType, newOrder)
+      } catch (e) {
+        // 用户取消
+      }
+    },
     queryQuestionTypeSearch(queryString, cb) {
       const suggestions = this.questionTypeSuggestions;
       const results = queryString ? suggestions.filter(item => {
@@ -542,14 +943,47 @@ export default {
     async getPaperById(paperId) {
       this.formData = (await getPaper(paperId)).data
       console.log(this.formData)
+      let nm = Number(this.formData.numberMode)
+      if (Number.isNaN(nm)) nm = 2
+      this.formData.numberMode = nm
+      // 非按题型分组：加载后合并为一块，避免多块题型残留
+      if (this.formData.numberMode === 2 || this.formData.numberMode === 3) {
+        this.mergeQuestionTypesAsFlatList()
+      }
+      this.initOriginOrderMapFromPaper()
+      // 进入编辑页后按 originOrderMap 重新确保：序号最小的在最上面
+      if (this.formData.numberMode === 2 || this.formData.numberMode === 3) {
+        const firstType = (this.formData.paperQuestionTypeDto || [])[0]
+        if (firstType) this.sortQuestionsByOriginOrder(firstType)
+      }
       // 兼容后端可能返回空字符串的情况
       if (this.formData.startTime === '') this.formData.startTime = null
       if (this.formData.endTime === '') this.formData.endTime = null
       this.autoCompose.form.subjectId = this.formData.subjectId
-      // 如果当前试卷配置为按加入顺序编号，则将题型扁平化为一个题目列表
-      if (this.formData.numberMode === 2) {
-        this.mergeQuestionTypesAsFlatList()
-      }
+    },
+    initOriginOrderMapFromPaper() {
+      const map = { ...(this.originOrderMap || {}) }
+      const types = this.formData.paperQuestionTypeDto || []
+      types.forEach(t => {
+        const dtos = (t && t.questionDtos) || []
+        dtos.forEach(q => {
+          if (!q || q.id === undefined || q.id === null) return
+          // 只给“可展示题目”（非完形子题）初始化默认值，避免父题/子题冲突
+          if (q.parentId) return
+          const fromDb = this.getStrictOriginOrder(q)
+          if (fromDb != null) {
+            map[q.id] = fromDb
+            return
+          }
+          if (map[q.id] !== undefined && map[q.id] !== null && map[q.id] !== '') return
+          // 无题库原卷题号时：用入卷顺序 itemOrder 作为占位，便于微调
+          if (q.itemOrder !== undefined && q.itemOrder !== null && q.itemOrder !== '') {
+            const n = Number(q.itemOrder)
+            map[q.id] = Number.isFinite(n) ? n + 1 : undefined
+          }
+        })
+      })
+      this.originOrderMap = map
     },
     getExistingQuestionIds() {
       const ids = new Set();
@@ -604,18 +1038,111 @@ export default {
         const response = await listQuestion(params);
         const filteredRows = this.filterExistingQuestions(response.rows || []);
         this.questionList.tableData = filteredRows;
+        // 弹框“原卷题号”仅展示：优先从题库题目 originOrder 回填到 draft，避免出现 idx+1 或空值
+        this.syncOriginOrderDraftFromRows(filteredRows)
         // 使用后端分页总数，保证分页组件正常工作
         this.questionList.total = Number(response.total) || filteredRows.length;
         this.$nextTick(() => {
-          this.$refs.questionTable && this.$refs.questionTable.clearSelection();
+          this.restoreQuestionTableSelection();
         });
       } finally {
         this.questionList.loading = false;
       }
     },
+    syncOriginOrderDraftFromRows(rows) {
+      if (!Array.isArray(rows) || !rows.length) return
+      if (!this.originOrderDraft) this.originOrderDraft = {}
+      for (const r of rows) {
+        if (!r || r.id === undefined || r.id === null) continue
+        const existed = this.originOrderDraft[r.id]
+        if (!(existed === undefined || existed === null || existed === '')) {
+          continue
+        }
+        const dbRaw = r.originOrder !== undefined ? r.originOrder : r.originalOrder
+        const n = dbRaw === '' || dbRaw === null || dbRaw === undefined ? null : Number(dbRaw)
+        if (Number.isFinite(n) && n > 0) {
+          this.$set(this.originOrderDraft, r.id, Math.floor(n))
+        }
+      }
+    },
+    /** 按当前查询条件分页拉取全部题目，合并去重后写入已选（跨页全选） */
+    async selectAllMatchingQuestionsCrossPage() {
+      const base = { ...this.questionList.queryParams };
+      const fetchSize = 100;
+      this.questionList.bulkSelecting = true;
+      this.questionList.loading = true;
+      try {
+        let pageNum = 1;
+        const allRows = [];
+        let total = null;
+        for (;;) {
+          const response = await listQuestion({ ...base, pageNum, pageSize: fetchSize });
+          if (total === null) {
+            total = Number(response.total) || 0;
+          }
+          const rows = response.rows || [];
+          if (!rows.length) {
+            break;
+          }
+          allRows.push(...rows);
+          if (allRows.length >= total || rows.length < fetchSize) {
+            break;
+          }
+          pageNum += 1;
+          if (pageNum > 500) {
+            break;
+          }
+        }
+        const filtered = this.filterExistingQuestions(allRows);
+        const seen = new Set();
+        const unique = [];
+        for (const r of filtered) {
+          if (!r || r.id == null) {
+            continue;
+          }
+          if (seen.has(r.id)) {
+            continue;
+          }
+          seen.add(r.id);
+          unique.push(r);
+        }
+        this.questionList.selectionList = unique;
+        this.$message.success(`已选中 ${unique.length} 道题目（当前查询条件下跨页全选）`);
+        await this.$nextTick();
+        this.restoreQuestionTableSelection();
+      } finally {
+        this.questionList.bulkSelecting = false;
+        this.questionList.loading = false;
+      }
+    },
+    /** 根据 selectionList 恢复当前页的勾选状态 */
+    restoreQuestionTableSelection() {
+      const table = this.$refs.questionTable;
+      if (!table) {
+        return;
+      }
+      this.questionList.selectionSyncing = true;
+      this.$nextTick(() => {
+        table.clearSelection();
+        const selectedIds = new Set(
+          (this.questionList.selectionList || [])
+            .map(r => r && r.id)
+            .filter(id => id != null)
+        );
+        (this.questionList.tableData || []).forEach(row => {
+          if (row && selectedIds.has(row.id)) {
+            table.toggleRowSelection(row, true);
+          }
+        });
+        this.$nextTick(() => {
+          this.questionList.selectionSyncing = false;
+        });
+      });
+    },
     queryQuestionList() {
       this.questionList.queryParams.pageNum = 1;
-      this.getQuestList()
+      this.questionList.selectionList = [];
+      this.getQuestList();
     },
     handleQuestionPageSizeChange(size) {
       this.questionList.queryParams.pageSize = size;
@@ -631,6 +1158,11 @@ export default {
     },
     getQuestionTypeLabel(type) {
       return this.questionTypeMap[type] || '未知题型'; // 默认值
+    },
+    getExamHalfLabel(h) {
+      if (h === 1) return '上半年';
+      if (h === 2) return '下半年';
+      return '-';
     },
     // 组卷页面展示用：隐藏完形子题，只展示父题或普通题
     getDisplayQuestions(questionType) {
@@ -676,6 +1208,11 @@ export default {
         if (idx >= 0) {
           questionType.questionDtos.splice(idx, 1);
         }
+        // 若“题库选择弹窗”正打开，需要刷新列表（让被移除的题重新可选）
+        if (this.open) {
+          this.questionList.queryParams.pageNum = 1;
+          this.getQuestList();
+        }
         return;
       }
       questionType.questionDtos = questionType.questionDtos.filter(q => {
@@ -684,73 +1221,158 @@ export default {
         if (q.parentId === targetId) return false;
         return true;
       });
+      // 若“题库选择弹窗”正打开，需要刷新列表（让被移除的题重新可选）
+      if (this.open) {
+        this.questionList.queryParams.pageNum = 1;
+        this.getQuestList();
+      }
     },
     // 将多个题型下的题目扁平为单一“题目列表”（用于按加入顺序展示）
     mergeQuestionTypesAsFlatList() {
       const list = this.formData.paperQuestionTypeDto || []
+      const firstName = (list || []).find(t => t && t.name && String(t.name).trim())?.name
       const allQuestions = []
+      const seenId = new Set()
       list.forEach(t => {
         (t.questionDtos || []).forEach(q => {
-          if (q) {
-            allQuestions.push(q)
+          if (!q) return
+          if (q.id != null) {
+            if (seenId.has(q.id)) return
+            seenId.add(q.id)
           }
+          allQuestions.push(q)
         })
       })
       this.formData.paperQuestionTypeDto = [{
-        name: '题目列表',
+        // numberMode=2 下只有一个“占位块”，名称用于页面展示，不影响真实排序逻辑
+        name: firstName || '单选题',
         questionDtos: allQuestions
       }]
     },
-    // 获取当前页复选框勾选的选项,后续新增直接传，全选就全部，选一个[]里就一个item
+    // 合并当前页勾选与其它页已选，支持跨页保留勾选
     handleSelectionChange(val) {
-      this.questionList.selectionList = val
+      if (this.questionList.selectionSyncing) {
+        return;
+      }
+      const pageRows = this.questionList.tableData || [];
+      const currentPageIds = new Set(
+        pageRows.map(r => r && r.id).filter(id => id != null)
+      );
+      const prev = this.questionList.selectionList || [];
+      const kept = prev.filter(r => r && !currentPageIds.has(r.id));
+      const picked = (val || []).filter(r => r);
+      this.questionList.selectionList = [...kept, ...picked];
     },
     onOpen() {
     },
     onClose() {
       this.$refs['elForm2'].resetFields()
+      this.questionInsertPosition = null
+      this.originOrderDraft = {}
+      this.questionList.selectionList = []
     },
     close() {
       this.open = false
     },
     async addQuestionConfirm() {
+      if (!this.questionList.selectionList || !this.questionList.selectionList.length) {
+        this.$message.warning('请先勾选题目，或使用「全选跨页结果」');
+        return;
+      }
       const existingIds = this.getExistingQuestionIds()
+      // 插入位置：以“可展示题目”的序号为准（忽略完形子题），为空则追加到末尾
+      const displayPos = this.normalizeInsertPosition(this.questionInsertPosition)
+      let rawInsertIndex = this.getRawInsertIndexByDisplayPosition(this.currQuestionType, displayPos)
       for (const q of this.questionList.selectionList) {
-        if (existingIds.has(q.id)) {
+        if (!q || existingIds.has(q.id)) {
           continue
         }
-        const res = await getQuestion(q.id)
-        const data = res.data
-        if (!data || existingIds.has(data.id)) {
-          continue
-        }
-        // 如果是完形填空父题，额外把其子题一并加入当前题型
-        if (data.questionType === 6) {
-          // 先加入父题
-          this.currQuestionType.questionDtos.push(data)
-          existingIds.add(data.id)
-          const clozeRes = await getClozeQuestion(data.id)
-          if (clozeRes.code === 200 && clozeRes.data) {
-            const children = clozeRes.data.children || []
-            children.forEach(child => {
-              if (!child || existingIds.has(child.id)) return
-              this.currQuestionType.questionDtos.push(child)
-              existingIds.add(child.id)
-            })
+        const isClozeParent = Number(q.questionType) === 6
+        // 题库列表已含题干、原卷题号等，无需再逐题 getQuestion；完形仅请求 cloze 接口拿父题详情与子题
+        if (isClozeParent) {
+          const clozeRes = await getClozeQuestion(q.id)
+          if (clozeRes.code !== 200 || !clozeRes.data) {
+            continue
           }
+          const data = clozeRes.data.parent
+          if (!data || existingIds.has(data.id)) {
+            continue
+          }
+          const toInsert = [data]
+          const children = clozeRes.data.children || []
+          children.forEach(child => {
+            if (!child || existingIds.has(child.id)) return
+            toInsert.push(child)
+          })
+          this.insertQuestionsAtPosition(this.currQuestionType, rawInsertIndex, toInsert)
+          toInsert.forEach(item => item && item.id && existingIds.add(item.id))
+          // 原卷题号：优先读取题库题目 originOrder（只做展示，避免覆盖你提前定义的顺序）
+          if (data && data.id) {
+            const draft = this.originOrderDraft ? this.originOrderDraft[data.id] : undefined
+            const n = draft === '' || draft === null || draft === undefined ? null : Number(draft)
+            const dbRaw = data.originOrder !== undefined ? data.originOrder : data.originalOrder
+            const dbN = dbRaw === '' || dbRaw === null || dbRaw === undefined ? null : Number(dbRaw)
+
+            // 试卷编辑页只做展示：优先读取题库题目的 originOrder，避免用 idx+1 兜底覆盖你提前定义的顺序
+            if (Number.isFinite(dbN) && dbN > 0) {
+              this.$set(this.originOrderMap, data.id, Math.floor(dbN))
+            } else if (Number.isFinite(n) && n > 0) {
+              this.$set(this.originOrderMap, data.id, Math.floor(n))
+            } else if (this.originOrderMap[data.id] === undefined || this.originOrderMap[data.id] === null || this.originOrderMap[data.id] === '') {
+              const displayListAfter = this.getDisplayQuestions(this.currQuestionType)
+              const idx = displayListAfter.findIndex(x => x && x.id === data.id)
+              if (idx >= 0) this.$set(this.originOrderMap, data.id, idx + 1)
+            }
+          }
+          rawInsertIndex += toInsert.length
         } else {
-          this.currQuestionType.questionDtos.push(data)
+          const data = { ...q }
+          if (!data.id || existingIds.has(data.id)) {
+            continue
+          }
+          this.insertQuestionsAtPosition(this.currQuestionType, rawInsertIndex, [data])
           existingIds.add(data.id)
+          if (data && data.id) {
+            const draft = this.originOrderDraft ? this.originOrderDraft[data.id] : undefined
+            const n = draft === '' || draft === null || draft === undefined ? null : Number(draft)
+            const dbRaw = data.originOrder !== undefined ? data.originOrder : data.originalOrder
+            const dbN = dbRaw === '' || dbRaw === null || dbRaw === undefined ? null : Number(dbRaw)
+
+            // 试卷编辑页只做展示：优先读取题库题目的 originOrder，避免用 idx+1 兜底覆盖你提前定义的顺序
+            if (Number.isFinite(dbN) && dbN > 0) {
+              this.$set(this.originOrderMap, data.id, Math.floor(dbN))
+            } else if (Number.isFinite(n) && n > 0) {
+              this.$set(this.originOrderMap, data.id, Math.floor(n))
+            } else if (this.originOrderMap[data.id] === undefined || this.originOrderMap[data.id] === null || this.originOrderMap[data.id] === '') {
+              const displayListAfter = this.getDisplayQuestions(this.currQuestionType)
+              const idx = displayListAfter.findIndex(x => x && x.id === data.id)
+              if (idx >= 0) this.$set(this.originOrderMap, data.id, idx + 1)
+            }
+          }
+          rawInsertIndex += 1
         }
+      }
+      // 按原卷题号展示需求：保证序号最小的在最上面（只重排 questionDtos 顺序，不覆盖题号值）
+      if (this.formData && (Number(this.formData.numberMode) === 2 || Number(this.formData.numberMode) === 3) && this.currQuestionType) {
+        this.sortQuestionsByOriginOrder(this.currQuestionType)
       }
       this.close()
     },
     // 点击新增时显示弹窗和加载题目表，也就是题目列表那些
     handleAddQuestion(questionType) {
       this.open = true
+      this.questionInsertPosition = null
+      this.questionList.selectionList = []
       // 拷贝一份当前的题型，标识给哪个题型加题目
       this.currQuestionType = questionType
+      // 如果当前题型块还是空的（还没“第一题”），默认插到最前面
+      const displayLen = this.getDisplayQuestions(questionType).length
+      if (displayLen === 0) {
+        this.questionInsertPosition = 1
+      }
       this.questionList.loading = true
+      // 初始化弹框内的“原卷题号草稿”为当前已记录的值
+      this.originOrderDraft = { ...(this.originOrderMap || {}) }
       if (!this.questionList.queryParams.subjectId && this.formData.subjectId) {
         this.questionList.queryParams.subjectId = this.formData.subjectId
       }
@@ -759,9 +1381,27 @@ export default {
       }
       this.getQuestList()
     },
+    /** 保证至少有一个题型块，便于从底部「添加题目」打开题库弹窗 */
+    ensureDefaultQuestionBlock() {
+      const list = this.formData.paperQuestionTypeDto
+      if (list && list.length) {
+        return
+      }
+      this.$set(this.formData, 'paperQuestionTypeDto', [{
+        name: this.formData.numberMode === 1 ? '题型1' : '单选题',
+        questionDtos: []
+      }])
+    },
+    /** 底部主按钮：不新增题型块，只向当前（或首个）题目列表加题（题号规则为「按加入顺序」时使用） */
+    handleAddQuestionNormal() {
+      this.ensureDefaultQuestionBlock()
+      const first = this.formData.paperQuestionTypeDto[0]
+      this.handleAddQuestion(first)
+    },
+    /** 题号规则为「按题型分组」时：底部按钮新增一个空题型块 */
     addQuestionTypeInput() {
       this.formData.paperQuestionTypeDto.push({
-        name: '',
+        name: `题型${(this.formData.paperQuestionTypeDto || []).length + 1}`,
         questionDtos: []
       })
     },
@@ -786,10 +1426,15 @@ export default {
       if (this.formData.startTime && this.formData.endTime && new Date(this.formData.startTime) >= new Date(this.formData.endTime)) {
         return this.$message.error('开始时间必须早于截止时间')
       }
-      this.$refs['elForm1'].validate(valid => {
-        if (!valid) return
-        // TODO 提交表单
+      const valid = await new Promise((resolve) => {
+        this.$refs['elForm1'].validate((ok, fields) => {
+          if (!ok) {
+            this.showValidatePopup(fields)
+          }
+          resolve(ok)
+        })
       })
+      if (!valid) return
       // 判断题型是否为空
       if (this.formData.paperQuestionTypeDto.length < 1 || this.formData.paperName.trim() === '') {
         return this.$message.error("信息未填写完毕")
