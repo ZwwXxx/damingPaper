@@ -122,17 +122,6 @@
         ORDER BY q.create_time ASC
     </select>
 
-    <select id="selectQuestionsBySubjectTypeAndTitle" resultMap="DamingQuestionResult">
-        <include refid="selectDamingQuestionVo"/>
-        left join daming_content_info ci on ci.id = q.question_info_id
-        <where>
-            and q.del_flag != 2
-            and q.subject_id = #{subjectId}
-            and q.question_type = #{questionType}
-            and json_unquote(json_extract(ci.content, '$.questionTitle')) = #{questionTitle}
-        </where>
-    </select>
-
     <insert id="insertDamingQuestion" parameterType="DamingQuestion" useGeneratedKeys="true" keyProperty="id">
         insert into daming_question
         <trim prefix="(" suffix=")" suffixOverrides=",">

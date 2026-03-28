@@ -702,10 +702,20 @@ export default {
       }
       return '无'
     },
+    /** 后端 Long 与 JSON 序列化后 id/parentId 可能为 number 或 string，父子关联比较须统一 */
+    idsEqual(a, b) {
+      if (a === null || a === undefined || b === null || b === undefined) return false
+      return String(a) === String(b)
+    },
+    isChildOfParent(parentId, row) {
+      console.log(`父题${parentId}对应的子题${row}`);
+      
+      return !!(row && row.parentId != null && row.parentId !== '' && this.idsEqual(row.parentId, parentId))
+    },
     hasChildren(questionType, parentQuestion) {
-      if (!questionType || !parentQuestion || !parentQuestion.id) return false
+      if (!questionType || !parentQuestion || parentQuestion.id == null) return false
       const list = questionType.questionDtos || []
-      return list.some(x => x && x.parentId === parentQuestion.id)
+      return list.some(x => this.isChildOfParent(parentQuestion.id, x))
     },
     // 估算“这道题在原卷里占用了多少个题号”
     // - 普通题固定占 1
@@ -718,7 +728,7 @@ export default {
       // 只要存在子题（不局限完形题型），按子题数占号
       if (this.hasChildren(questionType, q)) {
         const list = questionType.questionDtos || []
-        const n = list.filter(x => x && x.parentId === q.id).length
+        const n = list.filter(x => this.isChildOfParent(q.id, x)).length
         return Math.max(1, Number(n) || 1)
       }
       return 1
@@ -787,9 +797,19 @@ export default {
       this.applyDisplayOrder(questionType, newOrder)
     },
     getClozeChildCount(questionType, parentQuestion) {
-      if (!questionType || !parentQuestion || !parentQuestion.id) return 0
+      if (!questionType || !parentQuestion || parentQuestion.id == null) {
+        console.log("子题为空！");
+        console.log(questionType);
+        console.log(parentQuestion);
+        
+        return 0
+      }
+      
+      
       const list = questionType.questionDtos || []
-      return list.filter(x => x && x.parentId === parentQuestion.id).length
+      const length=list.filter(x => this.isChildOfParent(parentQuestion.id, x)).length
+      console.log("子题不为空！！数量为:"+length);
+      return length
     },
     /** 渲染内容（支持HTML和Markdown），格式取决于存储时的 format 字段 */
     renderContent(content, format) {
@@ -1191,7 +1211,7 @@ export default {
       for (const q of newDisplayOrder) {
         if (!q) continue;
         newDtos.push(q);
-        const children = (questionType.questionDtos || []).filter(x => x && x.parentId === q.id);
+        const children = (questionType.questionDtos || []).filter(x => this.isChildOfParent(q.id, x));
         newDtos.push(...children);
       }
       questionType.questionDtos = newDtos;
@@ -1217,8 +1237,8 @@ export default {
       }
       questionType.questionDtos = questionType.questionDtos.filter(q => {
         if (!q) return false;
-        if (q.id === targetId) return false;
-        if (q.parentId === targetId) return false;
+        if (this.idsEqual(q.id, targetId)) return false;
+        if (this.idsEqual(q.parentId, targetId)) return false;
         return true;
       });
       // 若“题库选择弹窗”正打开，需要刷新列表（让被移除的题重新可选）
