@@ -1,7 +1,9 @@
 package com.ruoyi.web.controller.quiz.student;
 
+import com.dm.quiz.dto.StudentRegisterRequest;
 import com.dm.quiz.service.DamingUserService;
 import com.dm.quiz.service.IDamingUserService;
+import com.dm.quiz.service.StudentEmailCaptchaService;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.LoginUser;
@@ -12,10 +14,11 @@ import com.ruoyi.framework.web.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.Date;
 
 /**
  * 前台用户Controller
@@ -44,63 +47,91 @@ public class StudentUserController {
     
     @Autowired
     private com.dm.quiz.service.IDamingFollowService followService;
+
+    @Autowired
+    private StudentEmailCaptchaService emailCaptchaService;
     
     /**
      * 前台学生登录
      */
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginBody loginBody) {
-        log.info("学生登录 - 用户名: {}", loginBody.getUsername());
-        
-        // 生成令牌
-        String token = loginService.login(loginBody.getUsername(), loginBody.getPassword());
+    public AjaxResult login(@RequestBody(required = false) LoginBody loginBody) {
+        if (loginBody == null) {
+            return AjaxResult.error("请求体不能为空");
+        }
+        String account = loginBody.getUsername() != null ? loginBody.getUsername().trim() : "";
+        String pwd = loginBody.getPassword() != null ? loginBody.getPassword() : "";
+        if (account.isEmpty()) {
+            return AjaxResult.error("请输入邮箱或用户名");
+        }
+        if (pwd.isEmpty()) {
+            return AjaxResult.error("请输入密码");
+        }
+        log.info("学生登录 - 账号: {}", account);
+
+        String token = loginService.login(account, pwd);
         
         AjaxResult ajax = AjaxResult.success("登录成功");
         ajax.put(Constants.TOKEN, token);
-        log.info("✅ 学生登录成功 - 用户名: {}", loginBody.getUsername());
+        log.info("✅ 学生登录成功 - 账号: {}", account);
         return ajax;
     }
     
     /**
-     * 前台学生注册
+     * 前台学生注册：邮箱 + 昵称 + 密码 + 邮箱验证码；user_name 与 email 均为规范化邮箱
      */
     @PostMapping("/registry")
-    public AjaxResult registry(@RequestBody DamingUser user) {
-        log.info("学生注册 - 用户名: {}, 昵称: {}", user.getUserName(), user.getNickName());
-        log.info("收到的密码: {}", user.getPassword());
-        
-        // 检查用户名是否已存在
-        DamingUser query = new DamingUser();
-        query.setUserName(user.getUserName());
-        List<DamingUser> existUsers = damingUserService.selectDamingUserList(query);
-        if (existUsers != null && !existUsers.isEmpty()) {
-            log.warn("用户名已存在: {}", user.getUserName());
-            return AjaxResult.error("用户名已存在");
+    public AjaxResult registry(@RequestBody StudentRegisterRequest req) {
+        if (req == null) {
+            return AjaxResult.error("参数无效");
         }
-        
-        // 验证密码不为空
-        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
-            log.error("密码为空");
+        String emailNorm = emailCaptchaService.normalizeEmail(req.getEmail());
+        if (!StringUtils.hasText(emailNorm)) {
+            return AjaxResult.error("请输入邮箱");
+        }
+        if (!emailCaptchaService.isValidEmailFormat(emailNorm)) {
+            return AjaxResult.error("邮箱格式不正确");
+        }
+        if (!StringUtils.hasText(req.getNickName()) || !StringUtils.hasText(req.getNickName().trim())) {
+            return AjaxResult.error("请输入昵称");
+        }
+        if (req.getPassword() == null || req.getPassword().trim().isEmpty()) {
             return AjaxResult.error("密码不能为空");
         }
-        
-        // 加密密码
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        user.setDelFlag("0");
-        
-        log.info("加密后的密码: {}", encodedPassword);
-        
-        // 插入用户
-        int result = damingUserService.insertDamingUser(user);
-        
-        if (result > 0) {
-            log.info("✅ 学生注册成功 - 用户名: {}", user.getUserName());
-            return AjaxResult.success("注册成功");
-        } else {
-            log.error("注册失败 - 用户名: {}", user.getUserName());
-            return AjaxResult.error("注册失败");
+        if (!StringUtils.hasText(req.getEmailCode())) {
+            return AjaxResult.error("请输入邮箱验证码");
         }
+
+        if (damingUserService.selectDamingUserByEmail(emailNorm) != null
+                || damingUserService.selectDamingUserByUserName(emailNorm) != null) {
+            return AjaxResult.error("该邮箱已被注册");
+        }
+
+        String verifyErr = emailCaptchaService.verifyAndConsumeRegisterCode(emailNorm, req.getEmailCode());
+        if (verifyErr != null) {
+            return AjaxResult.error(verifyErr);
+        }
+
+        DamingUser user = new DamingUser();
+        user.setUserName(emailNorm);
+        user.setEmail(emailNorm);
+        user.setNickName(req.getNickName().trim());
+        user.setPassword(passwordEncoder.encode(req.getPassword()));
+        user.setDelFlag("0");
+        Date now = new Date();
+        user.setCreateTime(now);
+        user.setUpdateTime(now);
+
+        log.info("学生注册 - 邮箱账号: {}, 昵称: {}", emailNorm, user.getNickName());
+
+        int result = damingUserService.insertDamingUser(user);
+
+        if (result > 0) {
+            log.info("✅ 学生注册成功 - {}", emailNorm);
+            return AjaxResult.success("注册成功");
+        }
+        log.error("注册失败 - {}", emailNorm);
+        return AjaxResult.error("注册失败");
     }
     
     /**

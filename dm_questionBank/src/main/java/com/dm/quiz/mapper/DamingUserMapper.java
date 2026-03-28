@@ -27,6 +27,13 @@ public interface DamingUserMapper
      */
     public DamingUser selectDamingUserByUserName(String userName);
 
+    /**
+     * 按邮箱查询（邮箱存小写）
+     *
+     * @param email 邮箱
+     * @return 刷题用户
+     */
+    public DamingUser selectDamingUserByEmail(String email);
 
     /**
      * 查询刷题用户列表

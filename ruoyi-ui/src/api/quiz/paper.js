@@ -60,3 +60,20 @@ export function delPaper(paperId) {
     method: 'delete'
   })
 }
+
+// 导出试卷同步包（JSON）
+export function exportPaperSyncPackage(paperId) {
+  return request({
+    url: '/quiz/paper/sync/export/' + paperId,
+    method: 'get'
+  })
+}
+
+// 导入试卷同步包（JSON）
+export function importPaperSyncPackage(data) {
+  return request({
+    url: '/quiz/paper/sync/import',
+    method: 'post',
+    data
+  })
+}

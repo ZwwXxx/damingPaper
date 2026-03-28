@@ -110,6 +110,29 @@
         >导出
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-document"
+          size="mini"
+          :disabled="single"
+          @click="handleExportSync"
+          v-hasPermi="['quiz:paper:query']"
+        >导出同步包
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-upload2"
+          size="mini"
+          @click="openImportSyncDialog"
+          v-hasPermi="['quiz:paper:add']"
+        >导入同步包
+        </el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -204,11 +227,43 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="导入试卷同步包" :visible.sync="importSyncOpen" width="520px" append-to-body>
+      <div style="margin-bottom: 10px; color: #909399;">
+        请选择由“导出同步包”得到的 JSON 文件。
+      </div>
+      <el-upload
+        ref="syncUpload"
+        drag
+        action="#"
+        :auto-upload="false"
+        :show-file-list="true"
+        :limit="1"
+        :on-change="handleSyncFileChange"
+        :on-remove="handleSyncFileRemove"
+        :before-upload="() => false"
+        accept=".json,application/json"
+      >
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将 JSON 文件拖到此处，或<em>点击上传</em></div>
+      </el-upload>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="importSyncOpen = false">取 消</el-button>
+        <el-button type="primary" :loading="importingSync" @click="submitImportSync">确 定 导 入</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {listPaper, delPaper, addPaper, updatePaper} from "@/api/quiz/paper";
+import {
+  listPaper,
+  delPaper,
+  addPaper,
+  updatePaper,
+  exportPaperSyncPackage,
+  importPaperSyncPackage
+} from "@/api/quiz/paper";
 import {optionSubject} from "@/api/quiz/subject";
 
 export default {
@@ -236,6 +291,12 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 同步包导入弹窗
+      importSyncOpen: false,
+      // 上传的同步包文件
+      syncImportFile: null,
+      // 是否正在导入
+      importingSync: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -391,6 +452,79 @@ export default {
       this.download('quiz/paper/export', {
         ...this.queryParams
       }, `paper_${new Date().getTime()}.xlsx`)
+    },
+    /** 导出同步包 */
+    handleExportSync(row) {
+      const paperId = (row && row.paperId) || this.ids[0];
+      if (!paperId) {
+        this.$modal.msgWarning("请先选择一条试卷");
+        return;
+      }
+      exportPaperSyncPackage(paperId).then(res => {
+        const payload = res && res.data ? res.data : {};
+        const paperName = (payload.paper && payload.paper.paperName) || `paper_${paperId}`;
+        const safeName = String(paperName).replace(/[\\/:*?"<>|]/g, "_");
+        const content = JSON.stringify(payload, null, 2);
+        const blob = new Blob([content], {type: "application/json;charset=utf-8"});
+        const fileName = `${safeName}_sync_${new Date().getTime()}.json`;
+        if (window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveBlob(blob, fileName);
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        this.$modal.msgSuccess("同步包导出成功");
+      });
+    },
+    openImportSyncDialog() {
+      this.syncImportFile = null;
+      this.importSyncOpen = true;
+      this.$nextTick(() => {
+        if (this.$refs.syncUpload) {
+          this.$refs.syncUpload.clearFiles();
+        }
+      });
+    },
+    handleSyncFileChange(file) {
+      this.syncImportFile = file ? file.raw : null;
+    },
+    handleSyncFileRemove() {
+      this.syncImportFile = null;
+    },
+    submitImportSync() {
+      if (!this.syncImportFile) {
+        this.$modal.msgWarning("请先选择 JSON 文件");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = async e => {
+        try {
+          const text = e.target && e.target.result ? e.target.result : "";
+          const payload = JSON.parse(text);
+          this.importingSync = true;
+          const res = await importPaperSyncPackage(payload);
+          const data = res && res.data ? res.data : {};
+          this.$modal.msgSuccess(
+            `导入成功，新试卷ID：${data.newPaperId || "-"}，新增题目：${data.insertedQuestionCount || 0}`
+          );
+          this.importSyncOpen = false;
+          this.getList();
+        } catch (error) {
+          this.$modal.msgError("导入失败，请检查 JSON 文件格式和内容");
+        } finally {
+          this.importingSync = false;
+        }
+      };
+      reader.onerror = () => {
+        this.$modal.msgError("文件读取失败，请重试");
+      };
+      reader.readAsText(this.syncImportFile, "utf-8");
     }
   }
 };

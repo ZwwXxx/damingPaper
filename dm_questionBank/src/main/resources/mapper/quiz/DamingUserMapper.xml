@@ -7,6 +7,7 @@
     <resultMap type="DamingUser" id="DamingUserResult">
         <result property="userId"    column="user_id"    />
         <result property="userName"    column="user_name"    />
+        <result property="email"    column="email"    />
         <result property="password"    column="password"    />
         <result property="nickName"    column="nick_name"    />
         <result property="avatar"    column="avatar"    />
@@ -18,7 +19,7 @@
     </resultMap>
 
     <sql id="selectDamingUserVo">
-        select user_id, user_name, password, nick_name, avatar, wx_open_id, wx_union_id, del_flag, create_time, update_time from daming_user
+        select user_id, user_name, email, password, nick_name, avatar, wx_open_id, wx_union_id, del_flag, create_time, update_time from daming_user
     </sql>
 
     <select id="selectDamingUserList" parameterType="DamingUser" resultMap="DamingUserResult">
@@ -46,10 +47,16 @@
         where user_name = #{userName}
     </select>
 
+    <select id="selectDamingUserByEmail" parameterType="String" resultMap="DamingUserResult">
+        <include refid="selectDamingUserVo"/>
+        where email = #{email} and (del_flag = '0' or del_flag is null)
+    </select>
+
     <insert id="insertDamingUser" parameterType="DamingUser" useGeneratedKeys="true" keyProperty="userId">
         insert into daming_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userName != null and userName != ''">user_name,</if>
+            <if test="email != null and email != ''">email,</if>
             <if test="password != null and password != ''">password,</if>
             <if test="nickName != null and nickName != ''">nick_name,</if>
             <if test="avatar != null">avatar,</if>
@@ -61,6 +68,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="email != null and email != ''">#{email},</if>
             <if test="password != null and password != ''">#{password},</if>
             <if test="nickName != null and nickName != ''">#{nickName},</if>
             <if test="avatar != null">#{avatar},</if>
@@ -76,6 +84,7 @@
         update daming_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="userName != null and userName != ''">user_name = #{userName},</if>
+            <if test="email != null">email = #{email},</if>
             <if test="password != null and password != ''">password = #{password},</if>
             <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
             <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>

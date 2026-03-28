@@ -39,6 +39,30 @@ public class DamingUserServiceImpl implements IDamingUserService
         return user;
     }
 
+    @Override
+    public DamingUser selectDamingUserByEmail(String email)
+    {
+        if (email == null || email.isEmpty())
+        {
+            return null;
+        }
+        DamingUser user = damingUserMapper.selectDamingUserByEmail(email);
+        processAvatar(user);
+        return user;
+    }
+
+    @Override
+    public DamingUser selectDamingUserByUserName(String userName)
+    {
+        if (userName == null || userName.isEmpty())
+        {
+            return null;
+        }
+        DamingUser user = damingUserMapper.selectDamingUserByUserName(userName);
+        processAvatar(user);
+        return user;
+    }
+
     /**
      * 查询刷题用户列表
      *

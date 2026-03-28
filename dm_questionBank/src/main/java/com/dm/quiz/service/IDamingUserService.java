@@ -20,6 +20,22 @@ public interface IDamingUserService
     public DamingUser selectDamingUserByUserId(Long userId);
 
     /**
+     * 按邮箱查询
+     *
+     * @param email 邮箱（小写）
+     * @return 用户
+     */
+    public DamingUser selectDamingUserByEmail(String email);
+
+    /**
+     * 按登录名（user_name）查询
+     *
+     * @param userName 用户名
+     * @return 用户
+     */
+    public DamingUser selectDamingUserByUserName(String userName);
+
+    /**
      * 查询刷题用户列表
      *
      * @param damingUser 刷题用户

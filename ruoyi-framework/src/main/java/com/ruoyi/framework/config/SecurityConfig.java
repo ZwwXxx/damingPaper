@@ -135,6 +135,7 @@ public class SecurityConfig {
                             .antMatchers("/login", "/register", "/captchaImage").permitAll()
                             // ⭐ 前台学生认证模块，允许匿名访问
                             .antMatchers("/quiz/student/user/login", "/quiz/student/user/registry").permitAll()
+                            .antMatchers("/quiz/student/user/email/**").permitAll()
                             // ⭐ 论坛模块，GET请求允许匿名访问（浏览帖子和评论）
                             .antMatchers(HttpMethod.GET, "/quiz/forum/posts/**", "/quiz/forum/comments/**").permitAll()
                             // 静态资源，可匿名访问

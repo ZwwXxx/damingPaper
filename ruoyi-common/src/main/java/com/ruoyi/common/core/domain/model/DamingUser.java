@@ -22,6 +22,10 @@ public class DamingUser extends BaseEntity
     @Excel(name = "用户名")
     private String userName;
 
+    /** 邮箱（唯一，可空） */
+    @Excel(name = "邮箱")
+    private String email;
+
     /** 用户密码 */
     @Excel(name = "用户密码")
     private String password;
@@ -61,6 +65,17 @@ public class DamingUser extends BaseEntity
     {
         return userName;
     }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
     public void setPassword(String password)
     {
         this.password = password;
@@ -123,6 +138,7 @@ public class DamingUser extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("userId", getUserId())
             .append("userName", getUserName())
+            .append("email", getEmail())
             .append("password", getPassword())
             .append("nickName", getNickName())
             .append("avatar", getAvatar())

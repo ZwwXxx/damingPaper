@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Locale;
+
 @Component("StudentDetailsServiceImpl")
 public class StudentDetailsServiceImpl implements UserDetailsService {
 
@@ -25,7 +27,13 @@ public class StudentDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("过来了！");
-        DamingUser damingUser = damingUserMapper.selectDamingUserByUserName(username);
+        String input = username != null ? username.trim() : "";
+        DamingUser damingUser = damingUserMapper.selectDamingUserByUserName(input);
+        if (StringUtils.isNull(damingUser) && input.contains("@"))
+        {
+            String emailKey = input.toLowerCase(Locale.ROOT);
+            damingUser = damingUserMapper.selectDamingUserByEmail(emailKey);
+        }
         if (StringUtils.isNull(damingUser))
         {
             throw new ServiceException(MessageUtils.message("user.not.exists"));

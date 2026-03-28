@@ -117,7 +117,7 @@ public class DamingPaperController extends BaseController
     @PreAuthorize("@ss.hasPermi('quiz:paper:query')")
     @GetMapping("/sync/export/{paperId}")
     public AjaxResult exportSyncPackage(@PathVariable("paperId") Long paperId) {
-        return success(damingPaperService.exportPaperSyncPackage(paperId));
+        return success(damingPaperService.exportPaperSyncPackage(paperId)); // 调用服务导出同步包并统一返回AjaxResult
     }
 
     /**
@@ -127,8 +127,8 @@ public class DamingPaperController extends BaseController
     @Log(title = "试卷同步导入", businessType = BusinessType.IMPORT)
     @PostMapping("/sync/import")
     public AjaxResult importSyncPackage(@RequestBody PaperSyncPackageDto syncPackageDto) {
-        PaperSyncImportResultDto result = damingPaperService.importPaperSyncPackage(syncPackageDto);
-        return success(result);
+        PaperSyncImportResultDto result = damingPaperService.importPaperSyncPackage(syncPackageDto); // 调用服务执行导入+去重+建卷
+        return success(result); // 返回导入统计信息（新卷ID/新增数/跳过数）
     }
 
     /**

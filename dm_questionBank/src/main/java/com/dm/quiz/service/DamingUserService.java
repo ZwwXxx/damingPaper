@@ -20,7 +20,7 @@ public class DamingUserService {
     
     @Autowired
     private DamingUserMapper userMapper;
-    
+
     /**
      * 根据微信信息查询或创建用户
      * 

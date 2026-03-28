@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -36,6 +37,17 @@ public class RedisConfig extends CachingConfigurerSupport
         template.setHashValueSerializer(serializer);
 
         template.afterPropertiesSet();
+        return template;
+    }
+
+    /**
+     * 字符串 RedisTemplate，用于 INCR 等需纯字符串值的场景（邮箱验证码发送次数窗口等）
+     */
+    @Bean
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory connectionFactory)
+    {
+        StringRedisTemplate template = new StringRedisTemplate();
+        template.setConnectionFactory(connectionFactory);
         return template;
     }
 

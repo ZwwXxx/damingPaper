@@ -1,5 +1,7 @@
 package com.ruoyi.common.core.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 /**
  * 用户登录对象
  * 
@@ -8,8 +10,9 @@ package com.ruoyi.common.core.domain.model;
 public class LoginBody
 {
     /**
-     * 用户名
+     * 登录账号：前台可为邮箱或历史用户名；兼容 JSON 字段 userName、email
      */
+    @JsonAlias({ "userName", "email" })
     private String username;
 
     /**

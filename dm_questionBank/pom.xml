@@ -45,7 +45,16 @@
            <version>4.8.1</version>
        </dependency>
 
-
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-mail</artifactId>
+       </dependency>
+       <!-- JavaMail 实现：父工程未在 dependencyManagement 中声明该坐标，必须写死版本 -->
+       <dependency>
+           <groupId>com.sun.mail</groupId>
+           <artifactId>javax.mail</artifactId>
+           <version>1.6.2</version>
+       </dependency>
 
    </dependencies>
 </project>
