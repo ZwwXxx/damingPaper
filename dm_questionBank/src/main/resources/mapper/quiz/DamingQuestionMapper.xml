@@ -122,9 +122,10 @@
         ORDER BY q.create_time ASC
     </select>
 
-    <insert id="insertDamingQuestion" parameterType="DamingQuestion" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertDamingQuestion" parameterType="DamingQuestion">
         insert into daming_question
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
             <if test="parentId != null">parent_id,</if>
             <if test="questionType != null">question_type,</if>
             <if test="clozeIndex != null">cloze_index,</if>
@@ -142,6 +143,7 @@
             <if test="updateTime != null">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
             <if test="parentId != null">#{parentId},</if>
             <if test="questionType != null">#{questionType},</if>
             <if test="clozeIndex != null">#{clozeIndex},</if>

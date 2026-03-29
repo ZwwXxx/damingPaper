@@ -1,0 +1,5 @@
+INSERT INTO `daming_question_favorite` (`favorite_id`, `question_id`, `paper_id`, `paper_answer_id`, `subject_id`, `create_user`, `remark`, `create_time`) VALUES (3, 112, 91, 235, 2, 'zww', NULL, '2025-11-21 18:23:25');
+INSERT INTO `daming_question_favorite` (`favorite_id`, `question_id`, `paper_id`, `paper_answer_id`, `subject_id`, `create_user`, `remark`, `create_time`) VALUES (4, 120, 91, 235, 2, 'zww', NULL, '2025-11-21 18:23:43');
+INSERT INTO `daming_question_favorite` (`favorite_id`, `question_id`, `paper_id`, `paper_answer_id`, `subject_id`, `create_user`, `remark`, `create_time`) VALUES (5, 143, 93, 270, 2, 'test666', NULL, '2025-11-24 20:57:06');
+INSERT INTO `daming_question_favorite` (`favorite_id`, `question_id`, `paper_id`, `paper_answer_id`, `subject_id`, `create_user`, `remark`, `create_time`) VALUES (6, 145, 93, 283, 2, 'test666', NULL, '2025-11-24 21:33:47');
+INSERT INTO `daming_question_favorite` (`favorite_id`, `question_id`, `paper_id`, `paper_answer_id`, `subject_id`, `create_user`, `remark`, `create_time`) VALUES (7, 162, 96, 351, 4, 'zww', NULL, '2026-03-09 15:16:41');

@@ -26,13 +26,15 @@
         where id = #{id}
     </select>
 
-    <insert id="insertContentInfo" parameterType="DamingContentInfo" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertContentInfo" parameterType="DamingContentInfo">
         insert into daming_content_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
             <if test="content != null and content != ''">content,</if>
             <if test="createTime != null">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
             <if test="content != null and content != ''">#{content},</if>
             <if test="createTime != null">#{createTime},</if>
         </trim>

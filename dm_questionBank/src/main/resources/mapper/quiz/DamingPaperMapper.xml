@@ -79,9 +79,10 @@
         </if>
     </select>
 
-    <insert id="insertDamingPaper" parameterType="DamingPaper" useGeneratedKeys="true" keyProperty="paperId">
+    <insert id="insertDamingPaper" parameterType="DamingPaper">
         insert into daming_paper
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="paperId != null">paper_id,</if>
             <if test="paperName != null and paperName != ''">paper_name,</if>
             <if test="subjectId != null">subject_id,</if>
             <if test="score != null">score,</if>
@@ -98,6 +99,7 @@
             <if test="numberMode != null">number_mode,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="paperId != null">#{paperId},</if>
             <if test="paperName != null and paperName != ''">#{paperName},</if>
             <if test="subjectId != null">#{subjectId},</if>
             <if test="score != null">#{score},</if>

@@ -22,6 +22,7 @@ import com.dm.quiz.dto.PaperQuestionTypeDto;
 import com.dm.quiz.dto.QuestionDto;
 import com.dm.quiz.mapper.*;
 import com.dm.quiz.service.IDamingQuestionService;
+import com.dm.quiz.support.SnowflakeIdGenerator;
 import com.dm.quiz.enums.QuestionTypeEnum;
 import com.dm.quiz.viewmodel.PaperQuestionTypeVM;
 import com.dm.quiz.viewmodel.PaperQuestionVM;
@@ -52,6 +53,8 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
     private DamingQuestionMapper damingQuestionMapper;
     @Autowired
     private IDamingQuestionService damingQuestionService;
+    @Autowired
+    private SnowflakeIdGenerator snowflakeIdGenerator;
 
     /**
      * 查询试卷
@@ -98,6 +101,7 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         DamingContentInfo damingContentInfo = new DamingContentInfo();
         String paperQuestionTypeDtoToVMString = paperQuestionTypeDtoToVMString(paperQuestionTypeDto);
         damingContentInfo.setContent(paperQuestionTypeDtoToVMString);
+        damingContentInfo.setId(snowflakeIdGenerator.nextId());
         // 以下方法将该试卷题目内容打包为json，存到内容表里
         damingContentInfoMapper.insertContentInfo(damingContentInfo);
 
@@ -128,6 +132,7 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         if (StringUtils.isNotEmpty(paperDto.getEndTime())) {
             damingPaper.setEndTime(DateUtils.parseDate(paperDto.getEndTime()));
         }
+        damingPaper.setPaperId(snowflakeIdGenerator.nextId());
         damingPaperMapper.insertDamingPaper(damingPaper);
         return damingPaper;
     }

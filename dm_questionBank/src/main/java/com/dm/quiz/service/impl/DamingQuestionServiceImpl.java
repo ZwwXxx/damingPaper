@@ -36,6 +36,7 @@ import org.springframework.util.CollectionUtils;
 import com.dm.quiz.mapper.DamingQuestionMapper;
 import com.dm.quiz.domain.DamingQuestion;
 import com.dm.quiz.service.IDamingQuestionService;
+import com.dm.quiz.support.SnowflakeIdGenerator;
 
 /**
  * 题目表Service业务层处理
@@ -53,6 +54,8 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
     private DamingSubjectMapper damingSubjectMapper;
     @Autowired
     private DamingAnimationMapper damingAnimationMapper;
+    @Autowired
+    private SnowflakeIdGenerator snowflakeIdGenerator;
 
     /**
      * 查询题目表
@@ -157,6 +160,7 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         String dtoToString = QuestionDtoToString(questionDto);
         DamingContentInfo questionInfo = new DamingContentInfo();
         questionInfo.setContent(dtoToString);
+        questionInfo.setId(snowflakeIdGenerator.nextId());
         damingContentInfoMapper.insertContentInfo(questionInfo);
 
         DamingQuestion damingQuestion = new DamingQuestion();
@@ -179,6 +183,7 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
                         : questionDto.getCorrect()
         );
         damingQuestion.setScore(questionDto.getScore());
+        damingQuestion.setId(snowflakeIdGenerator.nextId());
         damingQuestionMapper.insertDamingQuestion(damingQuestion);
         return damingQuestion.getId();
     }
