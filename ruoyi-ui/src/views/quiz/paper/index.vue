@@ -127,7 +127,16 @@
       <el-table-column label="考试时长" align="center" prop="suggestTime"/>
       <el-table-column label="试卷类型" align="center" prop="paperType">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.paper_type" :value="scope.row.paperType"/>
+          <el-tag
+            v-if="isSpecialPracticePaper(scope.row.paperType)"
+            type="warning"
+            effect="plain"
+            size="small"
+          >
+            <i class="el-icon-s-grid" style="margin-right: 4px"></i>
+            专项
+          </el-tag>
+          <dict-tag v-else :options="dict.type.paper_type" :value="scope.row.paperType"/>
         </template>
       </el-table-column>
       <el-table-column label="防作弊" align="center" prop="enableAntiCheat">
@@ -294,6 +303,10 @@ export default {
     },
     getSubjectLabel(subjectId) {
       return this.subjectMap[subjectId] || '-';
+    },
+    /** 专项卷（paperType=3），字典未配置时避免只显示数字 */
+    isSpecialPracticePaper(paperType) {
+      return paperType === 3 || paperType === '3';
     },
     /** 查询试卷列表 */
     getList() {

@@ -1,9 +1,12 @@
 package com.dm.quiz.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.validation.constraints.NotNull;
 
 public class ReviewQuestionScoreDto {
     @NotNull(message = "答题记录ID不能为空")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long answerId;
 
     @NotNull(message = "得分不能为空")

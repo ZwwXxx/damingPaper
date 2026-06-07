@@ -54,9 +54,54 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="防作弊">
+          <el-form-item label="防止切页/切屏">
             <el-switch
-              v-model="formData.enableAntiCheat"
+              v-model="formData.enableAntiCheatCutScreen"
+              active-text="开启"
+              inactive-text="关闭">
+            </el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="单题展示">
+            <el-switch
+              v-model="formData.enableAntiCheatSingleQuestion"
+              active-text="开启"
+              inactive-text="关闭">
+            </el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="禁用右键/复制/快捷键">
+            <el-switch
+              v-model="formData.enableAntiCheatDisableActions"
+              active-text="开启"
+              inactive-text="关闭">
+            </el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="开发者工具检测">
+            <el-switch
+              v-model="formData.enableAntiCheatDevToolsDetection"
+              active-text="开启"
+              inactive-text="关闭">
+            </el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="浏览器环境检测">
+            <el-switch
+              v-model="formData.enableAntiCheatBrowserEnvironmentDetection"
+              active-text="开启"
+              inactive-text="关闭">
+            </el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="题目乱序展示">
+            <el-switch
+              v-model="formData.enableAntiCheatShuffle"
               active-text="开启"
               inactive-text="关闭">
             </el-switch>
@@ -550,9 +595,14 @@ export default {
         // 未选择时间时用 null，避免后端解析空字符串失败
         startTime: null,
         endTime: null,
-        enableAntiCheat: false,
+        enableAntiCheatCutScreen: false,
+        enableAntiCheatSingleQuestion: false,
+        enableAntiCheatDisableActions: false,
+        enableAntiCheatDevToolsDetection: false,
+        enableAntiCheatBrowserEnvironmentDetection: false,
+        enableAntiCheatShuffle: false,
         // 题号规则：1=按题型分组编号，2=按加入顺序全局编号（默认2）
-        numberMode: 2,
+        numberMode: 3,
         score: 0,
         questionCount: 0,
         paperQuestionTypeDto: [
@@ -1537,7 +1587,20 @@ export default {
         paperName: this.formData.paperName,
         paperType: this.formData.paperType,
         suggestTime: this.formData.suggestTime,
-        enableAntiCheat: this.formData.enableAntiCheat,
+        enableAntiCheat: !!(
+          this.formData.enableAntiCheatCutScreen ||
+          this.formData.enableAntiCheatSingleQuestion ||
+          this.formData.enableAntiCheatDisableActions ||
+          this.formData.enableAntiCheatDevToolsDetection ||
+          this.formData.enableAntiCheatBrowserEnvironmentDetection ||
+          this.formData.enableAntiCheatShuffle
+        ),
+        enableAntiCheatCutScreen: this.formData.enableAntiCheatCutScreen,
+        enableAntiCheatSingleQuestion: this.formData.enableAntiCheatSingleQuestion,
+        enableAntiCheatDisableActions: this.formData.enableAntiCheatDisableActions,
+        enableAntiCheatDevToolsDetection: this.formData.enableAntiCheatDevToolsDetection,
+        enableAntiCheatBrowserEnvironmentDetection: this.formData.enableAntiCheatBrowserEnvironmentDetection,
+        enableAntiCheatShuffle: this.formData.enableAntiCheatShuffle,
         rules: this.autoCompose.form.rules.map(rule => ({
           sectionName: rule.name,
           questionType: rule.questionType,
@@ -1588,7 +1651,20 @@ export default {
         paperName: this.formData.paperName,
         paperType: this.formData.paperType,
         suggestTime: this.formData.suggestTime,
-        enableAntiCheat: this.formData.enableAntiCheat,
+        enableAntiCheat: !!(
+          this.formData.enableAntiCheatCutScreen ||
+          this.formData.enableAntiCheatSingleQuestion ||
+          this.formData.enableAntiCheatDisableActions ||
+          this.formData.enableAntiCheatDevToolsDetection ||
+          this.formData.enableAntiCheatBrowserEnvironmentDetection ||
+          this.formData.enableAntiCheatShuffle
+        ),
+        enableAntiCheatCutScreen: this.formData.enableAntiCheatCutScreen,
+        enableAntiCheatSingleQuestion: this.formData.enableAntiCheatSingleQuestion,
+        enableAntiCheatDisableActions: this.formData.enableAntiCheatDisableActions,
+        enableAntiCheatDevToolsDetection: this.formData.enableAntiCheatDevToolsDetection,
+        enableAntiCheatBrowserEnvironmentDetection: this.formData.enableAntiCheatBrowserEnvironmentDetection,
+        enableAntiCheatShuffle: this.formData.enableAntiCheatShuffle,
         beginTime,
         endTime
       }

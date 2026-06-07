@@ -27,6 +27,30 @@ public class AutoAssemblePaperRequest {
      */
     private Boolean enableAntiCheat;
     /**
+     * 防作弊-防止切页/切屏检测
+     */
+    private Boolean enableAntiCheatCutScreen;
+    /**
+     * 防作弊-单题展示模式
+     */
+    private Boolean enableAntiCheatSingleQuestion;
+    /**
+     * 防作弊-禁用右键/复制/快捷键
+     */
+    private Boolean enableAntiCheatDisableActions;
+    /**
+     * 防作弊-开发者工具检测
+     */
+    private Boolean enableAntiCheatDevToolsDetection;
+    /**
+     * 防作弊-浏览器环境检测（可疑扩展/自动化工具）
+     */
+    private Boolean enableAntiCheatBrowserEnvironmentDetection;
+    /**
+     * 防作弊-题目乱序展示
+     */
+    private Boolean enableAntiCheatShuffle;
+    /**
      * 规则列表（按题型+数量自动组卷时使用）
      */
     private List<AutoAssembleRuleDto> rules;
@@ -77,6 +101,54 @@ public class AutoAssemblePaperRequest {
 
     public void setEnableAntiCheat(Boolean enableAntiCheat) {
         this.enableAntiCheat = enableAntiCheat;
+    }
+
+    public Boolean getEnableAntiCheatCutScreen() {
+        return enableAntiCheatCutScreen;
+    }
+
+    public void setEnableAntiCheatCutScreen(Boolean enableAntiCheatCutScreen) {
+        this.enableAntiCheatCutScreen = enableAntiCheatCutScreen;
+    }
+
+    public Boolean getEnableAntiCheatSingleQuestion() {
+        return enableAntiCheatSingleQuestion;
+    }
+
+    public void setEnableAntiCheatSingleQuestion(Boolean enableAntiCheatSingleQuestion) {
+        this.enableAntiCheatSingleQuestion = enableAntiCheatSingleQuestion;
+    }
+
+    public Boolean getEnableAntiCheatDisableActions() {
+        return enableAntiCheatDisableActions;
+    }
+
+    public void setEnableAntiCheatDisableActions(Boolean enableAntiCheatDisableActions) {
+        this.enableAntiCheatDisableActions = enableAntiCheatDisableActions;
+    }
+
+    public Boolean getEnableAntiCheatDevToolsDetection() {
+        return enableAntiCheatDevToolsDetection;
+    }
+
+    public void setEnableAntiCheatDevToolsDetection(Boolean enableAntiCheatDevToolsDetection) {
+        this.enableAntiCheatDevToolsDetection = enableAntiCheatDevToolsDetection;
+    }
+
+    public Boolean getEnableAntiCheatBrowserEnvironmentDetection() {
+        return enableAntiCheatBrowserEnvironmentDetection;
+    }
+
+    public void setEnableAntiCheatBrowserEnvironmentDetection(Boolean enableAntiCheatBrowserEnvironmentDetection) {
+        this.enableAntiCheatBrowserEnvironmentDetection = enableAntiCheatBrowserEnvironmentDetection;
+    }
+
+    public Boolean getEnableAntiCheatShuffle() {
+        return enableAntiCheatShuffle;
+    }
+
+    public void setEnableAntiCheatShuffle(Boolean enableAntiCheatShuffle) {
+        this.enableAntiCheatShuffle = enableAntiCheatShuffle;
     }
 
     public List<AutoAssembleRuleDto> getRules() {

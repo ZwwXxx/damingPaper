@@ -2,6 +2,7 @@ package com.dm.quiz.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
@@ -17,7 +18,8 @@ public class DamingPaper extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /**  */
+    /** 试卷主键（JSON 输出为字符串，避免前端 Number 精度丢失） */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long paperId;
 
     /**  */
@@ -45,8 +47,8 @@ public class DamingPaper extends BaseEntity
 
     /**
      * 试卷内容id
-     * @param paperId
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long paperInfoId;
 
     /** $column.columnComment */
@@ -55,6 +57,24 @@ public class DamingPaper extends BaseEntity
 
     /** 是否开启防作弊 */
     private Boolean enableAntiCheat;
+
+    /** 是否开启防止切页/切屏检测 */
+    private Boolean enableAntiCheatCutScreen;
+
+    /** 是否开启单题展示模式（上一题/下一题） */
+    private Boolean enableAntiCheatSingleQuestion;
+
+    /** 是否开启禁用右键/复制/快捷键等操作 */
+    private Boolean enableAntiCheatDisableActions;
+
+    /** 是否开启开发者工具检测 */
+    private Boolean enableAntiCheatDevToolsDetection;
+
+    /** 是否开启浏览器环境检测（自动化/可疑扩展） */
+    private Boolean enableAntiCheatBrowserEnvironmentDetection;
+
+    /** 是否开启题目乱序展示（防止顺序作弊） */
+    private Boolean enableAntiCheatShuffle;
 
     /** 考试开始时间 */
     @Excel(name = "开始时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
@@ -91,6 +111,54 @@ public class DamingPaper extends BaseEntity
 
     public void setEnableAntiCheat(Boolean enableAntiCheat) {
         this.enableAntiCheat = enableAntiCheat;
+    }
+
+    public Boolean getEnableAntiCheatCutScreen() {
+        return enableAntiCheatCutScreen;
+    }
+
+    public void setEnableAntiCheatCutScreen(Boolean enableAntiCheatCutScreen) {
+        this.enableAntiCheatCutScreen = enableAntiCheatCutScreen;
+    }
+
+    public Boolean getEnableAntiCheatSingleQuestion() {
+        return enableAntiCheatSingleQuestion;
+    }
+
+    public void setEnableAntiCheatSingleQuestion(Boolean enableAntiCheatSingleQuestion) {
+        this.enableAntiCheatSingleQuestion = enableAntiCheatSingleQuestion;
+    }
+
+    public Boolean getEnableAntiCheatDisableActions() {
+        return enableAntiCheatDisableActions;
+    }
+
+    public void setEnableAntiCheatDisableActions(Boolean enableAntiCheatDisableActions) {
+        this.enableAntiCheatDisableActions = enableAntiCheatDisableActions;
+    }
+
+    public Boolean getEnableAntiCheatDevToolsDetection() {
+        return enableAntiCheatDevToolsDetection;
+    }
+
+    public void setEnableAntiCheatDevToolsDetection(Boolean enableAntiCheatDevToolsDetection) {
+        this.enableAntiCheatDevToolsDetection = enableAntiCheatDevToolsDetection;
+    }
+
+    public Boolean getEnableAntiCheatBrowserEnvironmentDetection() {
+        return enableAntiCheatBrowserEnvironmentDetection;
+    }
+
+    public void setEnableAntiCheatBrowserEnvironmentDetection(Boolean enableAntiCheatBrowserEnvironmentDetection) {
+        this.enableAntiCheatBrowserEnvironmentDetection = enableAntiCheatBrowserEnvironmentDetection;
+    }
+
+    public Boolean getEnableAntiCheatShuffle() {
+        return enableAntiCheatShuffle;
+    }
+
+    public void setEnableAntiCheatShuffle(Boolean enableAntiCheatShuffle) {
+        this.enableAntiCheatShuffle = enableAntiCheatShuffle;
     }
 
     public Date getStartTime() {
@@ -193,6 +261,12 @@ public class DamingPaper extends BaseEntity
                 .append("updateTime", getUpdateTime())
                 .append("paperType", getPaperType())
                 .append("enableAntiCheat", getEnableAntiCheat())
+                .append("enableAntiCheatCutScreen", getEnableAntiCheatCutScreen())
+                .append("enableAntiCheatSingleQuestion", getEnableAntiCheatSingleQuestion())
+                .append("enableAntiCheatDisableActions", getEnableAntiCheatDisableActions())
+                .append("enableAntiCheatDevToolsDetection", getEnableAntiCheatDevToolsDetection())
+                .append("enableAntiCheatBrowserEnvironmentDetection", getEnableAntiCheatBrowserEnvironmentDetection())
+                .append("enableAntiCheatShuffle", getEnableAntiCheatShuffle())
                 .append("startTime", getStartTime())
                 .append("endTime", getEndTime())
                 .append("numberMode", getNumberMode())

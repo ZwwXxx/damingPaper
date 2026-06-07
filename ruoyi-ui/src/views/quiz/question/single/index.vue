@@ -1592,7 +1592,8 @@ export default {
             items: child.items,
             correct: child.correct,
             correctArray: child.correctArray,
-            clozeIndex: index + 1
+            clozeIndex: index + 1,
+            difficulty: this.formData.difficulty
           };
         });
         const payload = {
@@ -1603,6 +1604,7 @@ export default {
             questionTitle: this.formData.questionTitle,
             analysis: this.formData.analysis,
             score: this.formData.score,
+            difficulty: this.formData.difficulty,
             animationId: this.formData.animationId,
             originOrder: keepIsReal ? this.formData.originOrder : null,
             examYear: keepExamYear,

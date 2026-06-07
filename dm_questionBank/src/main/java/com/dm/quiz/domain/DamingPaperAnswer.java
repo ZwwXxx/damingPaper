@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
@@ -17,7 +18,8 @@ public class DamingPaperAnswer extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 达卷记录ID */
+    /** 答卷记录ID（JSON 字符串，避免前端精度丢失） */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long paperAnswerId;
 
     /** 试卷名 */
@@ -26,6 +28,7 @@ public class DamingPaperAnswer extends BaseEntity
 
     /** 试卷ID */
     @Excel(name = "试卷ID")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long paperId;
 
     /** 回答人 */

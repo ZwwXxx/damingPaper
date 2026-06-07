@@ -1,14 +1,18 @@
 package com.dm.quiz.dto;
 
 import com.dm.quiz.viewmodel.QuestionOptionVM;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.List;
 
 public class QuestionDto {
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     // 父题ID（完形/阅读等复合题）
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long parentId;
     // 动画解析ID（可选）
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long animationId;
     // 动画解析URL（可选，便于回显/预览）
     private String animationUrl;

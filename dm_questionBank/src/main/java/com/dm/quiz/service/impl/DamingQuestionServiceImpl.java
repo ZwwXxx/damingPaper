@@ -172,7 +172,6 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         damingQuestion.setExamYear(questionDto.getExamYear());
         damingQuestion.setExamHalf(questionDto.getExamHalf());
         damingQuestion.setDifficulty(questionDto.getDifficulty());
-        damingQuestion.setDifficulty(questionDto.getDifficulty());
         damingQuestion.setQuestionInfoId(questionInfo.getId());
         if (questionDto.getAnimationId() != null && questionDto.getAnimationId() > 0) {
             damingQuestion.setAnimationId(questionDto.getAnimationId());
@@ -247,6 +246,7 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
         damingQuestion.setOriginOrder(questionDto.getOriginOrder());
         damingQuestion.setExamYear(questionDto.getExamYear());
         damingQuestion.setExamHalf(questionDto.getExamHalf());
+        damingQuestion.setDifficulty(questionDto.getDifficulty());
         if (questionDto.getAnimationId() != null) {
             damingQuestion.setAnimationId(questionDto.getAnimationId() != null && questionDto.getAnimationId() > 0
                     ? questionDto.getAnimationId()
@@ -623,5 +623,17 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
             throw new ServiceException("题目ID不能为空");
         }
         return damingQuestionMapper.updateExamHalf(id, examHalf);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int batchUpdateExamMeta(List<Long> ids, Integer examYear, Integer examHalf) {
+        if (CollectionUtils.isEmpty(ids)) {
+            throw new ServiceException("请选择要更新的题目");
+        }
+        if (examYear == null && examHalf == null) {
+            throw new ServiceException("请至少设置年份或批次中的一项");
+        }
+        return damingQuestionMapper.batchUpdateExamMeta(ids, examYear, examHalf);
     }
 }

@@ -79,10 +79,20 @@ export function updateQuestionExamHalf(data) {
   })
 }
 
-// 删除题目表
-export function delQuestion(id) {
+// 批量设置年份与考试批次（未传字段不改）
+export function batchUpdateQuestionExamMeta(data) {
   return request({
-    url: '/quiz/question/' + id,
+    url: '/quiz/question/batch-exam-meta',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除题目表（id 可为单个或数组；Snowflake 须用字符串传递，避免 Number 精度问题）
+export function delQuestion(id) {
+  const path = Array.isArray(id) ? id.join(',') : id
+  return request({
+    url: '/quiz/question/' + path,
     method: 'delete'
   })
 }

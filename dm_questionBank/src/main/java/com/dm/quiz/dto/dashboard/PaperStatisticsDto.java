@@ -1,5 +1,7 @@
 package com.dm.quiz.dto.dashboard;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.List;
 
 /**
@@ -59,6 +61,7 @@ public class PaperStatisticsDto {
      */
     public static class TopPaperDto {
         /** 试卷ID */
+        @JsonFormat(shape = JsonFormat.Shape.STRING)
         private Long paperId;
         
         /** 试卷名称 */

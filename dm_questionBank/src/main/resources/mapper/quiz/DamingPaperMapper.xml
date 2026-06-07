@@ -17,6 +17,12 @@
         <result property="updateTime"    column="update_time"    />
         <result property="paperType"    column="paper_type"    />
         <result property="enableAntiCheat" column="enable_anti_cheat"/>
+        <result property="enableAntiCheatCutScreen" column="enable_anti_cheat_cut_screen"/>
+        <result property="enableAntiCheatSingleQuestion" column="enable_anti_cheat_single_question"/>
+        <result property="enableAntiCheatDisableActions" column="enable_anti_cheat_disable_actions"/>
+        <result property="enableAntiCheatDevToolsDetection" column="enable_anti_cheat_dev_tools_detection"/>
+        <result property="enableAntiCheatBrowserEnvironmentDetection" column="enable_anti_cheat_browser_env_detection"/>
+        <result property="enableAntiCheatShuffle" column="enable_anti_cheat_shuffle"/>
         <result property="startTime"    column="start_time"    />
         <result property="endTime"    column="end_time"    />
         <result property="numberMode"    column="number_mode"    />
@@ -35,6 +41,12 @@
                update_time,
                paper_type,
                enable_anti_cheat,
+               enable_anti_cheat_cut_screen,
+               enable_anti_cheat_single_question,
+               enable_anti_cheat_disable_actions,
+               enable_anti_cheat_dev_tools_detection,
+               enable_anti_cheat_browser_env_detection,
+               enable_anti_cheat_shuffle,
                start_time,
                end_time,
                number_mode
@@ -94,6 +106,12 @@
             <if test="updateTime != null">update_time,</if>
             <if test="paperType != null">paper_type,</if>
             <if test="enableAntiCheat != null">enable_anti_cheat,</if>
+            <if test="enableAntiCheatCutScreen != null">enable_anti_cheat_cut_screen,</if>
+            <if test="enableAntiCheatSingleQuestion != null">enable_anti_cheat_single_question,</if>
+            <if test="enableAntiCheatDisableActions != null">enable_anti_cheat_disable_actions,</if>
+            <if test="enableAntiCheatDevToolsDetection != null">enable_anti_cheat_dev_tools_detection,</if>
+            <if test="enableAntiCheatBrowserEnvironmentDetection != null">enable_anti_cheat_browser_env_detection,</if>
+            <if test="enableAntiCheatShuffle != null">enable_anti_cheat_shuffle,</if>
             <if test="startTime != null">start_time,</if>
             <if test="endTime != null">end_time,</if>
             <if test="numberMode != null">number_mode,</if>
@@ -111,6 +129,12 @@
             <if test="updateTime != null">#{updateTime},</if>
             <if test="paperType != null">#{paperType},</if>
             <if test="enableAntiCheat != null">#{enableAntiCheat},</if>
+            <if test="enableAntiCheatCutScreen != null">#{enableAntiCheatCutScreen},</if>
+            <if test="enableAntiCheatSingleQuestion != null">#{enableAntiCheatSingleQuestion},</if>
+            <if test="enableAntiCheatDisableActions != null">#{enableAntiCheatDisableActions},</if>
+            <if test="enableAntiCheatDevToolsDetection != null">#{enableAntiCheatDevToolsDetection},</if>
+            <if test="enableAntiCheatBrowserEnvironmentDetection != null">#{enableAntiCheatBrowserEnvironmentDetection},</if>
+            <if test="enableAntiCheatShuffle != null">#{enableAntiCheatShuffle},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
             <if test="numberMode != null">#{numberMode},</if>
@@ -131,6 +155,12 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="paperType != null">paper_type = #{paperType},</if>
             <if test="enableAntiCheat != null">enable_anti_cheat = #{enableAntiCheat},</if>
+            <if test="enableAntiCheatCutScreen != null">enable_anti_cheat_cut_screen = #{enableAntiCheatCutScreen},</if>
+            <if test="enableAntiCheatSingleQuestion != null">enable_anti_cheat_single_question = #{enableAntiCheatSingleQuestion},</if>
+            <if test="enableAntiCheatDisableActions != null">enable_anti_cheat_disable_actions = #{enableAntiCheatDisableActions},</if>
+            <if test="enableAntiCheatDevToolsDetection != null">enable_anti_cheat_dev_tools_detection = #{enableAntiCheatDevToolsDetection},</if>
+            <if test="enableAntiCheatBrowserEnvironmentDetection != null">enable_anti_cheat_browser_env_detection = #{enableAntiCheatBrowserEnvironmentDetection},</if>
+            <if test="enableAntiCheatShuffle != null">enable_anti_cheat_shuffle = #{enableAntiCheatShuffle},</if>
             <!-- 允许前端传 null 来显式清空开始/截止时间 -->
             start_time = #{startTime},
             end_time = #{endTime},

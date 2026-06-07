@@ -1,9 +1,12 @@
 package com.dm.quiz.viewmodel;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * 试卷上的题目，数据层，包含id和顺序
  */
 public class PaperQuestionVM {
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     private Integer itemOrder;
 

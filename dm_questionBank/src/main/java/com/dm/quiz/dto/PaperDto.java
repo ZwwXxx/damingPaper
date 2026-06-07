@@ -1,12 +1,15 @@
 package com.dm.quiz.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.List;
 
 /**
  * 前端传来的，后续也拿这个格式给前端
  */
 public class PaperDto {
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long paperId;
     private Integer subjectId;
     private String paperName;
@@ -15,6 +18,12 @@ public class PaperDto {
     private Integer suggestTime;
     private Integer paperType;
     private Boolean enableAntiCheat;
+    private Boolean enableAntiCheatCutScreen;
+    private Boolean enableAntiCheatSingleQuestion;
+    private Boolean enableAntiCheatDisableActions;
+    private Boolean enableAntiCheatDevToolsDetection;
+    private Boolean enableAntiCheatBrowserEnvironmentDetection;
+    private Boolean enableAntiCheatShuffle;
     private Integer questionCount;
     private String startTime;
     private String endTime;
@@ -45,6 +54,54 @@ public class PaperDto {
 
     public void setEnableAntiCheat(Boolean enableAntiCheat) {
         this.enableAntiCheat = enableAntiCheat;
+    }
+
+    public Boolean getEnableAntiCheatCutScreen() {
+        return enableAntiCheatCutScreen;
+    }
+
+    public void setEnableAntiCheatCutScreen(Boolean enableAntiCheatCutScreen) {
+        this.enableAntiCheatCutScreen = enableAntiCheatCutScreen;
+    }
+
+    public Boolean getEnableAntiCheatSingleQuestion() {
+        return enableAntiCheatSingleQuestion;
+    }
+
+    public void setEnableAntiCheatSingleQuestion(Boolean enableAntiCheatSingleQuestion) {
+        this.enableAntiCheatSingleQuestion = enableAntiCheatSingleQuestion;
+    }
+
+    public Boolean getEnableAntiCheatDisableActions() {
+        return enableAntiCheatDisableActions;
+    }
+
+    public void setEnableAntiCheatDisableActions(Boolean enableAntiCheatDisableActions) {
+        this.enableAntiCheatDisableActions = enableAntiCheatDisableActions;
+    }
+
+    public Boolean getEnableAntiCheatDevToolsDetection() {
+        return enableAntiCheatDevToolsDetection;
+    }
+
+    public void setEnableAntiCheatDevToolsDetection(Boolean enableAntiCheatDevToolsDetection) {
+        this.enableAntiCheatDevToolsDetection = enableAntiCheatDevToolsDetection;
+    }
+
+    public Boolean getEnableAntiCheatBrowserEnvironmentDetection() {
+        return enableAntiCheatBrowserEnvironmentDetection;
+    }
+
+    public void setEnableAntiCheatBrowserEnvironmentDetection(Boolean enableAntiCheatBrowserEnvironmentDetection) {
+        this.enableAntiCheatBrowserEnvironmentDetection = enableAntiCheatBrowserEnvironmentDetection;
+    }
+
+    public Boolean getEnableAntiCheatShuffle() {
+        return enableAntiCheatShuffle;
+    }
+
+    public void setEnableAntiCheatShuffle(Boolean enableAntiCheatShuffle) {
+        this.enableAntiCheatShuffle = enableAntiCheatShuffle;
     }
 
     public Integer getQuestionCount() {

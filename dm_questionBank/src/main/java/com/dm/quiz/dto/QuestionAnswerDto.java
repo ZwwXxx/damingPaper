@@ -1,5 +1,7 @@
 package com.dm.quiz.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * 用户提交的题目答案实体
  */
@@ -11,10 +13,12 @@ public class QuestionAnswerDto {
     // 如果是多选题，回答内容装到数组里
     private String[] contentArray;
     // 回答该题目的id,用户后台查看，前台用不到这个，原题交给了paperDto上的题型
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long questionId;
     // 题目顺序
     private Integer itemOrder;
     // 答题记录ID
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long answerId;
     // 已得分
     private Integer finalScore;

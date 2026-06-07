@@ -2,6 +2,7 @@ package com.dm.quiz.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
@@ -15,10 +16,12 @@ public class DamingQuestion extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 题目id */
+    /** 题目id（JSON 输出为字符串，避免前端 Number 精度丢失导致删除等操作无效） */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
     /** 父题ID（完形/阅读等复合题） */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long parentId;
 
     /** 题目类型 */
@@ -33,9 +36,11 @@ public class DamingQuestion extends BaseEntity
 
     /** 题目内容id */
     @Excel(name = "题目内容id")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long questionInfoId;
 
     /** 动画解析ID（可选） */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long animationId;
 
     /** 正确答案 */

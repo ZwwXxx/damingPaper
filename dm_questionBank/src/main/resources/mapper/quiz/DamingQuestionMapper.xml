@@ -198,6 +198,21 @@
         where id = #{id}
     </update>
 
+    <!-- 批量更新年份/批次，null 表示不更新该字段 -->
+    <update id="batchUpdateExamMeta">
+        update daming_question
+        <set>
+            <if test="examYear != null">exam_year = #{examYear},</if>
+            <if test="examHalf != null">exam_half = #{examHalf},</if>
+            update_time = now()
+        </set>
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and del_flag != 2
+    </update>
+
     <delete id="deleteDamingQuestionById" parameterType="Long">
         delete from daming_question where id = #{id}
     </delete>

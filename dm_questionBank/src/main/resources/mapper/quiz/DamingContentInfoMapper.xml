@@ -26,6 +26,14 @@
         where id = #{id}
     </select>
 
+    <select id="selectDamingContentInfoByIds" resultMap="DamingQuestionInfoResult">
+        <include refid="selectDamingQuestionInfoVo"/>
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
     <insert id="insertContentInfo" parameterType="DamingContentInfo">
         insert into daming_content_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

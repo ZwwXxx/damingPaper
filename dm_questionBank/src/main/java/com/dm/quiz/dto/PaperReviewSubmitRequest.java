@@ -1,11 +1,14 @@
 package com.dm.quiz.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class PaperReviewSubmitRequest {
     @NotNull(message = "答卷ID不能为空")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long paperAnswerId;
 
     @NotEmpty(message = "评分明细不能为空")

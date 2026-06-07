@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.annotation.RequestTiming;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
@@ -65,6 +66,7 @@ public class DamingPaperController extends BaseController
     /**
      * 获取试卷详细信息
      */
+    @RequestTiming("管理端-获取试卷详情")
     @PreAuthorize("@ss.hasPermi('quiz:paper:query')")
     @GetMapping(value = "/{paperId}")
     public AjaxResult getInfo(@PathVariable("paperId") Long paperId)

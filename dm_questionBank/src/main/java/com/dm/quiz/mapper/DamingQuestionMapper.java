@@ -96,4 +96,11 @@ public interface DamingQuestionMapper
      * 仅更新考试批次（上/下半年）
      */
     int updateExamHalf(@Param("id") Long id, @Param("examHalf") Integer examHalf);
+
+    /**
+     * 批量更新考试年份与批次（为 null 的列不更新）
+     */
+    int batchUpdateExamMeta(@Param("ids") List<Long> ids,
+                            @Param("examYear") Integer examYear,
+                            @Param("examHalf") Integer examHalf);
 }

@@ -1,13 +1,17 @@
 package com.dm.quiz.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.List;
 
 public class PaperAnswerDto {
     // 题目回答列表
     private List<QuestionAnswerDto> questionAnswerDtos;
     // 试卷id，根据该试卷id找到 试卷答案
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long paperId;
     // 答卷记录ID
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long paperAnswerId;
     // 耗时,记录试卷回答记录
     private Integer doTime;

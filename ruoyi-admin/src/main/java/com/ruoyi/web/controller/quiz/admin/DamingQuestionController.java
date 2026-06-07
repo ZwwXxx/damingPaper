@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson2.JSONObject;
 import com.dm.quiz.domain.DamingContentInfo;
 import com.dm.quiz.viewmodel.QuestionInfoContentVM;
+import com.dm.quiz.dto.BatchQuestionExamMetaRequest;
 import com.dm.quiz.dto.ClozeQuestionCreateRequest;
 import com.dm.quiz.dto.QuestionDto;
 import com.dm.quiz.mapper.DamingContentInfoMapper;
@@ -200,6 +201,20 @@ public class DamingQuestionController extends BaseController {
             return AjaxResult.error("题目ID不能为空");
         }
         damingQuestionService.updateExamHalf(questionDto.getId(), questionDto.getExamHalf());
+        return success();
+    }
+
+    /**
+     * 批量设置题目的考试年份与上/下半年批次（未传的字段不改）
+     */
+    @PreAuthorize("@ss.hasPermi('quiz:question:edit')")
+    @Log(title = "题目表-批量年份批次", businessType = BusinessType.UPDATE)
+    @PutMapping("/batch-exam-meta")
+    public AjaxResult batchUpdateExamMeta(@RequestBody BatchQuestionExamMetaRequest body) {
+        if (body == null || body.getIds() == null || body.getIds().isEmpty()) {
+            return AjaxResult.error("请选择要更新的题目");
+        }
+        damingQuestionService.batchUpdateExamMeta(body.getIds(), body.getExamYear(), body.getExamHalf());
         return success();
     }
 

@@ -184,6 +184,39 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
+    <div v-hasPermi="['quiz:question:edit']" class="batch-exam-meta-bar">
+      <span class="batch-exam-meta-label">批量设置</span>
+      <el-input-number
+        v-model="batchExamYear"
+        :min="1990"
+        :max="2100"
+        :controls="false"
+        placeholder="年份"
+        size="small"
+        class="batch-exam-year"
+      />
+      <el-select
+        v-model="batchExamHalf"
+        placeholder="上/下半年"
+        clearable
+        size="small"
+        class="batch-exam-half"
+        style="width: 118px"
+      >
+        <el-option :value="1" label="上半年" />
+        <el-option :value="2" label="下半年" />
+      </el-select>
+      <el-button
+        type="primary"
+        size="mini"
+        icon="el-icon-check"
+        :disabled="multiple"
+        :loading="batchExamMetaLoading"
+        @click="handleBatchExamMeta"
+      >应用到选中</el-button>
+      <span class="batch-exam-meta-hint">未填写的项保持题目原值不变</span>
+    </div>
+
     <el-table v-loading="loading" :data="questionList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="题目id" align="center" prop="id"/>
@@ -405,7 +438,7 @@
 </template>
 
 <script>
-import {listQuestion, getQuestion, delQuestion, addQuestion, updateQuestion, updateQuestionOriginOrder, updateQuestionExamHalf} from "@/api/quiz/question";
+import {listQuestion, getQuestion, delQuestion, addQuestion, updateQuestion, updateQuestionOriginOrder, updateQuestionExamHalf, batchUpdateQuestionExamMeta} from "@/api/quiz/question";
 import {optionSubject} from "@/api/quiz/subject";
 import { getToken } from "@/utils/auth";
 
@@ -501,7 +534,11 @@ export default {
         content: '',
         textHtml: '',
         images: []
-      }
+      },
+      /** 列表上方：批量设置年份 / 批次 */
+      batchExamYear: undefined,
+      batchExamHalf: undefined,
+      batchExamMetaLoading: false
     };
   },
   created() {
@@ -529,6 +566,43 @@ export default {
         this.$message.success('考试批次已更新');
       } catch (e) {
         this.$message.error(e?.response?.data?.msg || e?.message || '更新考试批次失败');
+      }
+    },
+    async handleBatchExamMeta() {
+      if (!this.ids.length) {
+        this.$modal.msgWarning('请先勾选要设置的题目');
+        return;
+      }
+      const y = this.batchExamYear;
+      const h = this.batchExamHalf;
+      if ((y === undefined || y === null) && (h === undefined || h === null)) {
+        this.$modal.msgWarning('请至少填写年份或选择批次中的一项');
+        return;
+      }
+      const payload = {
+        ids: [...this.ids],
+        examYear: y !== undefined && y !== null ? Number(y) : null,
+        examHalf: h !== undefined && h !== null ? Number(h) : null
+      };
+      this.batchExamMetaLoading = true;
+      try {
+        await batchUpdateQuestionExamMeta(payload);
+        const idSet = new Set(this.ids.map(v => String(v)));
+        this.questionList.forEach(row => {
+          if (row && idSet.has(String(row.id))) {
+            if (payload.examYear != null) {
+              row.examYear = payload.examYear;
+            }
+            if (payload.examHalf != null) {
+              row.examHalf = payload.examHalf;
+            }
+          }
+        });
+        this.$message.success('已批量更新年份/批次');
+      } catch (e) {
+        this.$message.error(e?.response?.data?.msg || e?.message || '批量更新失败');
+      } finally {
+        this.batchExamMetaLoading = false;
       }
     },
     async openOriginOrderEditor(row) {
@@ -833,5 +907,31 @@ export default {
   border-radius: 16px;
   padding: 2px 10px;
   font-size: 12px;
+}
+
+.batch-exam-meta-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: #f5f7fa;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+}
+.batch-exam-meta-label {
+  font-size: 13px;
+  color: #606266;
+  font-weight: 500;
+  margin-right: 4px;
+}
+.batch-exam-year {
+  width: 120px;
+}
+.batch-exam-meta-hint {
+  font-size: 12px;
+  color: #909399;
+  margin-left: 4px;
 }
 </style>

@@ -117,4 +117,9 @@ public interface IDamingQuestionService
      * 仅更新题目的考试批次（上/下半年）
      */
     int updateExamHalf(Long id, Integer examHalf);
+
+    /**
+     * 批量更新题目的考试年份与批次（为 null 的字段不修改）
+     */
+    int batchUpdateExamMeta(List<Long> ids, Integer examYear, Integer examHalf);
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSON;
@@ -29,6 +30,8 @@ import com.dm.quiz.viewmodel.PaperQuestionVM;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +47,10 @@ import org.springframework.util.CollectionUtils;
  */
 @Service
 public class DamingPaperServiceImpl implements IDamingPaperService {
+    /** 耗时分析专用 logger，application.yml 中单独设为 INFO */
+    private static final Logger timingLog = LoggerFactory.getLogger("com.dm.quiz.timing.PaperRender");
+    private static final long PAPER_RENDER_SLOW_MS = 1000L;
+
     protected final static ModelMapper modelMapper = ModelMapperSingle.Instance();
     @Autowired
     private DamingPaperMapper damingPaperMapper;
@@ -123,7 +130,23 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         damingPaper.setPaperInfoId(damingContentInfo.getId());
         damingPaper.setDelFlag(0);
         damingPaper.setPaperType(paperDto.getPaperType());
-        damingPaper.setEnableAntiCheat(Boolean.TRUE.equals(paperDto.getEnableAntiCheat()));
+        // 防作弊开关：兼容旧版只传 enableAntiCheat 的请求；新版优先使用子功能开关组合。
+        AntiCheatFlags antiCheatFlags = resolveAntiCheatFlags(
+                paperDto.getEnableAntiCheat(),
+                paperDto.getEnableAntiCheatCutScreen(),
+                paperDto.getEnableAntiCheatSingleQuestion(),
+                paperDto.getEnableAntiCheatDisableActions(),
+                paperDto.getEnableAntiCheatDevToolsDetection(),
+                paperDto.getEnableAntiCheatBrowserEnvironmentDetection(),
+                paperDto.getEnableAntiCheatShuffle()
+        );
+        damingPaper.setEnableAntiCheat(antiCheatFlags.enableAntiCheat);
+        damingPaper.setEnableAntiCheatCutScreen(antiCheatFlags.enableAntiCheatCutScreen);
+        damingPaper.setEnableAntiCheatSingleQuestion(antiCheatFlags.enableAntiCheatSingleQuestion);
+        damingPaper.setEnableAntiCheatDisableActions(antiCheatFlags.enableAntiCheatDisableActions);
+        damingPaper.setEnableAntiCheatDevToolsDetection(antiCheatFlags.enableAntiCheatDevToolsDetection);
+        damingPaper.setEnableAntiCheatBrowserEnvironmentDetection(antiCheatFlags.enableAntiCheatBrowserEnvironmentDetection);
+        damingPaper.setEnableAntiCheatShuffle(antiCheatFlags.enableAntiCheatShuffle);
         // 题号规则：默认按加入顺序编号
         damingPaper.setNumberMode(paperDto.getNumberMode() == null ? 2 : paperDto.getNumberMode());
         if (StringUtils.isNotEmpty(paperDto.getStartTime())) {
@@ -217,7 +240,23 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
             paperDto.setEndTime(null);
         }
         modelMapper.map(paperDto, damingPaper);
-        damingPaper.setEnableAntiCheat(Boolean.TRUE.equals(paperDto.getEnableAntiCheat()));
+        // 防作弊开关：兼容旧版只传 enableAntiCheat 的请求；新版优先使用子功能开关组合。
+        AntiCheatFlags antiCheatFlags = resolveAntiCheatFlags(
+                paperDto.getEnableAntiCheat(),
+                paperDto.getEnableAntiCheatCutScreen(),
+                paperDto.getEnableAntiCheatSingleQuestion(),
+                paperDto.getEnableAntiCheatDisableActions(),
+                paperDto.getEnableAntiCheatDevToolsDetection(),
+                paperDto.getEnableAntiCheatBrowserEnvironmentDetection(),
+                paperDto.getEnableAntiCheatShuffle()
+        );
+        damingPaper.setEnableAntiCheat(antiCheatFlags.enableAntiCheat);
+        damingPaper.setEnableAntiCheatCutScreen(antiCheatFlags.enableAntiCheatCutScreen);
+        damingPaper.setEnableAntiCheatSingleQuestion(antiCheatFlags.enableAntiCheatSingleQuestion);
+        damingPaper.setEnableAntiCheatDisableActions(antiCheatFlags.enableAntiCheatDisableActions);
+        damingPaper.setEnableAntiCheatDevToolsDetection(antiCheatFlags.enableAntiCheatDevToolsDetection);
+        damingPaper.setEnableAntiCheatBrowserEnvironmentDetection(antiCheatFlags.enableAntiCheatBrowserEnvironmentDetection);
+        damingPaper.setEnableAntiCheatShuffle(antiCheatFlags.enableAntiCheatShuffle);
         if (StringUtils.isNotEmpty(paperDto.getStartTime())) {
             damingPaper.setStartTime(DateUtils.parseDate(paperDto.getStartTime()));
         }
@@ -270,13 +309,31 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
      */
     @Override
     public PaperDto paperIdtoDto(Long paperId) {
+        long totalStart = System.currentTimeMillis();
+        long stageStart = totalStart;
+
         // 1.先把试卷从数据库里找出来，变为dto试卷
         DamingPaper damingPaper = damingPaperMapper.selectDamingPaperByPaperId(paperId);
+        long queryPaperMs = System.currentTimeMillis() - stageStart;
+        stageStart = System.currentTimeMillis();
+        if (damingPaper == null) {
+            throw new ServiceException("试卷不存在或已删除");
+        }
         // 2.此时需要根据试卷内容id找到其框架内容
+        if (damingPaper.getPaperInfoId() == null) {
+            throw new ServiceException("试卷内容不存在，请联系管理员");
+        }
         DamingContentInfo damingContentInfo = damingContentInfoMapper.selectDamingContentInfoById(damingPaper.getPaperInfoId());
+        long queryContentMs = System.currentTimeMillis() - stageStart;
+        stageStart = System.currentTimeMillis();
+        if (damingContentInfo == null || StringUtils.isEmpty(damingContentInfo.getContent())) {
+            throw new ServiceException("试卷内容为空，请联系管理员");
+        }
         String content = damingContentInfo.getContent();
         // 3.然后根据该内容转为list，然后由该list<VM> 转为list<Dto>给前端 这个dto包含了题目排序，
         List<PaperQuestionTypeVM> questionTypeVMS = JSONArray.parseArray(content, PaperQuestionTypeVM.class);
+        long parseJsonMs = System.currentTimeMillis() - stageStart;
+        stageStart = System.currentTimeMillis();
         // 4.拿到每个题型里的所有question的questionIDS，数据库查question集合,由于是二层结构，外层使用flatMap摊平
         List<Long> questionIds = questionTypeVMS.stream()
                 .flatMap(i -> i.getPaperQuestionVMS().stream().map(PaperQuestionVM::getId))
@@ -285,9 +342,13 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         Set<Long> includedIds = new HashSet<>(questionIds);
         // 4.1根据id获取到每一个question
         List<DamingQuestion> damingQuestions = damingQuestionMapper.selectQuestionListByIds(questionIds);
+        long batchQueryMs = System.currentTimeMillis() - stageStart;
+        stageStart = System.currentTimeMillis();
         // 5.根据question，变为questionDTO然后设置order返回，map原题型数组，映射为DTO类型
         // 统一重新计算 itemOrder：完形父题不占号，其他题目（包括完形子题）全局连续编号
         AtomicInteger orderCounter = new AtomicInteger(0);
+        AtomicLong getQuestionDtoCost = new AtomicLong(0L);
+        AtomicLong clozeQueryCost = new AtomicLong(0L);
 
         List<PaperQuestionTypeDto> paperQuestionTypeDtos = questionTypeVMS.stream().map(i -> {
             PaperQuestionTypeDto paperQuestionTypeDto = modelMapper.map(i, PaperQuestionTypeDto.class);
@@ -308,7 +369,9 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
                     // 题目已被删除或不存在，跳过
                     continue;
                 }
+                long dtoStart = System.currentTimeMillis();
                 QuestionDto questionDto = damingQuestionService.getQuestionDto(question);
+                getQuestionDtoCost.addAndGet(System.currentTimeMillis() - dtoStart);
                 if (questionDto == null) {
                     continue;
                 }
@@ -325,11 +388,18 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
                     // 兜底补齐子题：若试卷内容里没存子题ID，则按 parentId 查询子题并追加
                     DamingQuestion query = new DamingQuestion();
                     query.setParentId(questionDto.getId());
+                    long clozeStart = System.currentTimeMillis();
                     List<DamingQuestion> children = damingQuestionMapper.selectDamingQuestionList(query);
+                    clozeQueryCost.addAndGet(System.currentTimeMillis() - clozeStart);
                     if (!CollectionUtils.isEmpty(children)) {
                         List<QuestionDto> childDtos = children.stream()
                                 .filter(Objects::nonNull)
-                                .map(damingQuestionService::getQuestionDto)
+                                .map(child -> {
+                                    long childDtoStart = System.currentTimeMillis();
+                                    QuestionDto childDto = damingQuestionService.getQuestionDto(child);
+                                    getQuestionDtoCost.addAndGet(System.currentTimeMillis() - childDtoStart);
+                                    return childDto;
+                                })
                                 .filter(Objects::nonNull)
                                 // 按 clozeIndex 排序，保证“第几空”顺序稳定
                                 .sorted((a, b) -> {
@@ -359,9 +429,17 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
             paperQuestionTypeDto.setQuestionDtos(questionDtoStream);
             return paperQuestionTypeDto;
         }).collect(Collectors.toList());
+        long buildDtoMs = System.currentTimeMillis() - stageStart;
+        stageStart = System.currentTimeMillis();
         PaperDto paperDto = modelMapper.map(damingPaper, PaperDto.class);
         paperDto.setPaperQuestionTypeDto(paperQuestionTypeDtos);
         paperDto.setEnableAntiCheat(damingPaper.getEnableAntiCheat());
+        paperDto.setEnableAntiCheatCutScreen(Boolean.TRUE.equals(damingPaper.getEnableAntiCheatCutScreen()));
+        paperDto.setEnableAntiCheatSingleQuestion(Boolean.TRUE.equals(damingPaper.getEnableAntiCheatSingleQuestion()));
+        paperDto.setEnableAntiCheatDisableActions(Boolean.TRUE.equals(damingPaper.getEnableAntiCheatDisableActions()));
+        paperDto.setEnableAntiCheatDevToolsDetection(Boolean.TRUE.equals(damingPaper.getEnableAntiCheatDevToolsDetection()));
+        paperDto.setEnableAntiCheatBrowserEnvironmentDetection(Boolean.TRUE.equals(damingPaper.getEnableAntiCheatBrowserEnvironmentDetection()));
+        paperDto.setEnableAntiCheatShuffle(Boolean.TRUE.equals(damingPaper.getEnableAntiCheatShuffle()));
         paperDto.setQuestionCount(damingPaper.getQuestionCount());
         paperDto.setNumberMode(damingPaper.getNumberMode());
         // 手动处理Date到String的转换
@@ -370,6 +448,22 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         }
         if (damingPaper.getEndTime() != null) {
             paperDto.setEndTime(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, damingPaper.getEndTime()));
+        }
+        long assembleMs = System.currentTimeMillis() - stageStart;
+        long totalMs = System.currentTimeMillis() - totalStart;
+        int outputQuestionCount = paperQuestionTypeDtos.stream()
+                .mapToInt(type -> type.getQuestionDtos() == null ? 0 : type.getQuestionDtos().size())
+                .sum();
+        String timingMsg = "[试卷渲染耗时] paperId={} | 总={}ms | 查试卷={}ms | 查内容={}ms | 解析JSON={}ms | 批量查题={}ms | 构建题目DTO={}ms(含getQuestionDto={}ms, 完形子题查询={}ms) | 组装结果={}ms | 题目数={}/{}";
+        Object[] timingArgs = new Object[]{
+                paperId, totalMs, queryPaperMs, queryContentMs, parseJsonMs, batchQueryMs,
+                buildDtoMs, getQuestionDtoCost.get(), clozeQueryCost.get(), assembleMs,
+                outputQuestionCount, questionIds.size()
+        };
+        if (totalMs > PAPER_RENDER_SLOW_MS) {
+            timingLog.warn(timingMsg, timingArgs);
+        } else {
+            timingLog.info(timingMsg, timingArgs);
         }
         return paperDto;
         // 搞到底就是为了给题目设置一个顺序，不容易啊，如果序号一开始就设置在DTO上不转存到VM上然后单独加Order就不用引起列表不一致了。(不行，这样VM会有很多空属性，不必要的属性在前后端流通)
@@ -428,7 +522,22 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         preview.setPaperName(request.getPaperName());
         preview.setPaperType(request.getPaperType());
         preview.setSuggestTime(request.getSuggestTime());
-        preview.setEnableAntiCheat(Boolean.TRUE.equals(request.getEnableAntiCheat()));
+        AntiCheatFlags antiCheatFlags = resolveAntiCheatFlags(
+                request.getEnableAntiCheat(),
+                request.getEnableAntiCheatCutScreen(),
+                request.getEnableAntiCheatSingleQuestion(),
+                request.getEnableAntiCheatDisableActions(),
+                request.getEnableAntiCheatDevToolsDetection(),
+                request.getEnableAntiCheatBrowserEnvironmentDetection(),
+                request.getEnableAntiCheatShuffle()
+        );
+        preview.setEnableAntiCheat(antiCheatFlags.enableAntiCheat);
+        preview.setEnableAntiCheatCutScreen(antiCheatFlags.enableAntiCheatCutScreen);
+        preview.setEnableAntiCheatSingleQuestion(antiCheatFlags.enableAntiCheatSingleQuestion);
+        preview.setEnableAntiCheatDisableActions(antiCheatFlags.enableAntiCheatDisableActions);
+        preview.setEnableAntiCheatDevToolsDetection(antiCheatFlags.enableAntiCheatDevToolsDetection);
+        preview.setEnableAntiCheatBrowserEnvironmentDetection(antiCheatFlags.enableAntiCheatBrowserEnvironmentDetection);
+        preview.setEnableAntiCheatShuffle(antiCheatFlags.enableAntiCheatShuffle);
         if (!CollectionUtils.isEmpty(paperQuestionTypeDtos)) {
             ComputeCountAndScoreResult stats = getComputeCountAndScoreResult(preview);
             preview.setScore(stats.totalScore);
@@ -489,11 +598,106 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         preview.setPaperName(request.getPaperName());
         preview.setPaperType(request.getPaperType());
         preview.setSuggestTime(request.getSuggestTime());
-        preview.setEnableAntiCheat(Boolean.TRUE.equals(request.getEnableAntiCheat()));
+        AntiCheatFlags antiCheatFlags = resolveAntiCheatFlags(
+                request.getEnableAntiCheat(),
+                request.getEnableAntiCheatCutScreen(),
+                request.getEnableAntiCheatSingleQuestion(),
+                request.getEnableAntiCheatDisableActions(),
+                request.getEnableAntiCheatDevToolsDetection(),
+                request.getEnableAntiCheatBrowserEnvironmentDetection(),
+                request.getEnableAntiCheatShuffle()
+        );
+        preview.setEnableAntiCheat(antiCheatFlags.enableAntiCheat);
+        preview.setEnableAntiCheatCutScreen(antiCheatFlags.enableAntiCheatCutScreen);
+        preview.setEnableAntiCheatSingleQuestion(antiCheatFlags.enableAntiCheatSingleQuestion);
+        preview.setEnableAntiCheatDisableActions(antiCheatFlags.enableAntiCheatDisableActions);
+        preview.setEnableAntiCheatDevToolsDetection(antiCheatFlags.enableAntiCheatDevToolsDetection);
+        preview.setEnableAntiCheatBrowserEnvironmentDetection(antiCheatFlags.enableAntiCheatBrowserEnvironmentDetection);
+        preview.setEnableAntiCheatShuffle(antiCheatFlags.enableAntiCheatShuffle);
         ComputeCountAndScoreResult stats = getComputeCountAndScoreResult(preview);
         preview.setScore(stats.totalScore);
         preview.setQuestionCount(stats.totalCount);
         return preview;
+    }
+
+    private static boolean isTrue(Boolean value) {
+        return Boolean.TRUE.equals(value);
+    }
+
+    /**
+     * 防作弊子功能开关组合规则：
+     * - 如果新版请求提供了任意一个子开关（不为 null），则以子开关为准；
+     * - 如果旧版请求只有 enableAntiCheat（子开关都为 null），则把 enableAntiCheat 视为“全部子开关开”。
+     */
+    private static AntiCheatFlags resolveAntiCheatFlags(
+            Boolean enableAntiCheat,
+            Boolean enableAntiCheatCutScreen,
+            Boolean enableAntiCheatSingleQuestion,
+            Boolean enableAntiCheatDisableActions,
+            Boolean enableAntiCheatDevToolsDetection,
+            Boolean enableAntiCheatBrowserEnvironmentDetection,
+            Boolean enableAntiCheatShuffle
+    ) {
+        boolean master = isTrue(enableAntiCheat);
+        boolean subAnySpecified =
+                enableAntiCheatCutScreen != null ||
+                        enableAntiCheatSingleQuestion != null ||
+                        enableAntiCheatDisableActions != null ||
+                        enableAntiCheatDevToolsDetection != null ||
+                        enableAntiCheatBrowserEnvironmentDetection != null ||
+                        enableAntiCheatShuffle != null;
+
+        boolean effectiveCutScreen = subAnySpecified ? isTrue(enableAntiCheatCutScreen) : master;
+        boolean effectiveSingleQuestion = subAnySpecified ? isTrue(enableAntiCheatSingleQuestion) : master;
+        boolean effectiveDisableActions = subAnySpecified ? isTrue(enableAntiCheatDisableActions) : master;
+        boolean effectiveDevTools = subAnySpecified ? isTrue(enableAntiCheatDevToolsDetection) : master;
+        boolean effectiveBrowserEnv = subAnySpecified ? isTrue(enableAntiCheatBrowserEnvironmentDetection) : master;
+        boolean effectiveShuffle = subAnySpecified ? isTrue(enableAntiCheatShuffle) : master;
+
+        boolean enableAntiCheatFinal = effectiveCutScreen
+                || effectiveSingleQuestion
+                || effectiveDisableActions
+                || effectiveDevTools
+                || effectiveBrowserEnv
+                || effectiveShuffle;
+
+        return new AntiCheatFlags(
+                enableAntiCheatFinal,
+                effectiveCutScreen,
+                effectiveSingleQuestion,
+                effectiveDisableActions,
+                effectiveDevTools,
+                effectiveBrowserEnv,
+                effectiveShuffle
+        );
+    }
+
+    private static class AntiCheatFlags {
+        public final boolean enableAntiCheat;
+        public final boolean enableAntiCheatCutScreen;
+        public final boolean enableAntiCheatSingleQuestion;
+        public final boolean enableAntiCheatDisableActions;
+        public final boolean enableAntiCheatDevToolsDetection;
+        public final boolean enableAntiCheatBrowserEnvironmentDetection;
+        public final boolean enableAntiCheatShuffle;
+
+        private AntiCheatFlags(
+                boolean enableAntiCheat,
+                boolean enableAntiCheatCutScreen,
+                boolean enableAntiCheatSingleQuestion,
+                boolean enableAntiCheatDisableActions,
+                boolean enableAntiCheatDevToolsDetection,
+                boolean enableAntiCheatBrowserEnvironmentDetection,
+                boolean enableAntiCheatShuffle
+        ) {
+            this.enableAntiCheat = enableAntiCheat;
+            this.enableAntiCheatCutScreen = enableAntiCheatCutScreen;
+            this.enableAntiCheatSingleQuestion = enableAntiCheatSingleQuestion;
+            this.enableAntiCheatDisableActions = enableAntiCheatDisableActions;
+            this.enableAntiCheatDevToolsDetection = enableAntiCheatDevToolsDetection;
+            this.enableAntiCheatBrowserEnvironmentDetection = enableAntiCheatBrowserEnvironmentDetection;
+            this.enableAntiCheatShuffle = enableAntiCheatShuffle;
+        }
     }
 
     private QuestionDto toQuestionDto(DamingQuestion question, AtomicInteger orderCounter) {
@@ -517,68 +721,93 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
     /**
      * 将题型下的题目调整为：顶层题按其在列表中首次出现顺序，每道顶层题后紧跟其所有子题（按 clozeIndex）。
      * 与 ruoyi-ui 试卷编辑 {@code applyDisplayOrder} 一致，避免完形子题排在父题前导致学生端/题量统计异常。
+     *
+     * <p><b>数据流转示例</b>（下列 id 仅便于阅读，线上为 Snowflake 长整型；obj 表示 {@link QuestionDto} 引用）：
+     * <pre>
+     * 设定：父题 id=100（完形 parentId=null）；子题 id=102（parentId=100, clozeIndex=1）；
+     *      子题 id=101（parentId=100, clozeIndex=2）；另有一道普通顶层题 id=50。
+     *
+     * 【入参 flat】顺序错乱，例如：[102, 100, 101] —— 子题夹在前后，且未保证「父在前」。
+     *
+     * ① 构建 byId 后：{ 100→obj100, 101→obj101, 102→obj102 } —— 仅 id 快速查找，不改变顺序。
+     *
+     * ② 扫描子题入桶 parentToChildren：仅 102、101 有 parentId=100 → { 100 → [102, 101] }
+     *    （桶内顺序 = flat 中子题出现先后：先 102 后 101）
+     *
+     * ③ 每桶按 clozeIndex 升序：102(index=1) 在 101(index=2) 前 → { 100 → [102, 101] }（若入桶已是 1、2 顺序，排序后不变）
+     *
+     * ④ 提取顶层顺序 topsOrdered：按 flat 从前到后只看「非子题」且去重 → 仅 100 → [100]
+     *    若 flat=[50, 102, 100, 101]（普通题在完形子题前）→ topsOrdered=[50, 100]。
+     *
+     * ⑤ 组装 out：依次取 topId；先 out.add(父题)，再 out.add 该父桶内子题列表
+     *    上例 [102,100,101] → out=[100, 102, 101]；placed={100,102,101}
+     *
+     * ⑥ 兜底：若某题既非已处理父/子（如异常孤立题），按原 flat 顺序追加到 out，并记入 placed。
+     *
+     * ⑦ 最后 flat.clear(); flat.addAll(out) —— 调用方持有的列表引用不变，内容被替换为稳定顺序。
+     * </pre>
      */
     private void normalizeParentChildQuestionOrder(List<QuestionDto> flat) {
-        if (CollectionUtils.isEmpty(flat)) {
-            return;
+        if (CollectionUtils.isEmpty(flat)) { // 入参列表是否为空
+            return; // 例：flat=[] → 直接返回，以下结构均无
         }
-        Map<Long, QuestionDto> byId = new HashMap<>();
-        for (QuestionDto q : flat) {
-            if (q != null && q.getId() != null) {
-                byId.put(q.getId(), q);
+        Map<Long, QuestionDto> byId = new HashMap<>(); // 题目 id -> 题目 DTO，便于 O(1) 按 id 取
+        for (QuestionDto q : flat) { // 遍历原列表，构建 id 映射
+            if (q != null && q.getId() != null) { // 跳过空对象或缺 id 的项
+                byId.put(q.getId(), q); // 例：见 JavaDoc ①，放入 100/101/102 对应对象引用
             }
         }
-        Map<Long, List<QuestionDto>> parentToChildren = new HashMap<>();
-        for (QuestionDto q : flat) {
-            if (q == null || q.getId() == null) {
-                continue;
+        Map<Long, List<QuestionDto>> parentToChildren = new HashMap<>(); // 父题 id -> 其子题列表（多桶）
+        for (QuestionDto q : flat) { // 再次遍历，收集每道子题
+            if (q == null || q.getId() == null) { // 无效项跳过
+                continue; // 进入下一轮
             }
-            if (isChildQuestion(q)) {
-                Long pid = normalizeParentId(q.getParentId());
-                if (pid != null) {
-                    parentToChildren.computeIfAbsent(pid, k -> new ArrayList<>()).add(q);
+            if (isChildQuestion(q)) { // 判断是否为带父题 id 的子题
+                Long pid = normalizeParentId(q.getParentId()); // 例：q=102 时 pid=100；parentId=0 时 pid=null 不入桶
+                if (pid != null) { // 确有合法父题 id
+                    parentToChildren.computeIfAbsent(pid, k -> new ArrayList<>()).add(q); // 例：见 JavaDoc ②，100→[102,101]
                 }
             }
         }
-        for (List<QuestionDto> ch : parentToChildren.values()) {
-            ch.sort(Comparator.comparing(c -> c.getClozeIndex() == null ? 0 : c.getClozeIndex()));
+        for (List<QuestionDto> ch : parentToChildren.values()) { // 遍历每个父题下的子题列表
+            ch.sort(Comparator.comparing(c -> c.getClozeIndex() == null ? 0 : c.getClozeIndex())); // 例：见 JavaDoc ③，按第1空、第2空…排序
         }
-        List<Long> topsOrdered = new ArrayList<>();
-        Set<Long> seenTop = new HashSet<>();
-        for (QuestionDto q : flat) {
-            if (q == null || q.getId() == null) {
-                continue;
+        List<Long> topsOrdered = new ArrayList<>(); // 顶层题 id 的先后顺序（与 flat 首次出现顺序一致）
+        Set<Long> seenTop = new HashSet<>(); // 去重：同一顶层 id 只记录一次
+        for (QuestionDto q : flat) { // 遍历原列表，提取顶层题 id 序列
+            if (q == null || q.getId() == null) { // 无效项跳过
+                continue; // 进入下一轮
             }
-            if (!isChildQuestion(q) && seenTop.add(q.getId())) {
-                topsOrdered.add(q.getId());
+            if (!isChildQuestion(q) && seenTop.add(q.getId())) { // 非子题且该 id 首次出现
+                topsOrdered.add(q.getId()); // 例：见 JavaDoc ④，[102,100,101]→topsOrdered=[100]；含 50 时→[50,100]
             }
         }
-        List<QuestionDto> out = new ArrayList<>();
-        Set<Long> placed = new HashSet<>();
-        for (Long topId : topsOrdered) {
-            QuestionDto top = byId.get(topId);
-            if (top == null) {
-                continue;
+        List<QuestionDto> out = new ArrayList<>(); // 重排后的结果列表
+        Set<Long> placed = new HashSet<>(); // 已写入 out 的题目 id，防重复
+        for (Long topId : topsOrdered) { // 按顶层题出现顺序依次处理
+            QuestionDto top = byId.get(topId); // 例：topId=100 → obj100
+            if (top == null) { // 映射中缺失则跳过（数据异常）
+                continue; // 进入下一轮
             }
-            out.add(top);
-            placed.add(top.getId());
-            List<QuestionDto> ch = parentToChildren.get(topId);
-            if (ch != null) {
-                for (QuestionDto c : ch) {
-                    out.add(c);
-                    placed.add(c.getId());
+            out.add(top); // 例：先追加父题 100
+            placed.add(top.getId()); // placed 记入 100
+            List<QuestionDto> ch = parentToChildren.get(topId); // 例：topId=100 → [102,101] 或 null（无子题）
+            if (ch != null) { // 若有子题
+                for (QuestionDto c : ch) { // 遍历已按 clozeIndex 排好序的子题
+                    out.add(c); // 例：见 JavaDoc ⑤，依次追加 102、101
+                    placed.add(c.getId()); // placed 追加 102、101
                 }
             }
         }
-        for (QuestionDto q : flat) {
-            if (q == null || q.getId() == null || placed.contains(q.getId())) {
-                continue;
+        for (QuestionDto q : flat) { // 兜底：处理仍未放入的题
+            if (q == null || q.getId() == null || placed.contains(q.getId())) { // 空、缺 id 或已放置则跳过
+                continue; // 例：正常完形父子已齐 → 本循环不追加；见 JavaDoc ⑥
             }
-            out.add(q);
-            placed.add(q.getId());
+            out.add(q); // 例：孤立题按 flat 顺序补入 out
+            placed.add(q.getId()); // 标记为已放置
         }
-        flat.clear();
-        flat.addAll(out);
+        flat.clear(); // 例：原 [102,100,101] 被清空
+        flat.addAll(out); // 例：见 JavaDoc ⑦，flat 变为 [100,102,101]（与 out 同序）
     }
 
     private boolean isChildQuestion(QuestionDto questionDto) {

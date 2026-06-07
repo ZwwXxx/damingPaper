@@ -185,6 +185,7 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                     // 如果是多选题或填空题，使用contentArray；否则使用content
                     String userAnswer = questionAnswerDto.getContent();
                     boolean isCorrect = false;
+                    String correctStr = matchQuestion.getCorrect();
                     
                     if (matchQuestion.getQuestionType() == QuestionTypeEnum.Multiple.getCode()) {
                         // 多选题：使用contentArray（忽略前后空格，忽略大小写，顺序无关）
@@ -194,7 +195,7 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                                     .map(String::trim)
                                     .filter(s -> !s.isEmpty())
                                     .toArray(String[]::new);
-                            String[] correctArray = Arrays.stream(matchQuestion.getCorrect().split(","))
+                            String[] correctArray = Arrays.stream((correctStr == null ? "" : correctStr).split(","))
                                     .map(String::trim)
                                     .filter(s -> !s.isEmpty())
                                     .toArray(String[]::new);
@@ -225,7 +226,7 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                                 // 保存时也去除空格，确保数据库存储的是干净的答案
                                 userAnswer = String.join(",", userAnswers);
                                 // 获取标准答案，转换为小写
-                                String[] matchCorrect = Arrays.stream(matchQuestion.getCorrect().split(","))
+                                String[] matchCorrect = Arrays.stream((correctStr == null ? "" : correctStr).split(","))
                                         .map(String::trim)
                                         .filter(s -> !s.isEmpty())
                                         .toArray(String[]::new);
@@ -261,7 +262,7 @@ public class DamingPaperAnswerServiceImpl implements IDamingPaperAnswerService {
                         }
                     } else {
                         // 单选题、判断题：使用content
-                        isCorrect = matchQuestion.getCorrect().equals(userAnswer);
+                        isCorrect = correctStr != null && correctStr.equals(userAnswer);
                     }
                     
                     // 最终保存前，确保去除前后空格

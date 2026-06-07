@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.ruoyi.common.annotation.RequestTiming;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.dm.quiz.domain.DamingPaper;
@@ -39,6 +40,7 @@ public class StudentPaperController extends BaseController
     /**
      * 获取试卷详细信息
      */
+    @RequestTiming("学生端-获取试卷详情")
     @PreAuthorize("@ss.hasPermi('quiz:paper:query')")
     @GetMapping(value = "/{paperId}")
     public AjaxResult getInfo(@PathVariable("paperId") Long paperId)
