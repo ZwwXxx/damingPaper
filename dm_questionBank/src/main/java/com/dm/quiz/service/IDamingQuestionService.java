@@ -1,6 +1,8 @@
 package com.dm.quiz.service;
 
 import java.util.List;
+import java.util.Map;
+import com.dm.quiz.domain.DamingContentInfo;
 import com.dm.quiz.domain.DamingQuestion;
 import com.dm.quiz.dto.ClozeQuestionCreateRequest;
 import com.dm.quiz.dto.QuestionDto;
@@ -66,7 +68,22 @@ public interface IDamingQuestionService
     /**
      * 将question转化为questionDto
      */
-    QuestionDto getQuestionDto ( DamingQuestion damingQuestion);
+    QuestionDto getQuestionDto(DamingQuestion damingQuestion);
+
+    /**
+     * 批量加载题目 content，key 为 questionInfoId
+     */
+    Map<Long, DamingContentInfo> loadContentInfoMap(List<DamingQuestion> questions);
+
+    /**
+     * 向已有 content 缓存中补充缺失项（如完形子题兜底查库后）
+     */
+    void mergeContentInfoMap(Map<Long, DamingContentInfo> contentInfoMap, List<DamingQuestion> questions);
+
+    /**
+     * 使用已加载的 content 缓存组装 QuestionDto（无缓存时回退单条查询）
+     */
+    QuestionDto buildQuestionDto(DamingQuestion question, Map<Long, DamingContentInfo> contentInfoMap);
 
     /**
      * 根据题目id集合获取可导出的题目内容

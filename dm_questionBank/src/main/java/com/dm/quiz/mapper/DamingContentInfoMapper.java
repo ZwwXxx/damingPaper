@@ -1,6 +1,7 @@
 package com.dm.quiz.mapper;
 
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 import com.dm.quiz.domain.DamingContentInfo;
 
 /**
@@ -18,6 +19,11 @@ public interface DamingContentInfoMapper
      * @return 题目信息
      */
     public DamingContentInfo selectDamingContentInfoById(Long id);
+
+    /**
+     * 批量查询题目信息
+     */
+    List<DamingContentInfo> selectDamingContentInfoByIds(@Param("ids") List<Long> ids);
 
     /**
      * 查询题目信息列表

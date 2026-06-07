@@ -3,8 +3,10 @@ package com.dm.quiz.service.impl;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -75,7 +77,85 @@ public class DamingQuestionServiceImpl implements IDamingQuestionService {
 
     @Override
     public QuestionDto getQuestionDto(DamingQuestion damingQuestion) {
+        if (damingQuestion == null || damingQuestion.getQuestionInfoId() == null) {
+            return null;
+        }
         DamingContentInfo damingContentInfo = damingContentInfoMapper.selectDamingContentInfoById(damingQuestion.getQuestionInfoId());
+        return buildQuestionDto(damingQuestion, damingContentInfo);
+    }
+
+    @Override
+    public Map<Long, DamingContentInfo> loadContentInfoMap(List<DamingQuestion> questions) {
+        if (CollectionUtils.isEmpty(questions)) {
+            return new HashMap<>();
+        }
+        List<Long> infoIds = questions.stream()
+                .filter(Objects::nonNull)
+                .map(DamingQuestion::getQuestionInfoId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(infoIds)) {
+            return new HashMap<>();
+        }
+        List<DamingContentInfo> contentList = damingContentInfoMapper.selectDamingContentInfoByIds(infoIds);
+        if (CollectionUtils.isEmpty(contentList)) {
+            return new HashMap<>();
+        }
+        Map<Long, DamingContentInfo> contentInfoMap = new HashMap<>(contentList.size());
+        for (DamingContentInfo contentInfo : contentList) {
+            if (contentInfo != null && contentInfo.getId() != null) {
+                contentInfoMap.put(contentInfo.getId(), contentInfo);
+            }
+        }
+        return contentInfoMap;
+    }
+
+    @Override
+    public void mergeContentInfoMap(Map<Long, DamingContentInfo> contentInfoMap, List<DamingQuestion> questions) {
+        if (contentInfoMap == null || CollectionUtils.isEmpty(questions)) {
+            return;
+        }
+        List<Long> missingInfoIds = questions.stream()
+                .filter(Objects::nonNull)
+                .map(DamingQuestion::getQuestionInfoId)
+                .filter(Objects::nonNull)
+                .filter(infoId -> !contentInfoMap.containsKey(infoId))
+                .distinct()
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(missingInfoIds)) {
+            return;
+        }
+        List<DamingContentInfo> contentList = damingContentInfoMapper.selectDamingContentInfoByIds(missingInfoIds);
+        if (CollectionUtils.isEmpty(contentList)) {
+            return;
+        }
+        for (DamingContentInfo contentInfo : contentList) {
+            if (contentInfo != null && contentInfo.getId() != null) {
+                contentInfoMap.put(contentInfo.getId(), contentInfo);
+            }
+        }
+    }
+
+    @Override
+    public QuestionDto buildQuestionDto(DamingQuestion question, Map<Long, DamingContentInfo> contentInfoMap) {
+        if (question == null || question.getQuestionInfoId() == null) {
+            return null;
+        }
+        DamingContentInfo contentInfo = contentInfoMap == null ? null : contentInfoMap.get(question.getQuestionInfoId());
+        if (contentInfo == null) {
+            contentInfo = damingContentInfoMapper.selectDamingContentInfoById(question.getQuestionInfoId());
+            if (contentInfo != null && contentInfoMap != null) {
+                contentInfoMap.put(contentInfo.getId(), contentInfo);
+            }
+        }
+        return buildQuestionDto(question, contentInfo);
+    }
+
+    private QuestionDto buildQuestionDto(DamingQuestion damingQuestion, DamingContentInfo damingContentInfo) {
+        if (damingQuestion == null || damingContentInfo == null || StringUtils.isEmpty(damingContentInfo.getContent())) {
+            return null;
+        }
         // 2.获取题目信息表的内容，二者拼接返回，使用前端传来的dto实体承接
         QuestionDto questionDto = new QuestionDto();
         // 获取题目信息内容

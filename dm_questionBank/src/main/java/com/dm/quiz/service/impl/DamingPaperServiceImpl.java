@@ -1,6 +1,7 @@
 package com.dm.quiz.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -344,6 +345,15 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         List<DamingQuestion> damingQuestions = damingQuestionMapper.selectQuestionListByIds(questionIds);
         long batchQueryMs = System.currentTimeMillis() - stageStart;
         stageStart = System.currentTimeMillis();
+        Map<Long, DamingQuestion> questionById = damingQuestions.stream()
+                .filter(q -> q != null && q.getId() != null)
+                .collect(Collectors.toMap(DamingQuestion::getId, q -> q, (a, b) -> a));
+        Map<Long, List<DamingQuestion>> clozeChildrenByParentId = damingQuestions.stream()
+                .filter(q -> q != null && q.getParentId() != null && q.getParentId() > 0)
+                .collect(Collectors.groupingBy(DamingQuestion::getParentId));
+        Map<Long, DamingContentInfo> contentInfoMap = damingQuestionService.loadContentInfoMap(damingQuestions);
+        long batchContentMs = System.currentTimeMillis() - stageStart;
+        stageStart = System.currentTimeMillis();
         // 5.根据question，变为questionDTO然后设置order返回，map原题型数组，映射为DTO类型
         // 统一重新计算 itemOrder：完形父题不占号，其他题目（包括完形子题）全局连续编号
         AtomicInteger orderCounter = new AtomicInteger(0);
@@ -361,16 +371,13 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
                 if (x == null || x.getId() == null) {
                     continue;
                 }
-                DamingQuestion question = damingQuestions.stream()
-                        .filter(p -> p != null && p.getId() != null && p.getId().equals(x.getId()))
-                        .findFirst()
-                        .orElse(null);
+                DamingQuestion question = questionById.get(x.getId());
                 if (question == null) {
                     // 题目已被删除或不存在，跳过
                     continue;
                 }
                 long dtoStart = System.currentTimeMillis();
-                QuestionDto questionDto = damingQuestionService.getQuestionDto(question);
+                QuestionDto questionDto = damingQuestionService.buildQuestionDto(question, contentInfoMap);
                 getQuestionDtoCost.addAndGet(System.currentTimeMillis() - dtoStart);
                 if (questionDto == null) {
                     continue;
@@ -385,23 +392,19 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
                     questionDto.setItemOrder(null);
                     questionDtoStream.add(questionDto);
 
-                    // 兜底补齐子题：若试卷内容里没存子题ID，则按 parentId 查询子题并追加
-                    DamingQuestion query = new DamingQuestion();
-                    query.setParentId(questionDto.getId());
-                    long clozeStart = System.currentTimeMillis();
-                    List<DamingQuestion> children = damingQuestionMapper.selectDamingQuestionList(query);
-                    clozeQueryCost.addAndGet(System.currentTimeMillis() - clozeStart);
+                    // 兜底补齐子题：优先用批量结果，仅当卷内未包含子题时才查库
+                    List<DamingQuestion> children = clozeChildrenByParentId.getOrDefault(questionDto.getId(), Collections.emptyList());
+                    if (CollectionUtils.isEmpty(children)) {
+                        DamingQuestion query = new DamingQuestion();
+                        query.setParentId(questionDto.getId());
+                        long clozeStart = System.currentTimeMillis();
+                        children = damingQuestionMapper.selectDamingQuestionList(query);
+                        clozeQueryCost.addAndGet(System.currentTimeMillis() - clozeStart);
+                        damingQuestionService.mergeContentInfoMap(contentInfoMap, children);
+                    }
                     if (!CollectionUtils.isEmpty(children)) {
-                        List<QuestionDto> childDtos = children.stream()
+                        List<DamingQuestion> sortedChildren = children.stream()
                                 .filter(Objects::nonNull)
-                                .map(child -> {
-                                    long childDtoStart = System.currentTimeMillis();
-                                    QuestionDto childDto = damingQuestionService.getQuestionDto(child);
-                                    getQuestionDtoCost.addAndGet(System.currentTimeMillis() - childDtoStart);
-                                    return childDto;
-                                })
-                                .filter(Objects::nonNull)
-                                // 按 clozeIndex 排序，保证“第几空”顺序稳定
                                 .sorted((a, b) -> {
                                     Integer ai = a.getClozeIndex() == null ? 0 : a.getClozeIndex();
                                     Integer bi = b.getClozeIndex() == null ? 0 : b.getClozeIndex();
@@ -409,9 +412,15 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
                                 })
                                 .collect(Collectors.toList());
 
-                        for (QuestionDto childDto : childDtos) {
-                            if (childDto.getId() != null && includedIds.contains(childDto.getId())) {
+                        for (DamingQuestion child : sortedChildren) {
+                            if (child.getId() != null && includedIds.contains(child.getId())) {
                                 // 已经在试卷内容里显式包含过的子题，避免重复追加
+                                continue;
+                            }
+                            long childDtoStart = System.currentTimeMillis();
+                            QuestionDto childDto = damingQuestionService.buildQuestionDto(child, contentInfoMap);
+                            getQuestionDtoCost.addAndGet(System.currentTimeMillis() - childDtoStart);
+                            if (childDto == null) {
                                 continue;
                             }
                             childDto.setItemOrder(orderCounter.getAndIncrement());
@@ -454,9 +463,9 @@ public class DamingPaperServiceImpl implements IDamingPaperService {
         int outputQuestionCount = paperQuestionTypeDtos.stream()
                 .mapToInt(type -> type.getQuestionDtos() == null ? 0 : type.getQuestionDtos().size())
                 .sum();
-        String timingMsg = "[试卷渲染耗时] paperId={} | 总={}ms | 查试卷={}ms | 查内容={}ms | 解析JSON={}ms | 批量查题={}ms | 构建题目DTO={}ms(含getQuestionDto={}ms, 完形子题查询={}ms) | 组装结果={}ms | 题目数={}/{}";
+        String timingMsg = "[试卷渲染耗时] paperId={} | 总={}ms | 查试卷={}ms | 查内容={}ms | 解析JSON={}ms | 批量查题={}ms | 批量查题目内容={}ms | 构建题目DTO={}ms(含组装={}ms, 完形子题查库={}ms) | 组装结果={}ms | 题目数={}/{}";
         Object[] timingArgs = new Object[]{
-                paperId, totalMs, queryPaperMs, queryContentMs, parseJsonMs, batchQueryMs,
+                paperId, totalMs, queryPaperMs, queryContentMs, parseJsonMs, batchQueryMs, batchContentMs,
                 buildDtoMs, getQuestionDtoCost.get(), clozeQueryCost.get(), assembleMs,
                 outputQuestionCount, questionIds.size()
         };
